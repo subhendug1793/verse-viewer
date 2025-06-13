@@ -6,6 +6,7 @@
   <title>SASTIK GBQ+ Verse Filter</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
+    h2, .mission-statement { text-align: center; }
     #filter, #sheetSelector { margin-bottom: 10px; padding: 5px; }
     table { border-collapse: collapse; width: 100%; max-width: 100%; overflow-x: auto; }
     th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
@@ -13,8 +14,7 @@
     a { color: blue; text-decoration: underline; }
     .mission-statement { margin-bottom: 15px; padding: 10px; background-color: #f9f9f9; border-left: 4px solid #4CAF50; }
     .controls { margin-bottom: 15px; }
-    .last-updated { font-size: 0.9em; color: #666; margin-top: 10px; }
-    .open-btn { display: inline-block; padding: 5px 10px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 3px; }
+    .last-updated { font-size: 0.9em; color: #666; margin-top: 10px; text-align: center; }
     @media (max-width: 600px) {
       table { font-size: 14px; }
       th, td { padding: 4px; }
@@ -39,14 +39,17 @@
     </select>
   </div>
   <div class="last-updated" id="lastUpdated">Last updated: loading...</div>
-  <a class="open-btn" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Open Full Sheet</a>
   <table id="verseTable">
     <thead>
       <tr>
+        <th>Verse Category</th>
+        <th>Sub Category</th>
         <th>Verse Name</th>
         <th>Bengali Translation</th>
         <th>Verse in English</th>
+        <th>Hindi Meaning</th>
         <th>Reference Links</th>
+        <th>SGS Remarks</th>
         <th>Sheet</th>
       </tr>
     </thead>
@@ -54,7 +57,6 @@
   </table>
 
   <script>
-    // Load data.json and set last updated time
     fetch('data.json')
       .then(response => response.json())
       .then(data => {
@@ -76,10 +78,12 @@
         const categories = [...new Set(allVerses.map(v => v['Verse Category'] || ''))];
         const filterSelect = document.getElementById('filter');
         categories.forEach(cat => {
-          const option = document.createElement('option');
-          option.value = cat;
-          option.textContent = cat || 'Uncategorized';
-          filterSelect.appendChild(option);
+          if (cat) { // Only add non-empty categories
+            const option = document.createElement('option');
+            option.value = cat;
+            option.textContent = cat;
+            filterSelect.appendChild(option);
+          }
         });
 
         // Display all verses initially
@@ -112,10 +116,14 @@
               : '';
             const row = document.createElement('tr');
             row.innerHTML = `
+              <td>${verse['Verse Category'] || ''}</td>
+              <td>${verse['Sub Category'] || ''}</td>
               <td>${verseContent}</td>
               <td>${verse['Bengali Translation'] || ''}</td>
               <td>${englishContent}</td>
+              <td>${verse['Hindi Meaning'] || ''}</td>
               <td>${refLink}</td>
+              <td>${verse['SGS Remarks'] || ''}</td>
               <td>${verse.sheet}</td>
             `;
             tbody.appendChild(row);

@@ -11,6 +11,8 @@
       background-color: #f9f9f9; 
       position: relative; 
       min-height: 100vh; /* Ensure body covers full height */
+      display: flex;
+      flex-direction: column;
     }
     .header-container { 
       display: flex; 
@@ -84,28 +86,23 @@
     th.quran-header { background-color: green; color: white; }
     th.hadith-header, th.miscellaneous-header { background-color: #4CAF50; color: white; }
     .footer { 
-      position: fixed;
-      top: 70%; /* Adjust if necessary */
-      left: 50%;
-      transform: translateX(-50%);
+      position: relative; /* Changed from fixed to relative */
+      margin-top: auto; /* Push to bottom in flex layout */
       display: flex;
       flex-direction: column;
       align-items: center;
       max-width: 80%;
-      margin: 0 auto;
+      margin: 20px auto 0; /* Add top margin for spacing */
       padding: 10px 0;
-      z-index: 9999; /* Ensure footer is above all other content */
       pointer-events: auto; /* Ensure footer is clickable */
     }
     .footer a { 
       text-decoration: none;
       cursor: pointer; /* Ensure clickable cursor */
-      z-index: 10000; /* Ensure links are clickable above footer elements */
       pointer-events: auto; /* Ensure links are clickable */
     }
     .footer img { 
       vertical-align: middle;
-      z-index: 10001; /* Ensure images are clickable above other footer elements */
       pointer-events: auto; /* Ensure images are clickable */
     }
     .logos { 
@@ -157,7 +154,7 @@
       .content-count { margin-top: 10px; }
       .header-container { flex-direction: column; text-align: center; }
       .logo { margin-right: 0; margin-bottom: 10px; width: 60px; }
-      .footer { top: 65%; font-size: 1.5em; max-width: 90%; }
+      .footer { max-width: 90%; }
       .logos img { width: 45px; margin-right: 3px; }
       .logos img:last-child { margin-right: 0; }
       .follow-text, .contact-text { font-size: 0.9em; }

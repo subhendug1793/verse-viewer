@@ -5,16 +5,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SASTIK GBQ+ Verse Filter</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; position: relative; }
-    h2 { color: #333; text-align: center; margin-bottom: 20px; font-size: 2.5em; font-weight: bold; }
-    .header-info { position: absolute; top: 20px; right: 20px; font-size: 0.9em; color: #666; }
-    .mission-statement { text-align: center; margin: 0 auto 20px; max-width: 80%; font-size: 1.1em; line-height: 1.5; font-weight: bold; }
+    body { 
+      font-family: Arial, sans-serif; 
+      margin: 20px; 
+      background-color: #f9f9f9; 
+      position: relative; 
+    }
+    .header-container { 
+      display: flex; 
+      align-items: center; 
+      margin-bottom: 20px; 
+    }
+    .logo { 
+      width: 100px; 
+      height: auto; 
+      margin-right: 10px; 
+    }
+    h2 { 
+      color: #333; 
+      text-align: center; 
+      margin: 0; 
+      font-size: 2.5em; 
+      font-weight: bold; 
+    }
+    .header-info { 
+      position: absolute; 
+      top: 20px; 
+      right: 20px; 
+      font-size: 0.9em; 
+      color: #666; 
+    }
+    .mission-statement { 
+      text-align: center; 
+      margin: 0 auto 20px; 
+      max-width: 80%; 
+      font-size: 1.1em; 
+      line-height: 1.5; 
+      font-weight: bold; 
+    }
     .mission-statement b { color: #ff0000; }
     .mission-statement em { color: #00ff00; }
-    .controls { margin-bottom: 20px; text-align: center; position: relative; }
-    .content-count { position: absolute; top: 0; right: 0; font-size: 1em; color: #333; }
+    .controls { 
+      margin-bottom: 20px; 
+      text-align: center; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      gap: 10px; 
+    }
+    .content-count { 
+      font-size: 1em; 
+      color: #333; 
+    }
     select, input { padding: 5px; margin-right: 10px; }
-    table { border-collapse: collapse; width: 80%; margin: 0 auto; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    table { 
+      border-collapse: collapse; 
+      width: 80%; 
+      margin: 0 auto; 
+      background-color: #fff; 
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+    }
     th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
     td a { color: #0066cc; text-decoration: none; }
     td a:hover { text-decoration: underline; }
@@ -23,6 +73,11 @@
     td.category-controversial { background-color: #FFFF00; }
     td.category-divisive { background-color: #FF0000; }
     td.category-violent { background-color: #000000; color: #FFFFFF; }
+    /* Sheet-specific header styles */
+    th.gita-header { background-color: orange; color: black; }
+    th.bible-header { background-color: blue; color: white; }
+    th.quran-header { background-color: green; color: white; }
+    th.hadith-header, th.miscellaneous-header { background-color: #4CAF50; color: white; } /* Default for Hadith and Miscellaneous */
     @media (max-width: 600px) {
       table { width: 100%; }
       .mission-statement { font-size: 0.9em; max-width: 90%; }
@@ -30,18 +85,22 @@
       select, input { width: 100%; margin-bottom: 10px; }
       .controls { flex-direction: column; align-items: center; }
       .header-info { position: static; text-align: right; margin-top: 10px; }
-      .content-count { position: static; text-align: center; margin-top: 10px; }
+      .content-count { margin-top: 10px; }
+      .header-container { flex-direction: column; text-align: center; }
+      .logo { margin-right: 0; margin-bottom: 10px; }
     }
   </style>
 </head>
 <body>
   <div class="header-info">
     <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
-    <span class="content-count" id="contentCount">Contents: 0</span>
   </div>
-  <h2>SASTIK GBQ+</h2>
+  <div class="header-container">
+    <img src="logo.png" alt="SASTIK Logo" class="logo">
+    <h2>SASTIK GBQ+</h2>
+  </div>
   <div class="mission-statement">
-    সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে <b>🚫</b> সম্প্রীতি ও মানবতার পক্ষে <em>✅</em><br>
+    সুস্থ আস্তিকতা প্রচারের উদ্দেষ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে <b>🚫</b> সম্প্রীতি ও মানবতার পক্ষে <em>✅</em><br>
     To propagate sane theism, against hatred and violence <b>🚫</b> in favor of harmony and humanity <em>✅</em>
   </div>
   <div class="controls">
@@ -63,6 +122,7 @@
       <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
       <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
     </select>
+    <div class="content-count" id="contentCount">Contents: 0</div>
     <input type="text" id="searchInput" placeholder="Search in table..." onkeyup="searchTable()">
   </div>
   <table id="verseTable">
@@ -83,10 +143,10 @@
           })
           .then(sheetData => {
             data = sheetData;
-            updateHeaders();
+            updateHeaders(sheetName);
             updateTable(data);
             updateContentCount(data.length);
-            console.log("Loaded data for sheet:", sheetName, "Rows:", data.length, "Sample Verse Category:", data[0] ? data[0]["Verse Category"] : "N/A");
+            console.log("Loaded data for sheet:", sheetName, "Rows:", data.length, "Sample Verse Category:", data[0] ? data[0]["Verse Category"] : "N/A", "Full Data:", data);
           })
           .catch(error => console.error("Error loading JSON:", error));
       } else {
@@ -97,7 +157,7 @@
       updateLastUpdated();
     }
 
-    function updateHeaders() {
+    function updateHeaders(sheetName) {
       const thead = document.getElementById("tableHeaders");
       thead.innerHTML = "";
       if (data.length > 0) {
@@ -106,6 +166,24 @@
         headers.forEach(header => {
           let th = document.createElement("th");
           th.textContent = header;
+          // Apply sheet-specific styles
+          switch (sheetName) {
+            case "gita":
+              th.classList.add("gita-header");
+              break;
+            case "bible":
+              th.classList.add("bible-header");
+              break;
+            case "quran":
+              th.classList.add("quran-header");
+              break;
+            case "hadith":
+              th.classList.add("hadith-header");
+              break;
+            case "miscellaneous":
+              th.classList.add("miscellaneous-header");
+              break;
+          }
           tr.appendChild(th);
         });
         let thSheet = document.createElement("th");
@@ -169,7 +247,9 @@
           row["Verse Category"] && typeof row["Verse Category"] === "string" && 
           row["Verse Category"].trim().toLowerCase() === category.toLowerCase()
         );
-        console.log("Filter category:", category, "Filtered rows:", filteredRows.length, "Sample Verse Category:", filteredRows[0] ? filteredRows[0]["Verse Category"] : "N/A");
+        console.log("Filter category:", category, "Filtered rows:", filteredRows.length, 
+                    "Sample Verse Category:", filteredRows[0] ? filteredRows[0]["Verse Category"] : "N/A", 
+                    "All Categories:", data.map(row => row["Verse Category"]));
         updateTable(filteredRows);
       }
     }

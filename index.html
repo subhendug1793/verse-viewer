@@ -9,12 +9,12 @@
     h2, .mission-statement { text-align: center; }
     #filter, #sheetSelector { margin-bottom: 10px; padding: 5px; }
     table { border-collapse: collapse; width: 100%; max-width: 100%; overflow-x: auto; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background-color: #f2f2f2; }
+    th { border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #4CAF50; color: white; }
+    td { border: 1px solid #ddd; padding: 8px; text-align: left; }
     a { color: blue; text-decoration: underline; }
     .mission-statement { margin-bottom: 15px; padding: 10px; background-color: #f9f9f9; border-left: 4px solid #4CAF50; }
     .controls { margin-bottom: 15px; }
-    .last-updated { font-size: 0.9em; color: #666; margin-top: 10px; text-align: center; }
+    .last-updated, .content-count { font-size: 0.9em; color: #666; margin-top: 10px; text-align: center; }
     @media (max-width: 600px) {
       table { font-size: 14px; }
       th, td { padding: 4px; }
@@ -39,20 +39,9 @@
     </select>
   </div>
   <div class="last-updated" id="lastUpdated">Last updated: loading...</div>
+  <div class="content-count" id="contentCount">Content found: 0</div>
   <table id="verseTable">
-    <thead>
-      <tr>
-        <th>Verse Category</th>
-        <th>Sub Category</th>
-        <th>Verse Name</th>
-        <th>Bengali Translation</th>
-        <th>Verse in English</th>
-        <th>Hindi Meaning</th>
-        <th>Reference Links</th>
-        <th>SGS Remarks</th>
-        <th>Sheet</th>
-      </tr>
-    </thead>
+    <thead id="tableHeaders"></thead>
     <tbody id="verseBody"></tbody>
   </table>
 
@@ -74,16 +63,29 @@
           allVerses = allVerses.concat(data[sheet].map(v => ({ ...v, sheet })));
         });
 
+        // Dynamically generate headers from the first row of each sheet
+        const firstSheetData = data[sheetNames[0]] || [];
+        const headers = firstSheetData.length > 0 ? Object.keys(firstSheetData[0]).filter(h => h !== 'sheet') : [];
+        const thead = document.getElementById('tableHeaders');
+        const headerRow = document.createElement('tr');
+        headers.forEach(header => {
+          const th = document.createElement('th');
+          th.textContent = header;
+          headerRow.appendChild(th);
+        });
+        const sheetTh = document.createElement('th');
+        sheetTh.textContent = 'Sheet';
+        headerRow.appendChild(sheetTh);
+        thead.appendChild(headerRow);
+
         // Populate category filter
-        const categories = [...new Set(allVerses.map(v => v['Verse Category'] || ''))];
+        const categories = [...new Set(allVerses.map(v => v['Verse Category'] || '').filter(cat => cat.trim()))];
         const filterSelect = document.getElementById('filter');
         categories.forEach(cat => {
-          if (cat) { // Only add non-empty categories
-            const option = document.createElement('option');
-            option.value = cat;
-            option.textContent = cat;
-            filterSelect.appendChild(option);
-          }
+          const option = document.createElement('option');
+          option.value = cat;
+          option.textContent = cat;
+          filterSelect.appendChild(option);
         });
 
         // Display all verses initially
@@ -104,28 +106,20 @@
         function displayVerses(verses) {
           const tbody = document.getElementById('verseBody');
           tbody.innerHTML = '';
+          document.getElementById('contentCount').textContent = `Content found: ${verses.length}`;
           verses.forEach(verse => {
-            const verseContent = typeof verse['Verse Name'] === 'object' && verse['Verse Name'].url
-              ? `<a href="${verse['Verse Name'].url}" target="_blank">${verse['Verse Name'].text}</a>`
-              : verse['Verse Name'] || '';
-            const englishContent = typeof verse['Verse in English'] === 'object' && verse['Verse in English'].url
-              ? `<a href="${verse['Verse in English'].url}" target="_blank">${verse['Verse in English'].text}</a>`
-              : verse['Verse in English'] || '';
-            const refLink = verse['Reference Links and Files']
-              ? `<a href="${verse['Reference Links and Files']}" target="_blank">Link</a>`
-              : '';
             const row = document.createElement('tr');
-            row.innerHTML = `
-              <td>${verse['Verse Category'] || ''}</td>
-              <td>${verse['Sub Category'] || ''}</td>
-              <td>${verseContent}</td>
-              <td>${verse['Bengali Translation'] || ''}</td>
-              <td>${englishContent}</td>
-              <td>${verse['Hindi Meaning'] || ''}</td>
-              <td>${refLink}</td>
-              <td>${verse['SGS Remarks'] || ''}</td>
-              <td>${verse.sheet}</td>
-            `;
+            headers.forEach(header => {
+              const content = typeof verse[header] === 'object' && verse[header].url
+                ? `<a href="${verse[header].url}" target="_blank">${verse[header].text}</a>`
+                : verse[header] || '';
+              const td = document.createElement('td');
+              td.innerHTML = content;
+              row.appendChild(td);
+            });
+            const sheetTd = document.createElement('td');
+            sheetTd.textContent = verse.sheet;
+            row.appendChild(sheetTd);
             tbody.appendChild(row);
           });
         }

@@ -7,11 +7,10 @@
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     h2, .mission-statement { text-align: center; }
-    #filter, #sheetSelector { margin-bottom: 10px; padding: 5px; }
+    #categoryFilter, #sheetSelector { margin-bottom: 10px; padding: 5px; }
     table { border-collapse: collapse; width: 100%; max-width: 100%; overflow-x: auto; }
-    th { border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #4CAF50; color: white; }
+    th { border: 1px solid #ddd; padding: 8px; text-align: left; }
     td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    a { color: blue; text-decoration: underline; }
     .mission-statement { margin-bottom: 15px; padding: 10px; background-color: #f9f9f9; border-left: 4px solid #4CAF50; }
     .controls { margin-bottom: 15px; }
     .last-updated, .content-count { font-size: 0.9em; color: #666; margin-top: 10px; text-align: center; }
@@ -20,6 +19,10 @@
       th, td { padding: 4px; }
       .mission-statement { font-size: 0.9em; }
     }
+    /* Sheet-specific header colors */
+    th[data-sheet="Gita"] { background-color: orange; color: white; }
+    th[data-sheet="Bible"] { background-color: blue; color: white; }
+    th[data-sheet="Quran"] { background-color: darkgreen; color: white; }
   </style>
 </head>
 <body>
@@ -33,9 +36,14 @@
     <select id="sheetSelector" onchange="loadSheetData()">
       <option value="">Select a sheet</option>
     </select>
-    <label for="filter">Filter by Category:</label>
-    <select id="filter" onchange="filterVerses()">
-      <option value="">All Categories</option>
+    <label for="categoryFilter">Filter by Category:</label>
+    <select id="categoryFilter" onchange="filterTable()">
+      <option value="">All</option>
+      <option value="Universal or Ethical Verse">Universal or Ethical Verse</option>
+      <option value="General Intra-community Verse">General Intra-community Verse</option>
+      <option value="Controversial Intra-community Verse">Controversial Intra-community Verse</option>
+      <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
+      <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
     </select>
   </div>
   <div class="last-updated" id="lastUpdated">Last updated: loading...</div>
@@ -64,13 +72,19 @@
         });
 
         // Dynamically generate headers from the first row of each sheet
-        const firstSheetData = data[sheetNames[0]] || [];
-        const headers = firstSheetData.length > 0 ? Object.keys(firstSheetData[0]).filter(h => h !== 'sheet') : [];
+        const uniqueHeaders = new Set();
+        sheetNames.forEach(sheet => {
+          if (data[sheet].length > 0) {
+            Object.keys(data[sheet][0]).filter(h => h !== 'sheet').forEach(header => uniqueHeaders.add(header));
+          }
+        });
+        const headers = Array.from(uniqueHeaders);
         const thead = document.getElementById('tableHeaders');
         const headerRow = document.createElement('tr');
         headers.forEach(header => {
           const th = document.createElement('th');
           th.textContent = header;
+          th.setAttribute('data-sheet', sheetNames[0]); // Default color based on first sheet
           headerRow.appendChild(th);
         });
         const sheetTh = document.createElement('th');
@@ -78,30 +92,28 @@
         headerRow.appendChild(sheetTh);
         thead.appendChild(headerRow);
 
-        // Populate category filter
-        const categories = [...new Set(allVerses.map(v => v['Verse Category'] || '').filter(cat => cat.trim()))];
-        const filterSelect = document.getElementById('filter');
-        categories.forEach(cat => {
-          const option = document.createElement('option');
-          option.value = cat;
-          option.textContent = cat;
-          filterSelect.appendChild(option);
-        });
-
         // Display all verses initially
         displayVerses(allVerses);
 
         window.loadSheetData = function() {
           const selectedSheet = sheetSelect.value;
           const filtered = selectedSheet ? allVerses.filter(v => v.sheet === selectedSheet) : allVerses;
-          filterVerses(filtered);
+          updateHeaderColors(selectedSheet);
+          filterTable(filtered);
         };
 
-        window.filterVerses = function(filteredData = allVerses) {
-          const category = filterSelect.value;
+        window.filterTable = function(filteredData = allVerses) {
+          const category = document.getElementById('categoryFilter').value;
           const filtered = category ? filteredData.filter(v => (v['Verse Category'] || '') === category) : filteredData;
           displayVerses(filtered);
         };
+
+        function updateHeaderColors(sheet) {
+          const ths = document.querySelectorAll('th[data-sheet]');
+          ths.forEach(th => {
+            th.setAttribute('data-sheet', sheet || sheetNames[0]);
+          });
+        }
 
         function displayVerses(verses) {
           const tbody = document.getElementById('verseBody');

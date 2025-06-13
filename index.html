@@ -1,232 +1,73 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-        background-color: #f9f9f9;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-      h2 {
-        color: #333;
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 2.5em;
-        font-weight: bold;
-      }
-      .mission-statement {
-        text-align: center;
-        margin: 0 auto 20px auto;
-        max-width: 80%;
-        font-size: 1.1em;
-        line-height: 1.5;
-        font-weight: bold;
-      }
-      .mission-statement b {
-        color: #ff0000;
-      }
-      .mission-statement em {
-        color: #00ff00;
-      }
-      .controls {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 10px;
-        gap: 10px;
-      }
-      .meta-info {
-        text-align: left;
-        margin-bottom: 10px;
-        font-size: 0.9em;
-        color: #555;
-      }
-      select, input {
-        padding: 5px;
-      }
-      table {
-        border-collapse: collapse;
-        width: 100%;
-        margin: 0 auto;
-        background-color: #fff;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      }
-      th, td {
-        border: 1px solid #ddd;
-        padding: 10px;
-        text-align: center;
-      }
-      td a {
-        color: #0066cc;
-        text-decoration: none;
-      }
-      td a:hover {
-        text-decoration: underline;
-      }
-      td.category-universal { background-color: #00FF00; }
-      td.category-general { background-color: #00FFFF; }
-      td.category-controversial { background-color: #FFFF00; }
-      td.category-divisive { background-color: #FF0000; }
-      td.category-violent { background-color: #000000; color: #FFFFFF; }
-      @media (max-width: 600px) {
-        table { width: 100%; }
-        .mission-statement { font-size: 0.9em; max-width: 90%; }
-        h2 { font-size: 2em; }
-        .controls { flex-direction: column; }
-      }
-    </style>
-  </head>
-  <body>
-    <h2>SASTIK GBQ+</h2>
-    <div class="mission-statement">
-      সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে <b>🚫</b> সম্প্রীতি ও মানবতার পক্ষে <em>✅</em><br>
-      To propagate sane theism, against hatred and violence <b>🚫</b> in favor of harmony and humanity <em>✅</em>
-    </div>
-    <div class="meta-info" id="lastEdit">Last updated: Fetching...</div>
-    <div class="controls">
-      <label for="sheetSelector">Select Sheet:</label>
-      <select id="sheetSelector"></select>
-      <label for="categoryFilter">Verse Category:</label>
-      <select id="categoryFilter"></select>
-      <label for="subCategoryFilter">Sub Category:</label>
-      <select id="subCategoryFilter"></select>
-      <input type="text" id="searchInput" placeholder="Search...">
-      <span class="content-count" id="contentCount">Contents: 0</span>
-    </div>
-    <table id="verseTable">
-      <thead id="tableHeaders"></thead>
-      <tbody id="verseBody"></tbody>
-    </table>
-    <script>
-      let allData = {}, currentSheet = "", headers = [];
+<table id="verseTable">
+  <thead id="tableHeaders"></thead>
+  <tbody id="verseBody"></tbody>
+</table>
 
-      async function fetchCSV(sheetId, sheetName = '') {
-        const url = `https://docs.google.com/spreadsheets/d/e/${sheetId}/pub?output=csv&sheet=${sheetName}`;
-        const res = await fetch(url);
-        const text = await res.text();
-        const rows = text.split('\n').map(row => row.split(','));
-        const header = rows.shift();
-        return rows.map(row => Object.fromEntries(header.map((h, i) => [h, row[i]])));
-      }
+<script>
+  // global vars
+  let allData = [], headers = [];
 
-      async function fetchSheetNames(sheetId) {
-        const htmlUrl = `https://docs.google.com/spreadsheets/d/e/${sheetId}/pubhtml`;
-        const res = await fetch(htmlUrl);
-        const html = await res.text();
-        const matches = [...html.matchAll(/"docs-sheet-tab-name"[^>]*>(.*?)<\/div>/g)];
-        return matches.map(m => m[1]);
-      }
+  async function loadSheet() {
+    // example fetching data - replace this with your fetch
+    const data = await fetch("YOUR_DATA_SOURCE_URL").then(r => r.json());
+    allData = data;
+    headers = Object.keys(allData[0]);
+    buildTable();
+  }
 
-      async function init() {
-        const sheetId = '2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt';
-        const selector = document.getElementById("sheetSelector");
-        const sheets = await fetchSheetNames(sheetId);
-        sheets.forEach(s => {
+  function buildTable(filterCategory = "") {
+    const thead = document.getElementById("tableHeaders");
+    const tbody = document.getElementById("verseBody");
+
+    thead.innerHTML = "";
+    tbody.innerHTML = "";
+
+    // Build header row with a filter for "Verse Category"
+    const trHead = document.createElement("tr");
+
+    headers.forEach(hdr => {
+      const th = document.createElement("th");
+      if (hdr === "Verse Category") {
+        // Create select dropdown for filtering categories
+        const select = document.createElement("select");
+        const categories = [...new Set(allData.map(row => row[hdr]).filter(Boolean))];
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = "All Categories";
+        select.appendChild(defaultOption);
+
+        categories.forEach(cat => {
           const opt = document.createElement("option");
-          opt.value = s;
-          opt.textContent = s;
-          selector.appendChild(opt);
-        });
-        selector.addEventListener("change", () => loadSheet(sheetId, selector.value));
-        document.getElementById("searchInput").addEventListener("input", searchTable);
-        document.getElementById("categoryFilter").addEventListener("change", filterTable);
-        document.getElementById("subCategoryFilter").addEventListener("change", filterTable);
-        loadSheet(sheetId, sheets[0]);
-      }
-
-      async function loadSheet(sheetId, sheetName) {
-        currentSheet = sheetName;
-        const rows = await fetchCSV(sheetId, sheetName);
-        if (!rows.length) return;
-        headers = Object.keys(rows[0]);
-        allData[sheetName] = rows;
-        buildTable(headers, rows);
-        buildFilters(rows);
-        document.getElementById("lastEdit").textContent = `Last updated: ${new Date().toLocaleString()}`;
-      }
-
-      function buildTable(headers, data) {
-        const thead = document.getElementById("tableHeaders");
-        const tbody = document.getElementById("verseBody");
-        thead.innerHTML = "";
-        tbody.innerHTML = "";
-
-        const tr = document.createElement("tr");
-        headers.forEach(h => {
-          const th = document.createElement("th");
-          th.textContent = h;
-          tr.appendChild(th);
-        });
-        thead.appendChild(tr);
-
-        data.forEach(row => {
-          const tr = document.createElement("tr");
-          headers.forEach((key, i) => {
-            const td = document.createElement("td");
-            const val = row[key] || "";
-            if (key === "Verse Category") td.className = getCategoryClass(val.toLowerCase());
-            td.innerHTML = parseHyperlink(val);
-            tr.appendChild(td);
-          });
-          tbody.appendChild(tr);
+          opt.value = cat;
+          opt.textContent = cat;
+          select.appendChild(opt);
         });
 
-        document.getElementById("contentCount").textContent = `Contents: ${data.length}`;
-      }
+        select.value = filterCategory;
+        select.addEventListener("change", e => buildTable(e.target.value));
 
-      function getCategoryClass(cat) {
-        if (cat.includes("universal")) return "category-universal";
-        if (cat.includes("general")) return "category-general";
-        if (cat.includes("controversial")) return "category-controversial";
-        if (cat.includes("divisive")) return "category-divisive";
-        if (cat.includes("violent")) return "category-violent";
-        return "";
+        th.appendChild(select);
+      } else {
+        th.textContent = hdr;
       }
+      trHead.appendChild(th);
+    });
+    thead.appendChild(trHead);
 
-      function parseHyperlink(cell) {
-        if (cell?.includes("http")) {
-          const [text, url] = cell.split("||");
-          return `<a href="${url || text}" target="_blank">${text || url}</a>`;
-        }
-        return cell;
-      }
+    // Filter rows if category selected
+    let filteredData = filterCategory ? allData.filter(r => r["Verse Category"] === filterCategory) : allData;
 
-      function buildFilters(data) {
-        const catSet = new Set();
-        const subSet = new Set();
-        data.forEach(r => {
-          catSet.add(r["Verse Category"]);
-          subSet.add(r["Sub Category"]);
-        });
-        const catFilter = document.getElementById("categoryFilter");
-        const subFilter = document.getElementById("subCategoryFilter");
-        catFilter.innerHTML = '<option value="">All</option>';
-        subFilter.innerHTML = '<option value="">All</option>';
-        catSet.forEach(c => { if (c) catFilter.innerHTML += `<option value="${c}">${c}</option>`; });
-        subSet.forEach(s => { if (s) subFilter.innerHTML += `<option value="${s}">${s}</option>`; });
-      }
+    // Build rows
+    filteredData.forEach(row => {
+      const tr = document.createElement("tr");
+      headers.forEach(hdr => {
+        const td = document.createElement("td");
+        td.textContent = row[hdr] || "";
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+  }
 
-      function filterTable() {
-        const cat = document.getElementById("categoryFilter").value;
-        const sub = document.getElementById("subCategoryFilter").value;
-        let filtered = allData[currentSheet] || [];
-        if (cat) filtered = filtered.filter(r => r["Verse Category"] === cat);
-        if (sub) filtered = filtered.filter(r => r["Sub Category"] === sub);
-        buildTable(headers, filtered);
-      }
-
-      function searchTable() {
-        const keyword = document.getElementById("searchInput").value.toLowerCase();
-        let filtered = allData[currentSheet] || [];
-        filtered = filtered.filter(row => Object.values(row).some(val => (val || "").toLowerCase().includes(keyword)));
-        buildTable(headers, filtered);
-      }
-
-      init();
-    </script>
-  </body>
-</html>
+  loadSheet();
+</script>

@@ -94,7 +94,7 @@
       max-width: 80%; 
       margin: 0 auto; 
       padding: 10px 0; 
-      z-index: -1; /* Behind content */
+      z-index: 1; /* Ensure above other content */
     }
     .footer a { 
       text-decoration: none; 
@@ -130,6 +130,13 @@
       font-size: 2em; /* Match SASTIK GBQ+ */
       margin: 5px 0; 
     }
+    .contact-text { 
+      white-space: nowrap; /* Force single line */
+      font-size: 1.1em; 
+      max-width: 100%; /* Ensure full width */
+      overflow: hidden; /* Prevent overflow */
+      text-overflow: ellipsis; /* Optional: truncate with ellipsis if too long */
+    }
     .contact-text img { 
       width: 30px; /* Smaller to match 1.1em text */
       height: auto; 
@@ -148,6 +155,7 @@
       .logos img { width: 45px; margin-right: 3px; }
       .logos img:last-child { margin-right: 0; }
       .follow-text, .contact-text { font-size: 0.9em; }
+      .contact-text { max-width: 90%; }
       .contact-text img { width: 20px; }
     }
   </style>
@@ -201,9 +209,9 @@
     <div class="text-group">
       <div class="follow-text">For more insights, follow me on 👇</div>
       <div class="logos">
-        <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="facebook_logo.png" alt="Facebook"></a>
-        <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="youtube_logo.png" alt="YouTube"></a>
-        <a href="https://x.com/subhendug1793" target="_blank"><img src="x_logo.png" alt="X" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/4/4f/X_icon_2023.svg';console.log('X logo fallback to SVG');"></a>
+        <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="facebook_logo.png" alt="Facebook" onload="console.log('Facebook logo loaded')" onerror="console.log('Facebook logo failed to load')"></a>
+        <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="youtube_logo.png" alt="YouTube" onload="console.log('YouTube logo loaded')" onerror="console.log('YouTube logo failed to load')"></a>
+        <a href="https://x.com/subhendug1793" target="_blank"><img src="x_logo.png" alt="X" onload="console.log('X logo loaded')" onerror="console.log('X logo failed to load or fallback to SVG')"></a>
       </div>
       <div class="name-text">Subhendu Ghosh Sastik</div>
       <div class="contact-text">If you want to contribute the verse or connect with us, contact me at <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram"></a> Telegram or <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="gmail_logo.png" alt="Mail"></a>sastikofficial@gmail.com</div>

@@ -89,7 +89,7 @@
       left: 50%; 
       transform: translateX(-50%); 
       display: flex; 
-      flex-direction: row; 
+      flex-direction: column; 
       align-items: center; 
       max-width: 80%; 
       margin: 0 auto; 
@@ -101,22 +101,13 @@
       margin: 0 5px; 
     }
     .footer img { 
-      width: 60px; /* Adjusted to match header logo proportion */
-      height: auto; 
       vertical-align: middle; 
-    }
-    .footer .logos { 
-      display: flex; 
-      flex-direction: row; 
-      align-items: center; 
-      margin-right: 20px; 
     }
     .footer .text-group { 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       text-align: center; 
-      flex-grow: 1; 
     }
     .footer .follow-text, .footer .contact-text { 
       font-size: 1.1em; /* Match mission statement size */
@@ -125,6 +116,22 @@
     .footer .name-text { 
       font-size: 2em; /* Match SASTIK GBQ+ */
       margin: 5px 0; 
+      display: flex; 
+      align-items: center; 
+    }
+    .footer .name-text img { 
+      width: 60px; 
+      height: auto; 
+      margin-right: 10px; 
+    }
+    .footer .contact-text { 
+      white-space: nowrap; /* Force single line */
+      font-size: 1.1em; 
+    }
+    .footer .contact-text img { 
+      width: 30px; /* Smaller to match 1.1em text */
+      height: auto; 
+      margin: 0 5px; 
     }
     @media (max-width: 600px) {
       table { width: 100%; }
@@ -137,9 +144,10 @@
       .header-container { flex-direction: column; text-align: center; }
       .logo { margin-right: 0; margin-bottom: 10px; width: 60px; }
       .footer { top: 65%; font-size: 1.5em; max-width: 90%; }
-      .footer img { width: 45px; }
-      .footer .follow-text, .footer .contact-text { font-size: 0.9em; }
       .footer .name-text { font-size: 1.5em; }
+      .footer .name-text img { width: 45px; }
+      .footer .follow-text, .footer .contact-text { font-size: 0.9em; }
+      .footer .contact-text img { width: 20px; }
     }
   </style>
 </head>
@@ -189,15 +197,15 @@
     <tbody id="verseBody"></tbody>
   </table>
   <div class="footer">
-    <div class="logos">
-      <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook"></a>
-      <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube"></a>
-      <a href="https://x.com/subhendug1793" target="_blank"><img src="x_logo.png" alt="X" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/4/4f/X_icon_2023.svg';console.log('X logo fallback to SVG');"></a>
-    </div>
     <div class="text-group">
       <div class="follow-text">For more insights, follow me on 👇</div>
-      <div class="name-text">Subhendu Ghosh Sastik</div>
-      <div class="contact-text">If you want to contribute the verse or connect with us, contact me at <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" style="width: 60px; height: auto; vertical-align: middle;"> Telegram</a> or <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="gmail_logo.png" alt="Mail" style="width: 60px; height: auto; vertical-align: middle;"> sastikofficial@gmail.com</a></div>
+      <div class="name-text">
+        <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook"></a>
+        <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube"></a>
+        <a href="https://x.com/subhendug1793" target="_blank"><img src="x_logo.png" alt="X" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/4/4f/X_icon_2023.svg';console.log('X logo fallback to SVG');"></a>
+        Subhendu Ghosh Sastik
+      </div>
+      <div class="contact-text">If you want to contribute the verse or connect with us, contact me at <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram"></a> Telegram or <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="gmail_logo.png" alt="Mail"></a> sastikofficial@gmail.com</div>
     </div>
   </div>
 

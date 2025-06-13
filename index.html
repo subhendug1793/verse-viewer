@@ -98,7 +98,6 @@
     }
     .footer a { 
       text-decoration: none; 
-      margin: 0 5px; 
     }
     .footer img { 
       vertical-align: middle; 
@@ -118,20 +117,22 @@
       margin: 5px 0; 
       display: flex; 
       align-items: center; 
+      gap: 0; /* Remove gap between logos */
     }
     .footer .name-text img { 
       width: 60px; 
       height: auto; 
-      margin-right: 10px; 
     }
     .footer .contact-text { 
       white-space: nowrap; /* Force single line */
       font-size: 1.1em; 
+      display: flex; 
+      align-items: center; 
+      gap: 0; /* Remove gap between logos and text */
     }
     .footer .contact-text img { 
       width: 30px; /* Smaller to match 1.1em text */
       height: auto; 
-      margin: 0 5px; 
     }
     @media (max-width: 600px) {
       table { width: 100%; }
@@ -205,7 +206,7 @@
         <a href="https://x.com/subhendug1793" target="_blank"><img src="x_logo.png" alt="X" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/4/4f/X_icon_2023.svg';console.log('X logo fallback to SVG');"></a>
         Subhendu Ghosh Sastik
       </div>
-      <div class="contact-text">If you want to contribute the verse or connect with us, contact me at <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram"></a> Telegram or <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="gmail_logo.png" alt="Mail"></a> sastikofficial@gmail.com</div>
+      <div class="contact-text">If you want to contribute the verse or connect with us, contact me at <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram"></a>Telegram or <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="gmail_logo.png" alt="Mail"></a>sastikofficial@gmail.com</div>
     </div>
   </div>
 
@@ -276,7 +277,7 @@
         let td = document.createElement("td");
         td.textContent = "No data available or error loading data";
         td.colSpan = Object.keys(data[0] || {}).length;
-        td.style.textAlign = "center";
+        td.style.text-align = "center";
         tr.appendChild(td);
         tbody.appendChild(tr);
       } else {

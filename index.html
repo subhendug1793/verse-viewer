@@ -201,12 +201,12 @@
     <div class="text-group">
       <div class="follow-text">For more insights, follow me on 👇</div>
       <div class="name-text">
-        <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook"></a>
-        <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube"></a>
+        <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="facebook_logo.png" alt="Facebook"></a>
+        <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="youtube_logo.png" alt="YouTube"></a>
         <a href="https://x.com/subhendug1793" target="_blank"><img src="x_logo.png" alt="X" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/4/4f/X_icon_2023.svg';console.log('X logo fallback to SVG');"></a>
         Subhendu Ghosh Sastik
       </div>
-      <div class="contact-text">If you want to contribute the verse or connect with us, contact me at  <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram"></a> Telegram or  <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="gmail_logo.png" alt="Mail"></a>sastikofficial@gmail.com</div>
+      <div class="contact-text">If you want to contribute the verse or connect with us, contact me at <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram"></a> Telegram or <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="gmail_logo.png" alt="Mail"></a>sastikofficial@gmail.com</div>
     </div>
   </div>
 
@@ -218,7 +218,9 @@
       if (sheetName) {
         fetch(`${sheetName}.json`)
           .then(response => {
-            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status} - Check if ${sheetName}.json exists in the repository`);
+            }
             return response.json();
           })
           .then(sheetData => {
@@ -228,7 +230,11 @@
             updateContentCount(data.length);
             console.log("Loaded data for sheet:", sheetName, "Rows:", data.length, "Sample Verse Category:", data[0] ? data[0]["Verse Category "] : "N/A", "Full Data:", data);
           })
-          .catch(error => console.error("Error loading JSON:", error));
+          .catch(error => {
+            console.error("Error loading JSON:", error.message);
+            document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${sheetName}.json: ${error.message}</td></tr>`;
+            updateContentCount(0);
+          });
       } else {
         document.getElementById("verseBody").innerHTML = "";
         document.getElementById("tableHeaders").innerHTML = "";
@@ -276,8 +282,8 @@
         let tr = document.createElement("tr");
         let td = document.createElement("td");
         td.textContent = "No data available or error loading data";
-        td.colSpan = Object.keys(data[0] || {}).length;
-        td.style.text-align = "center";
+        td.colSpan = Object.keys(data[0] || {}).length || 1;
+        td.style.textAlign = "center";
         tr.appendChild(td);
         tbody.appendChild(tr);
       } else {
@@ -351,8 +357,13 @@
     }
 
     function updateLastUpdated() {
-      const lastUpdated = new Date(document.lastModified).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }).replace(/,\s\d{4}$/, '');
-      document.getElementById("lastUpdated").textContent = `Last updated: ${lastUpdated}`;
+      try {
+        const lastUpdated = new Date(document.lastModified).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }).replace(/,\s\d{4}$/, '');
+        document.getElementById("lastUpdated").textContent = `Last updated: ${lastUpdated}`;
+      } catch (error) {
+        console.error("Error updating last modified:", error);
+        document.getElementById("lastUpdated").textContent = `Last updated: Unknown`;
+      }
     }
 
     window.onload = updateLastUpdated;

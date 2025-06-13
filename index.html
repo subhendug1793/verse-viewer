@@ -12,26 +12,45 @@
       position: relative; 
       min-height: 100vh; /* Ensure body covers full height for watermark */
     }
+    .follow-line { 
+      text-align: center; 
+      font-size: 1.2em; 
+      color: #333; 
+      margin-bottom: 10px; 
+    }
     .watermark { 
       position: fixed; 
       top: 50%; 
       left: 50%; 
       transform: translate(-50%, -50%); 
-      font-size: 3em; 
+      font-size: 4em; /* Increased from 3em */
       color: #333; 
-      opacity: 0.2; 
-      pointer-events: none; /* Prevent interaction */
+      opacity: 1; /* Full visibility */
+      pointer-events: none; /* Prevent interaction with text */
       display: flex; 
       align-items: center; 
       z-index: -1; /* Behind content */
     }
+    .watermark a { 
+      pointer-events: auto; /* Enable interaction with links */
+      margin-right: 10px; 
+      text-decoration: none; 
+    }
     .watermark img { 
-      width: 40px; 
+      width: 60px; /* Increased from 40px */
       height: auto; 
+      vertical-align: middle; /* Align logos on the same line */
       margin-right: 10px; 
     }
     .watermark span { 
       font-weight: bold; 
+      vertical-align: middle; /* Align text with logos */
+    }
+    .contact-line { 
+      text-align: center; 
+      font-size: 1em; 
+      color: #333; 
+      margin-top: 10px; 
     }
     .header-container { 
       display: flex; 
@@ -48,7 +67,7 @@
       color: #333; 
       text-align: center; 
       margin: 0; 
-      font-size: 2em; /* Reduced from 2.5em to fit with logo */
+      font-size: 2em; /* Reduced to fit with logo */
       font-weight: bold; 
       white-space: nowrap; /* Keep text on one line */
     }
@@ -107,15 +126,15 @@
     @media (max-width: 600px) {
       table { width: 100%; }
       .mission-statement { font-size: 0.9em; max-width: 90%; }
-      h2 { font-size: 1.5em; } /* Further reduced on mobile */
+      h2 { font-size: 1.5em; }
       select, input { width: 100%; margin-bottom: 10px; }
       .controls { flex-direction: column; align-items: center; }
       .header-info { position: static; text-align: right; margin-top: 10px; }
       .content-count { margin-top: 10px; }
       .header-container { flex-direction: column; text-align: center; }
-      .logo { margin-right: 0; margin-bottom: 10px; width: 60px; } /* Smaller on mobile */
-      .watermark { font-size: 2em; }
-      .watermark img { width: 30px; }
+      .logo { margin-right: 0; margin-bottom: 10px; width: 60px; }
+      .watermark { font-size: 3em; }
+      .watermark img { width: 45px; }
     }
   </style>
 </head>
@@ -124,15 +143,17 @@
     <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
   </div>
   <div class="header-container">
-    <img src="logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('Logo failed to load');">
+    <img src="sastik_logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('SASTIK logo failed to load');">
     <h2>SASTIK GBQ+</h2>
   </div>
+  <div class="follow-line">For more insights, follow me on 👇</div>
   <div class="watermark">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/X_icon_2023.svg" alt="X">
+    <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook"></a>
+    <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube"></a>
+    <a href="https://x.com/subhendug1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/X_icon_2023.svg" alt="X"></a>
     <span>Subhendu Ghosh Sastik</span>
   </div>
+  <div class="contact-line">If you want to contribute the verse or connect with us, contact me at sastikofficial@gmail.com</div>
   <div class="mission-statement">
     সুস্থ আস্তিকতা প্রচারের উদ্দেষ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে <b>🚫</b> সম্প্রীতি ও মানবতার পক্ষে <em>✅</em><br>
     To propagate sane theism, against hatred and violence <b>🚫</b> in favor of harmony and humanity <em>✅</em>

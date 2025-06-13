@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>SASTIK GBQ+ with Verse Category Filter</title>
+  <meta charset="UTF-8">
+  <title>SASTIK GBQ+</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -42,37 +42,17 @@
       border-radius: 5px;
       font-weight: bold;
     }
-    #filterContainer {
-      margin: 20px auto;
-      max-width: 95%;
-      text-align: center;
+    .iframe-container {
+      padding: 10px;
     }
-    #categoryFilter {
-      font-size: 1em;
-      padding: 6px 12px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-    table {
-      margin: 0 auto 40px;
-      border-collapse: collapse;
-      width: 95%;
-      background: white;
-      box-shadow: 0 0 8px rgb(0 0 0 / 0.1);
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: center;
-    }
-    th {
-      background-color: #3e8e41;
-      color: white;
+    iframe {
+      width: 100%;
+      height: 88vh;
+      border: none;
     }
     @media (max-width: 768px) {
       .tagline { font-size: 0.95em; }
       .open-btn { padding: 8px 16px; }
-      table, th, td { font-size: 12px; }
     }
   </style>
 </head>
@@ -89,108 +69,14 @@
     </a>
   </div>
 
-  <div id="filterContainer">
-    <label for="categoryFilter">Filter by Verse Category: </label>
-    <select id="categoryFilter">
-      <option value="">All Categories</option>
-    </select>
-  </div>
-
-  <div id="tableContainer">
-    <table id="verseTable">
-      <thead></thead>
-      <tbody></tbody>
-    </table>
+  <div class="iframe-container">
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml?widget=true&amp;headers=false"></iframe>
   </div>
 
   <script>
-    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pub?output=csv';
-
-    // Basic CSV parsing function
-    function parseCSV(text) {
-      const lines = text.trim().split('\n');
-      const headers = lines[0].split(',');
-      return lines.slice(1).map(line => {
-        const values = line.split(',');
-        const obj = {};
-        headers.forEach((header, i) => {
-          obj[header.trim()] = values[i] ? values[i].trim() : '';
-        });
-        return obj;
-      });
-    }
-
-    let allData = [];
-    let headers = [];
-
-    function buildTable(data) {
-      const thead = document.querySelector('#verseTable thead');
-      const tbody = document.querySelector('#verseTable tbody');
-      thead.innerHTML = '';
-      tbody.innerHTML = '';
-
-      // Build headers
-      const trHead = document.createElement('tr');
-      headers.forEach(hdr => {
-        const th = document.createElement('th');
-        th.textContent = hdr;
-        trHead.appendChild(th);
-      });
-      thead.appendChild(trHead);
-
-      // Build rows
-      data.forEach(row => {
-        const tr = document.createElement('tr');
-        headers.forEach(hdr => {
-          const td = document.createElement('td');
-          td.textContent = row[hdr] || '';
-          tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
-      });
-    }
-
-    function populateCategoryFilter(data) {
-      const select = document.getElementById('categoryFilter');
-      const categories = [...new Set(data.map(d => d['Verse Category']).filter(c => c))].sort();
-
-      categories.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat;
-        option.textContent = cat;
-        select.appendChild(option);
-      });
-    }
-
-    function filterTableByCategory(category) {
-      if (!category) {
-        buildTable(allData);
-      } else {
-        const filtered = allData.filter(row => row['Verse Category'] === category);
-        buildTable(filtered);
-      }
-    }
-
-    // Load and parse CSV data
-    fetch(csvUrl)
-      .then(response => response.text())
-      .then(text => {
-        allData = parseCSV(text);
-        headers = Object.keys(allData[0]);
-        populateCategoryFilter(allData);
-        buildTable(allData);
-
-        // Update last updated date (using current time)
-        document.getElementById('lastUpdated').textContent = "Last updated: " + new Date().toLocaleString();
-      })
-      .catch(err => {
-        console.error('Error loading CSV:', err);
-        document.getElementById('lastUpdated').textContent = "Failed to load data";
-      });
-
-    document.getElementById('categoryFilter').addEventListener('change', e => {
-      filterTableByCategory(e.target.value);
-    });
+    // Display current time as a basic "Last updated"
+    const now = new Date();
+    document.getElementById('lastUpdated').textContent = "Last updated: " + now.toLocaleString();
   </script>
 </body>
 </html>

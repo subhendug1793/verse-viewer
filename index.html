@@ -1,275 +1,176 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-        background-color: #f9f9f9;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-      h2 {
-        color: #333;
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 2.5em;
-        font-weight: bold;
-      }
-      .mission-statement {
-        text-align: center;
-        margin: 0 auto 20px auto;
-        max-width: 80%;
-        font-size: 1.1em;
-        line-height: 1.5;
-        font-weight: bold;
-      }
-      .mission-statement b {
-        color: #ff0000; /* Red for 🚫 */
-      }
-      .mission-statement em {
-        color: #00ff00; /* Green for ✅ */
-      }
-      .controls {
-        margin-bottom: 20px;
-        text-align: center;
-        position: relative;
-      }
-      .content-count {
-        position: absolute;
-        top: 0;
-        right: 0;
-        font-size: 1em;
-        color: #333;
-      }
-      select, input {
-        padding: 5px;
-        margin-right: 10px;
-      }
-      table {
-        border-collapse: collapse;
-        width: 80%;
-        margin: 0 auto;
-        background-color: #fff;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        flex-grow: 1;
-      }
-      th, td {
-        border: 1px solid #ddd;
-        padding: 10px;
-        text-align: center;
-      }
-      td a {
-        color: #0066cc;
-        text-decoration: none;
-      }
-      td a:hover {
-        text-decoration: underline;
-      }
-      /* Color Verse Category items */
-      td.category-universal { background-color: #00FF00; } /* Green */
-      td.category-general { background-color: #00FFFF; } /* Cyan */
-      td.category-controversial { background-color: #FFFF00; } /* Yellow */
-      td.category-divisive { background-color: #FF0000; } /* Red */
-      td.category-violent { background-color: #000000; color: #FFFFFF; } /* Black with white text */
-      /* Responsive Design */
-      @media (max-width: 600px) {
-        table { width: 100%; }
-        .mission-statement { font-size: 0.9em; max-width: 90%; }
-        h2 { font-size: 2em; }
-        select, input { width: 100%; margin-bottom: 10px; }
-        .controls { flex-direction: column; align-items: center; }
-        .content-count { position: static; text-align: center; margin-top: 10px; }
-      }
-    </style>
-  </head>
-  <body>
-    <h2>SASTIK GBQ+</h2>
-    <div class="mission-statement">
-      সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে <b>🚫</b> সম্প্রীতি ও মানবতার পক্ষে <em>✅</em><br>
-      To propagate sane theism, against hatred and violence <b>🚫</b> in favor of harmony and humanity <em>✅</em>
-    </div>
-    <div class="controls">
-      <label for="sheetSelector">Select Sheet:</label>
-      <select id="sheetSelector" onchange="loadSheetData()">
-        <option value="">Select a sheet</option>
-      </select>
-      <label for="categoryFilter">Filter by Category:</label>
-      <select id="categoryFilter" onchange="filterTable()">
-        <option value="">All</option>
-        <option value="Universal or Ethical Verse">Universal or Ethical Verse</option>
-        <option value="General Intra-community Verse">General Intra-community Verse</option>
-        <option value="Controversial Intra-community Verse">Controversial Intra-community Verse</option>
-        <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
-        <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
-      </select>
-      <input type="text" id="searchInput" placeholder="Search in table..." onkeyup="searchTable()">
-      <div class="content-count" id="contentCount">Contents: 0</div>
-    </div>
-    <table id="verseTable">
-      <thead id="tableHeaders"></thead>
-      <tbody id="verseBody"></tbody>
-    </table>
-    <script>
-      let data = [];
-      let hyperlinks = [];
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SASTIK GBQ+ Verse Filter</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
+    h2 { color: #333; text-align: center; margin-bottom: 20px; font-size: 2.5em; font-weight: bold; }
+    .mission-statement { text-align: center; margin: 0 auto 20px; max-width: 80%; font-size: 1.1em; line-height: 1.5; font-weight: bold; }
+    .mission-statement b { color: #ff0000; }
+    .mission-statement em { color: #00ff00; }
+    .controls { margin-bottom: 20px; text-align: center; position: relative; }
+    .content-count { position: absolute; top: 0; right: 0; font-size: 1em; color: #333; }
+    select, input { padding: 5px; margin-right: 10px; }
+    table { border-collapse: collapse; width: 80%; margin: 0 auto; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+    td a { color: #0066cc; text-decoration: none; }
+    td a:hover { text-decoration: underline; }
+    td.category-universal { background-color: #00FF00; }
+    td.category-general { background-color: #00FFFF; }
+    td.category-controversial { background-color: #FFFF00; }
+    td.category-divisive { background-color: #FF0000; }
+    td.category-violent { background-color: #000000; color: #FFFFFF; }
+    @media (max-width: 600px) {
+      table { width: 100%; }
+      .mission-statement { font-size: 0.9em; max-width: 90%; }
+      h2 { font-size: 2em; }
+      select, input { width: 100%; margin-bottom: 10px; }
+      .controls { flex-direction: column; align-items: center; }
+      .content-count { position: static; text-align: center; margin-top: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <h2>SASTIK GBQ+</h2>
+  <div class="mission-statement">
+    সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে <b>🚫</b> সম্প্রীতি ও মানবতার পক্ষে <em>✅</em><br>
+    To propagate sane theism, against hatred and violence <b>🚫</b> in favor of harmony and humanity <em>✅</em>
+  </div>
+  <div class="controls">
+    <label for="sheetSelector">Select Sheet:</label>
+    <select id="sheetSelector" onchange="loadSheetData()">
+      <option value="">Select a sheet</option>
+      <option value="gita">Gita</option>
+      <option value="bible">Bible</option>
+      <option value="quran">Quran</option>
+      <option value="hadith">Hadith</option>
+      <option value="miscellaneous">Miscellaneous</option>
+    </select>
+    <label for="categoryFilter">Filter by Category:</label>
+    <select id="categoryFilter" onchange="filterTable()">
+      <option value="">All</option>
+      <option value="Universal or Ethical Verse">Universal or Ethical Verse</option>
+      <option value="General Intra-community Verse">General Intra-community Verse</option>
+      <option value="Controversial Intra-community Verse">Controversial Intra-community Verse</option>
+      <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
+      <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
+    </select>
+    <input type="text" id="searchInput" placeholder="Search in table..." onkeyup="searchTable()">
+    <div class="content-count" id="contentCount">Contents: 0</div>
+  </div>
+  <table id="verseTable">
+    <thead id="tableHeaders"></thead>
+    <tbody id="verseBody"></tbody>
+  </table>
 
-      function loadSheetData() {
-        const sheetName = document.getElementById("sheetSelector").value;
-        if (sheetName) {
-          google.script.run.withSuccessHandler(function(dataObj) {
-            data = dataObj.rows;
-            hyperlinks = dataObj.hyperlinks || [];
-            updateHeaders(dataObj.headers, dataObj.headerColors);
-            updateTable(data, hyperlinks, dataObj.totalRows);
+  <script>
+    let data = [];
+
+    function loadSheetData() {
+      const sheetName = document.getElementById("sheetSelector").value;
+      if (sheetName) {
+        fetch(`${sheetName}.json`)
+          .then(response => response.json())
+          .then(sheetData => {
+            data = sheetData;
+            updateHeaders();
+            updateTable(data);
             updateContentCount(data.length);
-            console.log("Loaded data for sheet:", sheetName, "Rows:", data.length, "Sample row[0]:", data[0] ? data[0][0] : "N/A");
-          }).getSheetData(sheetName, "");
-        } else {
-          document.getElementById("verseBody").innerHTML = "";
-          document.getElementById("tableHeaders").innerHTML = "";
-          updateContentCount(0);
-        }
+            console.log("Loaded data for sheet:", sheetName, "Rows:", data.length, "Sample Verse Category:", data[0] ? data[0]["Verse Category"] : "N/A");
+          })
+          .catch(error => console.error("Error loading JSON:", error));
+      } else {
+        document.getElementById("verseBody").innerHTML = "";
+        document.getElementById("tableHeaders").innerHTML = "";
+        updateContentCount(0);
       }
+    }
 
-      function updateHeaders(headers, headerColors) {
-        const thead = document.getElementById("tableHeaders");
-        thead.innerHTML = "";
+    function updateHeaders() {
+      const thead = document.getElementById("tableHeaders");
+      thead.innerHTML = "";
+      if (data.length > 0) {
         let tr = document.createElement("tr");
-        headers.forEach((header, index) => {
-          if (header && header.trim()) {
-            let th = document.createElement("th");
-            th.textContent = header.trim();
-            th.style.backgroundColor = headerColors[index] || "#4CAF50";
-            th.style.color = getTextColor(headerColors[index]);
-            tr.appendChild(th);
-          }
+        const headers = Object.keys(data[0]).filter(h => h !== "sheet");
+        headers.forEach(header => {
+          let th = document.createElement("th");
+          th.textContent = header;
+          tr.appendChild(th);
         });
+        let thSheet = document.createElement("th");
+        thSheet.textContent = "Sheet";
+        tr.appendChild(thSheet);
         thead.appendChild(tr);
       }
+    }
 
-      function getTextColor(backgroundColor) {
-        if (!backgroundColor) return "#000000";
-        const rgb = hexToRgb(backgroundColor);
-        if (rgb) {
-          const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
-          return brightness > 128 ? "#000000" : "#FFFFFF";
-        }
-        return "#000000";
-      }
-
-      function hexToRgb(hex) {
-        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? {
-          r: parseInt(result[1], 16),
-          g: parseInt(result[2], 16),
-          b: parseInt(result[3], 16)
-        } : null;
-      }
-
-      function updateTable(rows, hyperlinks, totalRows) {
-        const tbody = document.getElementById("verseBody");
-        tbody.innerHTML = "";
-        rows.forEach((row, rowIndex) => {
-          let tr = document.createElement("tr");
-          row.forEach((cell, colIndex) => {
-            let td = document.createElement("td");
-            // Apply color coding to Verse Category (index 0)
-            if (colIndex === 0 && typeof cell === "string") {
-              td.className = getCategoryClass(cell.trim().toLowerCase());
-            }
-            // Apply hyperlink to Verse Name (index 2, adjusted based on headers)
-            const headers = document.querySelectorAll('#tableHeaders th');
-            const verseNameIndex = Array.from(headers).findIndex(th => th.textContent.trim() === 'Verse Name');
-            const refLinkIndex = Array.from(headers).findIndex(th => th.textContent.trim() === 'Reference Links and Files');
-            if (verseNameIndex === colIndex && hyperlinks[rowIndex] && hyperlinks[rowIndex][0]) {
-              let linkUrl = hyperlinks[rowIndex][0];
-              if (linkUrl && linkUrl.trim().length > 0) {
-                let displayText = row[verseNameIndex] || hyperlinks[rowIndex][1] || "Link";
-                let a = document.createElement("a");
-                a.href = linkUrl;
-                a.textContent = displayText;
-                a.target = "_blank";
-                td.appendChild(a);
-              } else {
-                td.textContent = row[colIndex] || "";
-              }
-            } else {
-              td.textContent = cell || "";
-            }
-            tr.appendChild(td);
-          });
-          tbody.appendChild(tr);
-        });
-        updateContentCount(rows.length);
-      }
-
-      function getCategoryClass(category) {
-        switch (category.toLowerCase()) {
-          case "universal or ethical verse": return "category-universal";
-          case "general intra-community verse": return "category-general";
-          case "controversial intra-community verse": return "category-controversial";
-          case "divisive or hateful inter-community verse": return "category-divisive";
-          case "violent or aggressive inter-community verse": return "category-violent";
-          default: return "";
-        }
-      }
-
-      function filterTable() {
-        const sheetName = document.getElementById("sheetSelector").value;
-        const category = document.getElementById("categoryFilter").value;
-        if (sheetName) {
-          google.script.run.withSuccessHandler(function(dataObj) {
-            data = dataObj.rows;
-            hyperlinks = dataObj.hyperlinks || [];
-            updateHeaders(dataObj.headers, dataObj.headerColors);
-            let filteredRows = category === "" ? data : data.filter(row => 
-              row[0] && typeof row[0] === "string" && row[0].trim().toLowerCase() === category.toLowerCase()
-            );
-            let filteredHyperlinks = category === "" ? hyperlinks : hyperlinks.filter((_, i) => 
-              data[i] && data[i][0] && typeof data[i][0] === "string" && data[i][0].trim().toLowerCase() === category.toLowerCase()
-            );
-            console.log("Filter category:", category, "Filtered rows:", filteredRows.length, "Sample filtered row[0]:", filteredRows[0] ? filteredRows[0][0] : "N/A");
-            updateTable(filteredRows, filteredHyperlinks, dataObj.totalRows);
-          }).getSheetData(sheetName, category);
-        }
-      }
-
-      function searchTable() {
-        let input = document.getElementById("searchInput").value.toLowerCase();
-        let rows = document.getElementById("verseBody").getElementsByTagName("tr");
-        let visibleCount = 0;
-        for (let i = 0; i < rows.length; i++) {
-          let cells = rows[i].getElementsByTagName("td");
-          let found = false;
-          for (let j = 0; j < cells.length; j++) {
-            let text = cells[j].textContent.toLowerCase();
-            if (text.includes(input)) {
-              found = true;
-              break;
-            }
+    function updateTable(rows) {
+      const tbody = document.getElementById("verseBody");
+      tbody.innerHTML = "";
+      rows.forEach(row => {
+        let tr = document.createElement("tr");
+        const headers = Object.keys(row).filter(h => h !== "sheet");
+        headers.forEach(header => {
+          let td = document.createElement("td");
+          const content = typeof row[header] === "object" && row[header].url
+            ? `<a href="${row[header].url}" target="_blank">${row[header].text}</a>`
+            : row[header] || "";
+          td.innerHTML = content;
+          if (header === "Verse Category" && typeof row[header] === "string") {
+            td.className = getCategoryClass(row[header].trim().toLowerCase());
           }
-          rows[i].style.display = found ? "" : "none";
-          if (found) visibleCount++;
-        }
-        updateContentCount(visibleCount);
-      }
-
-      function updateContentCount(count) {
-        document.getElementById("contentCount").textContent = `Contents: ${count}`;
-      }
-
-      // Load sheet names on page load
-      google.script.run.withSuccessHandler(function(sheets) {
-        const select = document.getElementById("sheetSelector");
-        sheets.forEach(sheet => {
-          let option = document.createElement("option");
-          option.value = sheet;
-          option.textContent = sheet;
-          select.appendChild(option);
+          tr.appendChild(td);
         });
-      }).getSheetNames();
-    </script>
-  </body>
+        let tdSheet = document.createElement("td");
+        tdSheet.textContent = document.getElementById("sheetSelector").value;
+        tr.appendChild(tdSheet);
+        tbody.appendChild(tr);
+      });
+      updateContentCount(rows.length);
+    }
+
+    function getCategoryClass(category) {
+      switch (category.toLowerCase()) {
+        case "universal or ethical verse": return "category-universal";
+        case "general intra-community verse": return "category-general";
+        case "controversial intra-community verse": return "category-controversial";
+        case "divisive or hateful inter-community verse": return "category-divisive";
+        case "violent or aggressive inter-community verse": return "category-violent";
+        default: return "";
+      }
+    }
+
+    function filterTable() {
+      const category = document.getElementById("categoryFilter").value;
+      const sheetName = document.getElementById("sheetSelector").value;
+      if (sheetName && data.length > 0) {
+        let filteredRows = category === "" ? data : data.filter(row =>
+          row["Verse Category"] && typeof row["Verse Category"] === "string" && 
+          row["Verse Category"].trim().toLowerCase() === category.toLowerCase()
+        );
+        console.log("Filter category:", category, "Filtered rows:", filteredRows.length, "Sample Verse Category:", filteredRows[0] ? filteredRows[0]["Verse Category"] : "N/A");
+        updateTable(filteredRows);
+      }
+    }
+
+    function searchTable() {
+      const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+      if (data.length > 0) {
+        let filteredRows = searchTerm === "" ? data : data.filter(row =>
+          Object.values(row).some(val =>
+            val && typeof val === "string" && val.toLowerCase().includes(searchTerm) ||
+            (typeof val === "object" && val.text && val.text.toLowerCase().includes(searchTerm))
+          )
+        );
+        updateTable(filteredRows);
+      }
+    }
+
+    function updateContentCount(count) {
+      document.getElementById("contentCount").textContent = `Contents: ${count}`;
+    }
+  </script>
+</body>
 </html>

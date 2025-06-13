@@ -13,6 +13,7 @@
     }
     .header-container { 
       display: flex; 
+      justify-content: center; 
       align-items: center; 
       margin-bottom: 20px; 
     }
@@ -77,7 +78,7 @@
     th.gita-header { background-color: orange; color: black; }
     th.bible-header { background-color: blue; color: white; }
     th.quran-header { background-color: green; color: white; }
-    th.hadith-header, th.miscellaneous-header { background-color: #4CAF50; color: white; } /* Default for Hadith and Miscellaneous */
+    th.hadith-header, th.miscellaneous-header { background-color: #4CAF50; color: white; }
     @media (max-width: 600px) {
       table { width: 100%; }
       .mission-statement { font-size: 0.9em; max-width: 90%; }
@@ -96,7 +97,7 @@
     <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
   </div>
   <div class="header-container">
-    <img src="logo.png" alt="SASTIK Logo" class="logo">
+    <img src="logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('Logo failed to load');">
     <h2>SASTIK GBQ+</h2>
   </div>
   <div class="mission-statement">
@@ -122,6 +123,13 @@
       <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
       <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
     </select>
+    <label for="subCategoryFilter">Filter by Sub Category:</label>
+    <select id="subCategoryFilter" onchange="filterTable()">
+      <option value="">All</option>
+      <option value="Historical or Narrative verse">Historical or Narrative verse</option>
+      <option value="Discriminatory or Prejudiced Verse">Discriminatory or Prejudiced Verse</option>
+      <option value="Metaphorical or Symbolic verse">Metaphorical or Symbolic verse</option>
+    </select>
     <div class="content-count" id="contentCount">Contents: 0</div>
     <input type="text" id="searchInput" placeholder="Search in table..." onkeyup="searchTable()">
   </div>
@@ -146,7 +154,7 @@
             updateHeaders(sheetName);
             updateTable(data);
             updateContentCount(data.length);
-            console.log("Loaded data for sheet:", sheetName, "Rows:", data.length, "Sample Verse Category:", data[0] ? data[0]["Verse Category"] : "N/A", "Full Data:", data);
+            console.log("Loaded data for sheet:", sheetName, "Rows:", data.length, "Sample Verse Category:", data[0] ? data[0]["Verse Category "] : "N/A", "Full Data:", data);
           })
           .catch(error => console.error("Error loading JSON:", error));
       } else {
@@ -162,7 +170,7 @@
       thead.innerHTML = "";
       if (data.length > 0) {
         let tr = document.createElement("tr");
-        const headers = Object.keys(data[0]).filter(h => h !== "sheet");
+        const headers = Object.keys(data[0]).filter(h => h !== "sheet"); // Exclude "sheet" from display
         headers.forEach(header => {
           let th = document.createElement("th");
           th.textContent = header;
@@ -186,9 +194,6 @@
           }
           tr.appendChild(th);
         });
-        let thSheet = document.createElement("th");
-        thSheet.textContent = "Sheet";
-        tr.appendChild(thSheet);
         thead.appendChild(tr);
       }
     }
@@ -200,28 +205,26 @@
         let tr = document.createElement("tr");
         let td = document.createElement("td");
         td.textContent = "No data available or error loading data";
-        td.colSpan = Object.keys(data[0] || {}).length + 1;
+        td.colSpan = Object.keys(data[0] || {}).length; // Exclude "sheet" from colspan
         td.style.textAlign = "center";
         tr.appendChild(td);
         tbody.appendChild(tr);
       } else {
         rows.forEach(row => {
           let tr = document.createElement("tr");
-          const headers = Object.keys(row).filter(h => h !== "sheet");
+          const headers = Object.keys(row).filter(h => h !== "sheet"); // Exclude "sheet" from display
           headers.forEach(header => {
             let td = document.createElement("td");
             const content = typeof row[header] === "object" && row[header].url
               ? `<a href="${row[header].url}" target="_blank">${row[header].text}</a>`
               : row[header] || "";
             td.innerHTML = content;
-            if (header === "Verse Category" && typeof row[header] === "string") {
+            if (header === "Verse Category " && typeof row[header] === "string") {
               td.className = getCategoryClass(row[header].trim().toLowerCase());
             }
             tr.appendChild(td);
           });
-          let tdSheet = document.createElement("td");
-          tdSheet.textContent = document.getElementById("sheetSelector").value;
-          tr.appendChild(tdSheet);
+          // "Sheet" data is kept in row but not displayed
           tbody.appendChild(tr);
         });
       }
@@ -241,15 +244,21 @@
 
     function filterTable() {
       const category = document.getElementById("categoryFilter").value;
+      const subCategory = document.getElementById("subCategoryFilter").value;
       const sheetName = document.getElementById("sheetSelector").value;
       if (sheetName && data.length > 0) {
-        let filteredRows = category === "" ? data : data.filter(row =>
-          row["Verse Category"] && typeof row["Verse Category"] === "string" && 
-          row["Verse Category"].trim().toLowerCase() === category.toLowerCase()
-        );
-        console.log("Filter category:", category, "Filtered rows:", filteredRows.length, 
-                    "Sample Verse Category:", filteredRows[0] ? filteredRows[0]["Verse Category"] : "N/A", 
-                    "All Categories:", data.map(row => row["Verse Category"]));
+        let filteredRows = data.filter(row => {
+          const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
+                                            row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+          const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
+                                                  row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+          return categoryMatch && subCategoryMatch;
+        });
+        console.log("Filter category:", category, "Sub category:", subCategory, "Filtered rows:", filteredRows.length, 
+                    "Sample Verse Category:", filteredRows[0] ? filteredRows[0]["Verse Category "] : "N/A", 
+                    "Sample Sub Category:", filteredRows[0] ? filteredRows[0]["Sub Category"] : "N/A",
+                    "All Categories:", data.map(row => row["Verse Category "]),
+                    "All Sub Categories:", data.map(row => row["Sub Category"]));
         updateTable(filteredRows);
       }
     }

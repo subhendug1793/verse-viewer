@@ -1,73 +1,196 @@
-<table id="verseTable">
-  <thead id="tableHeaders"></thead>
-  <tbody id="verseBody"></tbody>
-</table>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SASTIK GBQ+ with Verse Category Filter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
+    }
+    .header {
+      background-color: #fff;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .header h2 {
+      font-size: 2em;
+      color: #333;
+    }
+    .tagline {
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 1.1em;
+      line-height: 1.5;
+    }
+    .tagline b { color: red; }
+    .tagline em { color: green; }
+    .last-updated {
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 10px;
+    }
+    .open-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #3e8e41;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    #filterContainer {
+      margin: 20px auto;
+      max-width: 95%;
+      text-align: center;
+    }
+    #categoryFilter {
+      font-size: 1em;
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    table {
+      margin: 0 auto 40px;
+      border-collapse: collapse;
+      width: 95%;
+      background: white;
+      box-shadow: 0 0 8px rgb(0 0 0 / 0.1);
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #3e8e41;
+      color: white;
+    }
+    @media (max-width: 768px) {
+      .tagline { font-size: 0.95em; }
+      .open-btn { padding: 8px 16px; }
+      table, th, td { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>SASTIK GBQ+</h2>
+    <div class="tagline">
+      সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে <b>🚫</b> সম্প্রীতি ও মানবতার পক্ষে <em>✅</em><br>
+      To propagate sane theism, against hatred and violence <b>🚫</b> in favor of harmony and humanity <em>✅</em>
+    </div>
+    <div class="last-updated" id="lastUpdated">Last updated: loading...</div>
+    <a class="open-btn" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">
+      Open Full Sheet
+    </a>
+  </div>
 
-<script>
-  // global vars
-  let allData = [], headers = [];
+  <div id="filterContainer">
+    <label for="categoryFilter">Filter by Verse Category: </label>
+    <select id="categoryFilter">
+      <option value="">All Categories</option>
+    </select>
+  </div>
 
-  async function loadSheet() {
-    // example fetching data - replace this with your fetch
-    const data = await fetch("YOUR_DATA_SOURCE_URL").then(r => r.json());
-    allData = data;
-    headers = Object.keys(allData[0]);
-    buildTable();
-  }
+  <div id="tableContainer">
+    <table id="verseTable">
+      <thead></thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
-  function buildTable(filterCategory = "") {
-    const thead = document.getElementById("tableHeaders");
-    const tbody = document.getElementById("verseBody");
+  <script>
+    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pub?output=csv';
 
-    thead.innerHTML = "";
-    tbody.innerHTML = "";
-
-    // Build header row with a filter for "Verse Category"
-    const trHead = document.createElement("tr");
-
-    headers.forEach(hdr => {
-      const th = document.createElement("th");
-      if (hdr === "Verse Category") {
-        // Create select dropdown for filtering categories
-        const select = document.createElement("select");
-        const categories = [...new Set(allData.map(row => row[hdr]).filter(Boolean))];
-        const defaultOption = document.createElement("option");
-        defaultOption.value = "";
-        defaultOption.textContent = "All Categories";
-        select.appendChild(defaultOption);
-
-        categories.forEach(cat => {
-          const opt = document.createElement("option");
-          opt.value = cat;
-          opt.textContent = cat;
-          select.appendChild(opt);
+    // Basic CSV parsing function
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      const headers = lines[0].split(',');
+      return lines.slice(1).map(line => {
+        const values = line.split(',');
+        const obj = {};
+        headers.forEach((header, i) => {
+          obj[header.trim()] = values[i] ? values[i].trim() : '';
         });
-
-        select.value = filterCategory;
-        select.addEventListener("change", e => buildTable(e.target.value));
-
-        th.appendChild(select);
-      } else {
-        th.textContent = hdr;
-      }
-      trHead.appendChild(th);
-    });
-    thead.appendChild(trHead);
-
-    // Filter rows if category selected
-    let filteredData = filterCategory ? allData.filter(r => r["Verse Category"] === filterCategory) : allData;
-
-    // Build rows
-    filteredData.forEach(row => {
-      const tr = document.createElement("tr");
-      headers.forEach(hdr => {
-        const td = document.createElement("td");
-        td.textContent = row[hdr] || "";
-        tr.appendChild(td);
+        return obj;
       });
-      tbody.appendChild(tr);
-    });
-  }
+    }
 
-  loadSheet();
-</script>
+    let allData = [];
+    let headers = [];
+
+    function buildTable(data) {
+      const thead = document.querySelector('#verseTable thead');
+      const tbody = document.querySelector('#verseTable tbody');
+      thead.innerHTML = '';
+      tbody.innerHTML = '';
+
+      // Build headers
+      const trHead = document.createElement('tr');
+      headers.forEach(hdr => {
+        const th = document.createElement('th');
+        th.textContent = hdr;
+        trHead.appendChild(th);
+      });
+      thead.appendChild(trHead);
+
+      // Build rows
+      data.forEach(row => {
+        const tr = document.createElement('tr');
+        headers.forEach(hdr => {
+          const td = document.createElement('td');
+          td.textContent = row[hdr] || '';
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+
+    function populateCategoryFilter(data) {
+      const select = document.getElementById('categoryFilter');
+      const categories = [...new Set(data.map(d => d['Verse Category']).filter(c => c))].sort();
+
+      categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = cat;
+        select.appendChild(option);
+      });
+    }
+
+    function filterTableByCategory(category) {
+      if (!category) {
+        buildTable(allData);
+      } else {
+        const filtered = allData.filter(row => row['Verse Category'] === category);
+        buildTable(filtered);
+      }
+    }
+
+    // Load and parse CSV data
+    fetch(csvUrl)
+      .then(response => response.text())
+      .then(text => {
+        allData = parseCSV(text);
+        headers = Object.keys(allData[0]);
+        populateCategoryFilter(allData);
+        buildTable(allData);
+
+        // Update last updated date (using current time)
+        document.getElementById('lastUpdated').textContent = "Last updated: " + new Date().toLocaleString();
+      })
+      .catch(err => {
+        console.error('Error loading CSV:', err);
+        document.getElementById('lastUpdated').textContent = "Failed to load data";
+      });
+
+    document.getElementById('categoryFilter').addEventListener('change', e => {
+      filterTableByCategory(e.target.value);
+    });
+  </script>
+</body>
+</html>

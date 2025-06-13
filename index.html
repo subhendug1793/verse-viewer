@@ -8,13 +8,13 @@
     body { font-family: Arial, sans-serif; margin: 20px; }
     h2, .mission-statement { text-align: center; }
     .controls { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-    #categoryFilter, #sheetSelector { padding: 5px; }
+    #categoryFilter, #sheetSelector, #searchInput { padding: 5px; }
     table { border-collapse: collapse; width: 100%; max-width: 100%; overflow-x: auto; }
-    th { border: 1px solid #ddd; padding: 4px; text-align: left; color: black; }
+    th { border: 1px solid #ddd; padding: 4px; text-align: left; color: black; } /* Ensure black text */
     td { border: 1px solid #ddd; padding: 8px; text-align: left; }
     .mission-statement { margin-bottom: 15px; padding: 10px; background-color: #f9f9f9; border-left: 4px solid #4CAF50; }
     .last-updated, .content-count { font-size: 0.9em; color: #666; margin: 0; }
-    /* Sheet-specific header colors */
+    /* Sheet-specific header colors with black text */
     th[data-sheet="Gita"] { background-color: orange; }
     th[data-sheet="Bible"] { background-color: blue; }
     th[data-sheet="Quran"] { background-color: darkgreen; }
@@ -47,6 +47,8 @@
       <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
       <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
     </select>
+    <label for="searchInput">Search:</label>
+    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="e.g., Genesis 2.5, Gita 11.5">
     <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
     <span class="content-count" id="contentCount">Content found: 0</span>
   </div>
@@ -97,7 +99,22 @@
 
         window.filterTable = function(filteredData = allVerses) {
           const category = document.getElementById('categoryFilter').value;
-          const filtered = category ? filteredData.filter(v => (v['Verse Category'] || '') === category) : filteredData;
+          let filtered = category ? filteredData.filter(v => (v['Verse Category'] || '').trim() === category) : filteredData;
+          console.log('Filtering by category:', category, 'Result count:', filtered.length); // Debug log
+          searchTable(filtered); // Chain with search
+        };
+
+        window.searchTable = function(filteredData = allVerses) {
+          const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+          let filtered = filteredData;
+          if (searchTerm) {
+            filtered = filteredData.filter(v => {
+              return Object.values(v).some(val =>
+                val && typeof val === 'string' && val.toLowerCase().includes(searchTerm) ||
+                (typeof val === 'object' && val.text && val.text.toLowerCase().includes(searchTerm))
+              );
+            });
+          }
           displayVerses(filtered);
         };
 

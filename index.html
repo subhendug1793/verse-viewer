@@ -5,29 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SASTIK GBQ+ Verse Filter</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
+    body { font-family: Arial, sans-serif; margin: 20px; position: relative; }
     h2, .mission-statement { text-align: center; }
-    .controls { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-    #categoryFilter, #sheetSelector, #searchInput { padding: 5px; }
+    .header-info { position: absolute; top: 20px; right: 20px; font-size: 0.9em; color: #666; }
+    .controls { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; }
+    .controls label, .controls select, .controls input { vertical-align: middle; }
+    #categoryFilter, #subCategoryFilter, #sheetSelector, #searchInput { padding: 5px; }
     table { border-collapse: collapse; width: 100%; max-width: 100%; overflow-x: auto; }
-    th { border: 1px solid #ddd; padding: 4px; text-align: left; color: black; } /* Ensure black text */
+    th { border: 1px solid #ddd; padding: 4px; text-align: left; }
     td { border: 1px solid #ddd; padding: 8px; text-align: left; }
     .mission-statement { margin-bottom: 15px; padding: 10px; background-color: #f9f9f9; border-left: 4px solid #4CAF50; }
-    .last-updated, .content-count { font-size: 0.9em; color: #666; margin: 0; }
-    /* Sheet-specific header colors with black text */
-    th[data-sheet="Gita"] { background-color: orange; }
-    th[data-sheet="Bible"] { background-color: blue; }
-    th[data-sheet="Quran"] { background-color: darkgreen; }
+    /* Sheet-specific header colors with white text */
+    th[data-sheet="Gita"] { background-color: orange; color: white; }
+    th[data-sheet="Bible"] { background-color: blue; color: white; }
+    th[data-sheet="Quran"] { background-color: darkgreen; color: white; }
     @media (max-width: 600px) {
       table { font-size: 14px; }
       th { padding: 2px; font-size: 0.9em; }
       td { padding: 4px; }
       .mission-statement { font-size: 0.9em; }
       .controls { flex-direction: column; }
+      .header-info { position: static; text-align: right; margin-top: 10px; }
     }
   </style>
 </head>
 <body>
+  <div class="header-info">
+    <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
+    <span class="content-count" id="contentCount">Content found: 0</span>
+  </div>
   <h2>SASTIK GBQ+</h2>
   <div class="mission-statement">
     সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে <b>🚫</b> সম্প্রীতি ও মানবতার পক্ষে <em>✅</em><br>
@@ -47,10 +53,12 @@
       <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
       <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
     </select>
+    <label for="subCategoryFilter">Filter by Sub Category:</label>
+    <select id="subCategoryFilter" onchange="filterTable()">
+      <option value="">All</option>
+    </select>
     <label for="searchInput">Search:</label>
     <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="e.g., Genesis 2.5, Gita 11.5">
-    <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
-    <span class="content-count" id="contentCount">Content found: 0</span>
   </div>
   <table id="verseTable">
     <thead id="tableHeaders">
@@ -73,18 +81,28 @@
     fetch('data.json')
       .then(response => response.json())
       .then(data => {
-        const lastUpdated = new Date(document.lastModified).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+        const lastUpdated = new Date(document.lastModified).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }).replace(/,\s\d{4}$/, ''); // Format as 13/6/2025
         document.getElementById('lastUpdated').textContent = `Last updated: ${lastUpdated}`;
 
         let allVerses = [];
         let sheetNames = Object.keys(data);
         const sheetSelect = document.getElementById('sheetSelector');
+        const subCategorySelect = document.getElementById('subCategoryFilter');
         sheetNames.forEach(sheet => {
           const option = document.createElement('option');
           option.value = sheet;
           option.textContent = sheet;
           sheetSelect.appendChild(option);
           allVerses = allVerses.concat(data[sheet].map(v => ({ ...v, sheet })));
+        });
+
+        // Populate sub category filter
+        const subCategories = [...new Set(allVerses.map(v => v['Sub Category'] || '').filter(cat => cat.trim()))];
+        subCategories.forEach(cat => {
+          const option = document.createElement('option');
+          option.value = cat;
+          option.textContent = cat;
+          subCategorySelect.appendChild(option);
         });
 
         // Display all verses initially
@@ -99,9 +117,17 @@
 
         window.filterTable = function(filteredData = allVerses) {
           const category = document.getElementById('categoryFilter').value;
-          let filtered = category ? filteredData.filter(v => (v['Verse Category'] || '').trim() === category) : filteredData;
-          console.log('Filtering by category:', category, 'Result count:', filtered.length); // Debug log
-          searchTable(filtered); // Chain with search
+          const subCategory = document.getElementById('subCategoryFilter').value;
+          let filtered = filteredData;
+          if (category) {
+            filtered = filtered.filter(v => (v['Verse Category'] || '').trim() === category);
+            console.log('Filtering by category:', category, 'Result count:', filtered.length); // Debug log
+          }
+          if (subCategory) {
+            filtered = filtered.filter(v => (v['Sub Category'] || '').trim() === subCategory);
+            console.log('Filtering by sub category:', subCategory, 'Result count:', filtered.length); // Debug log
+          }
+          searchTable(filtered);
         };
 
         window.searchTable = function(filteredData = allVerses) {

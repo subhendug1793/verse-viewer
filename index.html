@@ -10,6 +10,28 @@
       margin: 20px; 
       background-color: #f9f9f9; 
       position: relative; 
+      min-height: 100vh; /* Ensure body covers full height for watermark */
+    }
+    .watermark { 
+      position: fixed; 
+      top: 50%; 
+      left: 50%; 
+      transform: translate(-50%, -50%); 
+      font-size: 3em; 
+      color: #333; 
+      opacity: 0.2; 
+      pointer-events: none; /* Prevent interaction */
+      display: flex; 
+      align-items: center; 
+      z-index: -1; /* Behind content */
+    }
+    .watermark img { 
+      width: 40px; 
+      height: auto; 
+      margin-right: 10px; 
+    }
+    .watermark span { 
+      font-weight: bold; 
     }
     .header-container { 
       display: flex; 
@@ -18,7 +40,7 @@
       margin-bottom: 20px; 
     }
     .logo { 
-      width: 100px; 
+      width: 80px; /* Adjusted size to balance with text */
       height: auto; 
       margin-right: 10px; 
     }
@@ -26,8 +48,9 @@
       color: #333; 
       text-align: center; 
       margin: 0; 
-      font-size: 2.5em; 
+      font-size: 2em; /* Reduced from 2.5em to fit with logo */
       font-weight: bold; 
+      white-space: nowrap; /* Keep text on one line */
     }
     .header-info { 
       position: absolute; 
@@ -65,6 +88,8 @@
       margin: 0 auto; 
       background-color: #fff; 
       box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+      position: relative; 
+      z-index: 1; /* Above watermark */
     }
     th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
     td a { color: #0066cc; text-decoration: none; }
@@ -82,13 +107,15 @@
     @media (max-width: 600px) {
       table { width: 100%; }
       .mission-statement { font-size: 0.9em; max-width: 90%; }
-      h2 { font-size: 2em; }
+      h2 { font-size: 1.5em; } /* Further reduced on mobile */
       select, input { width: 100%; margin-bottom: 10px; }
       .controls { flex-direction: column; align-items: center; }
       .header-info { position: static; text-align: right; margin-top: 10px; }
       .content-count { margin-top: 10px; }
       .header-container { flex-direction: column; text-align: center; }
-      .logo { margin-right: 0; margin-bottom: 10px; }
+      .logo { margin-right: 0; margin-bottom: 10px; width: 60px; } /* Smaller on mobile */
+      .watermark { font-size: 2em; }
+      .watermark img { width: 30px; }
     }
   </style>
 </head>
@@ -99,6 +126,12 @@
   <div class="header-container">
     <img src="logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('Logo failed to load');">
     <h2>SASTIK GBQ+</h2>
+  </div>
+  <div class="watermark">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/X_icon_2023.svg" alt="X">
+    <span>Subhendu Ghosh Sastik</span>
   </div>
   <div class="mission-statement">
     সুস্থ আস্তিকতা প্রচারের উদ্দেষ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে <b>🚫</b> সম্প্রীতি ও মানবতার পক্ষে <em>✅</em><br>
@@ -170,11 +203,10 @@
       thead.innerHTML = "";
       if (data.length > 0) {
         let tr = document.createElement("tr");
-        const headers = Object.keys(data[0]).filter(h => h !== "sheet"); // Exclude "sheet" from display
+        const headers = Object.keys(data[0]).filter(h => h !== "sheet");
         headers.forEach(header => {
           let th = document.createElement("th");
           th.textContent = header;
-          // Apply sheet-specific styles
           switch (sheetName) {
             case "gita":
               th.classList.add("gita-header");
@@ -205,14 +237,14 @@
         let tr = document.createElement("tr");
         let td = document.createElement("td");
         td.textContent = "No data available or error loading data";
-        td.colSpan = Object.keys(data[0] || {}).length; // Exclude "sheet" from colspan
+        td.colSpan = Object.keys(data[0] || {}).length;
         td.style.textAlign = "center";
         tr.appendChild(td);
         tbody.appendChild(tr);
       } else {
         rows.forEach(row => {
           let tr = document.createElement("tr");
-          const headers = Object.keys(row).filter(h => h !== "sheet"); // Exclude "sheet" from display
+          const headers = Object.keys(row).filter(h => h !== "sheet");
           headers.forEach(header => {
             let td = document.createElement("td");
             const content = typeof row[header] === "object" && row[header].url
@@ -224,7 +256,6 @@
             }
             tr.appendChild(td);
           });
-          // "Sheet" data is kept in row but not displayed
           tbody.appendChild(tr);
         });
       }

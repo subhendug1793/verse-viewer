@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SASTIK GBQ+ Verse Filter</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
+    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; position: relative; }
     h2 { color: #333; text-align: center; margin-bottom: 20px; font-size: 2.5em; font-weight: bold; }
+    .header-info { position: absolute; top: 20px; right: 20px; font-size: 0.9em; color: #666; }
     .mission-statement { text-align: center; margin: 0 auto 20px; max-width: 80%; font-size: 1.1em; line-height: 1.5; font-weight: bold; }
     .mission-statement b { color: #ff0000; }
     .mission-statement em { color: #00ff00; }
@@ -28,11 +29,16 @@
       h2 { font-size: 2em; }
       select, input { width: 100%; margin-bottom: 10px; }
       .controls { flex-direction: column; align-items: center; }
+      .header-info { position: static; text-align: right; margin-top: 10px; }
       .content-count { position: static; text-align: center; margin-top: 10px; }
     }
   </style>
 </head>
 <body>
+  <div class="header-info">
+    <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
+    <span class="content-count" id="contentCount">Contents: 0</span>
+  </div>
   <h2>SASTIK GBQ+</h2>
   <div class="mission-statement">
     সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে <b>🚫</b> সম্প্রীতি ও মানবতার পক্ষে <em>✅</em><br>
@@ -58,7 +64,6 @@
       <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
     </select>
     <input type="text" id="searchInput" placeholder="Search in table..." onkeyup="searchTable()">
-    <div class="content-count" id="contentCount">Contents: 0</div>
   </div>
   <table id="verseTable">
     <thead id="tableHeaders"></thead>
@@ -72,7 +77,10 @@
       const sheetName = document.getElementById("sheetSelector").value;
       if (sheetName) {
         fetch(`${sheetName}.json`)
-          .then(response => response.json())
+          .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            return response.json();
+          })
           .then(sheetData => {
             data = sheetData;
             updateHeaders();
@@ -86,6 +94,7 @@
         document.getElementById("tableHeaders").innerHTML = "";
         updateContentCount(0);
       }
+      updateLastUpdated();
     }
 
     function updateHeaders() {
@@ -109,25 +118,35 @@
     function updateTable(rows) {
       const tbody = document.getElementById("verseBody");
       tbody.innerHTML = "";
-      rows.forEach(row => {
+      if (rows.length === 0) {
         let tr = document.createElement("tr");
-        const headers = Object.keys(row).filter(h => h !== "sheet");
-        headers.forEach(header => {
-          let td = document.createElement("td");
-          const content = typeof row[header] === "object" && row[header].url
-            ? `<a href="${row[header].url}" target="_blank">${row[header].text}</a>`
-            : row[header] || "";
-          td.innerHTML = content;
-          if (header === "Verse Category" && typeof row[header] === "string") {
-            td.className = getCategoryClass(row[header].trim().toLowerCase());
-          }
-          tr.appendChild(td);
-        });
-        let tdSheet = document.createElement("td");
-        tdSheet.textContent = document.getElementById("sheetSelector").value;
-        tr.appendChild(tdSheet);
+        let td = document.createElement("td");
+        td.textContent = "No data available or error loading data";
+        td.colSpan = Object.keys(data[0] || {}).length + 1;
+        td.style.textAlign = "center";
+        tr.appendChild(td);
         tbody.appendChild(tr);
-      });
+      } else {
+        rows.forEach(row => {
+          let tr = document.createElement("tr");
+          const headers = Object.keys(row).filter(h => h !== "sheet");
+          headers.forEach(header => {
+            let td = document.createElement("td");
+            const content = typeof row[header] === "object" && row[header].url
+              ? `<a href="${row[header].url}" target="_blank">${row[header].text}</a>`
+              : row[header] || "";
+            td.innerHTML = content;
+            if (header === "Verse Category" && typeof row[header] === "string") {
+              td.className = getCategoryClass(row[header].trim().toLowerCase());
+            }
+            tr.appendChild(td);
+          });
+          let tdSheet = document.createElement("td");
+          tdSheet.textContent = document.getElementById("sheetSelector").value;
+          tr.appendChild(tdSheet);
+          tbody.appendChild(tr);
+        });
+      }
       updateContentCount(rows.length);
     }
 
@@ -171,6 +190,13 @@
     function updateContentCount(count) {
       document.getElementById("contentCount").textContent = `Contents: ${count}`;
     }
+
+    function updateLastUpdated() {
+      const lastUpdated = new Date(document.lastModified).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }).replace(/,\s\d{4}$/, '');
+      document.getElementById("lastUpdated").textContent = `Last updated: ${lastUpdated}`;
+    }
+
+    window.onload = updateLastUpdated;
   </script>
 </body>
 </html>

@@ -14,17 +14,17 @@
     }
     .watermark { 
       position: fixed; 
-      top: 60%; /* Lower middle position */
+      top: 55%; /* Lower middle position */
       left: 50%; 
       transform: translate(-50%, -50%); 
-      font-size: 4em; /* Increased from 3em */
+      font-size: 4em; /* For logo alignment */
       color: #333; 
       opacity: 0.2; /* Reverted to older opacity */
-      pointer-events: none; /* Prevent interaction with text */
       display: flex; 
-      flex-direction: column; 
+      flex-direction: row; /* Landscape orientation */
       align-items: center; 
       z-index: -1; /* Behind content */
+      max-width: 80%; /* Prevent overflow */
     }
     .watermark a { 
       pointer-events: auto; /* Enable interaction with links */
@@ -34,16 +34,28 @@
     .watermark img { 
       width: 60px; /* Increased from 40px */
       height: auto; 
-      vertical-align: middle; /* Align logos on the same line */
+      vertical-align: middle; /* Align logos */
     }
-    .watermark .follow-text { 
-      margin-bottom: 10px; 
+    .watermark .logos { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: flex-end; /* Align logos to the left */
+      margin-right: 20px; 
+    }
+    .watermark .text-group { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      text-align: center; 
+    }
+    .watermark .follow-text, .watermark .contact-text { 
+      font-size: 1.1em; /* Match mission statement size */
+      margin: 5px 0; 
+      max-width: 100%; /* Adjust to Subhendu Ghosh Sastik length */
     }
     .watermark .name-text { 
-      margin-bottom: 10px; 
-    }
-    .watermark .contact-text { 
-      font-size: 0.5em; /* Reduce size for lower middle */
+      font-size: 4em; /* Match overall watermark size */
+      margin: 10px 0; 
     }
     .header-container { 
       display: flex; 
@@ -126,9 +138,9 @@
       .content-count { margin-top: 10px; }
       .header-container { flex-direction: column; text-align: center; }
       .logo { margin-right: 0; margin-bottom: 10px; width: 60px; }
-      .watermark { font-size: 3em; }
+      .watermark { font-size: 3em; max-width: 90%; }
       .watermark img { width: 45px; }
-      .watermark .contact-text { font-size: 0.4em; } /* Further reduce on mobile */
+      .watermark .follow-text, .watermark .contact-text { font-size: 0.9em; }
     }
   </style>
 </head>
@@ -178,14 +190,17 @@
     <tbody id="verseBody"></tbody>
   </table>
   <div class="watermark">
-    <div class="follow-text">For more insights, follow me on 👇</div>
-    <div>
+    <div class="logos">
       <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook"></a>
       <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube"></a>
       <a href="https://x.com/subhendug1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/X_icon_2023.svg" alt="X"></a>
+      <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram"></a>
     </div>
-    <div class="name-text">Subhendu Ghosh Sastik</div>
-    <div class="contact-text">If you want to contribute the verse or connect with us, contact me at <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" style="width: 60px; height: auto; vertical-align: middle;"> t.me/Sg1793</a> or send an email to sastikofficial@gmail.com</div>
+    <div class="text-group">
+      <div class="follow-text">For more insights, follow me on 👇</div>
+      <div class="name-text">Subhendu Ghosh Sastik</div>
+      <div class="contact-text">If you want to contribute the verse or connect with us, contact me at Telegram or send an email to sastikofficial@gmail.com</div>
+    </div>
   </div>
 
   <script>

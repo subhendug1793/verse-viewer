@@ -7,22 +7,24 @@
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     h2, .mission-statement { text-align: center; }
-    #categoryFilter, #sheetSelector { margin-bottom: 10px; padding: 5px; }
+    .controls { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+    #categoryFilter, #sheetSelector { padding: 5px; }
     table { border-collapse: collapse; width: 100%; max-width: 100%; overflow-x: auto; }
-    th { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { border: 1px solid #ddd; padding: 4px; text-align: left; color: black; }
     td { border: 1px solid #ddd; padding: 8px; text-align: left; }
     .mission-statement { margin-bottom: 15px; padding: 10px; background-color: #f9f9f9; border-left: 4px solid #4CAF50; }
-    .controls { margin-bottom: 15px; }
-    .last-updated, .content-count { font-size: 0.9em; color: #666; margin-top: 10px; text-align: center; }
+    .last-updated, .content-count { font-size: 0.9em; color: #666; margin: 0; }
+    /* Sheet-specific header colors */
+    th[data-sheet="Gita"] { background-color: orange; }
+    th[data-sheet="Bible"] { background-color: blue; }
+    th[data-sheet="Quran"] { background-color: darkgreen; }
     @media (max-width: 600px) {
       table { font-size: 14px; }
-      th, td { padding: 4px; }
+      th { padding: 2px; font-size: 0.9em; }
+      td { padding: 4px; }
       .mission-statement { font-size: 0.9em; }
+      .controls { flex-direction: column; }
     }
-    /* Sheet-specific header colors */
-    th[data-sheet="Gita"] { background-color: orange; color: white; }
-    th[data-sheet="Bible"] { background-color: blue; color: white; }
-    th[data-sheet="Quran"] { background-color: darkgreen; color: white; }
   </style>
 </head>
 <body>
@@ -45,11 +47,23 @@
       <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
       <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
     </select>
+    <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
+    <span class="content-count" id="contentCount">Content found: 0</span>
   </div>
-  <div class="last-updated" id="lastUpdated">Last updated: loading...</div>
-  <div class="content-count" id="contentCount">Content found: 0</div>
   <table id="verseTable">
-    <thead id="tableHeaders"></thead>
+    <thead id="tableHeaders">
+      <tr>
+        <th data-sheet="">Verse Category</th>
+        <th data-sheet="">Sub Category</th>
+        <th data-sheet="">Verse Name</th>
+        <th data-sheet="">Bengali Translation</th>
+        <th data-sheet="">Verse in English</th>
+        <th data-sheet="">Hindi Meaning</th>
+        <th data-sheet="">Reference Links</th>
+        <th data-sheet="">SGS Remarks</th>
+        <th data-sheet="">Sheet</th>
+      </tr>
+    </thead>
     <tbody id="verseBody"></tbody>
   </table>
 
@@ -71,27 +85,6 @@
           allVerses = allVerses.concat(data[sheet].map(v => ({ ...v, sheet })));
         });
 
-        // Dynamically generate headers from the first row of each sheet
-        const uniqueHeaders = new Set();
-        sheetNames.forEach(sheet => {
-          if (data[sheet].length > 0) {
-            Object.keys(data[sheet][0]).filter(h => h !== 'sheet').forEach(header => uniqueHeaders.add(header));
-          }
-        });
-        const headers = Array.from(uniqueHeaders);
-        const thead = document.getElementById('tableHeaders');
-        const headerRow = document.createElement('tr');
-        headers.forEach(header => {
-          const th = document.createElement('th');
-          th.textContent = header;
-          th.setAttribute('data-sheet', sheetNames[0]); // Default color based on first sheet
-          headerRow.appendChild(th);
-        });
-        const sheetTh = document.createElement('th');
-        sheetTh.textContent = 'Sheet';
-        headerRow.appendChild(sheetTh);
-        thead.appendChild(headerRow);
-
         // Display all verses initially
         displayVerses(allVerses);
 
@@ -111,7 +104,7 @@
         function updateHeaderColors(sheet) {
           const ths = document.querySelectorAll('th[data-sheet]');
           ths.forEach(th => {
-            th.setAttribute('data-sheet', sheet || sheetNames[0]);
+            th.setAttribute('data-sheet', sheet || '');
           });
         }
 
@@ -121,10 +114,14 @@
           document.getElementById('contentCount').textContent = `Content found: ${verses.length}`;
           verses.forEach(verse => {
             const row = document.createElement('tr');
-            headers.forEach(header => {
-              const content = typeof verse[header] === 'object' && verse[header].url
-                ? `<a href="${verse[header].url}" target="_blank">${verse[header].text}</a>`
-                : verse[header] || '';
+            const columns = [
+              'Verse Category', 'Sub Category', 'Verse Name', 'Bengali Translation',
+              'Verse in English', 'Hindi Meaning', 'Reference Links', 'SGS Remarks'
+            ];
+            columns.forEach(column => {
+              const content = typeof verse[column] === 'object' && verse[column].url
+                ? `<a href="${verse[column].url}" target="_blank">${verse[column].text}</a>`
+                : verse[column] || '';
               const td = document.createElement('td');
               td.innerHTML = content;
               row.appendChild(td);

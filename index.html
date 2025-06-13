@@ -5,13 +5,14 @@
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
-    h2 { color: #333; text-align: center; margin-bottom: 20px; }
-    .tagline { text-align: center; font-weight: bold; margin-bottom: 10px; }
-    .last-updated { text-align: left; margin-bottom: 10px; font-style: italic; }
-    .controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+    h2, .tagline, .last-updated { text-align: center; }
+    .tagline { font-weight: bold; margin-bottom: 10px; }
+    .last-updated { margin: 10px; font-style: italic; }
+    .controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 15px; }
     select, input { padding: 5px; }
-    table { border-collapse: collapse; width: 100%; background: white; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+    th, td { border: 1px solid #ccc; padding: 6px; text-align: center; }
+    th { background-color: #f0f0f0; }
     a { color: blue; text-decoration: none; }
   </style>
 </head>
@@ -19,20 +20,15 @@
 
   <h2>SASTIK GBQ+</h2>
   <div class="tagline">
-    সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে <b>🚫</b> সম্প্রীতি ও মানবতার পক্ষে <em>✅</em><br>
-    To propagate sane theism, against hatred and violence <b>🚫</b> in favor of harmony and humanity <em>✅</em>
+    সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে 🚫 সম্প্রীতি ও মানবতার পক্ষে ✅<br>
+    To propagate sane theism, against hatred and violence 🚫 in favor of harmony and humanity ✅
   </div>
   <div class="last-updated" id="lastUpdated">Last Updated: Loading...</div>
+
   <div class="controls">
-    <label for="sheetSelector">Select Sheet:</label>
-    <select id="sheetSelector"></select>
-
-    <label for="categoryFilter">Verse Category:</label>
-    <select id="categoryFilter"></select>
-
-    <label for="subCategoryFilter">Sub Category:</label>
-    <select id="subCategoryFilter"></select>
-
+    <label>Sheet: <select id="sheetSelector"></select></label>
+    <label>Category: <select id="categoryFilter"></select></label>
+    <label>Subcategory: <select id="subCategoryFilter"></select></label>
     <input type="text" id="searchInput" placeholder="Search...">
     <span id="contentCount"></span>
   </div>
@@ -43,154 +39,136 @@
   </table>
 
   <script>
-    const EXCEL_FILE = 'Sastik%20GBQ%2B%2013-06.xlsx';
+    const FILE_NAME = 'Sastik-GBQ.xlsx';
     const USER = 'subhendug1793';
     const REPO = 'verse-viewer';
 
-    const EXCEL_URL = `https://raw.githubusercontent.com/${USER}/${REPO}/main/${EXCEL_FILE}`;
-    const GITHUB_API_URL = `https://api.github.com/repos/${USER}/${REPO}/commits?path=${EXCEL_FILE}&page=1&per_page=1`;
+    const EXCEL_URL = `https://raw.githubusercontent.com/${USER}/${REPO}/main/${FILE_NAME}`;
+    const API_URL = `https://api.github.com/repos/${USER}/${REPO}/commits?path=${FILE_NAME}&page=1&per_page=1`;
 
-    let workbook, currentSheetName, sheetData = {}, headers = [];
+    let workbook, sheetData = {}, headers = [], currentSheet = '';
 
     async function fetchExcel() {
-      const res = await fetch(EXCEL_URL + '?cache_bust=' + Date.now());
-      const arrayBuffer = await res.arrayBuffer();
-      workbook = XLSX.read(arrayBuffer, {type: "array"});
+      const res = await fetch(EXCEL_URL);
+      const buffer = await res.arrayBuffer();
+      workbook = XLSX.read(buffer, { type: "array" });
     }
 
-    function buildSheetSelector() {
-      const selector = document.getElementById('sheetSelector');
-      selector.innerHTML = '';
-      workbook.SheetNames.forEach(sheetName => {
-        const option = document.createElement('option');
-        option.value = sheetName;
-        option.textContent = sheetName;
-        selector.appendChild(option);
+    function loadSheetNames() {
+      const sel = document.getElementById('sheetSelector');
+      workbook.SheetNames.forEach(name => {
+        const opt = new Option(name, name);
+        sel.appendChild(opt);
       });
-      selector.addEventListener('change', e => {
-        currentSheetName = e.target.value;
-        loadSheetData(currentSheetName);
-      });
-      currentSheetName = workbook.SheetNames[0];
-      selector.value = currentSheetName;
+      sel.onchange = () => loadSheet(sel.value);
+      currentSheet = workbook.SheetNames[0];
+      sel.value = currentSheet;
     }
 
-    function loadSheetData(sheetName) {
-      const worksheet = workbook.Sheets[sheetName];
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
-      headers = jsonData[0];
-      sheetData[sheetName] = jsonData.slice(1);
-      buildFilters(sheetData[sheetName]);
-      buildTable(headers, sheetData[sheetName]);
+    function loadSheet(name) {
+      const data = XLSX.utils.sheet_to_json(workbook.Sheets[name], { header: 1 });
+      headers = data[0];
+      sheetData[name] = data.slice(1);
+      currentSheet = name;
+      buildFilters();
+      renderTable(sheetData[name]);
     }
 
-    function buildFilters(data) {
-      const categorySet = new Set();
-      const subCategorySet = new Set();
-      data.forEach(row => {
-        if(row[0]) categorySet.add(row[0]);
-        if(row[1]) subCategorySet.add(row[1]);
-      });
+    function buildFilters() {
       const catFilter = document.getElementById('categoryFilter');
       const subFilter = document.getElementById('subCategoryFilter');
       catFilter.innerHTML = '<option value="">All</option>';
       subFilter.innerHTML = '<option value="">All</option>';
-      categorySet.forEach(cat => {
-        catFilter.innerHTML += `<option value="${cat}">${cat}</option>`;
-      });
-      subCategorySet.forEach(sub => {
-        subFilter.innerHTML += `<option value="${sub}">${sub}</option>`;
+
+      const cats = new Set(), subs = new Set();
+      sheetData[currentSheet].forEach(row => {
+        if (row[0]) cats.add(row[0]);
+        if (row[1]) subs.add(row[1]);
       });
 
-      catFilter.onchange = filterAndDisplay;
-      subFilter.onchange = filterAndDisplay;
-      document.getElementById('searchInput').oninput = filterAndDisplay;
+      [...cats].forEach(c => catFilter.innerHTML += `<option>${c}</option>`);
+      [...subs].forEach(s => subFilter.innerHTML += `<option>${s}</option>`);
+
+      catFilter.onchange = filterTable;
+      subFilter.onchange = filterTable;
+      document.getElementById('searchInput').oninput = filterTable;
     }
 
-    function filterAndDisplay() {
+    function filterTable() {
       const cat = document.getElementById('categoryFilter').value;
       const sub = document.getElementById('subCategoryFilter').value;
       const search = document.getElementById('searchInput').value.toLowerCase();
-      let filtered = sheetData[currentSheetName] || [];
 
-      if(cat) filtered = filtered.filter(r => r[0] === cat);
-      if(sub) filtered = filtered.filter(r => r[1] === sub);
-      if(search) {
-        filtered = filtered.filter(r => r.some(cell => (cell || '').toString().toLowerCase().includes(search)));
-      }
+      let rows = sheetData[currentSheet];
+      if (cat) rows = rows.filter(r => r[0] === cat);
+      if (sub) rows = rows.filter(r => r[1] === sub);
+      if (search) rows = rows.filter(r => r.some(cell => String(cell || '').toLowerCase().includes(search)));
 
-      buildTable(headers, filtered);
+      renderTable(rows);
     }
 
-    function buildTable(headers, data) {
-      const thead = document.getElementById('tableHeaders');
-      const tbody = document.getElementById('verseBody');
-      thead.innerHTML = '';
-      tbody.innerHTML = '';
+    function renderTable(rows) {
+      const head = document.getElementById('tableHeaders');
+      const body = document.getElementById('verseBody');
+      head.innerHTML = '';
+      body.innerHTML = '';
 
-      const trHead = document.createElement('tr');
+      const tr = document.createElement('tr');
       headers.forEach(h => {
         const th = document.createElement('th');
         th.textContent = h;
-        trHead.appendChild(th);
+        tr.appendChild(th);
       });
-      thead.appendChild(trHead);
+      head.appendChild(tr);
 
-      data.forEach(row => {
+      rows.forEach(r => {
         const tr = document.createElement('tr');
-        row.forEach((cell, i) => {
+        r.forEach((cell, i) => {
           const td = document.createElement('td');
-
           if ((i === 2 || i === 3) && typeof cell === 'string' && cell.includes('||')) {
-            const parts = cell.split('||');
-            td.innerHTML = `<a href="${parts[1]}" target="_blank">${parts[0]}</a>`;
+            const [label, link] = cell.split('||');
+            td.innerHTML = `<a href="${link}" target="_blank">${label}</a>`;
           } else {
             td.textContent = cell;
           }
-
-          if(i === 0) {
-            td.style.backgroundColor = getCategoryColor(cell);
-            td.style.color = (cell && cell.toLowerCase() === 'violent') ? 'white' : 'black';
-          }
-
-          td.style.textAlign = 'center';
+          if (i === 0) td.style.backgroundColor = categoryColor(cell);
           tr.appendChild(td);
         });
-        tbody.appendChild(tr);
+        body.appendChild(tr);
       });
-      document.getElementById('contentCount').textContent = `Contents: ${data.length}`;
+
+      document.getElementById('contentCount').textContent = `Rows: ${rows.length}`;
     }
 
-    function getCategoryColor(category) {
-      if(!category) return '';
-      category = category.toLowerCase();
-      if(category.includes('universal')) return '#00FF00';
-      if(category.includes('general')) return '#00FFFF';
-      if(category.includes('controversial')) return '#FFFF00';
-      if(category.includes('divisive')) return '#FF0000';
-      if(category.includes('violent')) return '#000000';
+    function categoryColor(cat) {
+      if (!cat) return '';
+      cat = cat.toLowerCase();
+      if (cat.includes('universal')) return '#00FF00';
+      if (cat.includes('general')) return '#00FFFF';
+      if (cat.includes('controversial')) return '#FFFF00';
+      if (cat.includes('divisive')) return '#FF0000';
+      if (cat.includes('violent')) return '#000000';
       return '';
     }
 
-    async function fetchLastUpdated() {
-      const res = await fetch(GITHUB_API_URL);
-      if(res.ok) {
+    async function showLastUpdated() {
+      const res = await fetch(API_URL);
+      if (res.ok) {
         const data = await res.json();
-        if(data.length > 0) {
-          const dateStr = new Date(data[0].commit.committer.date).toLocaleString();
-          document.getElementById('lastUpdated').textContent = `Last Updated: ${dateStr}`;
+        if (data.length) {
+          const date = new Date(data[0].commit.committer.date);
+          document.getElementById('lastUpdated').textContent = `Last Updated: ${date.toLocaleString()}`;
         }
       }
     }
 
-    async function init() {
+    (async function init() {
       await fetchExcel();
-      buildSheetSelector();
-      loadSheetData(currentSheetName);
-      await fetchLastUpdated();
-    }
-
-    init();
+      loadSheetNames();
+      loadSheet(currentSheet);
+      await showLastUpdated();
+    })();
   </script>
+
 </body>
 </html>

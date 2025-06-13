@@ -1,174 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>SASTIK GBQ+</title>
-  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
-    h2, .tagline, .last-updated { text-align: center; }
-    .tagline { font-weight: bold; margin-bottom: 10px; }
-    .last-updated { margin: 10px; font-style: italic; }
-    .controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 15px; }
-    select, input { padding: 5px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
-    th, td { border: 1px solid #ccc; padding: 6px; text-align: center; }
-    th { background-color: #f0f0f0; }
-    a { color: blue; text-decoration: none; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
+    }
+    .header {
+      background-color: #fff;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .header h2 {
+      font-size: 2em;
+      color: #333;
+    }
+    .tagline {
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 1.1em;
+      line-height: 1.5;
+    }
+    .tagline b { color: red; }
+    .tagline em { color: green; }
+    .last-updated {
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 10px;
+    }
+    .open-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #3e8e41;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    .iframe-container {
+      padding: 10px;
+    }
+    iframe {
+      width: 100%;
+      height: 88vh;
+      border: none;
+    }
+    @media (max-width: 768px) {
+      .tagline { font-size: 0.95em; }
+      .open-btn { padding: 8px 16px; }
+    }
   </style>
 </head>
 <body>
-
-  <h2>SASTIK GBQ+</h2>
-  <div class="tagline">
-    সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে 🚫 সম্প্রীতি ও মানবতার পক্ষে ✅<br>
-    To propagate sane theism, against hatred and violence 🚫 in favor of harmony and humanity ✅
-  </div>
-  <div class="last-updated" id="lastUpdated">Last Updated: Loading...</div>
-
-  <div class="controls">
-    <label>Sheet: <select id="sheetSelector"></select></label>
-    <label>Category: <select id="categoryFilter"></select></label>
-    <label>Subcategory: <select id="subCategoryFilter"></select></label>
-    <input type="text" id="searchInput" placeholder="Search...">
-    <span id="contentCount"></span>
+  <div class="header">
+    <h2>SASTIK GBQ+</h2>
+    <div class="tagline">
+      সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে <b>🚫</b> সম্প্রীতি ও মানবতার পক্ষে <em>✅</em><br>
+      To propagate sane theism, against hatred and violence <b>🚫</b> in favor of harmony and humanity <em>✅</em>
+    </div>
+    <div class="last-updated" id="lastUpdated">Last updated: loading...</div>
+    <a class="open-btn" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">
+      Open Full Sheet
+    </a>
   </div>
 
-  <table id="verseTable">
-    <thead id="tableHeaders"></thead>
-    <tbody id="verseBody"></tbody>
-  </table>
+  <div class="iframe-container">
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml?widget=true&amp;headers=false"></iframe>
+  </div>
 
   <script>
-    const FILE_NAME = 'Sastik-GBQ.xlsx';
-    const USER = 'subhendug1793';
-    const REPO = 'verse-viewer';
-
-    const EXCEL_URL = `https://raw.githubusercontent.com/${USER}/${REPO}/main/${FILE_NAME}`;
-    const API_URL = `https://api.github.com/repos/${USER}/${REPO}/commits?path=${FILE_NAME}&page=1&per_page=1`;
-
-    let workbook, sheetData = {}, headers = [], currentSheet = '';
-
-    async function fetchExcel() {
-      const res = await fetch(EXCEL_URL);
-      const buffer = await res.arrayBuffer();
-      workbook = XLSX.read(buffer, { type: "array" });
-    }
-
-    function loadSheetNames() {
-      const sel = document.getElementById('sheetSelector');
-      workbook.SheetNames.forEach(name => {
-        const opt = new Option(name, name);
-        sel.appendChild(opt);
-      });
-      sel.onchange = () => loadSheet(sel.value);
-      currentSheet = workbook.SheetNames[0];
-      sel.value = currentSheet;
-    }
-
-    function loadSheet(name) {
-      const data = XLSX.utils.sheet_to_json(workbook.Sheets[name], { header: 1 });
-      headers = data[0];
-      sheetData[name] = data.slice(1);
-      currentSheet = name;
-      buildFilters();
-      renderTable(sheetData[name]);
-    }
-
-    function buildFilters() {
-      const catFilter = document.getElementById('categoryFilter');
-      const subFilter = document.getElementById('subCategoryFilter');
-      catFilter.innerHTML = '<option value="">All</option>';
-      subFilter.innerHTML = '<option value="">All</option>';
-
-      const cats = new Set(), subs = new Set();
-      sheetData[currentSheet].forEach(row => {
-        if (row[0]) cats.add(row[0]);
-        if (row[1]) subs.add(row[1]);
-      });
-
-      [...cats].forEach(c => catFilter.innerHTML += `<option>${c}</option>`);
-      [...subs].forEach(s => subFilter.innerHTML += `<option>${s}</option>`);
-
-      catFilter.onchange = filterTable;
-      subFilter.onchange = filterTable;
-      document.getElementById('searchInput').oninput = filterTable;
-    }
-
-    function filterTable() {
-      const cat = document.getElementById('categoryFilter').value;
-      const sub = document.getElementById('subCategoryFilter').value;
-      const search = document.getElementById('searchInput').value.toLowerCase();
-
-      let rows = sheetData[currentSheet];
-      if (cat) rows = rows.filter(r => r[0] === cat);
-      if (sub) rows = rows.filter(r => r[1] === sub);
-      if (search) rows = rows.filter(r => r.some(cell => String(cell || '').toLowerCase().includes(search)));
-
-      renderTable(rows);
-    }
-
-    function renderTable(rows) {
-      const head = document.getElementById('tableHeaders');
-      const body = document.getElementById('verseBody');
-      head.innerHTML = '';
-      body.innerHTML = '';
-
-      const tr = document.createElement('tr');
-      headers.forEach(h => {
-        const th = document.createElement('th');
-        th.textContent = h;
-        tr.appendChild(th);
-      });
-      head.appendChild(tr);
-
-      rows.forEach(r => {
-        const tr = document.createElement('tr');
-        r.forEach((cell, i) => {
-          const td = document.createElement('td');
-          if ((i === 2 || i === 3) && typeof cell === 'string' && cell.includes('||')) {
-            const [label, link] = cell.split('||');
-            td.innerHTML = `<a href="${link}" target="_blank">${label}</a>`;
-          } else {
-            td.textContent = cell;
-          }
-          if (i === 0) td.style.backgroundColor = categoryColor(cell);
-          tr.appendChild(td);
-        });
-        body.appendChild(tr);
-      });
-
-      document.getElementById('contentCount').textContent = `Rows: ${rows.length}`;
-    }
-
-    function categoryColor(cat) {
-      if (!cat) return '';
-      cat = cat.toLowerCase();
-      if (cat.includes('universal')) return '#00FF00';
-      if (cat.includes('general')) return '#00FFFF';
-      if (cat.includes('controversial')) return '#FFFF00';
-      if (cat.includes('divisive')) return '#FF0000';
-      if (cat.includes('violent')) return '#000000';
-      return '';
-    }
-
-    async function showLastUpdated() {
-      const res = await fetch(API_URL);
-      if (res.ok) {
-        const data = await res.json();
-        if (data.length) {
-          const date = new Date(data[0].commit.committer.date);
-          document.getElementById('lastUpdated').textContent = `Last Updated: ${date.toLocaleString()}`;
-        }
-      }
-    }
-
-    (async function init() {
-      await fetchExcel();
-      loadSheetNames();
-      loadSheet(currentSheet);
-      await showLastUpdated();
-    })();
+    // Display current time as a basic "Last updated"
+    const now = new Date();
+    document.getElementById('lastUpdated').textContent = "Last updated: " + now.toLocaleString();
   </script>
-
 </body>
 </html>

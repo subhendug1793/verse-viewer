@@ -2,81 +2,127 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>SASTIK GBQ+</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SASTIK GBQ+ Verse Filter</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background-color: #f9f9f9;
-    }
-    .header {
-      background-color: #fff;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-    .header h2 {
-      font-size: 2em;
-      color: #333;
-    }
-    .tagline {
-      margin-top: 10px;
-      font-weight: bold;
-      font-size: 1.1em;
-      line-height: 1.5;
-    }
-    .tagline b { color: red; }
-    .tagline em { color: green; }
-    .last-updated {
-      font-size: 0.9em;
-      color: #555;
-      margin-top: 10px;
-    }
-    .open-btn {
-      display: inline-block;
-      margin-top: 15px;
-      padding: 10px 20px;
-      background-color: #3e8e41;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      font-weight: bold;
-    }
-    .iframe-container {
-      padding: 10px;
-    }
-    iframe {
-      width: 100%;
-      height: 88vh;
-      border: none;
-    }
-    @media (max-width: 768px) {
-      .tagline { font-size: 0.95em; }
-      .open-btn { padding: 8px 16px; }
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #filter, #sheetSelector { margin-bottom: 10px; padding: 5px; }
+    table { border-collapse: collapse; width: 100%; max-width: 100%; overflow-x: auto; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    a { color: blue; text-decoration: underline; }
+    .mission-statement { margin-bottom: 15px; padding: 10px; background-color: #f9f9f9; border-left: 4px solid #4CAF50; }
+    .controls { margin-bottom: 15px; }
+    .last-updated { font-size: 0.9em; color: #666; margin-top: 10px; }
+    .open-btn { display: inline-block; padding: 5px 10px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 3px; }
+    @media (max-width: 600px) {
+      table { font-size: 14px; }
+      th, td { padding: 4px; }
+      .mission-statement { font-size: 0.9em; }
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h2>SASTIK GBQ+</h2>
-    <div class="tagline">
-      সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে <b>🚫</b> সম্প্রীতি ও মানবতার পক্ষে <em>✅</em><br>
-      To propagate sane theism, against hatred and violence <b>🚫</b> in favor of harmony and humanity <em>✅</em>
-    </div>
-    <div class="last-updated" id="lastUpdated">Last updated: loading...</div>
-    <a class="open-btn" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">
-      Open Full Sheet
-    </a>
+  <h2>SASTIK GBQ+</h2>
+  <div class="mission-statement">
+    সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে <b>🚫</b> সম্প্রীতি ও মানবতার পক্ষে <em>✅</em><br>
+    To propagate sane theism, against hatred and violence <b>🚫</b> in favor of harmony and humanity <em>✅</em>
   </div>
-
-  <div class="iframe-container">
-    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml?widget=true&amp;headers=false"></iframe>
+  <div class="controls">
+    <label for="sheetSelector">Select Sheet:</label>
+    <select id="sheetSelector" onchange="loadSheetData()">
+      <option value="">Select a sheet</option>
+    </select>
+    <label for="filter">Filter by Category:</label>
+    <select id="filter" onchange="filterVerses()">
+      <option value="">All Categories</option>
+    </select>
   </div>
+  <div class="last-updated" id="lastUpdated">Last updated: loading...</div>
+  <a class="open-btn" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Open Full Sheet</a>
+  <table id="verseTable">
+    <thead>
+      <tr>
+        <th>Verse Name</th>
+        <th>Bengali Translation</th>
+        <th>Verse in English</th>
+        <th>Reference Links</th>
+        <th>Sheet</th>
+      </tr>
+    </thead>
+    <tbody id="verseBody"></tbody>
+  </table>
 
   <script>
-    // Display current time as a basic "Last updated"
-    const now = new Date();
-    document.getElementById('lastUpdated').textContent = "Last updated: " + now.toLocaleString();
+    // Load data.json and set last updated time
+    fetch('data.json')
+      .then(response => response.json())
+      .then(data => {
+        const lastUpdated = new Date(document.lastModified).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+        document.getElementById('lastUpdated').textContent = `Last updated: ${lastUpdated}`;
+
+        let allVerses = [];
+        let sheetNames = Object.keys(data);
+        const sheetSelect = document.getElementById('sheetSelector');
+        sheetNames.forEach(sheet => {
+          const option = document.createElement('option');
+          option.value = sheet;
+          option.textContent = sheet;
+          sheetSelect.appendChild(option);
+          allVerses = allVerses.concat(data[sheet].map(v => ({ ...v, sheet })));
+        });
+
+        // Populate category filter
+        const categories = [...new Set(allVerses.map(v => v['Verse Category'] || ''))];
+        const filterSelect = document.getElementById('filter');
+        categories.forEach(cat => {
+          const option = document.createElement('option');
+          option.value = cat;
+          option.textContent = cat || 'Uncategorized';
+          filterSelect.appendChild(option);
+        });
+
+        // Display all verses initially
+        displayVerses(allVerses);
+
+        window.loadSheetData = function() {
+          const selectedSheet = sheetSelect.value;
+          const filtered = selectedSheet ? allVerses.filter(v => v.sheet === selectedSheet) : allVerses;
+          filterVerses(filtered);
+        };
+
+        window.filterVerses = function(filteredData = allVerses) {
+          const category = filterSelect.value;
+          const filtered = category ? filteredData.filter(v => (v['Verse Category'] || '') === category) : filteredData;
+          displayVerses(filtered);
+        };
+
+        function displayVerses(verses) {
+          const tbody = document.getElementById('verseBody');
+          tbody.innerHTML = '';
+          verses.forEach(verse => {
+            const verseContent = typeof verse['Verse Name'] === 'object' && verse['Verse Name'].url
+              ? `<a href="${verse['Verse Name'].url}" target="_blank">${verse['Verse Name'].text}</a>`
+              : verse['Verse Name'] || '';
+            const englishContent = typeof verse['Verse in English'] === 'object' && verse['Verse in English'].url
+              ? `<a href="${verse['Verse in English'].url}" target="_blank">${verse['Verse in English'].text}</a>`
+              : verse['Verse in English'] || '';
+            const refLink = verse['Reference Links and Files']
+              ? `<a href="${verse['Reference Links and Files']}" target="_blank">Link</a>`
+              : '';
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${verseContent}</td>
+              <td>${verse['Bengali Translation'] || ''}</td>
+              <td>${englishContent}</td>
+              <td>${refLink}</td>
+              <td>${verse.sheet}</td>
+            `;
+            tbody.appendChild(row);
+          });
+        }
+      })
+      .catch(error => console.error('Error loading data:', error));
   </script>
 </body>
 </html>

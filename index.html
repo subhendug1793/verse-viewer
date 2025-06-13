@@ -10,53 +10,7 @@
       margin: 20px; 
       background-color: #f9f9f9; 
       position: relative; 
-      min-height: 100vh; /* Ensure body covers full height for watermark */
-    }
-    .watermark { 
-      position: fixed; 
-      bottom: 10px; /* Bottom position */
-      left: 50%; 
-      transform: translateX(-50%); 
-      font-size: 4em; /* For logo alignment */
-      color: #333; 
-      opacity: 0.2; /* Reverted to older opacity */
-      display: flex; 
-      flex-direction: row; 
-      align-items: center; 
-      z-index: -1; /* Behind content */
-      max-width: 80%; 
-      padding: 10px 0; 
-    }
-    .watermark a { 
-      pointer-events: auto; /* Enable interaction with links */
-      text-decoration: none; 
-      margin: 0 5px; 
-    }
-    .watermark img { 
-      width: 60px; /* Increased from 40px */
-      height: auto; 
-      vertical-align: middle; /* Align logos */
-    }
-    .watermark .logos { 
-      display: flex; 
-      flex-direction: row; 
-      align-items: center; 
-      margin-right: 20px; 
-    }
-    .watermark .text-group { 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      text-align: center; 
-      flex-grow: 1; /* Allow text to fill space */
-    }
-    .watermark .follow-text, .watermark .contact-text { 
-      font-size: 1.1em; /* Match mission statement size */
-      margin: 2px 0; 
-    }
-    .watermark .name-text { 
-      font-size: 4em; /* Match overall watermark size */
-      margin: 5px 0; 
+      min-height: 100vh; /* Ensure body covers full height */
     }
     .header-container { 
       display: flex; 
@@ -73,7 +27,7 @@
       color: #333; 
       text-align: center; 
       margin: 0; 
-      font-size: 2em; /* Reduced to fit with logo */
+      font-size: 2em; /* Matches footer text size */
       font-weight: bold; 
       white-space: nowrap; /* Keep text on one line */
     }
@@ -110,11 +64,11 @@
     table { 
       border-collapse: collapse; 
       width: 80%; 
-      margin: 0 auto; 
+      margin: 0 auto 20px; /* Add margin to separate from footer */
       background-color: #fff; 
       box-shadow: 0 0 10px rgba(0,0,0,0.1); 
       position: relative; 
-      z-index: 1; /* Above watermark */
+      z-index: 1; 
     }
     th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
     td a { color: #0066cc; text-decoration: none; }
@@ -129,6 +83,46 @@
     th.bible-header { background-color: blue; color: white; }
     th.quran-header { background-color: green; color: white; }
     th.hadith-header, th.miscellaneous-header { background-color: #4CAF50; color: white; }
+    .footer { 
+      display: flex; 
+      flex-direction: row; 
+      align-items: center; 
+      justify-content: space-between; 
+      max-width: 80%; 
+      margin: 0 auto; 
+      padding: 10px 0; 
+      font-size: 2em; /* Match SASTIK GBQ+ size */
+    }
+    .footer a { 
+      text-decoration: none; 
+      margin: 0 5px; 
+    }
+    .footer img { 
+      width: 60px; /* Adjusted to match header logo proportion */
+      height: auto; 
+      vertical-align: middle; 
+    }
+    .footer .logos { 
+      display: flex; 
+      flex-direction: row; 
+      align-items: center; 
+      margin-right: 20px; 
+    }
+    .footer .text-group { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      text-align: center; 
+      flex-grow: 1; 
+    }
+    .footer .follow-text, .footer .contact-text { 
+      font-size: 2em; /* Match SASTIK GBQ+ */
+      margin: 2px 0; 
+    }
+    .footer .name-text { 
+      font-size: 2em; /* Match SASTIK GBQ+ */
+      margin: 5px 0; 
+    }
     @media (max-width: 600px) {
       table { width: 100%; }
       .mission-statement { font-size: 0.9em; max-width: 90%; }
@@ -139,9 +133,10 @@
       .content-count { margin-top: 10px; }
       .header-container { flex-direction: column; text-align: center; }
       .logo { margin-right: 0; margin-bottom: 10px; width: 60px; }
-      .watermark { font-size: 3em; max-width: 90%; }
-      .watermark img { width: 45px; }
-      .watermark .follow-text, .watermark .contact-text { font-size: 0.9em; }
+      .footer { font-size: 1.5em; max-width: 90%; }
+      .footer img { width: 45px; }
+      .footer .follow-text, .footer .contact-text { font-size: 1.5em; }
+      .footer .name-text { font-size: 1.5em; }
     }
   </style>
 </head>
@@ -190,7 +185,7 @@
     <thead id="tableHeaders"></thead>
     <tbody id="verseBody"></tbody>
   </table>
-  <div class="watermark">
+  <div class="footer">
     <div class="logos">
       <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook"></a>
       <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube"></a>

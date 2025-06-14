@@ -29,7 +29,7 @@
       color: #0066cc; /* Blue for hyperlink */
       text-align: center; 
       margin: 0; 
-      font-size: 2em; 
+      font-size: 1.8em; /* Slightly smaller than 80px logo */
       font-weight: bold; 
       white-space: nowrap; 
       text-decoration: none; 
@@ -50,14 +50,20 @@
     }
     .mission-statement { 
       text-align: center; 
-      margin: 0 auto 20px; 
+      margin: 0 auto 10px; /* Reduced margin for new line */
       max-width: 80%; 
       font-size: 1.1em; 
       line-height: 1.5; 
       font-weight: bold; 
     }
-    .mission-statement b { color: #ff0000; }
-    .mission-statement em { color: #00ff00; }
+    .mission-subtext { 
+      text-align: center; 
+      margin: 0 auto 20px; 
+      max-width: 80%; 
+      font-size: 1.1em; 
+      line-height: 1.5; 
+      font-weight: normal; 
+    }
     .controls { 
       margin-bottom: 20px; 
       text-align: center; 
@@ -136,6 +142,9 @@
       font-size: 1em; 
       margin-bottom: 10px; 
     }
+    .support-text span { 
+      display: block; 
+    }
     .follow-text, .contact-text { 
       font-size: 1.1em; 
       margin: 2px 0; 
@@ -160,13 +169,14 @@
       margin: 10px 0; 
     }
     .qr-code img { 
-      width: 100px; 
+      width: 150px; 
       height: auto; 
     }
     @media (max-width: 600px) {
       table { width: 100%; }
       .mission-statement { font-size: 0.9em; max-width: 90%; }
-      h2 { font-size: 1.5em; }
+      .mission-subtext { font-size: 0.9em; max-width: 90%; }
+      h2 { font-size: 1.4em; }
       select, input { width: 100%; margin-bottom: 10px; }
       .controls { flex-direction: column; align-items: center; }
       .content-count { margin-top: 10px; }
@@ -178,7 +188,7 @@
       .follow-text, .contact-text { font-size: 0.9em; }
       .contact-text { max-width: 90%; }
       .contact-text img { width: 20px; }
-      .qr-code img { width: 80px; }
+      .qr-code img { width: 120px; }
       .support-text { font-size: 0.9em; }
     }
   </style>
@@ -192,7 +202,11 @@
     <h2><a href="https://www.facebook.com/sastikofficial/" target="_blank">SASTIK GBQ+</a></h2>
   </div>
   <div class="mission-statement">
+    <b>সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে, সম্প্রীতি ও মানবতার পক্ষে ✅</b><br>
     <b>To Propagate Sane Theism, Against Hatred and Violence 🚫 In Favor of Harmony and Humanity ✅</b>
+  </div>
+  <div class="mission-subtext">
+    A unified platform offering categorized theological verses based on modern-day relevance—empowering you to apply or disregard teachings wisely and avoid the misguidance of charlatans.
   </div>
   <div class="controls">
     <label for="sheetSelector">Select Sheet:</label>
@@ -229,7 +243,10 @@
   </table>
   <div class="footer">
     <div class="text-group">
-      <div class="support-text">If you want to support this SASTIK mission for society’s betterment, you can help by scanning the QR code below. Your support will encourage me to continue this mission.</div>
+      <div class="support-text">
+        <span>To continue the SASTIK mission for a better, harmonious society,</span>
+        <span>you can support us by scanning the <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank">UPI QR code</a> and encouraging our efforts.</span>
+      </div>
       <div class="qr-code">
         <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank"><img src="qrcode_logo.jpg" alt="UPI QR Code" onerror="console.log('UPI QR code failed to load')"></a>
       </div>

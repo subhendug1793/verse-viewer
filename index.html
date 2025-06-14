@@ -90,24 +90,24 @@
       text-align: center;
     }
     select, input { 
-      padding: 4px; 
+      padding: 5px; 
       margin-right: 10px; 
     }
     #searchInput { 
-      width: 250px; 
+      width: 200px; 
     }
     table { 
-      border-collapse: collapse;
+      border-collapse: collapse; 
       width: 80%; 
-      margin: 20px auto; 
+      margin: 0 auto 20px; 
       background-color: #fff; 
       box-shadow: 0 0 10px rgba(0,0,0,0.1); 
       position: relative; 
-      z-index: 1;
+      z-index: 1; 
     }
     th, td { 
       border: 1px solid #ddd; 
-      padding: 8px; 
+      padding: 10px; 
       text-align: center; 
     }
     td a { 
@@ -200,6 +200,10 @@
     .support-text span { 
       display: block; 
     }
+    .sastik-highlight { 
+      color: #0066cc; 
+      font-weight: bold; 
+    }
     .follow-text, .contact-text { 
       font-size: 1.1em; 
       margin: 2px 0; 
@@ -285,10 +289,10 @@
       }
       table { 
         width: 100%; 
-        font-size: 0.8em; 
+        font-size: 0.9em; 
       }
       th, td { 
-        padding: 8px; 
+        padding: 6px; 
       }
       .footer { 
         max-width: 90%; 
@@ -319,266 +323,268 @@
   </style>
 </head>
 <body>
-    <div class="header-info">
-      <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
+  <div class="header-info">
+    <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
+  </div>
+  <div class="header-container">
+    <img src="sastik_logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('SASTIK logo failed to load');">
+    <h2><a href="https://www.facebook.com/sastikofficial/" target="_blank">SASTIK GBQ+</a></h2>
+  </div>
+  <div class="mission-statement">
+    <b>সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে, সম্প্রীতি ও মানবতার পক্ষে ✅</b><br>
+    <b>To Propagate Sane Theism, Against Hatred and Violence 🚫 In Favor of Harmony and Humanity ✅</b>
+  </div>
+  <div class="mission-subtext">
+    👇 A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. 👇
+  </div>
+  <div class="controls">
+    <label for="sheetSelector">Select Gita/Bible/Quran+:</label>
+    <select id="sheetSelector" onchange="loadSheetData()">
+      <option value="">Select a sheet</option>
+      <option value="gita">Gita</option>
+      <option value="bible">Bible</option>
+      <option value="quran">Quran</option>
+      <option value="hadith">Hadith</option>
+      <option value="miscellaneous">Miscellaneous</option>
+    </select>
+    <label for="categoryFilter">Filter by Sloka/Verse/Ayah Category:</label>
+    <select id="categoryFilter" onchange="filterTable()">
+      <option value="">All</option>
+      <option value="Universal or Ethical Verse">Universal or Ethical Verse</option>
+      <option value="General Intra-community Verse">General Intra-community Verse</option>
+      <option value="Controversial Intra-community Verse">Controversial Intra-community Verse</option>
+      <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
+      <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
+    </select>
+    <label for="subCategoryFilter">Filter by Sub Category:</label>
+    <select id="subCategoryFilter" onchange="filterTable()">
+      <option value="">All</option>
+      <option value="Historical or Narrative verse">Historical or Narrative verse</option>
+      <option value="Discriminatory or Prejudiced Verse">Discriminatory or Prejudiced Verse</option>
+      <option value="Metaphorical or Symbolic verse">Metaphorical or Symbolic verse</option>
+    </select>
+  </div>
+  <div class="search-row">
+    <div class="content-count" id="contentCount">Content Found: 0</div>
+    <div class="search-input-container">
+      <input type="text" id="searchInput" placeholder="Search in table..." onkeyup="searchTable()">
     </div>
-    <div class="header-container">
-      <img src="sastik_logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('SASTIK logo failed to load');">
-      <h2><a href="https://www.facebook.com/sastikofficial/" target="_blank">SASTIK</a></h2>
-    </div>
-    
-<div class="mission-statement">
-      <b>সুস্থা আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে, সম্প্রীতি ও মানবতার পক্ষে ✅</b><br>
-      <b>To Propagate Sane Theism, Against Hatred and Violence 🚫 In Favor of Harmony and Humanity ✅</b>
-    </div>
-    <div class="mission-subtext">
-      👇 A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. 👇
-    </div>
-    <div class="controls">
-      <label for="sheetSelector">Select Gita/Bible/Quran+:</label>
-      <select id="sheetSelector" onchange="loadSheetData()">
-        <option value="">Select a sheet</option>
-        <option value="gita">Gita</option>
-        <option value="bible">Bible</option>
-        <option value="quran">Quran</option>
-        <option value="hadith">Hadith</option>
-        <option value="miscellaneous">Miscellaneous</option>
-      </select>
-      <label for="categoryFilter">Filter by Sloka/Verse/Ayah Category:</label>
-      <select id="categoryFilter" onchange="filterTable()">
-        <option value="">All</option>
-        <option value="Universal or Ethical Verse">Universal or Ethical Verse</option>
-        <option value="General Intra-community Verse">General Intra-community Verse</option>
-        <option value="Controversial Intra-community Verse">Controversial Intra-community Verse</option>
-        <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
-        <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
-      </select>
-      <label for="subCategoryFilter">Filter by Sub Category:</label>
-      <select id="subCategoryFilter" onchange="filterTable()">
-        <option value="">All</option>
-        <option value="Historical or Narrative verse">Historical or Narrative verse</option>
-        <option value="Discriminatory or Prejudiced Verse">Discriminatory or Prejudiced Verse</option>
-        <option value="Metaphorical or Symbolic verse">Metaphorical or Symbolic verse</option>
-      </select>
-    </div>
-    <div class="search-row">
-      <div class="content-count" id="contentCount">Content Found: 0</div>
-      <div class="search-input-container">
-        <input type="text" id="searchInput" placeholder="Search in table..." onkeyup="searchTable()">
+    <div class="match-count" id="matchCount">Matches found: 0</div>
+  </div>
+  <table id="verseTable">
+    <thead id="tableHeaders"></thead>
+    <tbody id="verseBody"></tbody>
+  </table>
+  <div class="footer">
+    <div class="text-group">
+      <div class="support-text">
+        <span>Developing and maintaining this unified platform requires continuous effort and dedication.</span>
+        <span>We need your support to sustain the <span class="sastik-highlight">SASTIK</span> mission, which strives to build a better, more harmonious society.</span>
+        <span>You can encourage our efforts by scanning the <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank" style="color: #0066cc; text-decoration: none;">UPI QR code</a> below.</span>
       </div>
-      <div class="match-count" id="matchCount">Matches found: 0</div>
-    </div>
-    <table id="verseTable">
-      <thead id="tableHeaders"></thead>
-      <tbody id="verseBody"></tbody>
-    </table>
-    <div class="footer">
-      <div class="text-group">
-        <div class="support-text">
-          <span>Developing and maintaining this unified platform requires continuous effort and dedication.</span>
-          <span>We need your support to sustain the SASTIK mission, which strives to build a better, more harmonious society.</span>
-          <span>You can encourage our efforts by scanning the <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank" style="color: #0066cc; text-decoration: none;">UPI QR code</a> below.</span>
-        </div>
-        <div class="qr-code">
-          <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank"><img src="qrcode_logo.jpg" alt="UPI QR Code" onerror="console.log('UPI QR code failed to load')"></a>
-        </div>
-        <div class="follow-text">For more insights, follow me on 👇</div>
-        <div class="logos">
-          <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="facebook_logo.png" alt="Facebook" onload="console.log('Facebook logo loaded')" onerror="console.log('Facebook logo failed to load')"></a>
-          <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="youtube_logo.png" alt="YouTube" onload="console.log('YouTube logo loaded')" onerror="console.log('YouTube logo failed to load')"></a>
-          <a href="https://x.com/subhendug1793" target="_blank"><img src="x_logo.png" alt="X" onload="console.log('X logo loaded')" onerror="console.log('X logo failed to load or fallback to SVG')"></a>
-        </div>
-        <div class="name-text">Subhendu Ghosh Sastik</div>
-        <div class="contact-text">If you want to contribute the verse or connect with us, connect me to <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Connect"></a> or mail us at <a href="mailto:s@sastikofficial@gmail.com" target="_blank"><img src="aub@gmail.com" alt="Mail"></a><a href="mailto:sastikofficial@gmail.com" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a>
-</div>
+      <div class="qr-code">
+        <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank"><img src="qrcode_logo.jpg" alt="UPI QR Code" onerror="console.log('UPI QR code failed to load')"></a>
       </div>
+      <div class="follow-text">For more insights, follow me on 👇</div>
+      <div class="logos">
+        <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="facebook_logo.png" alt="Facebook" onload="console.log('Facebook logo loaded')" onerror="console.log('Facebook logo failed to load')"></a>
+        <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="youtube_logo.png" alt="YouTube" onload="console.log('YouTube logo loaded')" onerror="console.log('YouTube logo failed to load')"></a>
+        <a href="https://x.com/subhendug1793" target="_blank"><img src="x_logo.png" alt="X" onload="console.log('X logo loaded')" onerror="console.log('X logo failed to load or fallback to SVG')"></a>
+      </div>
+      <div class="name-text">Subhendu Ghosh Sastik</div>
+      <div class="contact-text">If you want to contribute the verse or contact with us, connect me to <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Connect"></a> or mail us at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="gmail_logo.png" alt="Mail" onerror="console.log('Gmail logo failed to load')"></a><a href="mailto:sastikofficial@gmail.com" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></div>
     </div>
+  </div>
 
-    <script>
-      let data = [];
+  <script>
+    let data = [];
 
-      function loadSheetData() {
-        const sheetName = document.getElementById("sheetSelector").value;
-        if (sheetName) {
-          fetch(`${sheetName}.json`) 
-            .then(response => {
-              if (!response.ok) {
-                throw new Error(`HTTP error occurred! Status: ${response.status}`);
-                .then(data);
-              }
-              return response.json();
-            })
-            .then(sheetData => {
-              data = sheetData;
-              updateHeaders(sheetName);
-              updateTable(data);
-              updateContentCount(data.length);
-              updateMatchCount(0);
-              console.log("Loaded data for sheet:", sheetName, data.length, "rows:", data[0] ? data[0]["Verse Category "] : "Rows:", "Rows:", data);
-              console.log("Data loaded for sheet");
-            })
-            .catch(error => {
-              console.error("Error loading JSON:", error.message);
-              document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || rows.length}" style="text-align: center;">Error: ${sheetName}.json: ${error.message}</td></tr>`;
-              updateContentCount(0);
-              updateMatchCount(0);
-            });
-        } else {
-          document.getElementById("verseBody").innerHTML = "";
-          document.querySelector("#tableHeaders").innerHTML = "";
-          updateContentCount(1);
-          updateMatchCount(0);
-        }
-        updateLastUpdated();
-      }
-
-      function updateHeaders() {
-        const thead = document.getElementById("tableHeaders");
-        thead.innerHTML = "";
-        if (data.length > 0) {
-          let tr = document.createElement("tr");
-          const headers = Object.keys(data[0]).filter(h => h !== "sheet");
-          headers.forEach(header => {
-            let th = document.createElement("th");
-            th.textContent = header;
-            switch (sheetName) {
-              case "gita":
-                th.classList.add("gita-header");
-                break;
-              case "bible":
-                th.classList.add("bible-header");
-                break;
-              case "quran":
-                th.classList.add("quran-header");
-                break;
-              case "hadith":
-                th.classList.add("hadith-header");
-                break;
-              case "miscellaneous":
-                th.classList.add("miscellaneous-header");
-                break;
+    function loadSheetData() {
+      const sheetName = document.getElementById("sheetSelector").value;
+      if (sheetName) {
+        fetch(`${sheetName}.json`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status} - Check if ${sheetName}.json exists in the repository`);
             }
-            tr.appendChild(th);
+            return response.json();
+          })
+          .then(sheetData => {
+            data = sheetData;
+            updateHeaders(sheetName);
+            updateTable(data);
+            updateContentCount(data.length);
+            updateMatchCount(0);
+            console.log("Loaded data for sheet:", sheetName, "Rows:", data.length, "Sample Verse Category:", data[0] ? data[0]["Verse Category "] : "N/A", "Full Data:", data);
+          })
+          .catch(error => {
+            console.error("Error loading JSON:", error.message);
+            document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${sheetName}.json: ${error.message}</td></tr>`;
+            updateContentCount(0);
+            updateMatchCount(0);
           });
-          thead.appendChild(tr);
-        }
+      } else {
+        document.getElementById("verseBody").innerHTML = "";
+        document.getElementById("tableHeaders").innerHTML = "";
+        updateContentCount(0);
+        updateMatchCount(0);
       }
+      updateLastUpdated();
+    }
 
-      function updateTable(rows) {
-        const tbody = document.getElementById("verseBody");
-        tbody.innerHTML = "";
-        if (rows.length === 0) {
+    function updateHeaders(sheetName) {
+      const thead = document.getElementById("tableHeaders");
+      thead.innerHTML = "";
+      if (data.length > 0) {
+        let tr = document.createElement("tr");
+        const headers = Object.keys(data[0]).filter(h => h !== "sheet");
+        headers.forEach(header => {
+          let th = document.createElement("th");
+          th.textContent = header;
+          switch (sheetName) {
+            case "gita":
+              th.classList.add("gita-header");
+              break;
+            case "bible":
+              th.classList.add("bible-header");
+              break;
+            case "quran":
+              th.classList.add("quran-header");
+              break;
+            case "hadith":
+              th.classList.add("hadith-header");
+              break;
+            case "miscellaneous":
+              th.classList.add("miscellaneous-header");
+              break;
+          }
+          tr.appendChild(th);
+        });
+        thead.appendChild(tr);
+      }
+    }
+
+    function updateTable(rows) {
+      const tbody = document.getElementById("verseBody");
+      tbody.innerHTML = "";
+      if (rows.length === 0) {
+        let tr = document.createElement("tr");
+        let td = document.createElement("td");
+        td.textContent = "No data available or error loading data";
+        td.colSpan = Object.keys(data[0] || {}).length || 1;
+        td.style.textAlign = "center";
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+      } else {
+        rows.forEach(row => {
           let tr = document.createElement("tr");
-          let td = document.createElement("td");
-          td.textContent = "No data available or error loading data";
-          td.colSpan = Object.keys(data[0] || {}).length || 1;
-          td.style.textAlign = "center";
-          tr.appendChild(td);
+          const headers = Object.keys(row).filter(h => h !== "sheet");
+          headers.forEach(header => {
+            let td = document.createElement("td");
+            let content = row[header] || "";
+            if (typeof content === "string" || (typeof content === "object" && content.text)) {
+              const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+              if (searchTerm) {
+                const textToSearch = typeof content === "object" ? content.text : content;
+                const highlighted = textToSearch.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
+                content = typeof content === "object" ? { text: highlighted, url: content.url } : highlighted;
+              }
+              td.innerHTML = typeof content === "object" && content.url
+                ? `<a href="${content.url}" target="_blank">${content.text}</a>`
+                : content;
+            } else {
+              td.textContent = content;
+            }
+            if (header === "Verse Category " && typeof row[header] === "string") {
+              td.className = getCategoryClass(row[header].trim().toLowerCase());
+            }
+            tr.appendChild(td);
+          });
           tbody.appendChild(tr);
+        });
+      }
+      updateContentCount(rows.length);
+    }
+
+    function getCategoryClass(category) {
+      switch (category.toLowerCase()) {
+        case "universal or ethical verse": return "category-universal";
+        case "general intra-community verse": return "category-general";
+        case "controversial intra-community verse": return "category-controversial";
+        case "divisive or hateful inter-community verse": return "category-divisive";
+        case "violent or aggressive inter-community verse": return "category-violent";
+        default: return "";
+      }
+    }
+
+    function filterTable() {
+      const category = document.getElementById("categoryFilter").value;
+      const subCategory = document.getElementById("subCategoryFilter").value;
+      const sheetName = document.getElementById("sheetSelector").value;
+      if (sheetName && data.length > 0) {
+        let filteredRows = data.filter(row => {
+          const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
+                                            row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+          const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
+                                                  row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+          return categoryMatch && subCategoryMatch;
+        });
+        updateTable(filteredRows);
+      }
+    }
+
+    function searchTable() {
+      const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+      if (data.length > 0 && searchTerm) {
+        let filteredRows = data.filter(row =>
+          Object.values(row).some(val =>
+            (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
+            (typeof val === "object" && val.text && val.text.toLowerCase().includes(searchTerm))
+          )
+        );
+        let matchCount = 0;
+        data.forEach(row => {
+          Object.values(row).forEach(val => {
+            if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
+              matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+            } else if (typeof val === "object" && val.text && val.text.toLowerCase().includes(searchTerm)) {
+              matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+            }
+          });
+        });
+        updateTable(filteredRows);
+        updateMatchCount(matchCount);
+      } else {
+        updateTable(data);
+        updateMatchCount(0);
+      }
+    }
+
+    function updateContentCount(count) {
+      document.getElementById("contentCount").textContent = `Content Found: ${count}`;
+    }
+
+    function updateMatchCount(count) {
+      document.getElementById("matchCount").textContent = `Matches found: ${count}`;
+    }
+
+    function updateLastUpdated() {
+      try {
+        let lastUpdated;
+        if (document.lastModified && new Date(document.lastModified).getTime()) {
+          lastUpdated = new Date(document.lastModified).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }).replace(/,\s\d{4}$/, '');
         } else {
-          rows.forEach(row => {
-            let tr = document.createElement("tr");
-            const headers = Object.keys(row).filter(h => h !== "sheet");
-            headers.forEach(header => {
-              let td = document.createElement("td");
-              let content = row[header] || "";
-              if (typeof content === "string" || (typeof content === "object" && content.text)) {
-                const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
-                if (searchTerm) {
-                  const textToSearch = typeof content === "object" ? content.text : content;
-                  const highlighted = textToSearch.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
-                  content = typeof content === "object" ? { text: highlighted, url: content.url } : highlighted;
-                }
-                td.innerHTML = typeof content === "object" && content.url
-                  ? `<a href="${content.url}" target="_blank">${content.text}</a>`
-                  : content;
-              } else {
-                td.textContent = content;
-              }
-              if (header === "Verse Category " && typeof row[header] === "string") {
-                td.className = getCategoryClass(row[header].trim().toLowerCase());
-              }
-              tr.appendChild(td);
-            });
-            tbody.appendChild(tr);
-          });
+          lastUpdated = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }).replace(/,\s\d{4}$/, '');
         }
-        updateContentCount(rows.length);
+        document.getElementById("lastUpdated").textContent = `Last updated: ${lastUpdated}`;
+      } catch (error) {
+        console.error("Error updating last modified:", error);
+        const fallbackDate = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }).replace(/,\s\d{4}$/, '');
+        document.getElementById("lastUpdated").textContent = `Last updated: ${fallbackDate}`;
       }
+    }
 
-      function getCategoryClass(category) {
-        switch (category.toLowerCase()) {
-          case "universal or ethical verse": return "category-universal";
-          case "general intra-community verse": return "category-general";
-          case "controversial intra-community verse": return "category-controversial";
-          case "divisive or hateful inter-community verse": return "category-divisive";
-          case "violent or aggressive inter-community verse": return "category-violent";
-          default: return "";
-        }
-      }
-
-      function filterTable() {
-        const category = document.getElementById("categoryFilter").value;
-        const subCategory = document.getElementById("subCategoryFilter").value;
-        const sheetName = document.getElementById("sheetSelector").value;
-        if (sheetName && data.length > 0) {
-          let filteredRows = data.filter(row => {
-            const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                              row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
-            const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                                    row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
-            return categoryMatch && subCategoryMatch;
-          });
-          updateTable(filteredRows);
-        }
-      }
-
-      function searchTable() {
-        const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
-        if (data.length > 0 && searchTerm) {
-          let filteredRows = data.filter(row =>
-            Object.values(row).some(val =>
-              (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
-              (typeof val === "object" && val.text && val.text.toLowerCase().includes(searchTerm))
-            )
-          );
-          let matchCount = 0;
-          data.forEach(row => {
-            Object.values(row).forEach(val => {
-              if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
-                matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
-              } else if (typeof val === "object" && val.text && val.text.toLowerCase().includes(searchTerm)) {
-                matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
-              }
-            });
-          });
-          updateTable(filteredRows);
-          updateMatchCount(matchCount);
-        } else {
-          updateTable(data);
-          updateMatchCount(0);
-        }
-      }
-
-      function updateContentCount(count) {
-        document.getElementById("contentCount").textContent = `Content Found: ${count}`;
-      }
-
-      function updateMatchCount(count) {
-        document.getElementById("matchCount").textContent = `Matches found: ${count}`;
-      }
-
-      function updateLastUpdated() {
-        try {
-          const lastUpdated = new Date(document.lastModified).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }).replace(/,\s\d{4}$/, '');
-          document.getElementById("lastUpdated").textContent = `Last updated: ${lastUpdated}`;
-        } catch (error) {
-          console.error("Error updating last modified:", error);
-          document.getElementById("lastUpdated").textContent = `Last updated: Unknown`;
-        }
-      }
-
-      window.onload = updateLastUpdated;
-    </script>
-  </body>
+    window.onload = updateLastUpdated;
+  </script>
+</body>
 </html>

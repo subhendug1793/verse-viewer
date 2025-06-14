@@ -330,7 +330,7 @@
 </head>
 <body>
   <div class="header-info">
-    <span class="last-updated" id="lastUpdated">Last updated: {{LAST_UPDATED}}</span>
+    <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
   </div>
   <div class="header-container">
     <img src="sastik_logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('SASTIK logo failed to load');">
@@ -410,9 +410,9 @@
 
     function updateLastUpdated() {
       try {
-        const lastUpdatedSpan = document.getElementById("lastUpdated");
-        if (lastUpdatedSpan.textContent.includes("{{LAST_UPDATED}}")) {
-          const now = new Date().toLocaleString('en-IN', {
+        let lastUpdated;
+        if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
+          lastUpdated = new Date(document.lastModified).toLocaleString('en-IN', {
             timeZone: 'Asia/Kolkata',
             day: '2-digit',
             month: '2-digit',
@@ -420,27 +420,18 @@
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit',
-            hour12: false
-          }).replace(/(\d{2})\/(\d{2})\/(\d{4}),/, '$1/$2/$3,');
-          lastUpdatedSpan.textContent = `Last updated: ${now}`;
-          console.log("Timestamp set to current time:", now);
+            hour12: true
+          }).replace(/(\d{2})\/(\d{2})\/(\d{4}),/, '$1/$2/$3,').replace(/,/, '');
+          document.getElementById("lastUpdated").textContent = `Last updated: ${lastUpdated}`;
+        } else {
+          document.getElementById("lastUpdated").textContent = `Last updated: Unknown`;
         }
       } catch (error) {
-        console.error("Error updating timestamp:", error);
-        const fallback = new Date().toLocaleString('en-IN', {
-          timeZone: 'Asia/Kolkata',
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false
-        }).replace(/(\d{2})\/(\d{2})\/(\d{4}),/, '$1/$2/$3,');
-        document.getElementById("lastUpdated").textContent = `Last updated: ${fallback}`;
+        console.error("Error updating last modified:", error);
+        document.getElementById("lastUpdated").textContent = `Last updated: Unknown`;
       }
     }
-    window.addEventListener('load', updateLastUpdated);
+    window.onload = updateLastUpdated;
 
     function loadSheetData() {
       const sheetName = document.getElementById("sheetSelector").value;

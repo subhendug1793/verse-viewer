@@ -200,8 +200,8 @@
     .support-text span { 
       display: block; 
     }
-    .follow-text, .contact-text { 
-      font-size: 1em; 
+    .follow-text { 
+      font-size: 1.1em; 
       margin: 2px 0; 
     }
     .name-text { 
@@ -211,13 +211,18 @@
     .contact-text { 
       font-size: 1em; 
       max-width: 90%; 
-      line-height: 1.4; 
+      text-align: center; 
       pointer-events: auto; 
+    }
+    .contact-text span { 
+      display: block; 
+      white-space: nowrap; 
+      line-height: 1.4; 
     }
     .contact-text img { 
       width: 30px; 
       height: auto; 
-      vertical-align: middle;
+      vertical-align: middle; 
     }
     .qr-code { 
       margin: 10px 0; 
@@ -299,7 +304,10 @@
       .logos img:last-child { 
         margin-right: 0; 
       }
-      .follow-text, .contact-text { 
+      .follow-text { 
+        font-size: 0.9em; 
+      }
+      .contact-text { 
         font-size: 0.75em; 
       }
       .contact-text img { 
@@ -384,7 +392,10 @@
         <a href="https://x.com/subhendug1793" target="_blank"><img src="x_logo.png" alt="X" onload="console.log('X logo loaded')" onerror="console.log('X logo failed to load or fallback to SVG')"></a>
       </div>
       <div class="name-text">Subhendu Ghosh Sastik</div>
-      <div class="contact-text">If you want to contribute to verse updates or have any suggestions or feedback, connect me to <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Connect"></a> or mail us at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="gmail_logo.png" alt="Mail" onerror="console.log('Gmail logo failed to load')"></a><a href="mailto:sastikofficial@gmail.com" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></div>
+      <div class="contact-text">
+        <span>If you want to contribute to verse updates or have any suggestions or feedback,</span>
+        <span>connect me to <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Connect"></a> or mail us at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="gmail_logo.png" alt="Mail" onerror="console.log('Gmail logo failed to load')"></a><a href="mailto:sastikofficial@gmail.com" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></span>
+      </div>
     </div>
   </div>
 
@@ -501,10 +512,10 @@
     function getCategoryClass(category) {
       switch (category.toLowerCase()) {
         case "universal or ethical verse": return "category-universal";
-        case "general intra-community": return "category-general";
-        case "controversial intra-community": return "category-controversial";
-        case "divisive or hateful inter-community": return "category-divisive";
-        case "violent or aggressive inter-community": return "category-violent";
+        case "general intra-community verse": return "category-general";
+        case "controversial intra-community verse": return "category-controversial";
+        case "divisive or hateful inter-community verse": return "category-divisive";
+        case "violent or aggressive inter-community verse": return "category-violent";
         default: return "";
       }
     }
@@ -566,7 +577,7 @@
         document.getElementById("lastUpdated").textContent = `Last updated: ${lastUpdated}`;
       } catch (error) {
         console.error("Error updating last modified:", error);
-        document.getElementById("lastUpdated").textContent = "Last updated: Unknown";
+        document.getElementById("lastUpdated").textContent = `Last updated: Unknown`;
       }
     }
 

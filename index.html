@@ -93,6 +93,10 @@
       padding: 5px; 
       margin-right: 10px; 
     }
+    select:disabled {
+      background-color: #e0e0e0;
+      cursor: not-allowed;
+    }
     #searchInput { 
       width: 200px; 
     }
@@ -326,7 +330,7 @@
 </head>
 <body>
   <div class="header-info">
-    <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
+    <span class="last-updated" id="lastUpdated">Last updated: {{LAST_UPDATED}}</span>
   </div>
   <div class="header-container">
     <img src="sastik_logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('SASTIK logo failed to load');">
@@ -350,7 +354,7 @@
       <option value="miscellaneous">Miscellaneous</option>
     </select>
     <label for="categoryFilter">Filter by Sloka/Verse/Ayah Category:</label>
-    <select id="categoryFilter" onchange="filterTable()">
+    <select id="categoryFilter" disabled onchange="filterTable()">
       <option value="">All</option>
       <option value="Universal or Ethical Verse">Universal or Ethical Verse</option>
       <option value="General Intra-community Verse">General Intra-community Verse</option>
@@ -359,7 +363,7 @@
       <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
     </select>
     <label for="subCategoryFilter">Filter by Sub Category:</label>
-    <select id="subCategoryFilter" onchange="filterTable()">
+    <select id="subCategoryFilter" disabled onchange="filterTable()">
       <option value="">All</option>
       <option value="Historical or Narrative verse">Historical or Narrative verse</option>
       <option value="Discriminatory or Prejudiced Verse">Discriminatory or Prejudiced Verse</option>
@@ -406,7 +410,11 @@
 
     function loadSheetData() {
       const sheetName = document.getElementById("sheetSelector").value;
+      const categoryFilter = document.getElementById("categoryFilter");
+      const subCategoryFilter = document.getElementById("subCategoryFilter");
       if (sheetName) {
+        categoryFilter.disabled = false;
+        subCategoryFilter.disabled = false;
         fetch(`${sheetName}.json`)
           .then(response => {
             if (!response.ok) {
@@ -429,12 +437,13 @@
             updateMatchCount(0);
           });
       } else {
+        categoryFilter.disabled = true;
+        subCategoryFilter.disabled = true;
         document.getElementById("verseBody").innerHTML = "";
         document.getElementById("tableHeaders").innerHTML = "";
         updateContentCount(0);
         updateMatchCount(0);
       }
-      updateLastUpdated();
     }
 
     function updateHeaders(sheetName) {
@@ -572,51 +581,6 @@
     function updateMatchCount(count) {
       document.getElementById("matchCount").textContent = `Matches found: ${count}`;
     }
-
-    function updateLastUpdated() {
-      fetch(`metadata.json?t=${Date.now()}`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Failed to fetch metadata.json: ${response.status} ${response.statusText}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          const lastUpdated = new Date(data.lastUpdated);
-          if (isNaN(lastUpdated)) {
-            throw new Error('Invalid date in metadata.json: ' + JSON.stringify(data));
-          }
-          const formattedDate = lastUpdated.toLocaleString('en-IN', { 
-            timeZone: 'Asia/Kolkata',
-            day: 'numeric',
-            month: 'numeric',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
-            hour12: false
-          }).replace(/(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+)/, '$1/$2/$3, $4:$5:$6');
-          document.getElementById("lastUpdated").textContent = `Last updated: ${formattedDate}`;
-        })
-        .catch(error => {
-          console.error("Error fetching last updated:", error.message);
-          const fallbackDate = new Date('2025-06-14T22:17:00+05:30'); // Updated fallback
-          const formattedFallback = fallbackDate.toLocaleString('en-IN', { 
-            timeZone: 'Asia/Kolkata',
-            day: 'numeric',
-            month: 'numeric',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
-            hour12: false
-          }).replace(/(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+)/, '$1/$2/$3, $4:$5:$6');
-          document.getElementById("lastUpdated").textContent = `Last updated: ${formattedFallback}`;
-        });
-    }
-
-    // Call immediately to ensure date/time displays
-    updateLastUpdated();
   </script>
 </body>
 </html>

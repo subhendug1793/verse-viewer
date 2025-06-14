@@ -151,29 +151,37 @@
     }
     mark { 
       background-color: yellow; 
-      color: black; 
+      font-weight: bold; 
     }
     .footer { 
+      position: relative; 
       margin-top: auto; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       max-width: 80%; 
-      margin: 20px auto; 
-      padding: 20px 0; 
+      margin: 20px auto 0; 
+      padding: 10px 0; 
+      pointer-events: auto; 
     }
     .footer a { 
       text-decoration: none; 
       cursor: pointer; 
+      pointer-events: auto; 
+    }
+    .footer img { 
+      vertical-align: middle; 
+      pointer-events: auto; 
     }
     .logos { 
       display: flex; 
       align-items: center; 
-      margin-bottom: 10px; 
+      margin-bottom: 5px; 
     }
     .logos img { 
-      margin-right: 10px; 
-      max-width: 60px; 
+      width: 60px; 
+      height: auto; 
+      margin-right: 5px; 
     }
     .logos img:last-child { 
       margin-right: 0; 
@@ -183,8 +191,6 @@
       flex-direction: column; 
       align-items: center; 
       text-align: center; 
-      width: 100%; 
-
     }
     .support-text { 
       font-weight: bold; 
@@ -196,103 +202,101 @@
     }
     .follow-text, .contact-text { 
       font-size: 1em; 
-      margin-bottom: 10px; 
+      margin: 2px 0; 
     }
     .name-text { 
       font-size: 2em; 
-      margin: 10px 0; 
+      margin: 5px 0; 
     }
     .contact-text { 
-      white-space: nowrap; 
       font-size: 1em; 
       max-width: 90%; 
-      overflow: auto; 
-      text-overflow: ellipsis; 
-
+      line-height: 1.4; 
+      pointer-events: auto; 
     }
     .contact-text img { 
-      width: 40px; 
-      height: auto;
+      width: 30px; 
+      height: auto; 
       vertical-align: middle;
-      margin-bottom: -10px;
     }
     .qr-code { 
       margin: 10px 0; 
     }
     .qr-code img { 
-      max-width: 150px; 
-      height: auto;
+      width: 150px; 
+      height: auto; 
     }
-    @media (max-width: 480px) {
+    @media (max-width: 600px) {
       .header-info { 
-        position: static; 
+        position: relative; 
+        top: 0; 
+        right: 0; 
         text-align: center; 
-        margin-bottom: 20px; 
-
+        margin: 10px 0; 
+        font-size: 0.8em; 
       }
       .header-container { 
         flex-direction: column; 
         text-align: center; 
-        align-items: center;
+        margin-bottom: 10px; 
       }
-      .logo img { 
-        margin: 0 auto 10px; 
+      .logo { 
+        margin-right: 0; 
+        margin-bottom: 5px; 
         width: 50px; 
       }
       h2 { 
         font-size: 1.2em; 
       }
       .mission-statement { 
-        width: 90%; 
-        font-size: 14px; 
-
+        font-size: 0.9em; 
+        max-width: 90%; 
       }
       .mission-subtext { 
-        width: 90%; 
-        font-size: 10px; 
+        font-size: 0.7em; 
+        max-width: 90%; 
       }
-      select, .labels { 
+      select, input { 
         width: 100%; 
-        margin-bottom: 10px; 
- 
+        margin-bottom: 8px; 
+        padding: 4px; 
       }
       .controls { 
         flex-direction: column; 
         align-items: center; 
-
+        gap: 8px; 
       }
       .search-row { 
         flex-direction: column; 
         align-items: center; 
-
+        gap: 8px; 
+        margin-bottom: 15px; 
       }
-      .content-text span, 
-      .match-count { 
+      .content-count, .match-count { 
         text-align: center; 
       }
       .search-input-container { 
         width: 100%; 
-
       }
       #searchInput { 
         width: 100%; 
-        max-width: 100%; 
+        max-width: 250px; 
       }
-      .table { 
+      table { 
         width: 100%; 
-        font-size: 10px; 
+        font-size: 0.9em; 
       }
-      th, .td { 
-        padding: 5px; 
+      th, td { 
+        padding: 6px; 
       }
       .footer { 
         max-width: 90%; 
       }
       .logos img { 
-        width: 30px; 
-        margin-right: 5px; 
+        width: 40px; 
+        margin-right: 3px; 
       }
-      .logos img img:last-child { 
+      .logos img:last-child { 
         margin-right: 0; 
       }
       .follow-text, .contact-text { 
@@ -300,13 +304,12 @@
       }
       .contact-text img { 
         width: 20px; 
-        margin-bottom: -5px;
       }
       .qr-code img { 
-        max-width: 100px; 
+        width: 100px; 
       }
       .support-text { 
-        font-size: 0.75em; 
+        font-size: 0.8em; 
       }
     }
   </style>
@@ -498,10 +501,10 @@
     function getCategoryClass(category) {
       switch (category.toLowerCase()) {
         case "universal or ethical verse": return "category-universal";
-        case "general intra-community verse": return "category-general";
-        case "controversial intra-community verse": return "category-controversial";
-        case "divisive or hateful inter-community verse": return "category-divisive";
-        case "violent or aggressive inter-community verse": return "category-violent";
+        case "general intra-community": return "category-general";
+        case "controversial intra-community": return "category-controversial";
+        case "divisive or hateful inter-community": return "category-divisive";
+        case "violent or aggressive inter-community": return "category-violent";
         default: return "";
       }
     }
@@ -563,7 +566,7 @@
         document.getElementById("lastUpdated").textContent = `Last updated: ${lastUpdated}`;
       } catch (error) {
         console.error("Error updating last modified:", error);
-        document.getElementById("lastUpdated").textContent = `Last updated: Unknown`;
+        document.getElementById("lastUpdated").textContent = "Last updated: Unknown";
       }
     }
 

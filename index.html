@@ -412,16 +412,21 @@
       try {
         let lastUpdated;
         if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
-          lastUpdated = new Date(document.lastModified).toLocaleString('en-IN', {
+          const date = new Date(document.lastModified);
+          const dateStr = date.toLocaleDateString('en-IN', {
             timeZone: 'Asia/Kolkata',
             day: '2-digit',
             month: '2-digit',
-            year: 'numeric',
+            year: 'numeric'
+          }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
+          const timeStr = date.toLocaleTimeString('en-IN', {
+            timeZone: 'Asia/Kolkata',
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit',
             hour12: true
-          }).replace(/(\d{2})\/(\d{2})\/(\d{4}),/, '$1/$2/$3,').replace(/,/, '').replace(/(am|pm)/i, '$1'.toUpperCase());
+          }).toUpperCase();
+          lastUpdated = `${dateStr} ${timeStr}`;
           document.getElementById("lastUpdated").textContent = `Last updated: ${lastUpdated}`;
         } else {
           document.getElementById("lastUpdated").textContent = `Last updated: Unknown`;

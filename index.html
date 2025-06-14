@@ -60,9 +60,11 @@
       text-align: center; 
       margin: 0 auto 20px; 
       max-width: 80%; 
-      font-size: 1.1em; 
-      line-height: 1.5; 
+      font-size: 0.9em; /* Reduced for single-line display */
+      line-height: 1.2; 
       font-weight: normal; 
+      white-space: nowrap; /* Prevent line break */
+      overflow-x: auto; /* Allow horizontal scroll if needed */
     }
     .controls { 
       margin-bottom: 20px; 
@@ -175,7 +177,7 @@
     @media (max-width: 600px) {
       table { width: 100%; }
       .mission-statement { font-size: 0.9em; max-width: 90%; }
-      .mission-subtext { font-size: 0.9em; max-width: 90%; }
+      .mission-subtext { font-size: 0.7em; max-width: 90%; white-space: normal; overflow-x: visible; } /* Allow wrap on small screens */
       h2 { font-size: 1.4em; }
       select, input { width: 100%; margin-bottom: 10px; }
       .controls { flex-direction: column; align-items: center; }
@@ -206,7 +208,7 @@
     <b>To Propagate Sane Theism, Against Hatred and Violence 🚫 In Favor of Harmony and Humanity ✅</b>
   </div>
   <div class="mission-subtext">
-    A unified platform offering categorized theological verses based on modern-day relevance—empowering you to apply or disregard teachings wisely and avoid the misguidance of charlatans.
+    👇 A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. 👇
   </div>
   <div class="controls">
     <label for="sheetSelector">Select Sheet:</label>
@@ -245,7 +247,7 @@
     <div class="text-group">
       <div class="support-text">
         <span>To continue the SASTIK mission for a better, harmonious society,</span>
-        <span>you can support us by scanning the <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank">UPI QR code</a> and encouraging our efforts.</span>
+        <span>You can support us by scanning the below UPI QR code to encourage our efforts.</span>
       </div>
       <div class="qr-code">
         <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank"><img src="qrcode_logo.jpg" alt="UPI QR Code" onerror="console.log('UPI QR code failed to load')"></a>

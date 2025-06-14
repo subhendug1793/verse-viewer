@@ -20,6 +20,13 @@
       align-items: center; 
       margin-bottom: 20px; 
     }
+    .header-info { 
+      position: absolute; 
+      top: 20px; 
+      right: 20px; 
+      font-size: 0.9em; 
+      color: #666; 
+    }
     .logo { 
       width: 80px; 
       height: auto; 
@@ -40,13 +47,6 @@
     }
     h2 a:hover { 
       text-decoration: underline; 
-    }
-    .header-info { 
-      position: absolute; 
-      top: 20px; 
-      right: 20px; 
-      font-size: 0.9em; 
-      color: #666; 
     }
     .mission-statement { 
       text-align: center; 
@@ -77,7 +77,7 @@
       display: flex; 
       justify-content: center; 
       align-items: center; 
-      gap: 10px; /* 2-3 spaces equivalent */
+      gap: 10px; 
       margin-bottom: 20px; 
     }
     .content-count, .match-count { 
@@ -86,7 +86,7 @@
       text-align: left; 
     }
     .search-input-container {
-      flex-grow: 0; /* Prevent stretching */
+      flex-grow: 0;
       text-align: center;
     }
     select, input { 
@@ -228,8 +228,26 @@
       height: auto; 
     }
     @media (max-width: 600px) {
-      table { 
-        width: 100%; 
+      .header-info { 
+        position: relative; /* Remove absolute positioning */
+        top: 0; 
+        right: 0; 
+        text-align: center; /* Center Last updated */
+        margin: 10px 0; /* Space above and below */
+        font-size: 0.8em; 
+      }
+      .header-container { 
+        flex-direction: column; 
+        text-align: center; 
+        margin-bottom: 10px; 
+      }
+      .logo { 
+        margin-right: 0; 
+        margin-bottom: 5px; 
+        width: 50px; /* Slightly smaller for mobile */
+      }
+      h2 { 
+        font-size: 1.2em; /* Smaller title */
       }
       .mission-statement { 
         font-size: 0.9em; 
@@ -239,20 +257,21 @@
         font-size: 0.7em; 
         max-width: 90%; 
       }
-      h2 { 
-        font-size: 1.4em; 
-      }
       select, input { 
         width: 100%; 
-        margin-bottom: 10px; 
+        margin-bottom: 8px; 
+        padding: 4px; 
       }
       .controls { 
         flex-direction: column; 
         align-items: center; 
+        gap: 8px; 
       }
       .search-row { 
         flex-direction: column; 
         align-items: center; 
+        gap: 8px; 
+        margin-bottom: 15px; 
       }
       .content-count, .match-count { 
         text-align: center; 
@@ -262,21 +281,20 @@
       }
       #searchInput { 
         width: 100%; 
+        max-width: 250px; /* Prevent excessive stretching */
       }
-      .header-container { 
-        flex-direction: column; 
-        text-align: center; 
+      table { 
+        width: 100%; 
+        font-size: 0.9em; /* Smaller table text */
       }
-      .logo { 
-        margin-right: 0; 
-        margin-bottom: 10px; 
-        width: 60px; 
+      th, td { 
+        padding: 6px; /* Smaller padding */
       }
       .footer { 
         max-width: 90%; 
       }
       .logos img { 
-        width: 45px; 
+        width: 40px; 
         margin-right: 3px; 
       }
       .logos img:last-child { 
@@ -292,10 +310,10 @@
         width: 20px; 
       }
       .qr-code img { 
-        width: 120px; 
+        width: 100px; 
       }
       .support-text { 
-        font-size: 0.9em; 
+        font-size: 0.8em; 
       }
     }
   </style>
@@ -391,7 +409,7 @@
             updateHeaders(sheetName);
             updateTable(data);
             updateContentCount(data.length);
-            updateMatchCount(0); // Reset match count on load
+            updateMatchCount(0);
             console.log("Loaded data for sheet:", sheetName, "Rows:", data.length, "Sample Verse Category:", data[0] ? data[0]["Verse Category "] : "N/A", "Full Data:", data);
           })
           .catch(error => {

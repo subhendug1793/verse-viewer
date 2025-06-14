@@ -60,11 +60,9 @@
       text-align: center; 
       margin: 0 auto 20px; 
       max-width: 80%; 
-      font-size: 0.9em; /* Reduced for single-line display */
+      font-size: 0.8em; /* Reduced for single-line where possible */
       line-height: 1.2; 
       font-weight: normal; 
-      white-space: nowrap; /* Prevent line break */
-      overflow-x: auto; /* Allow horizontal scroll if needed */
     }
     .controls { 
       margin-bottom: 20px; 
@@ -73,8 +71,18 @@
       justify-content: center; 
       align-items: center; 
       gap: 10px; 
+      flex-wrap: wrap; 
     }
-    .content-count { 
+    .count-display { 
+      text-align: center; 
+      margin-top: 10px; 
+      width: 100%; 
+    }
+    .count-display div { 
+      display: inline-block; 
+      margin: 0 10px; 
+    }
+    .content-count, .match-count { 
       font-size: 1em; 
       color: #333; 
     }
@@ -100,6 +108,10 @@
     th.bible-header { background-color: blue; color: white; }
     th.quran-header { background-color: green; color: white; }
     th.hadith-header, th.miscellaneous-header { background-color: #4CAF50; color: white; }
+    mark { 
+      background-color: yellow; 
+      font-weight: bold; 
+    }
     .footer { 
       position: relative; 
       margin-top: auto; 
@@ -177,11 +189,11 @@
     @media (max-width: 600px) {
       table { width: 100%; }
       .mission-statement { font-size: 0.9em; max-width: 90%; }
-      .mission-subtext { font-size: 0.7em; max-width: 90%; white-space: normal; overflow-x: visible; } /* Allow wrap on small screens */
+      .mission-subtext { font-size: 0.7em; max-width: 90%; }
       h2 { font-size: 1.4em; }
       select, input { width: 100%; margin-bottom: 10px; }
       .controls { flex-direction: column; align-items: center; }
-      .content-count { margin-top: 10px; }
+      .count-display { margin-top: 5px; }
       .header-container { flex-direction: column; text-align: center; }
       .logo { margin-right: 0; margin-bottom: 10px; width: 60px; }
       .footer { max-width: 90%; }
@@ -211,7 +223,7 @@
     👇 A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. 👇
   </div>
   <div class="controls">
-    <label for="sheetSelector">Select Sheet:</label>
+    <label for="sheetSelector">Select Gita/Bible/Quran:</label>
     <select id="sheetSelector" onchange="loadSheetData()">
       <option value="">Select a sheet</option>
       <option value="gita">Gita</option>
@@ -220,7 +232,7 @@
       <option value="hadith">Hadith</option>
       <option value="miscellaneous">Miscellaneous</option>
     </select>
-    <label for="categoryFilter">Filter by Category:</label>
+    <label for="categoryFilter">Filter by Sloka/Verse/Ayah Category:</label>
     <select id="categoryFilter" onchange="filterTable()">
       <option value="">All</option>
       <option value="Universal or Ethical Verse">Universal or Ethical Verse</option>
@@ -236,8 +248,11 @@
       <option value="Discriminatory or Prejudiced Verse">Discriminatory or Prejudiced Verse</option>
       <option value="Metaphorical or Symbolic verse">Metaphorical or Symbolic verse</option>
     </select>
-    <div class="content-count" id="contentCount">Contents: 0</div>
     <input type="text" id="searchInput" placeholder="Search in table..." onkeyup="searchTable()">
+  </div>
+  <div class="count-display">
+    <div class="content-count" id="contentCount">Contents: 0</div>
+    <div class="match-count" id="matchCount">Matches: 0</div>
   </div>
   <table id="verseTable">
     <thead id="tableHeaders"></thead>
@@ -247,7 +262,7 @@
     <div class="text-group">
       <div class="support-text">
         <span>To continue the SASTIK mission for a better, harmonious society,</span>
-        <span>You can support us by scanning the below UPI QR code to encourage our efforts.</span>
+        <span>You can support us by scanning the below <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank" style="color: #0066cc; text-decoration: none;">UPI QR code</a> to encourage our efforts.</span>
       </div>
       <div class="qr-code">
         <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank"><img src="qrcode_logo.jpg" alt="UPI QR Code" onerror="console.log('UPI QR code failed to load')"></a>
@@ -281,17 +296,20 @@
             updateHeaders(sheetName);
             updateTable(data);
             updateContentCount(data.length);
+            updateMatchCount(0); // Reset match count on load
             console.log("Loaded data for sheet:", sheetName, "Rows:", data.length, "Sample Verse Category:", data[0] ? data[0]["Verse Category "] : "N/A", "Full Data:", data);
           })
           .catch(error => {
             console.error("Error loading JSON:", error.message);
             document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${sheetName}.json: ${error.message}</td></tr>`;
             updateContentCount(0);
+            updateMatchCount(0);
           });
       } else {
         document.getElementById("verseBody").innerHTML = "";
         document.getElementById("tableHeaders").innerHTML = "";
         updateContentCount(0);
+        updateMatchCount(0);
       }
       updateLastUpdated();
     }
@@ -345,10 +363,20 @@
           const headers = Object.keys(row).filter(h => h !== "sheet");
           headers.forEach(header => {
             let td = document.createElement("td");
-            const content = typeof row[header] === "object" && row[header].url
-              ? `<a href="${row[header].url}" target="_blank">${row[header].text}</a>`
-              : row[header] || "";
-            td.innerHTML = content;
+            let content = row[header] || "";
+            if (typeof content === "string" || (typeof content === "object" && content.text)) {
+              const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+              if (searchTerm) {
+                const textToSearch = typeof content === "object" ? content.text : content;
+                const highlighted = textToSearch.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
+                content = typeof content === "object" ? { text: highlighted, url: content.url } : highlighted;
+              }
+              td.innerHTML = typeof content === "object" && content.url
+                ? `<a href="${content.url}" target="_blank">${content.text}</a>`
+                : content;
+            } else {
+              td.textContent = content;
+            }
             if (header === "Verse Category " && typeof row[header] === "string") {
               td.className = getCategoryClass(row[header].trim().toLowerCase());
             }
@@ -383,30 +411,43 @@
                                                   row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
           return categoryMatch && subCategoryMatch;
         });
-        console.log("Filter category:", category, "Sub category:", subCategory, "Filtered rows:", filteredRows.length, 
-                    "Sample Verse Category:", filteredRows[0] ? filteredRows[0]["Verse Category "] : "N/A", 
-                    "Sample Sub Category:", filteredRows[0] ? filteredRows[0]["Sub Category"] : "N/A",
-                    "All Categories:", data.map(row => row["Verse Category "]),
-                    "All Sub Categories:", data.map(row => row["Sub Category"]));
         updateTable(filteredRows);
       }
     }
 
     function searchTable() {
       const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
-      if (data.length > 0) {
-        let filteredRows = searchTerm === "" ? data : data.filter(row =>
+      if (data.length > 0 && searchTerm) {
+        let filteredRows = data.filter(row =>
           Object.values(row).some(val =>
-            val && typeof val === "string" && val.toLowerCase().includes(searchTerm) ||
+            (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
             (typeof val === "object" && val.text && val.text.toLowerCase().includes(searchTerm))
           )
         );
+        let matchCount = 0;
+        data.forEach(row => {
+          Object.values(row).forEach(val => {
+            if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
+              matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+            } else if (typeof val === "object" && val.text && val.text.toLowerCase().includes(searchTerm)) {
+              matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+            }
+          });
+        });
         updateTable(filteredRows);
+        updateMatchCount(matchCount);
+      } else {
+        updateTable(data);
+        updateMatchCount(0);
       }
     }
 
     function updateContentCount(count) {
       document.getElementById("contentCount").textContent = `Contents: ${count}`;
+    }
+
+    function updateMatchCount(count) {
+      document.getElementById("matchCount").textContent = `Matches: ${count}`;
     }
 
     function updateLastUpdated() {

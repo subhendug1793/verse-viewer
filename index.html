@@ -78,7 +78,7 @@
       justify-content: center; 
       align-items: center; 
       gap: 10px; 
-      margin-bottom: 20px; 
+      margin-bottom: 10px; /* Reduced from 20px */
     }
     .content-count, .match-count { 
       font-size: 1em; 
@@ -99,7 +99,7 @@
     table { 
       border-collapse: collapse; 
       width: 80%; 
-      margin: 0 auto 20px; 
+      margin: 0 auto 10px; /* Reduced margin-bottom from 20px */
       background-color: #fff; 
       box-shadow: 0 0 10px rgba(0,0,0,0.1); 
       position: relative; 
@@ -160,7 +160,7 @@
       flex-direction: column; 
       align-items: center; 
       max-width: 80%; 
-      margin: 20px auto 0; 
+      margin: 10px auto 0; /* Reduced from 20px */
       padding: 10px 0; 
       pointer-events: auto; 
     }
@@ -194,7 +194,7 @@
     }
     .support-text { 
       font-weight: bold; 
-      font-size: 0.9em; /* Reduced from 1em */
+      font-size: 0.9em; 
       margin-bottom: 10px; 
     }
     .support-text span { 
@@ -228,7 +228,7 @@
       margin: 10px 0; 
     }
     .qr-code img { 
-      width: 200px; /* Increased from 150px */
+      width: 200px; 
       height: auto; 
     }
     @media (max-width: 600px) {
@@ -275,7 +275,7 @@
         flex-direction: column; 
         align-items: center; 
         gap: 8px; 
-        margin-bottom: 15px; 
+        margin-bottom: 10px; /* Reduced from 15px */
       }
       .content-count, .match-count { 
         text-align: center; 
@@ -290,12 +290,14 @@
       table { 
         width: 100%; 
         font-size: 0.9em; 
+        margin-bottom: 10px; /* Reduced from implicit */
       }
       th, td { 
         padding: 6px; 
       }
       .footer { 
         max-width: 90%; 
+        margin: 10px auto 0; /* Reduced from implicit */
       }
       .logos img { 
         width: 40px; 
@@ -314,10 +316,10 @@
         width: 20px; 
       }
       .qr-code img { 
-        width: 150px; /* Increased from 100px */
+        width: 150px; 
       }
       .support-text { 
-        font-size: 0.7em; /* Reduced from 0.8em */
+        font-size: 0.7em; 
       }
     }
   </style>

@@ -10,7 +10,7 @@
       margin: 20px; 
       background-color: #f9f9f9; 
       position: relative; 
-      min-height: 100vh; /* Ensure body covers full height */
+      min-height: 100vh; 
       display: flex;
       flex-direction: column;
     }
@@ -21,17 +21,25 @@
       margin-bottom: 20px; 
     }
     .logo { 
-      width: 80px; /* Adjusted size to balance with text */
+      width: 80px; 
       height: auto; 
       margin-right: 10px; 
     }
     h2 { 
-      color: #333; 
+      color: #0066cc; /* Blue for hyperlink */
       text-align: center; 
       margin: 0; 
-      font-size: 2em; /* Matches footer text size */
+      font-size: 2em; 
       font-weight: bold; 
-      white-space: nowrap; /* Keep text on one line */
+      white-space: nowrap; 
+      text-decoration: none; 
+    }
+    h2 a { 
+      color: #0066cc; 
+      text-decoration: none; 
+    }
+    h2 a:hover { 
+      text-decoration: underline; 
     }
     .header-info { 
       position: absolute; 
@@ -66,7 +74,7 @@
     table { 
       border-collapse: collapse; 
       width: 80%; 
-      margin: 0 auto 20px; /* Add margin to separate from footer */
+      margin: 0 auto 20px; 
       background-color: #fff; 
       box-shadow: 0 0 10px rgba(0,0,0,0.1); 
       position: relative; 
@@ -80,30 +88,29 @@
     td.category-controversial { background-color: #FFFF00; }
     td.category-divisive { background-color: #FF0000; }
     td.category-violent { background-color: #000000; color: #FFFFFF; }
-    /* Sheet-specific header styles */
     th.gita-header { background-color: orange; color: black; }
     th.bible-header { background-color: blue; color: white; }
     th.quran-header { background-color: green; color: white; }
     th.hadith-header, th.miscellaneous-header { background-color: #4CAF50; color: white; }
     .footer { 
-      position: relative; /* Changed from fixed to relative */
-      margin-top: auto; /* Push to bottom in flex layout */
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      max-width: 80%;
-      margin: 20px auto 0; /* Add top margin for spacing */
-      padding: 10px 0;
-      pointer-events: auto; /* Ensure footer is clickable */
+      position: relative; 
+      margin-top: auto; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      max-width: 80%; 
+      margin: 20px auto 0; 
+      padding: 10px 0; 
+      pointer-events: auto; 
     }
     .footer a { 
-      text-decoration: none;
-      cursor: pointer; /* Ensure clickable cursor */
-      pointer-events: auto; /* Ensure links are clickable */
+      text-decoration: none; 
+      cursor: pointer; 
+      pointer-events: auto; 
     }
     .footer img { 
-      vertical-align: middle;
-      pointer-events: auto; /* Ensure images are clickable */
+      vertical-align: middle; 
+      pointer-events: auto; 
     }
     .logos { 
       display: flex; 
@@ -113,10 +120,10 @@
     .logos img { 
       width: 60px; 
       height: auto; 
-      margin-right: 5px; /* Small space between logos */
+      margin-right: 5px; 
     }
     .logos img:last-child { 
-      margin-right: 0; /* Remove space after last logo */
+      margin-right: 0; 
     }
     .text-group { 
       display: flex; 
@@ -124,24 +131,36 @@
       align-items: center; 
       text-align: center; 
     }
+    .support-text { 
+      font-weight: bold; 
+      font-size: 1em; 
+      margin-bottom: 10px; 
+    }
     .follow-text, .contact-text { 
-      font-size: 1.1em; /* Match mission statement size */
+      font-size: 1.1em; 
       margin: 2px 0; 
     }
     .name-text { 
-      font-size: 2em; /* Match SASTIK GBQ+ */
+      font-size: 2em; 
       margin: 5px 0; 
     }
     .contact-text { 
-      white-space: nowrap; /* Force single line */
+      white-space: nowrap; 
       font-size: 1.1em; 
-      max-width: 100%; /* Ensure full width */
-      overflow: hidden; /* Prevent overflow */
-      text-overflow: ellipsis; /* Optional: truncate with ellipsis if too long */
-      pointer-events: auto; /* Ensure contact text is clickable */
+      max-width: 100%; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+      pointer-events: auto; 
     }
     .contact-text img { 
-      width: 30px; /* Smaller to match 1.1em text */
+      width: 30px; 
+      height: auto; 
+    }
+    .qr-code { 
+      margin: 10px 0; 
+    }
+    .qr-code img { 
+      width: 100px; 
       height: auto; 
     }
     @media (max-width: 600px) {
@@ -150,7 +169,6 @@
       h2 { font-size: 1.5em; }
       select, input { width: 100%; margin-bottom: 10px; }
       .controls { flex-direction: column; align-items: center; }
-      .header-info { position: static; text-align: right; margin-top: 10px; }
       .content-count { margin-top: 10px; }
       .header-container { flex-direction: column; text-align: center; }
       .logo { margin-right: 0; margin-bottom: 10px; width: 60px; }
@@ -160,6 +178,8 @@
       .follow-text, .contact-text { font-size: 0.9em; }
       .contact-text { max-width: 90%; }
       .contact-text img { width: 20px; }
+      .qr-code img { width: 80px; }
+      .support-text { font-size: 0.9em; }
     }
   </style>
 </head>
@@ -169,11 +189,10 @@
   </div>
   <div class="header-container">
     <img src="sastik_logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('SASTIK logo failed to load');">
-    <h2>SASTIK GBQ+</h2>
+    <h2><a href="https://www.facebook.com/sastikofficial/" target="_blank">SASTIK GBQ+</a></h2>
   </div>
   <div class="mission-statement">
-    সুস্থ আস্তিকতা প্রচারের উদ্দেষ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে <b>🚫</b> সম্প্রীতি ও মানবতার পক্ষে <em>✅</em><br>
-    To propagate sane theism, against hatred and violence <b>🚫</b> in favor of harmony and humanity <em>✅</em>
+    <b>To Propagate Sane Theism, Against Hatred and Violence 🚫 In Favor of Harmony and Humanity ✅</b>
   </div>
   <div class="controls">
     <label for="sheetSelector">Select Sheet:</label>
@@ -210,6 +229,10 @@
   </table>
   <div class="footer">
     <div class="text-group">
+      <div class="support-text">If you want to support this SASTIK mission for society’s betterment, you can help by scanning the QR code below. Your support will encourage me to continue this mission.</div>
+      <div class="qr-code">
+        <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank"><img src="qrcode_logo.jpg" alt="UPI QR Code" onerror="console.log('UPI QR code failed to load')"></a>
+      </div>
       <div class="follow-text">For more insights, follow me on 👇</div>
       <div class="logos">
         <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="facebook_logo.png" alt="Facebook" onload="console.log('Facebook logo loaded')" onerror="console.log('Facebook logo failed to load')"></a>
@@ -217,7 +240,7 @@
         <a href="https://x.com/subhendug1793" target="_blank"><img src="x_logo.png" alt="X" onload="console.log('X logo loaded')" onerror="console.log('X logo failed to load or fallback to SVG')"></a>
       </div>
       <div class="name-text">Subhendu Ghosh Sastik</div>
-      <div class="contact-text">If you want to contribute the verse or connect with us, contact me at <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram"></a> Telegram or <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="gmail_logo.png" alt="Mail"></a>sastikofficial@gmail.com</div>
+      <div class="contact-text">If you want to contribute the verse or connect with us, connect me to <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Connect"></a> or mail us at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="gmail_logo.png" alt="Mail"></a><a href="mailto:sastikofficial@gmail.com" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></div>
     </div>
   </div>
 

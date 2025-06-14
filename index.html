@@ -151,37 +151,29 @@
     }
     mark { 
       background-color: yellow; 
-      font-weight: bold; 
+      color: black; 
     }
     .footer { 
-      position: relative; 
       margin-top: auto; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       max-width: 80%; 
-      margin: 20px auto 0; 
-      padding: 10px 0; 
-      pointer-events: auto; 
+      margin: 20px auto; 
+      padding: 20px 0; 
     }
     .footer a { 
       text-decoration: none; 
       cursor: pointer; 
-      pointer-events: auto; 
-    }
-    .footer img { 
-      vertical-align: middle; 
-      pointer-events: auto; 
     }
     .logos { 
       display: flex; 
       align-items: center; 
-      margin-bottom: 5px; 
+      margin-bottom: 10px; 
     }
     .logos img { 
-      width: 60px; 
-      height: auto; 
-      margin-right: 5px; 
+      margin-right: 10px; 
+      max-width: 60px; 
     }
     .logos img:last-child { 
       margin-right: 0; 
@@ -191,6 +183,8 @@
       flex-direction: column; 
       align-items: center; 
       text-align: center; 
+      width: 100%; 
+
     }
     .support-text { 
       font-weight: bold; 
@@ -200,124 +194,119 @@
     .support-text span { 
       display: block; 
     }
-    .sastik-highlight { 
-      color: #0066cc; 
-      font-weight: bold; 
-    }
     .follow-text, .contact-text { 
-      font-size: 1.1em; 
-      margin: 2px 0; 
+      font-size: 1em; 
+      margin-bottom: 10px; 
     }
     .name-text { 
       font-size: 2em; 
-      margin: 5px 0; 
+      margin: 10px 0; 
     }
     .contact-text { 
       white-space: nowrap; 
-      font-size: 1.1em; 
-      max-width: 100%; 
-      overflow: hidden; 
+      font-size: 1em; 
+      max-width: 90%; 
+      overflow: auto; 
       text-overflow: ellipsis; 
-      pointer-events: auto; 
+
     }
     .contact-text img { 
-      width: 30px; 
-      height: auto; 
+      width: 40px; 
+      height: auto;
+      vertical-align: middle;
+      margin-bottom: -10px;
     }
     .qr-code { 
       margin: 10px 0; 
     }
     .qr-code img { 
-      width: 150px; 
-      height: auto; 
+      max-width: 150px; 
+      height: auto;
     }
-    @media (max-width: 600px) {
+    @media (max-width: 480px) {
       .header-info { 
-        position: relative; 
-        top: 0; 
-        right: 0; 
+        position: static; 
         text-align: center; 
-        margin: 10px 0; 
-        font-size: 0.8em; 
+        margin-bottom: 20px; 
+
       }
       .header-container { 
         flex-direction: column; 
         text-align: center; 
-        margin-bottom: 10px; 
+        align-items: center;
       }
-      .logo { 
-        margin-right: 0; 
-        margin-bottom: 5px; 
+      .logo img { 
+        margin: 0 auto 10px; 
         width: 50px; 
       }
       h2 { 
         font-size: 1.2em; 
       }
       .mission-statement { 
-        font-size: 0.9em; 
-        max-width: 90%; 
+        width: 90%; 
+        font-size: 14px; 
+
       }
       .mission-subtext { 
-        font-size: 0.7em; 
-        max-width: 90%; 
+        width: 90%; 
+        font-size: 10px; 
       }
-      select, input { 
+      select, .labels { 
         width: 100%; 
-        margin-bottom: 8px; 
-        padding: 4px; 
+        margin-bottom: 10px; 
+ 
       }
       .controls { 
         flex-direction: column; 
         align-items: center; 
-        gap: 8px; 
+
       }
       .search-row { 
         flex-direction: column; 
         align-items: center; 
-        gap: 8px; 
-        margin-bottom: 15px; 
+
       }
-      .content-count, .match-count { 
+      .content-text span, 
+      .match-count { 
         text-align: center; 
       }
       .search-input-container { 
         width: 100%; 
+
       }
       #searchInput { 
         width: 100%; 
-        max-width: 250px; 
+        max-width: 100%; 
       }
-      table { 
+      .table { 
         width: 100%; 
-        font-size: 0.9em; 
+        font-size: 10px; 
       }
-      th, td { 
-        padding: 6px; 
+      th, .td { 
+        padding: 5px; 
       }
       .footer { 
         max-width: 90%; 
       }
       .logos img { 
-        width: 40px; 
-        margin-right: 3px; 
+        width: 30px; 
+        margin-right: 5px; 
       }
-      .logos img:last-child { 
+      .logos img img:last-child { 
         margin-right: 0; 
       }
       .follow-text, .contact-text { 
-        font-size: 0.9em; 
-      }
-      .contact-text { 
-        max-width: 90%; 
+        font-size: 0.75em; 
       }
       .contact-text img { 
         width: 20px; 
+        margin-bottom: -5px;
       }
       .qr-code img { 
-        width: 100px; 
+        max-width: 100px; 
       }
       .support-text { 
-        font-size: 0.8em; 
+        font-size: 0.75em; 
       }
     }
   </style>
@@ -379,7 +368,7 @@
     <div class="text-group">
       <div class="support-text">
         <span>Developing and maintaining this unified platform requires continuous effort and dedication.</span>
-        <span>We need your support to sustain the <span class="sastik-highlight">SASTIK</span> mission, which strives to build a better, more harmonious society.</span>
+        <span>We need your support to continue the SASTIK mission, which aims to create a better, harmonious society.</span>
         <span>You can encourage our efforts by scanning the <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank" style="color: #0066cc; text-decoration: none;">UPI QR code</a> below.</span>
       </div>
       <div class="qr-code">
@@ -392,7 +381,7 @@
         <a href="https://x.com/subhendug1793" target="_blank"><img src="x_logo.png" alt="X" onload="console.log('X logo loaded')" onerror="console.log('X logo failed to load or fallback to SVG')"></a>
       </div>
       <div class="name-text">Subhendu Ghosh Sastik</div>
-      <div class="contact-text">If you want to contribute the verse or contact with us, connect me to <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Connect"></a> or mail us at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="gmail_logo.png" alt="Mail" onerror="console.log('Gmail logo failed to load')"></a><a href="mailto:sastikofficial@gmail.com" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></div>
+      <div class="contact-text">If you want to contribute to verse updates or have any suggestions or feedback, connect me to <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Connect"></a> or mail us at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="gmail_logo.png" alt="Mail" onerror="console.log('Gmail logo failed to load')"></a><a href="mailto:sastikofficial@gmail.com" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></div>
     </div>
   </div>
 
@@ -570,21 +559,15 @@
 
     function updateLastUpdated() {
       try {
-        let lastUpdated;
-        if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
-          lastUpdated = new Date(document.lastModified).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }).replace(/,\s\d{4}$/, '');
-        } else {
-          lastUpdated = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }).replace(/,\s\d{4}$/, '');
-        }
+        const lastUpdated = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }).replace(/,\s\d{4}$/, '');
         document.getElementById("lastUpdated").textContent = `Last updated: ${lastUpdated}`;
       } catch (error) {
         console.error("Error updating last modified:", error);
-        const fallbackDate = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }).replace(/,\s\d{4}$/, '');
-        document.getElementById("lastUpdated").textContent = `Last updated: ${fallbackDate}`;
+        document.getElementById("lastUpdated").textContent = `Last updated: Unknown`;
       }
     }
 
-    // Call updateLastUpdated immediately to ensure it runs
+    // Call immediately to ensure date/time displays
     updateLastUpdated();
   </script>
 </body>

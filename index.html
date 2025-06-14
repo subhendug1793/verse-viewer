@@ -78,7 +78,7 @@
       justify-content: center; 
       align-items: center; 
       gap: 10px; 
-      margin-bottom: 5px; /* Reduced from 10px */
+      margin-bottom: 5px;
     }
     .content-count, .match-count { 
       font-size: 1em; 
@@ -99,7 +99,7 @@
     table { 
       border-collapse: collapse; 
       width: 80%; 
-      margin: 0 auto 5px; /* Reduced margin-bottom from 10px */
+      margin: 0 auto 5px;
       background-color: #fff; 
       box-shadow: 0 0 10px rgba(0,0,0,0.1); 
       position: relative; 
@@ -160,7 +160,7 @@
       flex-direction: column; 
       align-items: center; 
       max-width: 80%; 
-      margin: 5px auto 0; /* Reduced from 10px */
+      margin: 5px auto 0;
       padding: 10px 0; 
       pointer-events: auto; 
     }
@@ -275,7 +275,7 @@
         flex-direction: column; 
         align-items: center; 
         gap: 8px; 
-        margin-bottom: 5px; /* Reduced from 10px */
+        margin-bottom: 5px;
       }
       .content-count, .match-count { 
         text-align: center; 
@@ -290,14 +290,14 @@
       table { 
         width: 100%; 
         font-size: 0.9em; 
-        margin-bottom: 5px; /* Reduced from 10px */
+        margin-bottom: 5px;
       }
       th, td { 
         padding: 6px; 
       }
       .footer { 
         max-width: 90%; 
-        margin: 5px auto 0; /* Reduced from 10px */
+        margin: 5px auto 0;
       }
       .logos img { 
         width: 40px; 
@@ -577,14 +577,14 @@
       fetch(`metadata.json?t=${Date.now()}`)
         .then(response => {
           if (!response.ok) {
-            throw new Error('Failed to fetch metadata.json');
+            throw new Error(`Failed to fetch metadata.json: ${response.status} ${response.statusText}`);
           }
           return response.json();
         })
         .then(data => {
           const lastUpdated = new Date(data.lastUpdated);
           if (isNaN(lastUpdated)) {
-            throw new Error('Invalid date in metadata.json');
+            throw new Error('Invalid date in metadata.json: ' + JSON.stringify(data));
           }
           const formattedDate = lastUpdated.toLocaleString('en-IN', { 
             timeZone: 'Asia/Kolkata',
@@ -600,8 +600,7 @@
         })
         .catch(error => {
           console.error("Error fetching last updated:", error.message);
-          // Fallback to hardcoded timestamp
-          const fallbackDate = new Date('2025-06-14T22:00:00+05:30');
+          const fallbackDate = new Date('2025-06-14T22:17:00+05:30'); // Updated fallback
           const formattedFallback = fallbackDate.toLocaleString('en-IN', { 
             timeZone: 'Asia/Kolkata',
             day: 'numeric',

@@ -200,6 +200,10 @@
     .support-text span { 
       display: block; 
     }
+    .sastik-highlight { 
+      color: #0066cc; 
+      font-weight: bold; 
+    }
     .follow-text, .contact-text { 
       font-size: 1.1em; 
       margin: 2px 0; 
@@ -375,7 +379,7 @@
     <div class="text-group">
       <div class="support-text">
         <span>Developing and maintaining this unified platform requires continuous effort and dedication.</span>
-        <span>We need your support to sustain the SASTIK mission, which strives to build a better, more harmonious society.</span>
+        <span>We need your support to sustain the <span class="sastik-highlight">SASTIK</span> mission, which strives to build a better, more harmonious society.</span>
         <span>You can encourage our efforts by scanning the <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank" style="color: #0066cc; text-decoration: none;">UPI QR code</a> below.</span>
       </div>
       <div class="qr-code">
@@ -466,7 +470,7 @@
       if (rows.length === 0) {
         let tr = document.createElement("tr");
         let td = document.createElement("td");
-        td.textContent = "No data available or error loading data';
+        td.textContent = "No data available or error loading data";
         td.colSpan = Object.keys(data[0] || {}).length || 1;
         td.style.textAlign = "center";
         tr.appendChild(td);
@@ -481,7 +485,7 @@
             if (typeof content === "string" || (typeof content === "object" && content.text)) {
               const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
               if (searchTerm) {
-                const textToSearch = typeof content === "string" ? content.text : content.toLowerCase();
+                const textToSearch = typeof content === "object" ? content.text : content;
                 const highlighted = textToSearch.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
                 content = typeof content === "object" ? { text: highlighted, url: content.url } : highlighted;
               }
@@ -542,9 +546,9 @@
         data.forEach(row => {
           Object.values(row).forEach(val => {
             if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
-              matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length);
+              matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
             } else if (typeof val === "object" && val.text && val.text.toLowerCase().includes(searchTerm)) {
-              matchCount += (val.text.toLowerCase().match(/(${searchTerm.toLowerCase()}/g) || []).length;
+              matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
             }
           });
         });
@@ -567,7 +571,7 @@
     function updateLastUpdated() {
       try {
         let lastUpdated;
-        if (document.lastModified && new Date(document.lastModified).getTime()) {
+        if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
           lastUpdated = new Date(document.lastModified).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }).replace(/,\s\d{4}$/, '');
         } else {
           lastUpdated = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }).replace(/,\s\d{4}$/, '');
@@ -580,7 +584,8 @@
       }
     }
 
-    window.onload = updateLastUpdated;
+    // Call updateLastUpdated immediately to ensure it runs
+    updateLastUpdated();
   </script>
 </body>
 </html>

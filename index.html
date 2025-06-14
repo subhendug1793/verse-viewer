@@ -26,10 +26,10 @@
       margin-right: 10px; 
     }
     h2 { 
-      color: #0066cc; /* Blue for hyperlink */
+      color: #0066cc;
       text-align: center; 
       margin: 0; 
-      font-size: 1.8em; /* Slightly smaller than 80px logo */
+      font-size: 1.8em;
       font-weight: bold; 
       white-space: nowrap; 
       text-decoration: none; 
@@ -50,7 +50,7 @@
     }
     .mission-statement { 
       text-align: center; 
-      margin: 0 auto 10px; /* Reduced margin for new line */
+      margin: 0 auto 10px;
       max-width: 80%; 
       font-size: 1.1em; 
       line-height: 1.5; 
@@ -60,7 +60,7 @@
       text-align: center; 
       margin: 0 auto 20px; 
       max-width: 80%; 
-      font-size: 0.8em; /* Reduced for single-line where possible */
+      font-size: 0.8em;
       line-height: 1.2; 
       font-weight: normal; 
     }
@@ -70,23 +70,25 @@
       display: flex; 
       justify-content: center; 
       align-items: center; 
-      gap: 10px; 
+      gap: 10px; /* 2-3 spaces equivalent */
       flex-wrap: wrap; 
-    }
-    .count-display { 
-      text-align: center; 
-      margin-top: 10px; 
-      width: 100%; 
-    }
-    .count-display div { 
-      display: inline-block; 
-      margin: 0 10px; 
     }
     .content-count, .match-count { 
       font-size: 1em; 
       color: #333; 
+      text-align: left; /* Left-centric for Content and Matches */
     }
-    select, input { padding: 5px; margin-right: 10px; }
+    .search-input-container {
+      flex-grow: 1; /* Allows search input to take space and stay centered */
+      text-align: center; /* Center the search input */
+    }
+    select, input { 
+      padding: 5px; 
+      margin-right: 10px; 
+    }
+    #searchInput { 
+      width: 200px; /* Fixed width to prevent stretching */
+    }
     table { 
       border-collapse: collapse; 
       width: 80%; 
@@ -96,18 +98,50 @@
       position: relative; 
       z-index: 1; 
     }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-    td a { color: #0066cc; text-decoration: none; }
-    td a:hover { text-decoration: underline; }
-    td.category-universal { background-color: #00FF00; }
-    td.category-general { background-color: #00FFFF; }
-    td.category-controversial { background-color: #FFFF00; }
-    td.category-divisive { background-color: #FF0000; }
-    td.category-violent { background-color: #000000; color: #FFFFFF; }
-    th.gita-header { background-color: orange; color: black; }
-    th.bible-header { background-color: blue; color: white; }
-    th.quran-header { background-color: green; color: white; }
-    th.hadith-header, th.miscellaneous-header { background-color: #4CAF50; color: white; }
+    th, td { 
+      border: 1px solid #ddd; 
+      padding: 10px; 
+      text-align: center; 
+    }
+    td a { 
+      color: #0066cc; 
+      text-decoration: none; 
+    }
+    td a:hover { 
+      text-decoration: underline; 
+    }
+    td.category-universal { 
+      background-color: #00FF00; 
+    }
+    td.category-general { 
+      background-color: #00FFFF; 
+    }
+    td.category-controversial { 
+      background-color: #FFFF00; 
+    }
+    td.category-divisive { 
+      background-color: #FF0000; 
+    }
+    td.category-violent { 
+      background-color: #000000; 
+      color: #FFFFFF; 
+    }
+    th.gita-header { 
+      background-color: orange; 
+      color: black; 
+    }
+    th.bible-header { 
+      background-color: blue; 
+      color: white; 
+    }
+    th.quran-header { 
+      background-color: green; 
+      color: white; 
+    }
+    th.hadith-header, th.miscellaneous-header { 
+      background-color: #4CAF50; 
+      color: white; 
+    }
     mark { 
       background-color: yellow; 
       font-weight: bold; 
@@ -187,23 +221,71 @@
       height: auto; 
     }
     @media (max-width: 600px) {
-      table { width: 100%; }
-      .mission-statement { font-size: 0.9em; max-width: 90%; }
-      .mission-subtext { font-size: 0.7em; max-width: 90%; }
-      h2 { font-size: 1.4em; }
-      select, input { width: 100%; margin-bottom: 10px; }
-      .controls { flex-direction: column; align-items: center; }
-      .count-display { margin-top: 5px; }
-      .header-container { flex-direction: column; text-align: center; }
-      .logo { margin-right: 0; margin-bottom: 10px; width: 60px; }
-      .footer { max-width: 90%; }
-      .logos img { width: 45px; margin-right: 3px; }
-      .logos img:last-child { margin-right: 0; }
-      .follow-text, .contact-text { font-size: 0.9em; }
-      .contact-text { max-width: 90%; }
-      .contact-text img { width: 20px; }
-      .qr-code img { width: 120px; }
-      .support-text { font-size: 0.9em; }
+      table { 
+        width: 100%; 
+      }
+      .mission-statement { 
+        font-size: 0.9em; 
+        max-width: 90%; 
+      }
+      .mission-subtext { 
+        font-size: 0.7em; 
+        max-width: 90%; 
+      }
+      h2 { 
+        font-size: 1.4em; 
+      }
+      select, input { 
+        width: 100%; 
+        margin-bottom: 10px; 
+      }
+      .controls { 
+        flex-direction: column; 
+        align-items: center; 
+      }
+      .content-count, .match-count { 
+        text-align: center; /* Center on small screens for balance */
+      }
+      .search-input-container { 
+        width: 100%; 
+      }
+      #searchInput { 
+        width: 100%; 
+      }
+      .header-container { 
+        flex-direction: column; 
+        text-align: center; 
+      }
+      .logo { 
+        margin-right: 0; 
+        margin-bottom: 10px; 
+        width: 60px; 
+      }
+      .footer { 
+        max-width: 90%; 
+      }
+      .logos img { 
+        width: 45px; 
+        margin-right: 3px; 
+      }
+      .logos img:last-child { 
+        margin-right: 0; 
+      }
+      .follow-text, .contact-text { 
+        font-size: 0.9em; 
+      }
+      .contact-text { 
+        max-width: 90%; 
+      }
+      .contact-text img { 
+        width: 20px; 
+      }
+      .qr-code img { 
+        width: 120px; 
+      }
+      .support-text { 
+        font-size: 0.9em; 
+      }
     }
   </style>
 </head>
@@ -223,7 +305,7 @@
     👇 A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. 👇
   </div>
   <div class="controls">
-    <label for="sheetSelector">Select Gita/Bible/Quran:</label>
+    <label for="sheetSelector">Select Gita/Bible/Quran+:</label>
     <select id="sheetSelector" onchange="loadSheetData()">
       <option value="">Select a sheet</option>
       <option value="gita">Gita</option>
@@ -248,11 +330,11 @@
       <option value="Discriminatory or Prejudiced Verse">Discriminatory or Prejudiced Verse</option>
       <option value="Metaphorical or Symbolic verse">Metaphorical or Symbolic verse</option>
     </select>
-    <input type="text" id="searchInput" placeholder="Search in table..." onkeyup="searchTable()">
-  </div>
-  <div class="count-display">
-    <div class="content-count" id="contentCount">Contents: 0</div>
-    <div class="match-count" id="matchCount">Matches: 0</div>
+    <div class="content-count" id="contentCount">Content Found: 0</div>
+    <div class="search-input-container">
+      <input type="text" id="searchInput" placeholder="Search in table..." onkeyup="searchTable()">
+    </div>
+    <div class="match-count" id="matchCount">Matches found: 0</div>
   </div>
   <table id="verseTable">
     <thead id="tableHeaders"></thead>
@@ -443,11 +525,11 @@
     }
 
     function updateContentCount(count) {
-      document.getElementById("contentCount").textContent = `Contents: ${count}`;
+      document.getElementById("contentCount").textContent = `Content Found: ${count}`;
     }
 
     function updateMatchCount(count) {
-      document.getElementById("matchCount").textContent = `Matches: ${count}`;
+      document.getElementById("matchCount").textContent = `Matches found: ${count}`;
     }
 
     function updateLastUpdated() {

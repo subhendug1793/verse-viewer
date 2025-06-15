@@ -37,10 +37,6 @@
       color: #333;
       z-index: 10;
     }
-    .header-info .visitor-count img, .header-info .visitor-count script {
-      vertical-align: middle;
-      height: 20px; 
-    }
     .header-info .visitor-count.fallback {
       font-weight: normal;
       color: #999;
@@ -464,30 +460,44 @@
       }
     }
 
+    function updateVisitorCount() {
+      try {
+        const visitorCount = document.getElementById("visitorCount");
+        if (visitorCount) {
+          console.log("Visitor count element found:", visitorCount.outerHTML);
+          // Check if visitor has been counted in this session
+          let hasVisited = sessionStorage.getItem("hasVisited");
+          if (!hasVisited) {
+            // Increment counter in localStorage
+            let count = parseInt(localStorage.getItem("visitorCount") || "0", 10);
+            count += 1;
+            localStorage.setItem("visitorCount", count);
+            sessionStorage.setItem("hasVisited", "true");
+            console.log("Visitor counted:", count);
+          }
+          // Get current count
+          let count = parseInt(localStorage.getItem("visitorCount") || "0", 10);
+          // Format count with leading zeros (e.g., 00001)
+          let formattedCount = count.toString().padStart(5, "0");
+          visitorCount.classList.remove("fallback");
+          visitorCount.innerHTML = `Visitors: ${formattedCount}`;
+          console.log("Visitor count updated:", formattedCount);
+        } else {
+          console.error("Visitor count element NOT found. Check .header-info HTML structure.");
+        }
+      } catch (error) {
+        console.error("Error updating visitor count:", error);
+        const visitorCount = document.getElementById("visitorCount");
+        if (visitorCount) {
+          visitorCount.innerHTML = "Visitors: Error";
+          visitorCount.classList.add("fallback");
+        }
+      }
+    }
+
     window.onload = () => {
       updateLastUpdated();
-      const visitorCount = document.getElementById("visitorCount");
-      if (visitorCount) {
-        console.log("Visitor count element found:", visitorCount.outerHTML);
-        const counterScript = visitorCount.querySelector("script");
-        if (counterScript) {
-          console.log("Counter script found:", counterScript.src);
-          counterScript.onload = () => {
-            console.log("FreeCounterStat loaded successfully:", counterScript.src);
-            visitorCount.classList.remove("fallback");
-            visitorCount.innerHTML = `<span>Visitors: </span>${visitorCount.innerHTML}`;
-          };
-          counterScript.onerror = () => {
-            console.error("FreeCounterStat failed to load:", counterScript.src);
-            visitorCount.innerHTML = "Visitors: Error";
-            visitorCount.classList.add("fallback");
-          };
-        } else {
-          console.warn("No counter script found in visitor-count span. Ensure FreeCounterStat code is added correctly.");
-        }
-      } else {
-        console.error("Visitor count element NOT found. Check .header-info HTML structure.");
-      }
+      updateVisitorCount();
       const headerInfo = document.querySelector(".header-info");
       if (headerInfo) {
         const computedStyle = window.getComputedStyle(headerInfo);

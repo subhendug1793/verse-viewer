@@ -443,7 +443,7 @@
       <option value="Metaphorical or Symbolic verse">Metaphorical or Symbolic verse</option>
     </select>
   </div>
-  <div class="search-row">
+  <div class="search-row" id="search-row">
     <div class="content-count" id="contentCount">Content Found: 0</div>
     <div class="search-input-container">
       <input type="text" id="searchInput" placeholder="Search in table..." disabled onkeyup="searchTable()">
@@ -619,6 +619,8 @@
       subCategoryFilter.disabled = false;
       searchInput.disabled = false;
       errorDisplay.textContent = "";
+      // Show search row in table view
+      document.querySelector('.search-row').style.display = 'flex';
       const urlsToTry = [`${currentSheet}.json`, `${currentSheet.toLowerCase()}.json`, `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`];
       let response, sheetData;
       for (const url of urlsToTry) {
@@ -651,6 +653,8 @@
       errorDisplay.textContent = "";
       document.getElementById("verseBody").innerHTML = "";
       document.getElementById("tableHeaders").innerHTML = "";
+      // Show search row by default when no sheet is selected
+      document.querySelector('.search-row').style.display = 'flex';
       updateContentCount(0);
       updateMatchCount(0);
     }
@@ -681,12 +685,16 @@
         displaySingleVerse(verse, verseIndex);
         document.getElementById("controls").style.display = "none";
         document.getElementById("verseTable").style.display = "none";
-        document.getElementById("search-row").style.display = "none";
+        document.querySelector('.search-row').style.display = 'none';
       } else {
         displaySingleVerse(null, verseIndex);
+        document.getElementById("controls").style.display = "none";
+        document.getElementById("verseTable").style.display = "none";
+        document.querySelector('.search-row').style.display = 'none';
       }
     } else {
       document.getElementById("singleVerseView").style.display = "none";
+      document.querySelector('.search-row').style.display = 'flex';
     }
   }
 

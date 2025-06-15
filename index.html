@@ -8,7 +8,7 @@
     body { 
       font-family: Arial, sans-serif; 
       margin: 20px; 
-      background: #f9f9f9; /* Revert to simple background */
+      background: #f9f9f9; 
       position: relative; 
       min-height: 100vh; 
       display: flex;
@@ -82,22 +82,6 @@
       line-height: 1.2; 
       font-weight: normal; 
     }
-    .sheet-selection { 
-      text-align: center; 
-      margin-bottom: 20px; 
-    }
-    .sheet-selection button { 
-      padding: 10px 20px; 
-      margin: 5px; 
-      background-color: #0066cc; 
-      color: white; 
-      border: none; 
-      border-radius: 5px; 
-      cursor: pointer; 
-    }
-    .sheet-selection button:hover { 
-      background-color: #004c99; 
-    }
     .controls { 
       margin-bottom: 10px; 
       text-align: center; 
@@ -156,30 +140,22 @@
       text-decoration: underline; 
     }
     td.category-universal { 
-      background-color: #00FF00; /* Restored original color */
+      background-color: #00FF00; 
     }
     td.category-general { 
-      background-color: #00FFFF; /* Restored original color */
+      background-color: #00FFFF; 
     }
     td.category-controversial { 
-      background-color: #FFFF00; /* Restored original color */
+      background-color: #FFFF00; 
     }
     td.category-divisive { 
-      background-color: #FF0000; /* Restored original color */
+      background-color: #FF0000; 
     }
     td.category-violent { 
-      background-color: #000000; /* Restored original color */
+      background-color: #000000; 
       color: #FFFFFF; 
     }
-    th.gita-header { 
-      background-color: #ffe4b5; /* Kept for visual appeal */
-      color: black; 
-    }
-    th.bible-header { 
-      background-color: #add8e6; /* Kept for visual appeal */
-      color: white; 
-    }
-    th.quran-header, th.hadith-header, th.miscellaneous-header { 
+    th.gita-header, th.bible-header, th.quran-header, th.hadith-header, th.miscellaneous-header { 
       background-color: white; /* Restored original color */
       color: black; 
     }
@@ -277,9 +253,28 @@
       color: #0066cc; 
       margin-bottom: 10px; 
     }
-    .share-buttons a { 
-      margin: 0 5px; 
-      font-size: 0.9em; 
+    .verse-details { 
+      margin-bottom: 20px; 
+      text-align: left; 
+    }
+    .verse-details p { 
+      margin: 5px 0; 
+      font-size: 1em; 
+    }
+    .verse-details strong { 
+      display: inline-block; 
+      width: 150px; 
+      font-weight: bold; 
+    }
+    .share-buttons { 
+      display: flex; 
+      justify-content: center; 
+      gap: 10px; 
+    }
+    .share-buttons img { 
+      width: 24px; 
+      height: 24px; 
+      vertical-align: middle; 
     }
     @media (max-width: 600px) {
       .header-info { 
@@ -310,11 +305,6 @@
       .mission-subtext { 
         font-size: 0.7em; 
         max-width: 90%; 
-      }
-      .sheet-selection button { 
-        padding: 8px 15px; 
-        margin: 3px; 
-        font-size: 0.9em; 
       }
       select, input { 
         width: 100%; 
@@ -376,6 +366,20 @@
       .support-text { 
         font-size: 0.7em; 
       }
+      .single-verse-view { 
+        max-width: 90%; 
+        padding: 15px; 
+      }
+      .verse-details p { 
+        font-size: 0.9em; 
+      }
+      .verse-details strong { 
+        width: 120px; 
+      }
+      .share-buttons img { 
+        width: 20px; 
+        height: 20px; 
+      }
     }
   </style>
 </head>
@@ -395,6 +399,7 @@
   <div class="mission-subtext">
     ⬇️ A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. ⬇️
   </div>
+  <!-- Commented out sheet selection for future use
   <div class="sheet-selection">
     <button onclick="selectSheet('gita')">Gita</button>
     <button onclick="selectSheet('bible')">Bible</button>
@@ -402,6 +407,7 @@
     <button onclick="selectSheet('hadith')">Hadith</button>
     <button onclick="selectSheet('miscellaneous')">Miscellaneous</button>
   </div>
+  -->
   <div class="single-verse-view" id="singleVerseView" style="display: none;"></div>
   <div class="controls" id="controls">
     <label for="sheetSelector">Select Gita/Bible/Quran+:</label>
@@ -537,9 +543,6 @@
           console.warn("document.lastModified unavailable, using current date:", lastUpdated);
         }
         lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${lastUpdated}</a>`;
-        console.log("Last updated set to:", lastUpdated);
-      } else {
-        console.error("Last updated element NOT found.");
       }
     } catch (error) {
       console.error("Error updating last modified:", error);
@@ -552,22 +555,16 @@
 
   async function updateVisitorCount() {
     const visitorCount = document.getElementById("visitorCount");
-    if (!visitorCount) {
-      console.error("Visitor count element NOT found.");
-      return;
-    }
+    if (!visitorCount) return;
     visitorCount.innerHTML = "Visitors: Loading...";
     try {
-      if (!db) {
-        throw new Error("Firestore not initialized");
-      }
+      if (!db) throw new Error("Firestore not initialized");
       const counterRef = doc(db, "counters", "viewerCount");
       await setDoc(counterRef, { count: increment(1) }, { merge: true });
       const counterSnap = await getDoc(counterRef);
       if (counterSnap.exists()) {
-        const count = counterSnap.data().count || 0;
         visitorCount.classList.remove("error");
-        visitorCount.innerHTML = `Visitors: ${count}`;
+        visitorCount.innerHTML = `Visitors: ${counterSnap.data().count || 0}`;
       } else {
         throw new Error("Counter document does not exist");
       }
@@ -575,9 +572,7 @@
       console.error("Firestore error:", error);
       try {
         const response = await fetch('counter.json', { cache: 'no-store' });
-        if (!response.ok) {
-          throw new Error(`counter.json fetch error: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`counter.json fetch error: ${response.status}`);
         const data = await response.json();
         visitorCount.classList.remove("error");
         visitorCount.innerHTML = `Visitors: ${data.visitors}`;
@@ -644,12 +639,6 @@
     }
   }
 
-  function selectSheet(sheetName) {
-    const sheetSelector = document.getElementById("sheetSelector");
-    sheetSelector.value = sheetName;
-    loadSheetData();
-  }
-
   async function loadSingleVerse() {
     const params = new URLSearchParams(window.location.search);
     const sheet = params.get("sheet");
@@ -677,7 +666,6 @@
         document.getElementById("verseTable").style.display = "none";
         document.getElementById("search-row").style.display = "none";
       } else {
-        console.error("Invalid verse or sheet data");
         displaySingleVerse(null, verseIndex);
       }
     } else {
@@ -692,21 +680,19 @@
       singleVerseView.style.display = "block";
       return;
     }
-    let html = `<h3>${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} Verse</h3>`;
-    html += `<table><thead><tr>`;
+    let html = `<h3>${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} Verse</h3><div class="verse-details">`;
     const headers = Object.keys(verse).filter(h => h !== "sheet");
-    headers.forEach(header => {
-      html += `<th>${header}</th>`;
-    });
-    html += `<th>Share</th></tr></thead><tbody><tr>`;
     headers.forEach(header => {
       let content = verse[header] || "-";
       if (typeof content === "object" && content.text && content.url) {
         content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
       }
-      html += `<td${header === "Verse Category " ? ` class="${getCategoryClass(verse[header]?.trim().toLowerCase())}"` : ""}>${content}</td>`;
+      const className = header === "Verse Category " && typeof verse[header] === "string" 
+        ? getCategoryClass(verse[header].trim().toLowerCase()) 
+        : "";
+      html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
     });
-    html += `<td class="share-buttons">${addShareButton(verse, index)}</td></tr></tbody></table>`;
+    html += `</div><div class="share-buttons">${addShareButton(verse, index)}</div>`;
     singleVerseView.innerHTML = html;
     singleVerseView.style.display = "block";
   }
@@ -789,9 +775,20 @@
     const verseText = row["Verse"] || row["Text"] || "";
     const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${currentSheet}&verse=${index}`;
     return `
-      <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank">Twitter</a>
-      <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank">WhatsApp</a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank"><img src="facebook_logo.png" alt="Facebook"></a>
+      <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="whatsapp_logo.png" alt="WhatsApp"></a>
+      <a href="https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(verseText)}" target="_blank"><img src="telegram_logo.png" alt="Telegram"></a>
+      <a href="https://www.instagram.com/?url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="instagram_logo.png" alt="Instagram"></a>
+      <a href="#" onclick="copyToClipboard('${shareUrl}'); return false;"><img src="link_logo.png" alt="Copy Link"></a>
     `;
+  }
+
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Link copied to clipboard!");
+    }).catch(err => {
+      console.error("Failed to copy link:", err);
+    });
   }
 
   function filterTable() {
@@ -875,7 +872,7 @@
   window.loadSheetData = loadSheetData;
   window.filterTable = filterTable;
   window.searchTable = searchTable;
-  window.selectSheet = selectSheet;
+  // window.selectSheet = selectSheet; // Commented out for future use
 
   // Initialize on page load
   window.onload = () => {

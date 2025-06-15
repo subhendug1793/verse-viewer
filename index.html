@@ -37,7 +37,7 @@
       color: #333;
       z-index: 10;
     }
-    .header-info .visitor-count img {
+    .header-info .visitor-count img, .header-info .visitor-count script {
       vertical-align: middle;
       height: 20px; 
     }
@@ -95,7 +95,7 @@
       display: flex; 
       justify-content: center; 
       align-items: center; 
-      gap: 10px; 
+      gap: 2px; 
       flex-wrap: wrap; 
     }
     .search-row { 
@@ -469,24 +469,21 @@
       const visitorCount = document.getElementById("visitorCount");
       if (visitorCount) {
         console.log("Visitor count element found:", visitorCount.outerHTML);
-        if (visitorCount.innerHTML.includes("<your_counter_code>")) {
-          console.warn("Visitor counter placeholder not replaced. Please add HitWebCounter code from https://www.hitwebcounter.com/.");
-        }
-        const counterImg = visitorCount.querySelector("img");
-        if (counterImg) {
-          console.log("Counter image found:", counterImg.src);
-          counterImg.onload = () => {
-            console.log("HitWebCounter loaded successfully:", counterImg.src);
+        const counterScript = visitorCount.querySelector("script");
+        if (counterScript) {
+          console.log("Counter script found:", counterScript.src);
+          counterScript.onload = () => {
+            console.log("FreeCounterStat loaded successfully:", counterScript.src);
             visitorCount.classList.remove("fallback");
-            visitorCount.innerHTML = `<span>Visitors: </span>${counterImg.outerHTML}`;
+            visitorCount.innerHTML = `<span>Visitors: </span>${visitorCount.innerHTML}`;
           };
-          counterImg.onerror = () => {
-            console.error("HitWebCounter failed to load:", counterImg.src);
+          counterScript.onerror = () => {
+            console.error("FreeCounterStat failed to load:", counterScript.src);
             visitorCount.innerHTML = "Visitors: Error";
             visitorCount.classList.add("fallback");
           };
         } else {
-          console.warn("No counter image found in visitor-count span. Ensure HitWebCounter code is added correctly.");
+          console.warn("No counter script found in visitor-count span. Ensure FreeCounterStat code is added correctly.");
         }
       } else {
         console.error("Visitor count element NOT found. Check .header-info HTML structure.");

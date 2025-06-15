@@ -26,20 +26,20 @@
       right: 20px; 
       font-size: 0.9em; 
       color: #666; 
-      z-index: 10; /* Ensure visibility */
+      z-index: 10; 
     }
     .header-info .visitor-count {
       margin-left: 20px;
       vertical-align: middle;
       display: inline-block;
-      min-height: 20px; /* Prevent collapse */
+      min-height: 20px; 
       font-weight: bold;
       color: #333;
       z-index: 10;
     }
     .header-info .visitor-count img {
       vertical-align: middle;
-      height: 20px; /* Match text */
+      height: 20px; 
     }
     .header-info .visitor-count.fallback {
       font-weight: normal;
@@ -466,15 +466,12 @@
 
     window.onload = () => {
       updateLastUpdated();
-      // Debug: Check visitor-count element
       const visitorCount = document.getElementById("visitorCount");
       if (visitorCount) {
         console.log("Visitor count element found:", visitorCount.outerHTML);
-        // Check for placeholder or counter code
         if (visitorCount.innerHTML.includes("<your_counter_code>")) {
           console.warn("Visitor counter placeholder not replaced. Please add HitWebCounter code from https://www.hitwebcounter.com/.");
         }
-        // Check for img element
         const counterImg = visitorCount.querySelector("img");
         if (counterImg) {
           console.log("Counter image found:", counterImg.src);
@@ -487,21 +484,19 @@
             visitorCount.innerHTML = "Visitors: Error";
             visitorCount.classList.add("fallback");
           };
-        } else if (!visitorCount.innerHTML.includes("Visitors: Loading") && !visitorCount.innerHTML.includes("Visitors: Error")) {
-          console.warn("No counter image or valid fallback text found in visitor-count span.");
+        } else {
+          console.warn("No counter image found. Ensure HitWebCounter code is added.");
         }
       } else {
-        console.error("Visitor count element NOT found. Check HTML structure in .header-info.");
+        console.error("Visitor count element NOT found. Check .header-info HTML.");
       }
-      // Debug: Check header-info visibility
       const headerInfo = document.querySelector(".header-info");
       if (headerInfo) {
         const computedStyle = window.getComputedStyle(headerInfo);
         console.log("Header-info visibility:", {
           display: computedStyle.display,
           visibility: computedStyle.visibility,
-          opacity: computedStyle.opacity,
-          position: computedStyle.position
+          opacity: computedStyle.opacity
         });
       }
     };
@@ -650,7 +645,7 @@
 
     function searchTable() {
       const searchInput = document.getElementById("searchInput");
-      if (searchInput.disabled) return; // Prevent search if disabled
+      if (searchInput.disabled) return; 
       const searchTerm = searchInput.value.toLowerCase().trim();
       if (data.length > 0 && searchTerm) {
         let filteredRows = data.filter(row =>

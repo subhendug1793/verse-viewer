@@ -424,74 +424,112 @@
     </div>
   </div>
 
-  <script>
-    let data = [];
+<script type="module">
+  // Import Firebase SDKs
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+  import { getFirestore, doc, setDoc, getDoc, increment } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
-    function updateLastUpdated() {
-      try {
-        const lastUpdatedElement = document.getElementById("lastUpdated");
-        if (lastUpdatedElement) {
-          console.log("Last updated element found:", lastUpdatedElement.outerHTML);
-          let lastUpdated;
-          if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
-            const date = new Date(document.lastModified);
-            const dateStr = date.toLocaleDateString('en-IN', {
-              timeZone: 'Asia/Kolkata',
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric'
-            }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
-            const timeStr = date.toLocaleTimeString('en-IN', {
-              timeZone: 'Asia/Kolkata',
-              hour: '2-digit',
-              minute: '2-digit',
-              second: '2-digit',
-              hour12: false
-            });
-            lastUpdated = `${dateStr} ${timeStr}`;
-          } else {
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('en-IN', {
-              timeZone: 'Asia/Kolkata',
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric'
-            }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
-            const timeStr = now.toLocaleTimeString('en-IN', {
-              timeZone: 'Asia/Kolkata',
-              hour: '2-digit',
-              minute: '2-digit',
-              second: '2-digit',
-              hour12: false
-            });
-            lastUpdated = `${dateStr} ${timeStr}`;
-            console.warn("document.lastModified unavailable, using current date:", lastUpdated);
-          }
-          lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${lastUpdated}</a>`;
-          console.log("Last updated set to:", lastUpdated);
+  // Your Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyCou0LOLpeijDPxHlVN1pvpruvxdrLKVWk",
+    authDomain: "verseviewercounter.firebaseapp.com",
+    projectId: "verseviewercounter",
+    storageBucket: "verseviewercounter.firebasestorage.app",
+    messagingSenderId: "486076065573",
+    appId: "1:486076065573:web:363e819071b11880089ccc",
+    measurementId: "G-NE4PCNMR8D"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Your existing JavaScript functions (unchanged)
+  let data = [];
+
+  function updateLastUpdated() {
+    try {
+      const lastUpdatedElement = document.getElementById("lastUpdated");
+      if (lastUpdatedElement) {
+        console.log("Last updated element found:", lastUpdatedElement.outerHTML);
+        let lastUpdated;
+        if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
+          const date = new Date(document.lastModified);
+          const dateStr = date.toLocaleDateString('en-IN', {
+            timeZone: 'Asia/Kolkata',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
+          const timeStr = date.toLocaleTimeString('en-IN', {
+            timeZone: 'Asia/Kolkata',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+          });
+          lastUpdated = `${dateStr} ${timeStr}`;
         } else {
-          console.error("Last updated element NOT found.");
+          const now = new Date();
+          const dateStr = now.toLocaleDateString('en-IN', {
+            timeZone: 'Asia/Kolkata',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
+          const timeStr = now.toLocaleTimeString('en-IN', {
+            timeZone: 'Asia/Kolkata',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+          });
+          lastUpdated = `${dateStr} ${timeStr}`;
+          console.warn("document.lastModified unavailable, using current date:", lastUpdated);
         }
-      } catch (error) {
-        console.error("Error updating last modified:", error);
-        const lastUpdatedElement = document.getElementById("lastUpdated");
-        if (lastUpdatedElement) {
-          lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Unknown</a>`;
-        }
+        lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${lastUpdated}</a>`;
+        console.log("Last updated set to:", lastUpdated);
+      } else {
+        console.error("Last updated element NOT found.");
+      }
+    } catch (error) {
+      console.error("Error updating last modified:", error);
+      const lastUpdatedElement = document.getElementById("lastUpdated");
+      if (lastUpdatedElement) {
+        lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Unknown</a>`;
       }
     }
+  }
 
-    async function updateVisitorCount() {
-      const visitorCount = document.getElementById("visitorCount");
-      if (!visitorCount) {
-        console.error("Visitor count element NOT found.");
-        return;
+  async function updateVisitorCount() {
+    const visitorCount = document.getElementById("visitorCount");
+    if (!visitorCount) {
+      console.error("Visitor count element NOT found.");
+      return;
+    }
+    console.log("Visitor count element found:", visitorCount.outerHTML);
+    visitorCount.innerHTML = "Visitors: Loading...";
+
+    try {
+      const counterRef = doc(db, "counters", "viewerCount");
+      // Increment the counter
+      await setDoc(counterRef, { count: increment(1) }, { merge: true });
+      console.log("Counter incremented in Firestore");
+
+      // Fetch the current count
+      const counterSnap = await getDoc(counterRef);
+      if (counterSnap.exists()) {
+        const count = counterSnap.data().count || 0;
+        visitorCount.classList.remove("error");
+        visitorCount.innerHTML = `Visitors: ${count}`;
+        console.log("Visitor count updated from Firestore:", count);
+      } else {
+        throw new Error("Counter document does not exist");
       }
-      console.log("Visitor count element found:", visitorCount.outerHTML);
-      visitorCount.innerHTML = "Visitors: Loading...";
-
+    } catch (error) {
+      console.error("Firestore error:", error);
+      // Fallback to counter.json
       try {
-        // Fetch counter.json
         const response = await fetch('counter.json', { cache: 'no-store' });
         if (!response.ok) {
           throw new Error(`counter.json fetch error: ${response.status}`);
@@ -501,208 +539,209 @@
         visitorCount.classList.remove("error");
         visitorCount.innerHTML = `Visitors: ${data.visitors}`;
         console.log("Visitor count updated from counter.json:", data.visitors);
-      } catch (error) {
-        console.error("Local counter fetch error:", error);
-        // Default to 1
+      } catch (jsonError) {
+        console.error("Local counter fetch error:", jsonError);
         visitorCount.innerHTML = "Visitors: 1";
         visitorCount.classList.add("error");
         console.log("Defaulted to Visitors: 1");
       }
     }
+  }
 
-    window.onload = () => {
-      updateLastUpdated();
-      updateVisitorCount();
-      const headerInfo = document.querySelector(".header-info");
-      if (headerInfo) {
-        const computedStyle = window.getComputedStyle(headerInfo);
-        console.log("Header-info visibility:", {
-          display: computedStyle.display,
-          visibility: computedStyle.visibility,
-          opacity: computedStyle.opacity,
-          position: computedStyle.position
-        });
-      }
-    };
-
-    function loadSheetData() {
-      const sheetName = document.getElementById("sheetSelector").value;
-      const categoryFilter = document.getElementById("categoryFilter");
-      const subCategoryFilter = document.getElementById("subCategoryFilter");
-      const searchInput = document.getElementById("searchInput");
-      if (sheetName) {
-        categoryFilter.disabled = false;
-        subCategoryFilter.disabled = false;
-        searchInput.disabled = false;
-        fetch(`${sheetName}.json`)
-          .then(response => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status} - Check if ${sheetName}.json exists in the repository`);
-            }
-            return response.json();
-          })
-          .then(sheetData => {
-            data = sheetData;
-            updateHeaders(sheetName);
-            updateTable(data);
-            updateContentCount(data.length);
-            updateMatchCount(0);
-            console.log("Loaded data for sheet:", sheetName, "Rows:", data.length, "Sample Verse Category:", data[0] ? data[0]["Verse Category "] : "N/A", "Full Data:", data);
-          })
-          .catch(error => {
-            console.error("Error loading JSON:", error.message);
-            document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${sheetName}.json: ${error.message}</td></tr>`;
-            updateContentCount(0);
-            updateMatchCount(0);
-          });
-      } else {
-        categoryFilter.disabled = true;
-        subCategoryFilter.disabled = true;
-        searchInput.disabled = true;
-        document.getElementById("verseBody").innerHTML = "";
-        document.getElementById("tableHeaders").innerHTML = "";
-        updateContentCount(0);
-        updateMatchCount(0);
-      }
+  window.onload = () => {
+    updateLastUpdated();
+    updateVisitorCount();
+    const headerInfo = document.querySelector(".header-info");
+    if (headerInfo) {
+      const computedStyle = window.getComputedStyle(headerInfo);
+      console.log("Header-info visibility:", {
+        display: computedStyle.display,
+        visibility: computedStyle.visibility,
+        opacity: computedStyle.opacity,
+        position: computedStyle.position
+      });
     }
+  };
 
-    function updateHeaders(sheetName) {
-      const thead = document.getElementById("tableHeaders");
-      thead.innerHTML = "";
-      if (data.length > 0) {
-        let tr = document.createElement("tr");
-        const headers = Object.keys(data[0]).filter(h => h !== "sheet");
-        headers.forEach(header => {
-          let th = document.createElement("th");
-          th.textContent = header;
-          switch (sheetName) {
-            case "gita":
-              th.classList.add("gita-header");
-              break;
-            case "bible":
-              th.classList.add("bible-header");
-              break;
-            case "quran":
-              th.classList.add("quran-header");
-              break;
-            case "hadith":
-              th.classList.add("hadith-header");
-              break;
-            case "miscellaneous":
-              th.classList.add("miscellaneous-header");
-              break;
+  // Your existing functions (unchanged)
+  function loadSheetData() {
+    const sheetName = document.getElementById("sheetSelector").value;
+    const categoryFilter = document.getElementById("categoryFilter");
+    const subCategoryFilter = document.getElementById("subCategoryFilter");
+    const searchInput = document.getElementById("searchInput");
+    if (sheetName) {
+      categoryFilter.disabled = false;
+      subCategoryFilter.disabled = false;
+      searchInput.disabled = false;
+      fetch(`${sheetName}.json`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status} - Check if ${sheetName}.json exists in the repository`);
           }
-          tr.appendChild(th);
+          return response.json();
+        })
+        .then(sheetData => {
+          data = sheetData;
+          updateHeaders(sheetName);
+          updateTable(data);
+          updateContentCount(data.length);
+          updateMatchCount(0);
+          console.log("Loaded data for sheet:", sheetName, "Rows:", data.length, "Sample Verse Category:", data[0] ? data[0]["Verse Category "] : "N/A", "Full Data:", data);
+        })
+        .catch(error => {
+          console.error("Error loading JSON:", error.message);
+          document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${sheetName}.json: ${error.message}</td></tr>`;
+          updateContentCount(0);
+          updateMatchCount(0);
         });
-        thead.appendChild(tr);
-      }
+    } else {
+      categoryFilter.disabled = true;
+      subCategoryFilter.disabled = true;
+      searchInput.disabled = true;
+      document.getElementById("verseBody").innerHTML = "";
+      document.getElementById("tableHeaders").innerHTML = "";
+      updateContentCount(0);
+      updateMatchCount(0);
     }
+  }
 
-    function updateTable(rows) {
-      const tbody = document.getElementById("verseBody");
-      tbody.innerHTML = "";
-      if (rows.length === 0) {
+  function updateHeaders(sheetName) {
+    const thead = document.getElementById("tableHeaders");
+    thead.innerHTML = "";
+    if (data.length > 0) {
+      let tr = document.createElement("tr");
+      const headers = Object.keys(data[0]).filter(h => h !== "sheet");
+      headers.forEach(header => {
+        let th = document.createElement("th");
+        th.textContent = header;
+        switch (sheetName) {
+          case "gita":
+            th.classList.add("gita-header");
+            break;
+          case "bible":
+            th.classList.add("bible-header");
+            break;
+          case "quran":
+            th.classList.add("quran-header");
+            break;
+          case "hadith":
+            th.classList.add("hadith-header");
+            break;
+          case "miscellaneous":
+            th.classList.add("miscellaneous-header");
+            break;
+        }
+        tr.appendChild(th);
+      });
+      thead.appendChild(tr);
+    }
+  }
+
+  function updateTable(rows) {
+    const tbody = document.getElementById("verseBody");
+    tbody.innerHTML = "";
+    if (rows.length === 0) {
+      let tr = document.createElement("tr");
+      let td = document.createElement("td");
+      td.textContent = "No data available or error loading data";
+      td.colSpan = Object.keys(data[0] || {}).length || 1;
+      td.style.textAlign = "center";
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    } else {
+      rows.forEach(row => {
         let tr = document.createElement("tr");
-        let td = document.createElement("td");
-        td.textContent = "No data available or error loading data";
-        td.colSpan = Object.keys(data[0] || {}).length || 1;
-        td.style.textAlign = "center";
-        tr.appendChild(td);
+        const headers = Object.keys(row).filter(h => h !== "sheet");
+        headers.forEach(header => {
+          let td = document.createElement("td");
+          let content = row[header] || "";
+          if (typeof content === "string" || (typeof content === "object" && content.text)) {
+            const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+            if (searchTerm && !document.getElementById("searchInput").disabled) {
+              const textToSearch = typeof content === "object" ? content.text : content;
+              const highlighted = textToSearch.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
+              content = typeof content === "object" ? { text: highlighted, url: content.url } : highlighted;
+            }
+            td.innerHTML = typeof content === "object" && content.url
+              ? `<a href="${content.url}" target="_blank">${content.text}</a>`
+              : content;
+          } else {
+            td.textContent = content;
+          }
+          if (header === "Verse Category " && typeof row[header] === "string") {
+            td.className = getCategoryClass(row[header].trim().toLowerCase());
+          }
+          tr.appendChild(td);
+        });
         tbody.appendChild(tr);
-      } else {
-        rows.forEach(row => {
-          let tr = document.createElement("tr");
-          const headers = Object.keys(row).filter(h => h !== "sheet");
-          headers.forEach(header => {
-            let td = document.createElement("td");
-            let content = row[header] || "";
-            if (typeof content === "string" || (typeof content === "object" && content.text)) {
-              const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
-              if (searchTerm && !document.getElementById("searchInput").disabled) {
-                const textToSearch = typeof content === "object" ? content.text : content;
-                const highlighted = textToSearch.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
-                content = typeof content === "object" ? { text: highlighted, url: content.url } : highlighted;
-              }
-              td.innerHTML = typeof content === "object" && content.url
-                ? `<a href="${content.url}" target="_blank">${content.text}</a>`
-                : content;
-            } else {
-              td.textContent = content;
-            }
-            if (header === "Verse Category " && typeof row[header] === "string") {
-              td.className = getCategoryClass(row[header].trim().toLowerCase());
-            }
-            tr.appendChild(td);
-          });
-          tbody.appendChild(tr);
+      });
+    }
+    updateContentCount(rows.length);
+  }
+
+  function getCategoryClass(category) {
+    switch (category.toLowerCase()) {
+      case "universal or ethical verse": return "category-universal";
+      case "general intra-community verse": return "category-general";
+      case "controversial intra-community verse": return "category-controversial";
+      case "divisive or hateful inter-community verse": return "category-divisive";
+      case "violent or aggressive inter-community verse": return "category-violent";
+      default: return "";
+    }
+  }
+
+  function filterTable() {
+    const category = document.getElementById("categoryFilter").value;
+    const subCategory = document.getElementById("subCategoryFilter").value;
+    const sheetName = document.getElementById("sheetSelector").value;
+    if (sheetName && data.length > 0) {
+      let filteredRows = data.filter(row => {
+        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
+                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+        const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
+                                                row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+        return categoryMatch && subCategoryMatch;
+      });
+      updateTable(filteredRows);
+    }
+  }
+
+  function searchTable() {
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput.disabled) return; 
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    if (data.length > 0 && searchTerm) {
+      let filteredRows = data.filter(row =>
+        Object.values(row).some(val =>
+          (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
+          (typeof val === "object" && val.text && val.text.toLowerCase().includes(searchTerm))
+        )
+      );
+      let matchCount = 0;
+      data.forEach(row => {
+        Object.values(row).forEach(val => {
+          if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
+            matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+          } else if (typeof val === "object" && val.text && val.text.toLowerCase().includes(searchTerm)) {
+            matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+          }
         });
-      }
-      updateContentCount(rows.length);
+      });
+      updateTable(filteredRows);
+      updateMatchCount(matchCount);
+    } else {
+      updateTable(data);
+      updateMatchCount(0);
     }
+  }
 
-    function getCategoryClass(category) {
-      switch (category.toLowerCase()) {
-        case "universal or ethical verse": return "category-universal";
-        case "general intra-community verse": return "category-general";
-        case "controversial intra-community verse": return "category-controversial";
-        case "divisive or hateful inter-community verse": return "category-divisive";
-        case "violent or aggressive inter-community verse": return "category-violent";
-        default: return "";
-      }
-    }
+  function updateContentCount(count) {
+    document.getElementById("contentCount").textContent = `Content Found: ${count}`;
+  }
 
-    function filterTable() {
-      const category = document.getElementById("categoryFilter").value;
-      const subCategory = document.getElementById("subCategoryFilter").value;
-      const sheetName = document.getElementById("sheetSelector").value;
-      if (sheetName && data.length > 0) {
-        let filteredRows = data.filter(row => {
-          const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                            row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
-          const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                                  row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
-          return categoryMatch && subCategoryMatch;
-        });
-        updateTable(filteredRows);
-      }
-    }
-
-    function searchTable() {
-      const searchInput = document.getElementById("searchInput");
-      if (searchInput.disabled) return; 
-      const searchTerm = searchInput.value.toLowerCase().trim();
-      if (data.length > 0 && searchTerm) {
-        let filteredRows = data.filter(row =>
-          Object.values(row).some(val =>
-            (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
-            (typeof val === "object" && val.text && val.text.toLowerCase().includes(searchTerm))
-          )
-        );
-        let matchCount = 0;
-        data.forEach(row => {
-          Object.values(row).forEach(val => {
-            if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
-              matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
-            } else if (typeof val === "object" && val.text && val.text.toLowerCase().includes(searchTerm)) {
-              matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
-            }
-          });
-        });
-        updateTable(filteredRows);
-        updateMatchCount(matchCount);
-      } else {
-        updateTable(data);
-        updateMatchCount(0);
-      }
-    }
-
-    function updateContentCount(count) {
-      document.getElementById("contentCount").textContent = `Content Found: ${count}`;
-    }
-
-    function updateMatchCount(count) {
-      document.getElementById("matchCount").textContent = `Matches found: ${count}`;
-    }
-  </script>
+  function updateMatchCount(count) {
+    document.getElementById("matchCount").textContent = `Matches found: ${count}`;
+  }
+</script>
 </body>
 </html>

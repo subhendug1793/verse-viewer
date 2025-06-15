@@ -30,10 +30,18 @@
     .header-info .visitor-count {
       margin-left: 20px;
       vertical-align: middle;
+      display: inline-block;
+      min-height: 20px; /* Ensure span is visible even if empty */
+      font-weight: bold;
+      color: #333;
     }
     .header-info .visitor-count img {
       vertical-align: middle;
-      height: 20px; /* Adjust size to match text */
+      height: 20px; /* Match text size */
+    }
+    .header-info .visitor-count.fallback {
+      font-weight: normal;
+      color: #999;
     }
     .header-info .live-data {
       margin-left: 20px;
@@ -346,7 +354,7 @@
 <body>
   <div class="header-info">
     <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
-    <span class="visitor-count"><your_counter_code></span>
+    <span class="visitor-count fallback" id="visitorCount">Visitors: Loading...</span>
     <span class="live-data"><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Live Data</a></span>
   </div>
   <div class="header-container">
@@ -456,6 +464,17 @@
 
     window.onload = () => {
       updateLastUpdated();
+      // Debug: Check if visitor-count element exists
+      const visitorCount = document.getElementById("visitorCount");
+      if (visitorCount) {
+        console.log("Visitor count element found:", visitorCount);
+        // Check if counter code is a placeholder
+        if (visitorCount.innerHTML.includes("<your_counter_code>")) {
+          console.warn("Visitor counter placeholder not replaced. Please add HitWebCounter code.");
+        }
+      } else {
+        console.error("Visitor count element NOT found. Check HTML structure.");
+      }
     };
 
     function loadSheetData() {

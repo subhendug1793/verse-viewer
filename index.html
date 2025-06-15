@@ -29,8 +29,8 @@
     }
     .header-info .visitor-count {
       margin-left: 20px;
-      font-weight: bold; /* Added for emphasis */
-      color: #333; /* Added for emphasis */
+      font-weight: bold;
+      color: #333;
     }
     .header-info .live-data {
       margin-left: 20px;
@@ -39,7 +39,6 @@
       color: #0066cc;
       text-decoration: underline;
     }
-    /* Rest of the CSS remains unchanged */
     .logo { 
       width: 80px; 
       height: auto; 
@@ -345,7 +344,7 @@
   <div class="header-info">
     <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
     <span class="visitor-count" id="visitorCount">Visitors: 0</span>
-    <span class="live-data">Click 👉 to 👁 <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Live Data</a></span>
+    <span class="live-data"><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Live Data</a></span>
   </div>
   <div class="header-container">
     <img src="sastik_logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('SASTIK logo failed to load');">
@@ -453,14 +452,42 @@
     }
 
     function updateVisitorCount() {
+      // Attempt to fetch visitor count
       fetch('https://api.countapi.xyz/update/sastik/verseviewer/?amount=1')
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
         .then(data => {
+          console.log('CountAPI response:', data);
           document.getElementById('visitorCount').textContent = `Visitors: ${data.value || 0}`;
         })
         .catch(error => {
-          console.error('Error fetching visitor count:', error);
-          document.getElementById('visitorCount').textContent = `Visitors: N/A`;
+          console.error('Error fetching visitor count:', error.message);
+          // Attempt to initialize the key if it doesn't exist
+          fetch('https://api.countapi.xyz/create?namespace=sastik&key=verseviewer')
+            .then(response => response.json())
+            .then(initData => {
+              console.log('CountAPI key initialization response:', initData);
+              // Retry fetching count after initialization
+              return fetch('https://api.countapi.xyz/update/sastik/verseviewer/?amount=1');
+            })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`Retry HTTP error! Status: ${response.status}`);
+              }
+              return response.json();
+            })
+            .then(data => {
+              console.log('CountAPI retry response:', data);
+              document.getElementById('visitorCount').textContent = `Visitors: ${data.value || 0}`;
+            })
+            .catch(retryError => {
+              console.error('Error after key initialization:', retryError.message);
+              document.getElementById('visitorCount').textContent = `Visitors: N/A`;
+            });
         });
     }
 

@@ -8,7 +8,7 @@
     body { 
       font-family: Arial, sans-serif; 
       margin: 20px; 
-      background-color: #f9f9f9; 
+      background: linear-gradient(to bottom, #f9f9f9, #e6f3e6); /* Subtle gradient for visual appeal */
       position: relative; 
       min-height: 100vh; 
       display: flex;
@@ -156,15 +156,15 @@
       color: #FFFFFF; 
     }
     th.gita-header { 
-      background-color: orange; 
+      background-color: #ffe4b5; 
       color: black; 
     }
     th.bible-header { 
-      background-color: blue; 
+      background-color: #add8e6; 
       color: white; 
     }
     th.quran-header { 
-      background-color: green; 
+      background-color: #e6f3e6; 
       color: white; 
     }
     th.hadith-header, th.miscellaneous-header { 
@@ -242,7 +242,7 @@
       line-height: 1.4; 
     }
     .contact-text img { 
-      width: 30px; 
+      width: 20px; 
       height: auto; 
       vertical-align: middle; 
     }
@@ -252,6 +252,78 @@
     .qr-code img { 
       width: 200px; 
       height: auto; 
+    }
+    .category-icon { 
+      margin-right: 5px; 
+    }
+    .verse-of-day { 
+      text-align: center; 
+      margin: 20px auto; 
+      max-width: 80%; 
+      padding: 10px; 
+      background-color: #fff; 
+      box-shadow: 0 0 5px rgba(0,0,0,0.1); 
+    }
+    .verse-of-day h3 { 
+      color: #0066cc; 
+      margin: 0 0 10px; 
+    }
+    .related-verses { 
+      text-align: center; 
+      margin: 20px auto; 
+      max-width: 80%; 
+      padding: 10px; 
+      background-color: #fff; 
+      box-shadow: 0 0 5px rgba(0,0,0,0.1); 
+    }
+    .related-verses h3 { 
+      color: #0066cc; 
+      margin: 0 0 10px; 
+    }
+    .feedback { 
+      text-align: center; 
+      margin: 20px auto; 
+      max-width: 80%; 
+      padding: 10px; 
+      background-color: #fff; 
+      box-shadow: 0 0 5px rgba(0,0,0,0.1); 
+    }
+    .feedback textarea { 
+      width: 100%; 
+      max-width: 300px; 
+      height: 100px; 
+      margin-bottom: 10px; 
+    }
+    .comment-modal { 
+      display: none; 
+      position: fixed; 
+      top: 50%; 
+      left: 50%; 
+      transform: translate(-50%, -50%); 
+      background-color: #fff; 
+      padding: 20px; 
+      box-shadow: 0 0 10px rgba(0,0,0,0.3); 
+      z-index: 1000; 
+    }
+    .comment-modal.active { 
+      display: block; 
+    }
+    .overlay { 
+      display: none; 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      background: rgba(0,0,0,0.5); 
+      z-index: 999; 
+    }
+    .overlay.active { 
+      display: block; 
+    }
+    .share-buttons a { 
+      margin: 0 5px; 
+      font-size: 0.9em; 
     }
     @media (max-width: 600px) {
       .header-info { 
@@ -317,6 +389,15 @@
       th, td { 
         padding: 6px; 
       }
+      .verseBody td:nth-child(n+3) { 
+        display: none; 
+      }
+      .verseBody tr { 
+        cursor: pointer; 
+      }
+      .verseBody tr.expanded td { 
+        display: table-cell; 
+      }
       .footer { 
         max-width: 90%; 
         margin: 5px auto 0;
@@ -343,6 +424,9 @@
       .support-text { 
         font-size: 0.7em; 
       }
+      .feedback textarea { 
+        max-width: 90%; 
+      }
     }
   </style>
 </head>
@@ -362,6 +446,7 @@
   <div class="mission-subtext">
     ⬇️ A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. ⬇️
   </div>
+  <div class="verse-of-day" id="verseOfDay"></div>
   <div class="controls">
     <label for="sheetSelector">Select Gita/Bible/Quran+:</label>
     <select id="sheetSelector" onchange="loadSheetData()">
@@ -400,6 +485,14 @@
     <thead id="tableHeaders"></thead>
     <tbody id="verseBody"></tbody>
   </table>
+  <div class="related-verses" id="relatedVerses"></div>
+  <div class="overlay" id="overlay"></div>
+  <div class="comment-modal" id="commentModal">
+    <h3>Add Comment</h3>
+    <textarea id="commentText" placeholder="Your comment..."></textarea>
+    <button onclick="submitComment()">Submit</button>
+    <button onclick="closeCommentModal()">Close</button>
+  </div>
   <div class="footer">
     <div class="text-group">
       <div class="support-text">
@@ -420,6 +513,13 @@
       <div class="contact-text">
         <span>If you’d like to contribute to verse updates 📜 or have any suggestions or feedback 💭</span>
         <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" style="width: 20px; height: auto; vertical-align: middle;"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="gmail_logo.png" alt="Mail" style="width: 20px; height: auto; vertical-align: middle;" onerror="console.log('Gmail logo failed to load')"></a><a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></span>
+      </div>
+      <div class="feedback">
+        <h3>Feedback</h3>
+        <form id="feedbackForm">
+          <textarea name="feedback" placeholder="Share your thoughts..."></textarea>
+          <button type="submit">Submit</button>
+        </form>
       </div>
     </div>
   </div>
@@ -454,6 +554,7 @@
 
   // Data storage
   let data = [];
+  let currentSheet = "";
 
   function updateLastUpdated() {
     try {
@@ -559,7 +660,7 @@
   async function loadSheetData() {
     console.log("loadSheetData triggered");
     const sheetSelector = document.getElementById("sheetSelector");
-    const sheetName = sheetSelector.value;
+    currentSheet = sheetSelector.value;
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
     const searchInput = document.getElementById("searchInput");
@@ -570,15 +671,15 @@
     errorDisplay.style.marginBottom = "10px";
     document.querySelector(".controls").after(errorDisplay);
 
-    if (sheetName) {
-      console.log(`Fetching data for sheet: ${sheetName}`);
+    if (currentSheet) {
+      console.log(`Fetching data for sheet: ${currentSheet}`);
       categoryFilter.disabled = false;
       subCategoryFilter.disabled = false;
       searchInput.disabled = false;
       errorDisplay.textContent = "";
       
       // Try fetching with original case, then lowercase, then uppercase
-      const urlsToTry = [`${sheetName}.json`, `${sheetName.toLowerCase()}.json`, `${sheetName.charAt(0).toUpperCase() + sheetName.slice(1).toLowerCase()}.json`];
+      const urlsToTry = [`${currentSheet}.json`, `${currentSheet.toLowerCase()}.json`, `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`];
       let response, sheetData;
       for (const url of urlsToTry) {
         try {
@@ -598,15 +699,16 @@
 
       if (sheetData) {
         data = sheetData;
-        updateHeaders(sheetName);
+        updateHeaders(currentSheet);
         updateTable(data);
         updateContentCount(data.length);
         updateMatchCount(0);
-        console.log("Loaded data for sheet:", sheetName, "Rows:", data.length, "Sample Verse Category:", data[0] ? data[0]["Verse Category "] : "N/A");
+        displayVerseOfTheDay();
+        console.log("Loaded data for sheet:", currentSheet, "Rows:", data.length, "Sample Verse Category:", data[0] ? data[0]["Verse Category "] : "N/A");
       } else {
-        console.error(`Failed to load ${sheetName}.json after trying all URL variants`);
-        errorDisplay.textContent = `Error loading ${sheetName}.json. Please check if the file exists or contact support.`;
-        document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${sheetName}.json: File not found or inaccessible</td></tr>`;
+        console.error(`Failed to load ${currentSheet}.json after trying all URL variants`);
+        errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if the file exists or contact support.`;
+        document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${currentSheet}.json: File not found or inaccessible</td></tr>`;
         updateContentCount(0);
         updateMatchCount(0);
       }
@@ -618,6 +720,8 @@
       errorDisplay.textContent = "";
       document.getElementById("verseBody").innerHTML = "";
       document.getElementById("tableHeaders").innerHTML = "";
+      document.getElementById("verseOfDay").innerHTML = "";
+      document.getElementById("relatedVerses").innerHTML = "";
       updateContentCount(0);
       updateMatchCount(0);
     }
@@ -651,6 +755,9 @@
         }
         tr.appendChild(th);
       });
+      // Add headers for comment and share buttons
+      tr.appendChild(document.createElement("th")).textContent = "Comment";
+      tr.appendChild(document.createElement("th")).textContent = "Share";
       thead.appendChild(tr);
       console.log("Table headers updated for:", sheetName);
     }
@@ -663,13 +770,14 @@
       let tr = document.createElement("tr");
       let td = document.createElement("td");
       td.textContent = "No data available or error loading data";
-      td.colSpan = Object.keys(data[0] || {}).length || 1;
+      td.colSpan = Object.keys(data[0] || {}).length + 2 || 3;
       td.style.textAlign = "center";
       tr.appendChild(td);
       tbody.appendChild(tr);
       console.log("Table updated with no data message");
+      document.getElementById("relatedVerses").innerHTML = "";
     } else {
-      rows.forEach(row => {
+      rows.forEach((row, index) => {
         let tr = document.createElement("tr");
         const headers = Object.keys(row).filter(h => h !== "sheet");
         headers.forEach(header => {
@@ -689,26 +797,46 @@
             td.textContent = content || "-";
           }
           if (header === "Verse Category " && typeof row[header] === "string") {
-            td.className = getCategoryClass(row[header].trim().toLowerCase());
+            td.innerHTML = getCategoryClass(row[header].trim().toLowerCase()) + td.innerHTML;
           }
           tr.appendChild(td);
         });
+        // Add comment button
+        let commentTd = document.createElement("td");
+        commentTd.innerHTML = `<button onclick="openCommentModal('${currentSheet}_${index}')">Comment</button>`;
+        tr.appendChild(commentTd);
+        // Add share buttons
+        let shareTd = document.createElement("td");
+        shareTd.className = "share-buttons";
+        shareTd.innerHTML = addShareButton(row, index);
+        tr.appendChild(shareTd);
         tbody.appendChild(tr);
       });
+      showRelatedVerses(rows[0]); // Show related verses for the first displayed row
       console.log("Table updated with", rows.length, "rows");
     }
     updateContentCount(rows.length);
   }
 
   function getCategoryClass(category) {
-    switch (category.toLowerCase()) {
-      case "universal or ethical verse": return "category-universal";
-      case "general intra-community verse": return "category-general";
-      case "controversial intra-community verse": return "category-controversial";
-      case "divisive or hateful inter-community verse": return "category-divisive";
-      case "violent or aggressive inter-community verse": return "category-violent";
-      default: return "";
-    }
+    const icons = {
+      "universal or ethical verse": "🕊️",
+      "general intra-community verse": "🙏",
+      "controversial intra-community verse": "⚠️",
+      "divisive or hateful inter-community verse": "🚫",
+      "violent or aggressive inter-community verse": "🔥"
+    };
+    const className = category.toLowerCase().replace(/ /g, "-");
+    return `<span class="category-icon">${icons[category.toLowerCase()] || ""}</span>`;
+  }
+
+  function addShareButton(row, index) {
+    const verseText = row["Verse"] || row["Text"] || "";
+    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${currentSheet}&verse=${index}`;
+    return `
+      <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank">Twitter</a>
+      <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank">WhatsApp</a>
+    `;
   }
 
   function filterTable() {
@@ -727,7 +855,6 @@
         return categoryMatch && subCategoryMatch;
       });
       updateTable(filteredRows);
-      // If there's a search term, apply search on filtered rows
       if (searchTerm) {
         searchTable();
       } else {
@@ -746,7 +873,6 @@
     const sheetName = document.getElementById("sheetSelector").value;
 
     if (sheetName && data.length > 0) {
-      // Apply category and subcategory filters
       let filteredRows = data.filter(row => {
         const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
                                           row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
@@ -755,7 +881,6 @@
         return categoryMatch && subCategoryMatch;
       });
 
-      // If there's a search term, filter further and count matches
       if (searchTerm) {
         let searchFilteredRows = filteredRows.filter(row =>
           Object.values(row).some(val =>
@@ -788,6 +913,75 @@
     }
   }
 
+  async function displayVerseOfTheDay() {
+    if (!db || !currentSheet) {
+      document.getElementById("verseOfDay").innerHTML = "";
+      return;
+    }
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const verseDoc = doc(db, "verse_of_day", today);
+      let verse;
+      const docSnap = await getDoc(verseDoc);
+      if (docSnap.exists()) {
+        verse = docSnap.data();
+      } else {
+        const randomIndex = Math.floor(Math.random() * data.length);
+        verse = data[randomIndex];
+        await setDoc(verseDoc, { ...verse, sheet: currentSheet });
+      }
+      const verseDiv = document.getElementById("verseOfDay");
+      verseDiv.innerHTML = `<h3>Verse of the Day</h3><p>${verse["Verse"] || verse["Text"] || "No verse available"}</p>`;
+    } catch (error) {
+      console.error("Error displaying verse of the day:", error);
+      document.getElementById("verseOfDay").innerHTML = "";
+    }
+  }
+
+  function showRelatedVerses(currentRow) {
+    if (!currentRow || !data.length) {
+      document.getElementById("relatedVerses").innerHTML = "";
+      return;
+    }
+    const category = currentRow["Verse Category "]?.trim().toLowerCase();
+    const related = data.filter(row => row["Verse Category "]?.trim().toLowerCase() === category && row !== currentRow).slice(0, 3);
+    const relatedDiv = document.getElementById("relatedVerses");
+    relatedDiv.innerHTML = "<h3>Related Verses</h3>";
+    related.forEach(row => {
+      relatedDiv.innerHTML += `<p>${row["Verse"] || row["Text"] || "Verse content"}</p>`;
+    });
+  }
+
+  function openCommentModal(verseId) {
+    const modal = document.getElementById("commentModal");
+    const overlay = document.getElementById("overlay");
+    modal.classList.add("active");
+    overlay.classList.add("active");
+    modal.dataset.verseId = verseId;
+  }
+
+  async function submitComment() {
+    const modal = document.getElementById("commentModal");
+    const verseId = modal.dataset.verseId;
+    const commentText = document.getElementById("commentText").value;
+    if (!db || !commentText) return;
+    try {
+      await setDoc(doc(db, "verse_comments", verseId), { comment: commentText, timestamp: new Date() }, { merge: true });
+      console.log("Comment saved for:", verseId);
+      closeCommentModal();
+    } catch (error) {
+      console.error("Error saving comment:", error);
+    }
+  }
+
+  function closeCommentModal() {
+    const modal = document.getElementById("commentModal");
+    const overlay = document.getElementById("overlay");
+    modal.classList.remove("active");
+    overlay.classList.remove("active");
+    document.getElementById("commentText").value = "";
+  }
+
   function updateContentCount(count) {
     document.getElementById("contentCount").textContent = `Content Found: ${count}`;
   }
@@ -800,6 +994,9 @@
   window.loadSheetData = loadSheetData;
   window.filterTable = filterTable;
   window.searchTable = searchTable;
+  window.openCommentModal = openCommentModal;
+  window.submitComment = submitComment;
+  window.closeCommentModal = closeCommentModal;
 
   // Initialize on page load
   window.onload = () => {
@@ -835,6 +1032,29 @@
     if (searchInput) {
       searchInput.addEventListener("keyup", searchTable);
     }
+    // Feedback form
+    document.getElementById("feedbackForm")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const feedback = e.target.feedback.value;
+      if (db && feedback) {
+        try {
+          await setDoc(doc(db, "feedback", Date.now().toString()), { feedback, timestamp: new Date() });
+          alert("Thank you for your feedback!");
+          e.target.reset();
+        } catch (error) {
+          console.error("Error saving feedback:", error);
+        }
+      }
+    });
+    // Mobile table toggle
+    document.getElementById("verseBody").addEventListener("click", (e) => {
+      if (window.innerWidth <= 600) {
+        const tr = e.target.closest("tr");
+        if (tr) {
+          tr.classList.toggle("expanded");
+        }
+      }
+    });
   };
 </script>
 </body>

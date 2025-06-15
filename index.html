@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SASTIK GBQ+ Verse Filter</title>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
   <style>
     body { 
       font-family: Arial, sans-serif; 
@@ -431,6 +434,18 @@
   <script>
     let data = [];
 
+    // Initialize Firebase (replace with your config)
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     function updateLastUpdated() {
       try {
         let lastUpdated;
@@ -465,25 +480,43 @@
         const visitorCount = document.getElementById("visitorCount");
         if (visitorCount) {
           console.log("Visitor count element found:", visitorCount.outerHTML);
-          // Check if visitor has been counted in this session
           let hasVisited = sessionStorage.getItem("hasVisited");
           if (!hasVisited) {
-            // Increment counter in localStorage
-            let count = parseInt(localStorage.getItem("visitorCount") || "0", 10);
-            count += 1;
-            localStorage.setItem("visitorCount", count);
-            sessionStorage.setItem("hasVisited", "true");
-            console.log("Visitor counted:", count);
+            // Increment counter in Firestore
+            const counterRef = db.collection("visitors").doc("count");
+            db.runTransaction(async (transaction) => {
+              const counterDoc = await transaction.get(counterRef);
+              const newCount = (counterDoc.exists ? counterDoc.data().value : 0) + 1;
+              transaction.set(counterRef, { value: newCount });
+              return newCount;
+            }).then((count) => {
+              sessionStorage.setItem("hasVisited", "true");
+              console.log("Visitor counted:", count);
+              let formattedCount = count.toString().padStart(5, "0");
+              visitorCount.classList.remove("fallback");
+              visitorCount.innerHTML = `Visitors: ${formattedCount}`;
+              console.log("Visitor count updated:", formattedCount);
+            }).catch((error) => {
+              console.error("Firestore transaction error:", error);
+              visitorCount.innerHTML = "Visitors: Error";
+              visitorCount.classList.add("fallback");
+            });
+          } else {
+            // Get current count
+            db.collection("visitors").doc("count").get().then((doc) => {
+              let count = doc.exists ? doc.data().value : 0;
+              let formattedCount = count.toString().padStart(5, "0");
+              visitorCount.classList.remove("fallback");
+              visitorCount.innerHTML = `Visitors: ${formattedCount}`;
+              console.log("Visitor count updated:", formattedCount);
+            }).catch((error) => {
+              console.error("Firestore fetch error:", error);
+              visitorCount.innerHTML = "Visitors: Error";
+              visitorCount.classList.add("fallback");
+            });
           }
-          // Get current count
-          let count = parseInt(localStorage.getItem("visitorCount") || "0", 10);
-          // Format count with leading zeros (e.g., 00001)
-          let formattedCount = count.toString().padStart(5, "0");
-          visitorCount.classList.remove("fallback");
-          visitorCount.innerHTML = `Visitors: ${formattedCount}`;
-          console.log("Visitor count updated:", formattedCount);
         } else {
-          console.error("Visitor count element NOT found. Check .header-info HTML structure.");
+          console.error("Visitor count element NOT found.");
         }
       } catch (error) {
         console.error("Error updating visitor count:", error);

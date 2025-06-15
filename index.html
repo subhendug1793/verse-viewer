@@ -29,8 +29,11 @@
     }
     .header-info .visitor-count {
       margin-left: 20px;
-      font-weight: bold;
-      color: #333;
+      vertical-align: middle;
+    }
+    .header-info .visitor-count img {
+      vertical-align: middle;
+      height: 20px; /* Adjust size to match text */
     }
     .header-info .live-data {
       margin-left: 20px;
@@ -343,7 +346,7 @@
 <body>
   <div class="header-info">
     <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
-    <span class="visitor-count" id="visitorCount">Visitors: 0</span>
+    <span class="visitor-count"><img alt="Visitors" src="https://hits.sh/subhendug1793/verse-viewer.svg?style=flat-square&label=Visitors&color=blue"></span>
     <span class="live-data"><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Live Data</a></span>
   </div>
   <div class="header-container">
@@ -451,49 +454,8 @@
       }
     }
 
-    function updateVisitorCount() {
-      // Try initializing the key first
-      fetch('https://api.countapi.xyz/create?namespace=sastik&key=verseviewer')
-        .then(response => response.json())
-        .then(initData => {
-          console.log('CountAPI key initialization response:', initData);
-          // Proceed to fetch the count
-          return fetch('https://api.countapi.xyz/hit/sastik/verseviewer');
-        })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log('CountAPI response:', data);
-          document.getElementById('visitorCount').textContent = `Visitors: ${data.value || 0}`;
-        })
-        .catch(error => {
-          console.error('Error fetching visitor count:', error.message);
-          // Fallback to a different namespace
-          fetch('https://api.countapi.xyz/hit/subhendug1793/verseviewer')
-            .then(response => {
-              if (!response.ok) {
-                throw new Error(`Fallback HTTP error! Status: ${response.status}`);
-              }
-              return response.json();
-            })
-            .then(data => {
-              console.log('Fallback CountAPI response:', data);
-              document.getElementById('visitorCount').textContent = `Visitors: ${data.value || 0}`;
-            })
-            .catch(fallbackError => {
-              console.error('Error with fallback counter:', fallbackError.message);
-              document.getElementById('visitorCount').textContent = `Visitors: N/A`;
-            });
-        });
-    }
-
     window.onload = () => {
       updateLastUpdated();
-      updateVisitorCount();
     };
 
     function loadSheetData() {

@@ -481,56 +481,57 @@
       }
     }
 
-    function updateVisitorCount() {
-      try {
-        const visitorCount = document.getElementById("visitorCount");
-        if (visitorCount) {
-          console.log("Visitor count element found:", visitorCount.outerHTML);
-          // Try CountAPI
-          fetch('https://api.countapi.xyz/hit/verse-viewer-june2025/visitors')
-            .then(response => {
-              console.log("CountAPI response status:", response.status);
-              if (!response.ok) {
-                throw new Error(`CountAPI error: ${response.status}`);
-              }
-              return response.json();
-            })
-            .then(data => {
-              console.log("Visitor counted:", data.value);
-              visitorCount.classList.remove("error");
-              visitorCount.innerHTML = `Visitors: ${data.value}`;
-              console.log("Visitor count updated:", data.value);
-            })
-            .catch(error => {
-              console.error("CountAPI fetch error:", error);
-              // Fallback to counter.json
-              fetch('counter.json')
-                .then(response => {
-                  if (!response.ok) {
-                    throw new Error(`counter.json fetch error: ${response.status}`);
-                  }
-                  return response.json();
-                })
-                .then(data => {
-                  console.log("Local counter fetched:", data.visitors);
-                  visitorCount.classList.remove("error");
-                  visitorCount.innerHTML = `Visitors: ${data.visitors}`;
-                  console.log("Visitor count updated from local:", data.visitors);
-                })
-                .catch(localError => {
-                  console.error("Local counter fetch error:", localError);
-                  visitorCount.innerHTML = "Visitors: 1";
-                  visitorCount.classList.add("error");
-                  console.log("Defaulted to Visitors: 1");
-                });
-            });
-        } else {
-          console.error("Visitor count element NOT found.");
+    async function retryFetch(url, retries = 2, delay = 1000) {
+      for (let i = 0; i <= retries; i++) {
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+          }
+          return await response.json();
+        } catch (error) {
+          console.warn(`Attempt ${i + 1} failed for ${url}: ${error}`);
+          if (i < retries) {
+            await new Promise(resolve => setTimeout(resolve, delay));
+          } else {
+            throw error;
+          }
         }
-      } catch (error) {
-        console.error("Error updating visitor count:", error);
-        const visitorCount = document.getElementById("visitorCount");
-        if (visitorCount) {
+      }
+    }
+
+    async function updateVisitorCount() {
+      const visitorCount = document.getElementById("visitorCount");
+      if (!visitorCount) {
+        console.error("Visitor count element NOT found.");
+        return;
+      }
+      console.log("Visitor count element found:", visitorCount.outerHTML);
+      visitorCount.innerHTML = "Visitors: Loading...";
+
+      try {
+        // Try CountAPI with retries
+        const countApiData = await retryFetch('https://api.countapi.xyz/hit/verse-viewer-june2025/visitors');
+        console.log("CountAPI response:", countApiData);
+        visitorCount.classList.remove("error");
+        visitorCount.innerHTML = `Visitors: ${countApiData.value}`;
+        console.log("Visitor count updated from CountAPI:", countApiData.value);
+      } catch (countApiError) {
+        console.error("CountAPI fetch error:", countApiError);
+        // Fallback to counter.json
+        try {
+          const localData = await fetch('counter.json');
+          if (!localData.ok) {
+            throw new Error(`counter.json fetch error: ${localData.status}`);
+          }
+          const localCount = await localData.json();
+          console.log("Local counter fetched:", localCount.visitors);
+          visitorCount.classList.remove("error");
+          visitorCount.innerHTML = `Visitors: ${localCount.visitors}`;
+          console.log("Visitor count updated from counter.json:", localCount.visitors);
+        } catch (localError) {
+          console.error("Local counter fetch error:", localError);
+          // Default to 1
           visitorCount.innerHTML = "Visitors: 1";
           visitorCount.classList.add("error");
           console.log("Defaulted to Visitors: 1");

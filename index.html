@@ -41,6 +41,10 @@
       color: #333;
       z-index: 10;
     }
+    .header-info .visitor-count.error {
+      font-weight: normal;
+      color: #999;
+    }
     .logo { 
       width: 80px; 
       height: auto; 
@@ -345,7 +349,7 @@
 <body>
   <div class="header-info">
     <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
-    <span class="visitor-count" id="visitorCount">Visitors: 1</span>
+    <span class="visitor-count" id="visitorCount">Visitors: Loading...</span>
   </div>
   <div class="header-container">
     <img src="sastik_logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('SASTIK logo failed to load');">
@@ -477,8 +481,46 @@
       }
     }
 
+    function updateVisitorCount() {
+      try {
+        const visitorCount = document.getElementById("visitorCount");
+        if (visitorCount) {
+          console.log("Visitor count element found:", visitorCount.outerHTML);
+          // Increment counter via CountAPI on every page load
+          fetch('https://api.countapi.xyz/hit/verse-viewer-2025/visitors')
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`CountAPI error: ${response.status}`);
+              }
+              return response.json();
+            })
+            .then(data => {
+              console.log("Visitor counted:", data.value);
+              visitorCount.classList.remove("error");
+              visitorCount.innerHTML = `Visitors: ${data.value}`;
+              console.log("Visitor count updated:", data.value);
+            })
+            .catch(error => {
+              console.error("CountAPI fetch error:", error);
+              visitorCount.innerHTML = "Visitors: Error";
+              visitorCount.classList.add("error");
+            });
+        } else {
+          console.error("Visitor count element NOT found.");
+        }
+      } catch (error) {
+        console.error("Error updating visitor count:", error);
+        const visitorCount = document.getElementById("visitorCount");
+        if (visitorCount) {
+          visitorCount.innerHTML = "Visitors: Error";
+          visitorCount.classList.add("error");
+        }
+      }
+    }
+
     window.onload = () => {
       updateLastUpdated();
+      updateVisitorCount();
       const headerInfo = document.querySelector(".header-info");
       if (headerInfo) {
         const computedStyle = window.getComputedStyle(headerInfo);
@@ -488,12 +530,6 @@
           opacity: computedStyle.opacity,
           position: computedStyle.position
         });
-      }
-      const visitorCount = document.getElementById("visitorCount");
-      if (visitorCount) {
-        console.log("Visitor count element found:", visitorCount.outerHTML);
-      } else {
-        console.error("Visitor count element NOT found.");
       }
     };
 

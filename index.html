@@ -26,18 +26,20 @@
       right: 20px; 
       font-size: 0.9em; 
       color: #666; 
+      z-index: 10; /* Ensure visibility */
     }
     .header-info .visitor-count {
       margin-left: 20px;
       vertical-align: middle;
       display: inline-block;
-      min-height: 20px; /* Ensure visibility */
+      min-height: 20px; /* Prevent collapse */
       font-weight: bold;
       color: #333;
+      z-index: 10;
     }
     .header-info .visitor-count img {
       vertical-align: middle;
-      height: 20px; /* Match text size */
+      height: 20px; /* Match text */
     }
     .header-info .visitor-count.fallback {
       font-weight: normal;
@@ -354,7 +356,7 @@
 <body>
   <div class="header-info">
     <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
-    <span class="visitor-count fallback" id="visitorCount"><your_counter_code></span>
+    <span class="visitor-count fallback" id="visitorCount">Visitors: Loading...</span>
     <span class="live-data"><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Live Data</a></span>
   </div>
   <div class="header-container">
@@ -468,7 +470,7 @@
       const visitorCount = document.getElementById("visitorCount");
       if (visitorCount) {
         console.log("Visitor count element found:", visitorCount.outerHTML);
-        // Check for placeholder
+        // Check for placeholder or counter code
         if (visitorCount.innerHTML.includes("<your_counter_code>")) {
           console.warn("Visitor counter placeholder not replaced. Please add HitWebCounter code from https://www.hitwebcounter.com/.");
         }
@@ -485,11 +487,22 @@
             visitorCount.innerHTML = "Visitors: Error";
             visitorCount.classList.add("fallback");
           };
-        } else {
-          console.warn("No counter image found in visitor-count span.");
+        } else if (!visitorCount.innerHTML.includes("Visitors: Loading") && !visitorCount.innerHTML.includes("Visitors: Error")) {
+          console.warn("No counter image or valid fallback text found in visitor-count span.");
         }
       } else {
-        console.error("Visitor count element NOT found. Check HTML structure.");
+        console.error("Visitor count element NOT found. Check HTML structure in .header-info.");
+      }
+      // Debug: Check header-info visibility
+      const headerInfo = document.querySelector(".header-info");
+      if (headerInfo) {
+        const computedStyle = window.getComputedStyle(headerInfo);
+        console.log("Header-info visibility:", {
+          display: computedStyle.display,
+          visibility: computedStyle.visibility,
+          opacity: computedStyle.opacity,
+          position: computedStyle.position
+        });
       }
     };
 

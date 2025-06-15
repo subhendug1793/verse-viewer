@@ -506,6 +506,16 @@
     }
   }
 
+  // Expose copyToClipboard to global scope
+  window.copyToClipboard = function(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Link copied to clipboard!");
+    }).catch(err => {
+      console.error("Failed to copy link:", err);
+      alert("Failed to copy link. Please try again.");
+    });
+  };
+
   // Data storage
   let data = [];
   let currentSheet = "";
@@ -727,7 +737,7 @@
   function updateTable(rows) {
     const tbody = document.getElementById("verseBody");
     tbody.innerHTML = "";
-    if (rows.length == 0) {
+    if (rows.length === 0) {
       let tr = document.createElement("tr");
       let td = document.createElement("td");
       td.textContent = "No data available or error loading data";
@@ -797,31 +807,6 @@
       -->
     `;
   }
-
-  function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-      alert("Link copied to clipboard!");
-    }).catch(err => {
-      console.error("Failed to copy link:", err);
-      alert("Failed to copy link. Please try again.");
-    });
-  }
-
-  /*
-  // Future Share Anywhere function
-  function shareAnywhere(text, url) {
-    if (navigator.share) {
-      navigator.share({
-        title: 'SASTIK GBQ+ Verse',
-        text: text,
-        url: url
-      }).catch(err => console.error('Share failed:', err));
-    } else {
-      copyToClipboard(url);
-      alert('Share this verse by pasting the copied link anywhere!');
-    }
-  }
-  */
 
   function filterTable() {
     const category = document.getElementById("categoryFilter").value;

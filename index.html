@@ -29,6 +29,8 @@
     }
     .header-info .visitor-count {
       margin-left: 20px;
+      font-weight: bold; /* Added for emphasis */
+      color: #333; /* Added for emphasis */
     }
     .header-info .live-data {
       margin-left: 20px;
@@ -37,6 +39,7 @@
       color: #0066cc;
       text-decoration: underline;
     }
+    /* Rest of the CSS remains unchanged */
     .logo { 
       width: 80px; 
       height: auto; 
@@ -450,7 +453,7 @@
     }
 
     function updateVisitorCount() {
-      fetch('https://api.countapi.xyz/hit/subhendug1793.github.io/verse-viewer')
+      fetch('https://api.countapi.xyz/update/sastik/verseviewer/?amount=1')
         .then(response => response.json())
         .then(data => {
           document.getElementById('visitorCount').textContent = `Visitors: ${data.value || 0}`;

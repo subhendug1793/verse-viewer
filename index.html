@@ -715,6 +715,9 @@
     const category = document.getElementById("categoryFilter").value;
     const subCategory = document.getElementById("subCategoryFilter").value;
     const sheetName = document.getElementById("sheetSelector").value;
+    const searchInput = document.getElementById("searchInput");
+    const searchTerm = searchInput.value.toLowerCase().trim();
+
     if (sheetName && data.length > 0) {
       let filteredRows = data.filter(row => {
         const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
@@ -724,6 +727,12 @@
         return categoryMatch && subCategoryMatch;
       });
       updateTable(filteredRows);
+      // If there's a search term, apply search on filtered rows
+      if (searchTerm) {
+        searchTable();
+      } else {
+        updateMatchCount(0);
+      }
       console.log("Table filtered:", filteredRows.length, "rows");
     }
   }
@@ -732,30 +741,50 @@
     const searchInput = document.getElementById("searchInput");
     if (searchInput.disabled) return; 
     const searchTerm = searchInput.value.toLowerCase().trim();
-    if (data.length > 0 && searchTerm) {
-      let filteredRows = data.filter(row =>
-        Object.values(row).some(val =>
-          (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
-          (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm))
-        )
-      );
-      let matchCount = 0;
-      data.forEach(row => {
-        Object.values(row).forEach(val => {
-          if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
-            matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
-          } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm)) {
-            matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
-          }
-        });
+    const category = document.getElementById("categoryFilter").value;
+    const subCategory = document.getElementById("subCategoryFilter").value;
+    const sheetName = document.getElementById("sheetSelector").value;
+
+    if (sheetName && data.length > 0) {
+      // Apply category and subcategory filters
+      let filteredRows = data.filter(row => {
+        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
+                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+        const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
+                                                row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+        return categoryMatch && subCategoryMatch;
       });
-      updateTable(filteredRows);
-      updateMatchCount(matchCount);
-      console.log("Search performed, matches found:", matchCount);
+
+      // If there's a search term, filter further and count matches
+      if (searchTerm) {
+        let searchFilteredRows = filteredRows.filter(row =>
+          Object.values(row).some(val =>
+            (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
+            (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm))
+          )
+        );
+        let matchCount = 0;
+        searchFilteredRows.forEach(row => {
+          Object.values(row).forEach(val => {
+            if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
+              matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+            } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm)) {
+              matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+            }
+          });
+        });
+        updateTable(searchFilteredRows);
+        updateMatchCount(matchCount);
+        console.log("Search performed on filtered rows, matches found:", matchCount);
+      } else {
+        updateTable(filteredRows);
+        updateMatchCount(0);
+        console.log("No search term, showing filtered rows");
+      }
     } else {
       updateTable(data);
       updateMatchCount(0);
-      console.log("Search cleared, showing all data");
+      console.log("Search cleared or no sheet selected, showing all data");
     }
   }
 

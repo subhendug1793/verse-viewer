@@ -4,9 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SASTIK GBQ+ Verse Filter</title>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
   <style>
     body { 
       font-family: Arial, sans-serif; 
@@ -31,6 +28,10 @@
       color: #666; 
       z-index: 10; 
     }
+    .header-info .last-updated a {
+      color: #0066cc;
+      text-decoration: none;
+    }
     .header-info .visitor-count {
       margin-left: 20px;
       vertical-align: middle;
@@ -39,17 +40,6 @@
       font-weight: bold;
       color: #333;
       z-index: 10;
-    }
-    .header-info .visitor-count.fallback {
-      font-weight: normal;
-      color: #999;
-    }
-    .header-info .live-data {
-      margin-left: 20px;
-    }
-    .header-info .live-data a {
-      color: #0066cc;
-      text-decoration: underline;
     }
     .logo { 
       width: 80px; 
@@ -355,8 +345,7 @@
 <body>
   <div class="header-info">
     <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
-    <span class="visitor-count fallback" id="visitorCount">Visitors: Loading...</span>
-    <span class="live-data"><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Live Data</a></span>
+    <span class="visitor-count" id="visitorCount">Visitors: 1</span>
   </div>
   <div class="header-container">
     <img src="sastik_logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('SASTIK logo failed to load');">
@@ -434,103 +423,62 @@
   <script>
     let data = [];
 
-    // Initialize Firebase (replace with your config)
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
     function updateLastUpdated() {
       try {
-        let lastUpdated;
-        if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
-          const date = new Date(document.lastModified);
-          const dateStr = date.toLocaleDateString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
-          const timeStr = date.toLocaleTimeString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-          });
-          lastUpdated = `${dateStr} ${timeStr}`;
-          document.getElementById("lastUpdated").textContent = `Last updated: ${lastUpdated}`;
+        const lastUpdatedElement = document.getElementById("lastUpdated");
+        if (lastUpdatedElement) {
+          console.log("Last updated element found:", lastUpdatedElement.outerHTML);
+          let lastUpdated;
+          if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
+            const date = new Date(document.lastModified);
+            const dateStr = date.toLocaleDateString('en-IN', {
+              timeZone: 'Asia/Kolkata',
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric'
+            }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
+            const timeStr = date.toLocaleTimeString('en-IN', {
+              timeZone: 'Asia/Kolkata',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false
+            });
+            lastUpdated = `${dateStr} ${timeStr}`;
+          } else {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-IN', {
+              timeZone: 'Asia/Kolkata',
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric'
+            }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
+            const timeStr = now.toLocaleTimeString('en-IN', {
+              timeZone: 'Asia/Kolkata',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false
+            });
+            lastUpdated = `${dateStr} ${timeStr}`;
+            console.warn("document.lastModified unavailable, using current date:", lastUpdated);
+          }
+          lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${lastUpdated}</a>`;
+          console.log("Last updated set to:", lastUpdated);
         } else {
-          document.getElementById("lastUpdated").textContent = `Last updated: Unknown`;
+          console.error("Last updated element NOT found.");
         }
       } catch (error) {
         console.error("Error updating last modified:", error);
-        document.getElementById("lastUpdated").textContent = `Last updated: Unknown`;
-      }
-    }
-
-    function updateVisitorCount() {
-      try {
-        const visitorCount = document.getElementById("visitorCount");
-        if (visitorCount) {
-          console.log("Visitor count element found:", visitorCount.outerHTML);
-          let hasVisited = sessionStorage.getItem("hasVisited");
-          if (!hasVisited) {
-            // Increment counter in Firestore
-            const counterRef = db.collection("visitors").doc("count");
-            db.runTransaction(async (transaction) => {
-              const counterDoc = await transaction.get(counterRef);
-              const newCount = (counterDoc.exists ? counterDoc.data().value : 0) + 1;
-              transaction.set(counterRef, { value: newCount });
-              return newCount;
-            }).then((count) => {
-              sessionStorage.setItem("hasVisited", "true");
-              console.log("Visitor counted:", count);
-              let formattedCount = count.toString().padStart(5, "0");
-              visitorCount.classList.remove("fallback");
-              visitorCount.innerHTML = `Visitors: ${formattedCount}`;
-              console.log("Visitor count updated:", formattedCount);
-            }).catch((error) => {
-              console.error("Firestore transaction error:", error);
-              visitorCount.innerHTML = "Visitors: Error";
-              visitorCount.classList.add("fallback");
-            });
-          } else {
-            // Get current count
-            db.collection("visitors").doc("count").get().then((doc) => {
-              let count = doc.exists ? doc.data().value : 0;
-              let formattedCount = count.toString().padStart(5, "0");
-              visitorCount.classList.remove("fallback");
-              visitorCount.innerHTML = `Visitors: ${formattedCount}`;
-              console.log("Visitor count updated:", formattedCount);
-            }).catch((error) => {
-              console.error("Firestore fetch error:", error);
-              visitorCount.innerHTML = "Visitors: Error";
-              visitorCount.classList.add("fallback");
-            });
-          }
-        } else {
-          console.error("Visitor count element NOT found.");
-        }
-      } catch (error) {
-        console.error("Error updating visitor count:", error);
-        const visitorCount = document.getElementById("visitorCount");
-        if (visitorCount) {
-          visitorCount.innerHTML = "Visitors: Error";
-          visitorCount.classList.add("fallback");
+        const lastUpdatedElement = document.getElementById("lastUpdated");
+        if (lastUpdatedElement) {
+          lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Unknown</a>`;
         }
       }
     }
 
     window.onload = () => {
       updateLastUpdated();
-      updateVisitorCount();
       const headerInfo = document.querySelector(".header-info");
       if (headerInfo) {
         const computedStyle = window.getComputedStyle(headerInfo);
@@ -540,6 +488,12 @@
           opacity: computedStyle.opacity,
           position: computedStyle.position
         });
+      }
+      const visitorCount = document.getElementById("visitorCount");
+      if (visitorCount) {
+        console.log("Visitor count element found:", visitorCount.outerHTML);
+      } else {
+        console.error("Visitor count element NOT found.");
       }
     };
 

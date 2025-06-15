@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SASTIK GBQ+ Verse Filter</title>
+  <!-- Open Graph Meta Tags for Facebook Sharing -->
+  <meta property="og:title" content="SASTIK GBQ+ Verse">
+  <meta property="og:description" content="Explore categorized theological verses from the Gita, Bible, Quran, and more.">
+  <meta property="og:image" content="https://subhendug1793.github.io/verse-viewer/images/sastik_logo.png">
+  <meta property="og:url" content="https://subhendug1793.github.io/verse-viewer/">
   <style>
     body { 
       font-family: Arial, sans-serif; 
@@ -289,6 +294,43 @@
       justify-content: center; 
       width: 40px; 
     }
+    .navigation-arrows {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .navigation-arrows a {
+      font-size: 1.5em;
+      text-decoration: none;
+      color: #0066cc;
+    }
+    .navigation-arrows a.disabled {
+      color: #ccc;
+      cursor: not-allowed;
+    }
+    .reaction-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .reaction-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .reaction-buttons img {
+      width: 20px;
+      height: 20px;
+    }
+    .reaction-buttons span {
+      font-size: 0.9em;
+      color: #333;
+    }
     @media (max-width: 600px) {
       .header-info { 
         position: relative; 
@@ -396,6 +438,13 @@
       .share-buttons a, .single-verse-share-buttons a { 
         width: 30px; 
       }
+      .navigation-arrows a {
+        font-size: 1.2em;
+      }
+      .reaction-buttons img {
+        width: 16px;
+        height: 16px;
+      }
     }
   </style>
 </head>
@@ -481,7 +530,7 @@
 <script type="module">
   // Import Firebase SDKs
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDoc, increment } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
   // Firebase configuration
   const firebaseConfig = {
@@ -516,9 +565,23 @@
     });
   };
 
+  // Expose shareAnywhere to global scope
+  window.shareAnywhere = function(verseText, shareUrl) {
+    if (navigator.share) {
+      navigator.share({
+        title: 'SASTIK GBQ+ Verse',
+        text: verseText,
+        url: shareUrl
+      }).catch(err => console.error('Share error:', err));
+    } else {
+      alert('Share not supported on this browser. Copy the link instead.');
+    }
+  };
+
   // Data storage
   let data = [];
   let currentSheet = "";
+  let currentVerseIndex = -1;
 
   function updateLastUpdated() {
     try {
@@ -619,7 +682,6 @@
       subCategoryFilter.disabled = false;
       searchInput.disabled = false;
       errorDisplay.textContent = "";
-      // Show search row in table view
       document.querySelector('.search-row').style.display = 'flex';
       const urlsToTry = [`${currentSheet}.json`, `${currentSheet.toLowerCase()}.json`, `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`];
       let response, sheetData;
@@ -653,7 +715,6 @@
       errorDisplay.textContent = "";
       document.getElementById("verseBody").innerHTML = "";
       document.getElementById("tableHeaders").innerHTML = "";
-      // Show search row by default when no sheet is selected
       document.querySelector('.search-row').style.display = 'flex';
       updateContentCount(0);
       updateMatchCount(0);
@@ -663,8 +724,10 @@
   async function loadSingleVerse() {
     const params = new URLSearchParams(window.location.search);
     const sheet = params.get("sheet");
-    const verseIndex = parseInt(params.get("verse"), 10);
-    if (sheet && !isNaN(verseIndex)) {
+    const verseParam = params.get("verse");
+    let verseIndex = -1;
+
+    if (sheet && verseParam) {
       currentSheet = sheet;
       const urlsToTry = [`${sheet}.json`, `${sheet.toLowerCase()}.json`, `${sheet.charAt(0).toUpperCase() + sheet.slice(1).toLowerCase()}.json`];
       let response, sheetData;
@@ -679,15 +742,32 @@
           console.warn(`Error fetching ${url}:`, err.message);
         }
       }
-      if (sheetData && verseIndex >= 0 && verseIndex < sheetData.length) {
+      if (sheetData) {
         data = sheetData;
-        const verse = sheetData[verseIndex];
-        displaySingleVerse(verse, verseIndex);
-        document.getElementById("controls").style.display = "none";
-        document.getElementById("verseTable").style.display = "none";
-        document.querySelector('.search-row').style.display = 'none';
+        // Map verseParam to index
+        verseIndex = data.findIndex(row => {
+          const verseName = row["Verse Name"] || row["Verse"] || "";
+          return verseName.trim() === verseParam.trim();
+        });
+        if (verseIndex === -1) {
+          verseIndex = parseInt(verseParam, 10);
+        }
+        if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < sheetData.length) {
+          currentVerseIndex = verseIndex;
+          const verse = sheetData[verseIndex];
+          displaySingleVerse(verse, verseIndex);
+          document.getElementById("controls").style.display = "none";
+          document.getElementById("verseTable").style.display = "none";
+          document.querySelector('.search-row').style.display = 'none';
+          await loadReactions(sheet, verseIndex);
+        } else {
+          displaySingleVerse(null, -1);
+          document.getElementById("controls").style.display = "none";
+          document.getElementById("verseTable").style.display = "none";
+          document.querySelector('.search-row').style.display = 'none';
+        }
       } else {
-        displaySingleVerse(null, verseIndex);
+        displaySingleVerse(null, -1);
         document.getElementById("controls").style.display = "none";
         document.getElementById("verseTable").style.display = "none";
         document.querySelector('.search-row').style.display = 'none';
@@ -698,6 +778,71 @@
     }
   }
 
+  async function loadReactions(sheet, verseIndex) {
+    try {
+      const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
+      const reactionSnap = await getDoc(reactionRef);
+      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, dislike: 0, love: 0, angry: 0 };
+      updateReactionButtons(reactionCounts);
+      // Check if user has reacted
+      const userId = localStorage.getItem('userId') || generateUserId();
+      localStorage.setItem('userId', userId);
+      const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
+      const userReactionSnap = await getDoc(userReactionRef);
+      if (userReactionSnap.exists()) {
+        const userReaction = userReactionSnap.data().reaction;
+        document.querySelector(`.reaction-buttons button[data-reaction="${userReaction}"]`).classList.add('active');
+      }
+    } catch (error) {
+      console.error("Error loading reactions:", error);
+    }
+  }
+
+  async function toggleReaction(reaction, sheet, verseIndex) {
+    try {
+      const userId = localStorage.getItem('userId');
+      const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
+      const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
+      const userReactionSnap = await getDoc(userReactionRef);
+      const currentReaction = userReactionSnap.exists() ? userReactionSnap.data().reaction : null;
+
+      if (currentReaction === reaction) {
+        // Remove reaction
+        await updateDoc(reactionRef, { [reaction]: increment(-1) });
+        await setDoc(userReactionRef, { reaction: null }, { merge: true });
+        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`).classList.remove('active');
+      } else {
+        // Update or add reaction
+        if (currentReaction) {
+          await updateDoc(reactionRef, { [currentReaction]: increment(-1) });
+          document.querySelector(`.reaction-buttons button[data-reaction="${currentReaction}"]`).classList.remove('active');
+        }
+        await updateDoc(reactionRef, { [reaction]: increment(1) }, { merge: true });
+        await setDoc(userReactionRef, { reaction: reaction }, { merge: true });
+        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`).classList.add('active');
+      }
+
+      // Refresh reaction counts
+      const reactionSnap = await getDoc(reactionRef);
+      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, dislike: 0, love: 0, angry: 0 };
+      updateReactionButtons(reactionCounts);
+    } catch (error) {
+      console.error("Error toggling reaction:", error);
+      alert("Failed to update reaction. Please try again.");
+    }
+  }
+
+  function updateReactionButtons(counts) {
+    document.querySelector('#likeCount').textContent = counts.like || 0;
+    document.querySelector('#dislikeCount').textContent = counts.dislike || 0;
+    document.querySelector('#loveCount').textContent = counts.love || 0;
+    document.querySelector('#angryCount').textContent = counts.angry || 0;
+  }
+
+  function generateUserId() {
+    return 'user_' + Math.random().toString(36).substr(2, 9);
+  }
+
   function displaySingleVerse(verse, index) {
     const singleVerseView = document.getElementById("singleVerseView");
     if (!verse) {
@@ -705,7 +850,9 @@
       singleVerseView.style.display = "block";
       return;
     }
-    let html = `<h3>${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} Verse</h3><div class="verse-details">`;
+    const verseName = verse["Verse Name"] || verse["Verse"] || "Verse";
+    const heading = `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} ${verseName}`;
+    let html = `<h3>${heading}</h3><div class="verse-details">`;
     const headers = Object.keys(verse).filter(h => h !== "sheet");
     headers.forEach(header => {
       let content = verse[header] || "-";
@@ -717,9 +864,30 @@
         : "";
       html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
     });
-    html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index)}</div>`;
+    // Add navigation arrows
+    html += `<div class="navigation-arrows">
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>&larr;</a>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>&rarr;</a>
+    </div>`;
+    // Add reaction buttons
+    html += `<div class="reaction-buttons">
+      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})"><img src="images/like_logo.png" alt="Like" onerror="this.src='https://via.placeholder.com/20?text=👍';"><span id="likeCount">0</span></button>
+      <button data-reaction="dislike" onclick="toggleReaction('dislike', '${currentSheet}', ${index})"><img src="images/dislike_logo.png" alt="Dislike" onerror="this.src='https://via.placeholder.com/20?text=👎';"><span id="dislikeCount">0</span></button>
+      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})"><img src="images/love_logo.png" alt="Love" onerror="this.src='https://via.placeholder.com/20?text=❤️';"><span id="loveCount">0</span></button>
+      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})"><img src="images/angry_logo.png" alt="Angry" onerror="this.src='https://via.placeholder.com/20?text=😣';"><span id="angryCount">0</span></button>
+    </div>`;
+    html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
     singleVerseView.innerHTML = html;
     singleVerseView.style.display = "block";
+  }
+
+  function navigateVerse(newIndex) {
+    const verse = data[newIndex];
+    const verseName = verse["Verse Name"] || verse["Verse"] || newIndex;
+    history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`);
+    currentVerseIndex = newIndex;
+    displaySingleVerse(verse, newIndex);
+    loadReactions(currentSheet, newIndex);
   }
 
   function updateHeaders(sheetName) {
@@ -780,7 +948,7 @@
         });
         let shareTd = document.createElement("td");
         shareTd.className = "share-buttons";
-        shareTd.innerHTML = addShareButton(row, index);
+        shareTd.innerHTML = addShareButton(row, index, true);
         tr.appendChild(shareTd);
         tbody.appendChild(tr);
       });
@@ -799,21 +967,23 @@
     }
   }
 
-  function addShareButton(row, index) {
+  function addShareButton(row, index, isTableView = true) {
     const verseText = row["Verse"] || row["Text"] || "";
-    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${index}`;
+    const verseName = row["Verse Name"] || row["Verse"] || index;
+    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`;
     const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
-    return `
-      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
+    let html = '';
+    if (isTableView) {
+      html += `<a href="${shareUrl}" target="_blank"><img src="images/eye_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
+    }
+    html += `
       <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>
-      <a href="https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(verseText)}" target="_blank"><img src="images/telegram_logo.png" alt="Telegram"></a>
-      <a href="https://www.instagram.com/?url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/instagram_logo.png" alt="Instagram"></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
       <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
       <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
-      <!-- Future Share Anywhere option
-      <a href="#" onclick="shareAnywhere('${verseText}', '${escapedShareUrl}'); return false;"><img src="images/share_anywhere.png" alt="Share Anywhere"></a>
-      -->
+      <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
     `;
+    return html;
   }
 
   function filterTable() {
@@ -897,6 +1067,8 @@
   window.loadSheetData = loadSheetData;
   window.filterTable = filterTable;
   window.searchTable = searchTable;
+  window.navigateVerse = navigateVerse;
+  window.toggleReaction = toggleReaction;
 
   // Initialize on page load
   window.onload = () => {

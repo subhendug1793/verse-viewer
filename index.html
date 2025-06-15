@@ -486,9 +486,10 @@
         const visitorCount = document.getElementById("visitorCount");
         if (visitorCount) {
           console.log("Visitor count element found:", visitorCount.outerHTML);
-          // Increment counter via CountAPI on every page load
-          fetch('https://api.countapi.xyz/hit/verse-viewer-2025/visitors')
+          // Try CountAPI
+          fetch('https://api.countapi.xyz/hit/verse-viewer-june2025/visitors')
             .then(response => {
+              console.log("CountAPI response status:", response.status);
               if (!response.ok) {
                 throw new Error(`CountAPI error: ${response.status}`);
               }
@@ -502,8 +503,26 @@
             })
             .catch(error => {
               console.error("CountAPI fetch error:", error);
-              visitorCount.innerHTML = "Visitors: Error";
-              visitorCount.classList.add("error");
+              // Fallback to counter.json
+              fetch('counter.json')
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error(`counter.json fetch error: ${response.status}`);
+                  }
+                  return response.json();
+                })
+                .then(data => {
+                  console.log("Local counter fetched:", data.visitors);
+                  visitorCount.classList.remove("error");
+                  visitorCount.innerHTML = `Visitors: ${data.visitors}`;
+                  console.log("Visitor count updated from local:", data.visitors);
+                })
+                .catch(localError => {
+                  console.error("Local counter fetch error:", localError);
+                  visitorCount.innerHTML = "Visitors: 1";
+                  visitorCount.classList.add("error");
+                  console.log("Defaulted to Visitors: 1");
+                });
             });
         } else {
           console.error("Visitor count element NOT found.");
@@ -512,8 +531,9 @@
         console.error("Error updating visitor count:", error);
         const visitorCount = document.getElementById("visitorCount");
         if (visitorCount) {
-          visitorCount.innerHTML = "Visitors: Error";
+          visitorCount.innerHTML = "Visitors: 1";
           visitorCount.classList.add("error");
+          console.log("Defaulted to Visitors: 1");
         }
       }
     }

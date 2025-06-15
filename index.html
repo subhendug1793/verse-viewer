@@ -8,7 +8,7 @@
     body { 
       font-family: Arial, sans-serif; 
       margin: 20px; 
-      background: linear-gradient(to bottom, #f9f9f9, #e6f3e6); /* Subtle gradient for visual appeal */
+      background: #f9f9f9; /* Revert to simple background */
       position: relative; 
       min-height: 100vh; 
       display: flex;
@@ -82,6 +82,22 @@
       line-height: 1.2; 
       font-weight: normal; 
     }
+    .sheet-selection { 
+      text-align: center; 
+      margin-bottom: 20px; 
+    }
+    .sheet-selection button { 
+      padding: 10px 20px; 
+      margin: 5px; 
+      background-color: #0066cc; 
+      color: white; 
+      border: none; 
+      border-radius: 5px; 
+      cursor: pointer; 
+    }
+    .sheet-selection button:hover { 
+      background-color: #004c99; 
+    }
     .controls { 
       margin-bottom: 10px; 
       text-align: center; 
@@ -140,36 +156,32 @@
       text-decoration: underline; 
     }
     td.category-universal { 
-      background-color: #00FF00; 
+      background-color: #00FF00; /* Restored original color */
     }
     td.category-general { 
-      background-color: #00FFFF; 
+      background-color: #00FFFF; /* Restored original color */
     }
     td.category-controversial { 
-      background-color: #FFFF00; 
+      background-color: #FFFF00; /* Restored original color */
     }
     td.category-divisive { 
-      background-color: #FF0000; 
+      background-color: #FF0000; /* Restored original color */
     }
     td.category-violent { 
-      background-color: #000000; 
+      background-color: #000000; /* Restored original color */
       color: #FFFFFF; 
     }
     th.gita-header { 
-      background-color: #ffe4b5; 
+      background-color: #ffe4b5; /* Kept for visual appeal */
       color: black; 
     }
     th.bible-header { 
-      background-color: #add8e6; 
+      background-color: #add8e6; /* Kept for visual appeal */
       color: white; 
     }
-    th.quran-header { 
-      background-color: #e6f3e6; 
-      color: white; 
-    }
-    th.hadith-header, th.miscellaneous-header { 
-      background-color: #4CAF50; 
-      color: white; 
+    th.quran-header, th.hadith-header, th.miscellaneous-header { 
+      background-color: white; /* Restored original color */
+      color: black; 
     }
     mark { 
       background-color: yellow; 
@@ -253,73 +265,17 @@
       width: 200px; 
       height: auto; 
     }
-    .category-icon { 
-      margin-right: 5px; 
-    }
-    .verse-of-day { 
+    .single-verse-view { 
       text-align: center; 
       margin: 20px auto; 
       max-width: 80%; 
-      padding: 10px; 
-      background-color: #fff; 
-      box-shadow: 0 0 5px rgba(0,0,0,0.1); 
-    }
-    .verse-of-day h3 { 
-      color: #0066cc; 
-      margin: 0 0 10px; 
-    }
-    .related-verses { 
-      text-align: center; 
-      margin: 20px auto; 
-      max-width: 80%; 
-      padding: 10px; 
-      background-color: #fff; 
-      box-shadow: 0 0 5px rgba(0,0,0,0.1); 
-    }
-    .related-verses h3 { 
-      color: #0066cc; 
-      margin: 0 0 10px; 
-    }
-    .feedback { 
-      text-align: center; 
-      margin: 20px auto; 
-      max-width: 80%; 
-      padding: 10px; 
-      background-color: #fff; 
-      box-shadow: 0 0 5px rgba(0,0,0,0.1); 
-    }
-    .feedback textarea { 
-      width: 100%; 
-      max-width: 300px; 
-      height: 100px; 
-      margin-bottom: 10px; 
-    }
-    .comment-modal { 
-      display: none; 
-      position: fixed; 
-      top: 50%; 
-      left: 50%; 
-      transform: translate(-50%, -50%); 
-      background-color: #fff; 
       padding: 20px; 
-      box-shadow: 0 0 10px rgba(0,0,0,0.3); 
-      z-index: 1000; 
+      background-color: #fff; 
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
     }
-    .comment-modal.active { 
-      display: block; 
-    }
-    .overlay { 
-      display: none; 
-      position: fixed; 
-      top: 0; 
-      left: 0; 
-      width: 100%; 
-      height: 100%; 
-      background: rgba(0,0,0,0.5); 
-      z-index: 999; 
-    }
-    .overlay.active { 
-      display: block; 
+    .single-verse-view h3 { 
+      color: #0066cc; 
+      margin-bottom: 10px; 
     }
     .share-buttons a { 
       margin: 0 5px; 
@@ -355,6 +311,11 @@
         font-size: 0.7em; 
         max-width: 90%; 
       }
+      .sheet-selection button { 
+        padding: 8px 15px; 
+        margin: 3px; 
+        font-size: 0.9em; 
+      }
       select, input { 
         width: 100%; 
         margin-bottom: 8px; 
@@ -389,15 +350,6 @@
       th, td { 
         padding: 6px; 
       }
-      .verseBody td:nth-child(n+3) { 
-        display: none; 
-      }
-      .verseBody tr { 
-        cursor: pointer; 
-      }
-      .verseBody tr.expanded td { 
-        display: table-cell; 
-      }
       .footer { 
         max-width: 90%; 
         margin: 5px auto 0;
@@ -424,9 +376,6 @@
       .support-text { 
         font-size: 0.7em; 
       }
-      .feedback textarea { 
-        max-width: 90%; 
-      }
     }
   </style>
 </head>
@@ -446,8 +395,15 @@
   <div class="mission-subtext">
     ⬇️ A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. ⬇️
   </div>
-  <div class="verse-of-day" id="verseOfDay"></div>
-  <div class="controls">
+  <div class="sheet-selection">
+    <button onclick="selectSheet('gita')">Gita</button>
+    <button onclick="selectSheet('bible')">Bible</button>
+    <button onclick="selectSheet('quran')">Quran</button>
+    <button onclick="selectSheet('hadith')">Hadith</button>
+    <button onclick="selectSheet('miscellaneous')">Miscellaneous</button>
+  </div>
+  <div class="single-verse-view" id="singleVerseView" style="display: none;"></div>
+  <div class="controls" id="controls">
     <label for="sheetSelector">Select Gita/Bible/Quran+:</label>
     <select id="sheetSelector" onchange="loadSheetData()">
       <option value="">Select a sheet</option>
@@ -485,14 +441,6 @@
     <thead id="tableHeaders"></thead>
     <tbody id="verseBody"></tbody>
   </table>
-  <div class="related-verses" id="relatedVerses"></div>
-  <div class="overlay" id="overlay"></div>
-  <div class="comment-modal" id="commentModal">
-    <h3>Add Comment</h3>
-    <textarea id="commentText" placeholder="Your comment..."></textarea>
-    <button onclick="submitComment()">Submit</button>
-    <button onclick="closeCommentModal()">Close</button>
-  </div>
   <div class="footer">
     <div class="text-group">
       <div class="support-text">
@@ -513,13 +461,6 @@
       <div class="contact-text">
         <span>If you’d like to contribute to verse updates 📜 or have any suggestions or feedback 💭</span>
         <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" style="width: 20px; height: auto; vertical-align: middle;"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="gmail_logo.png" alt="Mail" style="width: 20px; height: auto; vertical-align: middle;" onerror="console.log('Gmail logo failed to load')"></a><a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></span>
-      </div>
-      <div class="feedback">
-        <h3>Feedback</h3>
-        <form id="feedbackForm">
-          <textarea name="feedback" placeholder="Share your thoughts..."></textarea>
-          <button type="submit">Submit</button>
-        </form>
       </div>
     </div>
   </div>
@@ -560,7 +501,6 @@
     try {
       const lastUpdatedElement = document.getElementById("lastUpdated");
       if (lastUpdatedElement) {
-        console.log("Last updated element found:", lastUpdatedElement.outerHTML);
         let lastUpdated;
         if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
           const date = new Date(document.lastModified);
@@ -616,23 +556,18 @@
       console.error("Visitor count element NOT found.");
       return;
     }
-    console.log("Visitor count element found:", visitorCount.outerHTML);
     visitorCount.innerHTML = "Visitors: Loading...";
-
     try {
       if (!db) {
         throw new Error("Firestore not initialized");
       }
       const counterRef = doc(db, "counters", "viewerCount");
       await setDoc(counterRef, { count: increment(1) }, { merge: true });
-      console.log("Counter incremented in Firestore");
-
       const counterSnap = await getDoc(counterRef);
       if (counterSnap.exists()) {
         const count = counterSnap.data().count || 0;
         visitorCount.classList.remove("error");
         visitorCount.innerHTML = `Visitors: ${count}`;
-        console.log("Visitor count updated from Firestore:", count);
       } else {
         throw new Error("Counter document does not exist");
       }
@@ -644,21 +579,17 @@
           throw new Error(`counter.json fetch error: ${response.status}`);
         }
         const data = await response.json();
-        console.log("Local counter fetched:", data.visitors);
         visitorCount.classList.remove("error");
         visitorCount.innerHTML = `Visitors: ${data.visitors}`;
-        console.log("Visitor count updated from counter.json:", data.visitors);
       } catch (jsonError) {
         console.error("Local counter fetch error:", jsonError);
         visitorCount.innerHTML = "Visitors: 1";
         visitorCount.classList.add("error");
-        console.log("Defaulted to Visitors: 1");
       }
     }
   }
 
   async function loadSheetData() {
-    console.log("loadSheetData triggered");
     const sheetSelector = document.getElementById("sheetSelector");
     currentSheet = sheetSelector.value;
     const categoryFilter = document.getElementById("categoryFilter");
@@ -672,59 +603,112 @@
     document.querySelector(".controls").after(errorDisplay);
 
     if (currentSheet) {
-      console.log(`Fetching data for sheet: ${currentSheet}`);
       categoryFilter.disabled = false;
       subCategoryFilter.disabled = false;
       searchInput.disabled = false;
       errorDisplay.textContent = "";
-      
-      // Try fetching with original case, then lowercase, then uppercase
       const urlsToTry = [`${currentSheet}.json`, `${currentSheet.toLowerCase()}.json`, `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`];
       let response, sheetData;
       for (const url of urlsToTry) {
         try {
-          console.log(`Attempting to fetch: ${url}`);
           response = await fetch(url, { cache: 'no-store' });
           if (response.ok) {
             sheetData = await response.json();
-            console.log(`Data fetched successfully from ${url}:`, sheetData);
             break;
-          } else {
-            console.warn(`Fetch failed for ${url}: Status ${response.status}`);
           }
         } catch (err) {
           console.warn(`Error fetching ${url}:`, err.message);
         }
       }
-
       if (sheetData) {
         data = sheetData;
         updateHeaders(currentSheet);
         updateTable(data);
         updateContentCount(data.length);
         updateMatchCount(0);
-        displayVerseOfTheDay();
-        console.log("Loaded data for sheet:", currentSheet, "Rows:", data.length, "Sample Verse Category:", data[0] ? data[0]["Verse Category "] : "N/A");
       } else {
-        console.error(`Failed to load ${currentSheet}.json after trying all URL variants`);
         errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if the file exists or contact support.`;
         document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${currentSheet}.json: File not found or inaccessible</td></tr>`;
         updateContentCount(0);
         updateMatchCount(0);
       }
     } else {
-      console.log("No sheet selected, clearing table");
       categoryFilter.disabled = true;
       subCategoryFilter.disabled = true;
       searchInput.disabled = true;
       errorDisplay.textContent = "";
       document.getElementById("verseBody").innerHTML = "";
       document.getElementById("tableHeaders").innerHTML = "";
-      document.getElementById("verseOfDay").innerHTML = "";
-      document.getElementById("relatedVerses").innerHTML = "";
       updateContentCount(0);
       updateMatchCount(0);
     }
+  }
+
+  function selectSheet(sheetName) {
+    const sheetSelector = document.getElementById("sheetSelector");
+    sheetSelector.value = sheetName;
+    loadSheetData();
+  }
+
+  async function loadSingleVerse() {
+    const params = new URLSearchParams(window.location.search);
+    const sheet = params.get("sheet");
+    const verseIndex = parseInt(params.get("verse"), 10);
+    if (sheet && !isNaN(verseIndex)) {
+      currentSheet = sheet;
+      const urlsToTry = [`${sheet}.json`, `${sheet.toLowerCase()}.json`, `${sheet.charAt(0).toUpperCase() + sheet.slice(1).toLowerCase()}.json`];
+      let response, sheetData;
+      for (const url of urlsToTry) {
+        try {
+          response = await fetch(url, { cache: 'no-store' });
+          if (response.ok) {
+            sheetData = await response.json();
+            break;
+          }
+        } catch (err) {
+          console.warn(`Error fetching ${url}:`, err.message);
+        }
+      }
+      if (sheetData && verseIndex >= 0 && verseIndex < sheetData.length) {
+        data = sheetData;
+        const verse = sheetData[verseIndex];
+        displaySingleVerse(verse, verseIndex);
+        document.getElementById("controls").style.display = "none";
+        document.getElementById("verseTable").style.display = "none";
+        document.getElementById("search-row").style.display = "none";
+      } else {
+        console.error("Invalid verse or sheet data");
+        displaySingleVerse(null, verseIndex);
+      }
+    } else {
+      document.getElementById("singleVerseView").style.display = "none";
+    }
+  }
+
+  function displaySingleVerse(verse, index) {
+    const singleVerseView = document.getElementById("singleVerseView");
+    if (!verse) {
+      singleVerseView.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
+      singleVerseView.style.display = "block";
+      return;
+    }
+    let html = `<h3>${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} Verse</h3>`;
+    html += `<table><thead><tr>`;
+    const headers = Object.keys(verse).filter(h => h !== "sheet");
+    headers.forEach(header => {
+      html += `<th>${header}</th>`;
+    });
+    html += `<th>Share</th></tr></thead><tbody><tr>`;
+    headers.forEach(header => {
+      let content = verse[header] || "-";
+      if (typeof content === "object" && content.text && content.url) {
+        content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
+      }
+      html += `<td${header === "Verse Category " ? ` class="${getCategoryClass(verse[header]?.trim().toLowerCase())}"` : ""}>${content}</td>`;
+    });
+    html += `<td class="share-buttons">${addShareButton(verse, index)}</td></tr></tbody></table>`;
+    singleVerseView.innerHTML = html;
+    singleVerseView.style.display = "block";
   }
 
   function updateHeaders(sheetName) {
@@ -736,30 +720,11 @@
       headers.forEach(header => {
         let th = document.createElement("th");
         th.textContent = header;
-        switch (sheetName) {
-          case "gita":
-            th.classList.add("gita-header");
-            break;
-          case "bible":
-            th.classList.add("bible-header");
-            break;
-          case "quran":
-            th.classList.add("quran-header");
-            break;
-          case "hadith":
-            th.classList.add("hadith-header");
-            break;
-          case "miscellaneous":
-            th.classList.add("miscellaneous-header");
-            break;
-        }
+        th.classList.add(`${sheetName}-header`);
         tr.appendChild(th);
       });
-      // Add headers for comment and share buttons
-      tr.appendChild(document.createElement("th")).textContent = "Comment";
       tr.appendChild(document.createElement("th")).textContent = "Share";
       thead.appendChild(tr);
-      console.log("Table headers updated for:", sheetName);
     }
   }
 
@@ -770,12 +735,10 @@
       let tr = document.createElement("tr");
       let td = document.createElement("td");
       td.textContent = "No data available or error loading data";
-      td.colSpan = Object.keys(data[0] || {}).length + 2 || 3;
+      td.colSpan = Object.keys(data[0] || {}).length + 1 || 2;
       td.style.textAlign = "center";
       tr.appendChild(td);
       tbody.appendChild(tr);
-      console.log("Table updated with no data message");
-      document.getElementById("relatedVerses").innerHTML = "";
     } else {
       rows.forEach((row, index) => {
         let tr = document.createElement("tr");
@@ -797,37 +760,29 @@
             td.textContent = content || "-";
           }
           if (header === "Verse Category " && typeof row[header] === "string") {
-            td.innerHTML = getCategoryClass(row[header].trim().toLowerCase()) + td.innerHTML;
+            td.className = getCategoryClass(row[header].trim().toLowerCase());
           }
           tr.appendChild(td);
         });
-        // Add comment button
-        let commentTd = document.createElement("td");
-        commentTd.innerHTML = `<button onclick="openCommentModal('${currentSheet}_${index}')">Comment</button>`;
-        tr.appendChild(commentTd);
-        // Add share buttons
         let shareTd = document.createElement("td");
         shareTd.className = "share-buttons";
         shareTd.innerHTML = addShareButton(row, index);
         tr.appendChild(shareTd);
         tbody.appendChild(tr);
       });
-      showRelatedVerses(rows[0]); // Show related verses for the first displayed row
-      console.log("Table updated with", rows.length, "rows");
     }
     updateContentCount(rows.length);
   }
 
   function getCategoryClass(category) {
-    const icons = {
-      "universal or ethical verse": "🕊️",
-      "general intra-community verse": "🙏",
-      "controversial intra-community verse": "⚠️",
-      "divisive or hateful inter-community verse": "🚫",
-      "violent or aggressive inter-community verse": "🔥"
-    };
-    const className = category.toLowerCase().replace(/ /g, "-");
-    return `<span class="category-icon">${icons[category.toLowerCase()] || ""}</span>`;
+    switch (category?.toLowerCase()) {
+      case "universal or ethical verse": return "category-universal";
+      case "general intra-community verse": return "category-general";
+      case "controversial intra-community verse": return "category-controversial";
+      case "divisive or hateful inter-community verse": return "category-divisive";
+      case "violent or aggressive inter-community verse": return "category-violent";
+      default: return "";
+    }
   }
 
   function addShareButton(row, index) {
@@ -860,7 +815,6 @@
       } else {
         updateMatchCount(0);
       }
-      console.log("Table filtered:", filteredRows.length, "rows");
     }
   }
 
@@ -880,7 +834,6 @@
                                                 row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
         return categoryMatch && subCategoryMatch;
       });
-
       if (searchTerm) {
         let searchFilteredRows = filteredRows.filter(row =>
           Object.values(row).some(val =>
@@ -900,86 +853,14 @@
         });
         updateTable(searchFilteredRows);
         updateMatchCount(matchCount);
-        console.log("Search performed on filtered rows, matches found:", matchCount);
       } else {
         updateTable(filteredRows);
         updateMatchCount(0);
-        console.log("No search term, showing filtered rows");
       }
     } else {
       updateTable(data);
       updateMatchCount(0);
-      console.log("Search cleared or no sheet selected, showing all data");
     }
-  }
-
-  async function displayVerseOfTheDay() {
-    if (!db || !currentSheet) {
-      document.getElementById("verseOfDay").innerHTML = "";
-      return;
-    }
-    try {
-      const today = new Date().toISOString().split('T')[0];
-      const verseDoc = doc(db, "verse_of_day", today);
-      let verse;
-      const docSnap = await getDoc(verseDoc);
-      if (docSnap.exists()) {
-        verse = docSnap.data();
-      } else {
-        const randomIndex = Math.floor(Math.random() * data.length);
-        verse = data[randomIndex];
-        await setDoc(verseDoc, { ...verse, sheet: currentSheet });
-      }
-      const verseDiv = document.getElementById("verseOfDay");
-      verseDiv.innerHTML = `<h3>Verse of the Day</h3><p>${verse["Verse"] || verse["Text"] || "No verse available"}</p>`;
-    } catch (error) {
-      console.error("Error displaying verse of the day:", error);
-      document.getElementById("verseOfDay").innerHTML = "";
-    }
-  }
-
-  function showRelatedVerses(currentRow) {
-    if (!currentRow || !data.length) {
-      document.getElementById("relatedVerses").innerHTML = "";
-      return;
-    }
-    const category = currentRow["Verse Category "]?.trim().toLowerCase();
-    const related = data.filter(row => row["Verse Category "]?.trim().toLowerCase() === category && row !== currentRow).slice(0, 3);
-    const relatedDiv = document.getElementById("relatedVerses");
-    relatedDiv.innerHTML = "<h3>Related Verses</h3>";
-    related.forEach(row => {
-      relatedDiv.innerHTML += `<p>${row["Verse"] || row["Text"] || "Verse content"}</p>`;
-    });
-  }
-
-  function openCommentModal(verseId) {
-    const modal = document.getElementById("commentModal");
-    const overlay = document.getElementById("overlay");
-    modal.classList.add("active");
-    overlay.classList.add("active");
-    modal.dataset.verseId = verseId;
-  }
-
-  async function submitComment() {
-    const modal = document.getElementById("commentModal");
-    const verseId = modal.dataset.verseId;
-    const commentText = document.getElementById("commentText").value;
-    if (!db || !commentText) return;
-    try {
-      await setDoc(doc(db, "verse_comments", verseId), { comment: commentText, timestamp: new Date() }, { merge: true });
-      console.log("Comment saved for:", verseId);
-      closeCommentModal();
-    } catch (error) {
-      console.error("Error saving comment:", error);
-    }
-  }
-
-  function closeCommentModal() {
-    const modal = document.getElementById("commentModal");
-    const overlay = document.getElementById("overlay");
-    modal.classList.remove("active");
-    overlay.classList.remove("active");
-    document.getElementById("commentText").value = "";
   }
 
   function updateContentCount(count) {
@@ -994,67 +875,14 @@
   window.loadSheetData = loadSheetData;
   window.filterTable = filterTable;
   window.searchTable = searchTable;
-  window.openCommentModal = openCommentModal;
-  window.submitComment = submitComment;
-  window.closeCommentModal = closeCommentModal;
+  window.selectSheet = selectSheet;
 
   // Initialize on page load
   window.onload = () => {
-    console.log("Window loaded, initializing...");
     initializeFirebase();
     updateLastUpdated();
     updateVisitorCount();
-    const headerInfo = document.querySelector(".header-info");
-    if (headerInfo) {
-      const computedStyle = window.getComputedStyle(headerInfo);
-      console.log("Header-info visibility:", {
-        display: computedStyle.display,
-        visibility: computedStyle.visibility,
-        opacity: computedStyle.opacity,
-        position: computedStyle.position
-      });
-    }
-    // Attach event listeners
-    const sheetSelector = document.getElementById("sheetSelector");
-    const categoryFilter = document.getElementById("categoryFilter");
-    const subCategoryFilter = document.getElementById("subCategoryFilter");
-    const searchInput = document.getElementById("searchInput");
-    if (sheetSelector) {
-      sheetSelector.addEventListener("change", loadSheetData);
-      console.log("Event listener attached to sheetSelector");
-    }
-    if (categoryFilter) {
-      categoryFilter.addEventListener("change", filterTable);
-    }
-    if (subCategoryFilter) {
-      subCategoryFilter.addEventListener("change", filterTable);
-    }
-    if (searchInput) {
-      searchInput.addEventListener("keyup", searchTable);
-    }
-    // Feedback form
-    document.getElementById("feedbackForm")?.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const feedback = e.target.feedback.value;
-      if (db && feedback) {
-        try {
-          await setDoc(doc(db, "feedback", Date.now().toString()), { feedback, timestamp: new Date() });
-          alert("Thank you for your feedback!");
-          e.target.reset();
-        } catch (error) {
-          console.error("Error saving feedback:", error);
-        }
-      }
-    });
-    // Mobile table toggle
-    document.getElementById("verseBody").addEventListener("click", (e) => {
-      if (window.innerWidth <= 600) {
-        const tr = e.target.closest("tr");
-        if (tr) {
-          tr.classList.toggle("expanded");
-        }
-      }
-    });
+    loadSingleVerse();
   };
 </script>
 </body>

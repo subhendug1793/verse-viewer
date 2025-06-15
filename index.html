@@ -481,25 +481,6 @@
       }
     }
 
-    async function retryFetch(url, retries = 2, delay = 1000) {
-      for (let i = 0; i <= retries; i++) {
-        try {
-          const response = await fetch(url);
-          if (!response.ok) {
-            throw new Error(`HTTP error: ${response.status}`);
-          }
-          return await response.json();
-        } catch (error) {
-          console.warn(`Attempt ${i + 1} failed for ${url}: ${error}`);
-          if (i < retries) {
-            await new Promise(resolve => setTimeout(resolve, delay));
-          } else {
-            throw error;
-          }
-        }
-      }
-    }
-
     async function updateVisitorCount() {
       const visitorCount = document.getElementById("visitorCount");
       if (!visitorCount) {
@@ -510,32 +491,22 @@
       visitorCount.innerHTML = "Visitors: Loading...";
 
       try {
-        // Try CountAPI with retries
-        const countApiData = await retryFetch('https://api.countapi.xyz/hit/verse-viewer-june2025/visitors');
-        console.log("CountAPI response:", countApiData);
-        visitorCount.classList.remove("error");
-        visitorCount.innerHTML = `Visitors: ${countApiData.value}`;
-        console.log("Visitor count updated from CountAPI:", countApiData.value);
-      } catch (countApiError) {
-        console.error("CountAPI fetch error:", countApiError);
-        // Fallback to counter.json
-        try {
-          const localData = await fetch('counter.json');
-          if (!localData.ok) {
-            throw new Error(`counter.json fetch error: ${localData.status}`);
-          }
-          const localCount = await localData.json();
-          console.log("Local counter fetched:", localCount.visitors);
-          visitorCount.classList.remove("error");
-          visitorCount.innerHTML = `Visitors: ${localCount.visitors}`;
-          console.log("Visitor count updated from counter.json:", localCount.visitors);
-        } catch (localError) {
-          console.error("Local counter fetch error:", localError);
-          // Default to 1
-          visitorCount.innerHTML = "Visitors: 1";
-          visitorCount.classList.add("error");
-          console.log("Defaulted to Visitors: 1");
+        // Fetch counter.json
+        const response = await fetch('counter.json', { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error(`counter.json fetch error: ${response.status}`);
         }
+        const data = await response.json();
+        console.log("Local counter fetched:", data.visitors);
+        visitorCount.classList.remove("error");
+        visitorCount.innerHTML = `Visitors: ${data.visitors}`;
+        console.log("Visitor count updated from counter.json:", data.visitors);
+      } catch (error) {
+        console.error("Local counter fetch error:", error);
+        // Default to 1
+        visitorCount.innerHTML = "Visitors: 1";
+        visitorCount.classList.add("error");
+        console.log("Defaulted to Visitors: 1");
       }
     }
 

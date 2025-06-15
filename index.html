@@ -452,8 +452,14 @@
     }
 
     function updateVisitorCount() {
-      // Attempt to fetch visitor count
-      fetch('https://api.countapi.xyz/update/sastik/verseviewer/?amount=1')
+      // Try initializing the key first
+      fetch('https://api.countapi.xyz/create?namespace=sastik&key=verseviewer')
+        .then(response => response.json())
+        .then(initData => {
+          console.log('CountAPI key initialization response:', initData);
+          // Proceed to fetch the count
+          return fetch('https://api.countapi.xyz/hit/sastik/verseviewer');
+        })
         .then(response => {
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -466,26 +472,20 @@
         })
         .catch(error => {
           console.error('Error fetching visitor count:', error.message);
-          // Attempt to initialize the key if it doesn't exist
-          fetch('https://api.countapi.xyz/create?namespace=sastik&key=verseviewer')
-            .then(response => response.json())
-            .then(initData => {
-              console.log('CountAPI key initialization response:', initData);
-              // Retry fetching count after initialization
-              return fetch('https://api.countapi.xyz/update/sastik/verseviewer/?amount=1');
-            })
+          // Fallback to a different namespace
+          fetch('https://api.countapi.xyz/hit/subhendug1793/verseviewer')
             .then(response => {
               if (!response.ok) {
-                throw new Error(`Retry HTTP error! Status: ${response.status}`);
+                throw new Error(`Fallback HTTP error! Status: ${response.status}`);
               }
               return response.json();
             })
             .then(data => {
-              console.log('CountAPI retry response:', data);
+              console.log('Fallback CountAPI response:', data);
               document.getElementById('visitorCount').textContent = `Visitors: ${data.value || 0}`;
             })
-            .catch(retryError => {
-              console.error('Error after key initialization:', retryError.message);
+            .catch(fallbackError => {
+              console.error('Error with fallback counter:', fallbackError.message);
               document.getElementById('visitorCount').textContent = `Visitors: N/A`;
             });
         });

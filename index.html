@@ -31,7 +31,7 @@
       margin-left: 20px;
       vertical-align: middle;
       display: inline-block;
-      min-height: 20px; /* Ensure span is visible even if empty */
+      min-height: 20px; /* Ensure visibility */
       font-weight: bold;
       color: #333;
     }
@@ -354,7 +354,7 @@
 <body>
   <div class="header-info">
     <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
-    <span class="visitor-count fallback" id="visitorCount">Visitors: Loading...</span>
+    <span class="visitor-count fallback" id="visitorCount"><your_counter_code></span>
     <span class="live-data"><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Live Data</a></span>
   </div>
   <div class="header-container">
@@ -464,13 +464,29 @@
 
     window.onload = () => {
       updateLastUpdated();
-      // Debug: Check if visitor-count element exists
+      // Debug: Check visitor-count element
       const visitorCount = document.getElementById("visitorCount");
       if (visitorCount) {
-        console.log("Visitor count element found:", visitorCount);
-        // Check if counter code is a placeholder
+        console.log("Visitor count element found:", visitorCount.outerHTML);
+        // Check for placeholder
         if (visitorCount.innerHTML.includes("<your_counter_code>")) {
-          console.warn("Visitor counter placeholder not replaced. Please add HitWebCounter code.");
+          console.warn("Visitor counter placeholder not replaced. Please add HitWebCounter code from https://www.hitwebcounter.com/.");
+        }
+        // Check for img element
+        const counterImg = visitorCount.querySelector("img");
+        if (counterImg) {
+          console.log("Counter image found:", counterImg.src);
+          counterImg.onload = () => {
+            console.log("HitWebCounter loaded successfully:", counterImg.src);
+            visitorCount.classList.remove("fallback");
+          };
+          counterImg.onerror = () => {
+            console.error("HitWebCounter failed to load:", counterImg.src);
+            visitorCount.innerHTML = "Visitors: Error";
+            visitorCount.classList.add("fallback");
+          };
+        } else {
+          console.warn("No counter image found in visitor-count span.");
         }
       } else {
         console.error("Visitor count element NOT found. Check HTML structure.");

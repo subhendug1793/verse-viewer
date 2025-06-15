@@ -478,6 +478,7 @@
           counterImg.onload = () => {
             console.log("HitWebCounter loaded successfully:", counterImg.src);
             visitorCount.classList.remove("fallback");
+            visitorCount.innerHTML = `<span>Visitors: </span>${counterImg.outerHTML}`;
           };
           counterImg.onerror = () => {
             console.error("HitWebCounter failed to load:", counterImg.src);
@@ -485,10 +486,10 @@
             visitorCount.classList.add("fallback");
           };
         } else {
-          console.warn("No counter image found. Ensure HitWebCounter code is added.");
+          console.warn("No counter image found in visitor-count span. Ensure HitWebCounter code is added correctly.");
         }
       } else {
-        console.error("Visitor count element NOT found. Check .header-info HTML.");
+        console.error("Visitor count element NOT found. Check .header-info HTML structure.");
       }
       const headerInfo = document.querySelector(".header-info");
       if (headerInfo) {
@@ -496,7 +497,8 @@
         console.log("Header-info visibility:", {
           display: computedStyle.display,
           visibility: computedStyle.visibility,
-          opacity: computedStyle.opacity
+          opacity: computedStyle.opacity,
+          position: computedStyle.position
         });
       }
     };

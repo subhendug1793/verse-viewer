@@ -429,7 +429,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
   import { getFirestore, doc, setDoc, getDoc, increment } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
-  // Your Firebase configuration
+  // Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyCou0LOLpeijDPxHlVN1pvpruvxdrLKVWk",
     authDomain: "verseviewercounter.firebaseapp.com",
@@ -441,10 +441,18 @@
   };
 
   // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+  let db = null;
+  function initializeFirebase() {
+    try {
+      const app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      console.log("Firebase initialized successfully");
+    } catch (error) {
+      console.error("Firebase initialization error:", error);
+    }
+  }
 
-  // Your existing JavaScript functions (unchanged)
+  // Data storage
   let data = [];
 
   function updateLastUpdated() {
@@ -511,12 +519,13 @@
     visitorCount.innerHTML = "Visitors: Loading...";
 
     try {
+      if (!db) {
+        throw new Error("Firestore not initialized");
+      }
       const counterRef = doc(db, "counters", "viewerCount");
-      // Increment the counter
       await setDoc(counterRef, { count: increment(1) }, { merge: true });
       console.log("Counter incremented in Firestore");
 
-      // Fetch the current count
       const counterSnap = await getDoc(counterRef);
       if (counterSnap.exists()) {
         const count = counterSnap.data().count || 0;
@@ -528,7 +537,6 @@
       }
     } catch (error) {
       console.error("Firestore error:", error);
-      // Fallback to counter.json
       try {
         const response = await fetch('counter.json', { cache: 'no-store' });
         if (!response.ok) {
@@ -548,56 +556,66 @@
     }
   }
 
-  window.onload = () => {
-    updateLastUpdated();
-    updateVisitorCount();
-    const headerInfo = document.querySelector(".header-info");
-    if (headerInfo) {
-      const computedStyle = window.getComputedStyle(headerInfo);
-      console.log("Header-info visibility:", {
-        display: computedStyle.display,
-        visibility: computedStyle.visibility,
-        opacity: computedStyle.opacity,
-        position: computedStyle.position
-      });
-    }
-  };
-
-  // Your existing functions (unchanged)
-  function loadSheetData() {
-    const sheetName = document.getElementById("sheetSelector").value;
+  async function loadSheetData() {
+    console.log("loadSheetData triggered");
+    const sheetSelector = document.getElementById("sheetSelector");
+    const sheetName = sheetSelector.value;
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
     const searchInput = document.getElementById("searchInput");
+    const errorDisplay = document.createElement("div");
+    errorDisplay.id = "errorDisplay";
+    errorDisplay.style.color = "red";
+    errorDisplay.style.textAlign = "center";
+    errorDisplay.style.marginBottom = "10px";
+    document.querySelector(".controls").after(errorDisplay);
+
     if (sheetName) {
+      console.log(`Fetching data for sheet: ${sheetName}`);
       categoryFilter.disabled = false;
       subCategoryFilter.disabled = false;
       searchInput.disabled = false;
-      fetch(`${sheetName}.json`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status} - Check if ${sheetName}.json exists in the repository`);
+      errorDisplay.textContent = "";
+      
+      // Try fetching with original case, then lowercase, then uppercase
+      const urlsToTry = [`${sheetName}.json`, `${sheetName.toLowerCase()}.json`, `${sheetName.charAt(0).toUpperCase() + sheetName.slice(1).toLowerCase()}.json`];
+      let response, sheetData;
+      for (const url of urlsToTry) {
+        try {
+          console.log(`Attempting to fetch: ${url}`);
+          response = await fetch(url, { cache: 'no-store' });
+          if (response.ok) {
+            sheetData = await response.json();
+            console.log(`Data fetched successfully from ${url}:`, sheetData);
+            break;
+          } else {
+            console.warn(`Fetch failed for ${url}: Status ${response.status}`);
           }
-          return response.json();
-        })
-        .then(sheetData => {
-          data = sheetData;
-          updateHeaders(sheetName);
-          updateTable(data);
-          updateContentCount(data.length);
-          updateMatchCount(0);
-          console.log("Loaded data for sheet:", sheetName, "Rows:", data.length, "Sample Verse Category:", data[0] ? data[0]["Verse Category "] : "N/A", "Full Data:", data);
-        })
-        .catch(error => {
-          console.error("Error loading JSON:", error.message);
-          document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${sheetName}.json: ${error.message}</td></tr>`;
-          updateContentCount(0);
-          updateMatchCount(0);
-        });
+        } catch (err) {
+          console.warn(`Error fetching ${url}:`, err.message);
+        }
+      }
+
+      if (sheetData) {
+        data = sheetData;
+        updateHeaders(sheetName);
+        updateTable(data);
+        updateContentCount(data.length);
+        updateMatchCount(0);
+        console.log("Loaded data for sheet:", sheetName, "Rows:", data.length, "Sample Verse Category:", data[0] ? data[0]["Verse Category "] : "N/A");
+      } else {
+        console.error(`Failed to load ${sheetName}.json after trying all URL variants`);
+        errorDisplay.textContent = `Error loading ${sheetName}.json. Please check if the file exists or contact support.`;
+        document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${sheetName}.json: File not found or inaccessible</td></tr>`;
+        updateContentCount(0);
+        updateMatchCount(0);
+      }
     } else {
+      console.log("No sheet selected, clearing table");
       categoryFilter.disabled = true;
       subCategoryFilter.disabled = true;
       searchInput.disabled = true;
+      errorDisplay.textContent = "";
       document.getElementById("verseBody").innerHTML = "";
       document.getElementById("tableHeaders").innerHTML = "";
       updateContentCount(0);
@@ -634,6 +652,7 @@
         tr.appendChild(th);
       });
       thead.appendChild(tr);
+      console.log("Table headers updated for:", sheetName);
     }
   }
 
@@ -648,6 +667,7 @@
       td.style.textAlign = "center";
       tr.appendChild(td);
       tbody.appendChild(tr);
+      console.log("Table updated with no data message");
     } else {
       rows.forEach(row => {
         let tr = document.createElement("tr");
@@ -655,7 +675,7 @@
         headers.forEach(header => {
           let td = document.createElement("td");
           let content = row[header] || "";
-          if (typeof content === "string" || (typeof content === "object" && content.text)) {
+          if (typeof content === "string" || (typeof content === "object" && content && content.text)) {
             const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
             if (searchTerm && !document.getElementById("searchInput").disabled) {
               const textToSearch = typeof content === "object" ? content.text : content;
@@ -666,7 +686,7 @@
               ? `<a href="${content.url}" target="_blank">${content.text}</a>`
               : content;
           } else {
-            td.textContent = content;
+            td.textContent = content || "-";
           }
           if (header === "Verse Category " && typeof row[header] === "string") {
             td.className = getCategoryClass(row[header].trim().toLowerCase());
@@ -675,6 +695,7 @@
         });
         tbody.appendChild(tr);
       });
+      console.log("Table updated with", rows.length, "rows");
     }
     updateContentCount(rows.length);
   }
@@ -703,6 +724,7 @@
         return categoryMatch && subCategoryMatch;
       });
       updateTable(filteredRows);
+      console.log("Table filtered:", filteredRows.length, "rows");
     }
   }
 
@@ -714,7 +736,7 @@
       let filteredRows = data.filter(row =>
         Object.values(row).some(val =>
           (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
-          (typeof val === "object" && val.text && val.text.toLowerCase().includes(searchTerm))
+          (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm))
         )
       );
       let matchCount = 0;
@@ -722,16 +744,18 @@
         Object.values(row).forEach(val => {
           if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
             matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
-          } else if (typeof val === "object" && val.text && val.text.toLowerCase().includes(searchTerm)) {
+          } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm)) {
             matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
           }
         });
       });
       updateTable(filteredRows);
       updateMatchCount(matchCount);
+      console.log("Search performed, matches found:", matchCount);
     } else {
       updateTable(data);
       updateMatchCount(0);
+      console.log("Search cleared, showing all data");
     }
   }
 
@@ -742,6 +766,47 @@
   function updateMatchCount(count) {
     document.getElementById("matchCount").textContent = `Matches found: ${count}`;
   }
+
+  // Expose functions to global scope
+  window.loadSheetData = loadSheetData;
+  window.filterTable = filterTable;
+  window.searchTable = searchTable;
+
+  // Initialize on page load
+  window.onload = () => {
+    console.log("Window loaded, initializing...");
+    initializeFirebase();
+    updateLastUpdated();
+    updateVisitorCount();
+    const headerInfo = document.querySelector(".header-info");
+    if (headerInfo) {
+      const computedStyle = window.getComputedStyle(headerInfo);
+      console.log("Header-info visibility:", {
+        display: computedStyle.display,
+        visibility: computedStyle.visibility,
+        opacity: computedStyle.opacity,
+        position: computedStyle.position
+      });
+    }
+    // Attach event listeners
+    const sheetSelector = document.getElementById("sheetSelector");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const subCategoryFilter = document.getElementById("subCategoryFilter");
+    const searchInput = document.getElementById("searchInput");
+    if (sheetSelector) {
+      sheetSelector.addEventListener("change", loadSheetData);
+      console.log("Event listener attached to sheetSelector");
+    }
+    if (categoryFilter) {
+      categoryFilter.addEventListener("change", filterTable);
+    }
+    if (subCategoryFilter) {
+      subCategoryFilter.addEventListener("change", filterTable);
+    }
+    if (searchInput) {
+      searchInput.addEventListener("keyup", searchTable);
+    }
+  };
 </script>
 </body>
 </html>

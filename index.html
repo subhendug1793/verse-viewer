@@ -253,6 +253,7 @@
       padding: 20px; 
       background-color: #fff; 
       box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+      position: relative; /* For absolute positioning of arrows */
     }
     .single-verse-view h3 { 
       color: #0066cc; 
@@ -292,22 +293,43 @@
     .share-buttons a, .single-verse-share-buttons a { 
       display: flex; 
       justify-content: center; 
+      align-items: center; 
       width: 40px; 
+      position: relative; /* For emoji positioning */
+    }
+    .share-buttons a.view-link::after { 
+      content: '👆'; 
+      position: absolute; 
+      top: -10px; 
+      font-size: 0.8em; 
     }
     .navigation-arrows {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100%;
       display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 20px;
+      justify-content: space-between;
+      pointer-events: none;
     }
     .navigation-arrows a {
-      font-size: 1.5em;
+      font-size: 2.5em;
       text-decoration: none;
       color: #0066cc;
+      padding: 10px;
+      pointer-events: auto;
     }
     .navigation-arrows a.disabled {
       color: #ccc;
       cursor: not-allowed;
+    }
+    .navigation-arrows .prev {
+      position: absolute;
+      left: -30px;
+    }
+    .navigation-arrows .next {
+      position: absolute;
+      right: -30px;
     }
     .reaction-buttons {
       display: flex;
@@ -439,7 +461,14 @@
         width: 30px; 
       }
       .navigation-arrows a {
-        font-size: 1.2em;
+        font-size: 2em;
+        padding: 5px;
+      }
+      .navigation-arrows .prev {
+        left: -20px;
+      }
+      .navigation-arrows .next {
+        right: -20px;
       }
       .reaction-buttons img {
         width: 16px;
@@ -744,10 +773,11 @@
       }
       if (sheetData) {
         data = sheetData;
-        // Map verseParam to index
+        // Normalize verseParam for comparison
+        const normalizedVerseParam = decodeURIComponent(verseParam).trim();
         verseIndex = data.findIndex(row => {
-          const verseName = row["Verse Name"] || row["Verse"] || "";
-          return verseName.trim() === verseParam.trim();
+          const verseName = (row["Verse Name"] || row["Verse"] || "").trim();
+          return verseName === normalizedVerseParam;
         });
         if (verseIndex === -1) {
           verseIndex = parseInt(verseParam, 10);
@@ -761,12 +791,14 @@
           document.querySelector('.search-row').style.display = 'none';
           await loadReactions(sheet, verseIndex);
         } else {
+          console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
           displaySingleVerse(null, -1);
           document.getElementById("controls").style.display = "none";
           document.getElementById("verseTable").style.display = "none";
           document.querySelector('.search-row').style.display = 'none';
         }
       } else {
+        console.error(`Failed to load ${sheet}.json`);
         displaySingleVerse(null, -1);
         document.getElementById("controls").style.display = "none";
         document.getElementById("verseTable").style.display = "none";
@@ -866,8 +898,8 @@
     });
     // Add navigation arrows
     html += `<div class="navigation-arrows">
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>&larr;</a>
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>&rarr;</a>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>←</a>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="next ${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>→</a>
     </div>`;
     // Add reaction buttons
     html += `<div class="reaction-buttons">
@@ -969,12 +1001,18 @@
 
   function addShareButton(row, index, isTableView = true) {
     const verseText = row["Verse"] || row["Text"] || "";
-    const verseName = row["Verse Name"] || row["Verse"] || index;
+    // Sanitize verseName to avoid [object Object]
+    let verseName = row["Verse Name"] || row["Verse"] || index.toString();
+    if (typeof verseName !== "string") {
+      verseName = index.toString();
+      console.warn(`Invalid Verse Name for sheet=${currentSheet}, index=${index}:`, verseName);
+    }
+    verseName = verseName.trim();
     const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`;
     const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
     let html = '';
     if (isTableView) {
-      html += `<a href="${shareUrl}" target="_blank"><img src="images/eye_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
+      html += `<a href="${shareUrl}" target="_blank" class="view-link"><img src="images/eye_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
     }
     html += `
       <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>

@@ -272,12 +272,19 @@
       align-items: center; 
       gap: 8px; 
     }
-    .share-buttons img { 
+    .single-verse-share-buttons { 
+      display: flex; 
+      flex-direction: row; 
+      justify-content: center; 
+      gap: 12px; 
+      flex-wrap: wrap; 
+    }
+    .share-buttons img, .single-verse-share-buttons img { 
       width: 24px; 
       height: 24px; 
       vertical-align: middle; 
     }
-    .share-buttons a { 
+    .share-buttons a, .single-verse-share-buttons a { 
       display: flex; 
       justify-content: center; 
       width: 40px; 
@@ -382,11 +389,11 @@
       .verse-details strong { 
         width: 120px; 
       }
-      .share-buttons img { 
+      .share-buttons img, .single-verse-share-buttons img { 
         width: 20px; 
         height: 20px; 
       }
-      .share-buttons a { 
+      .share-buttons a, .single-verse-share-buttons a { 
         width: 30px; 
       }
     }
@@ -408,15 +415,6 @@
   <div class="mission-subtext">
     ⬇️ A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. ⬇️
   </div>
-  <!-- Commented out sheet selection for future use
-  <div class="sheet-selection">
-    <button onclick="selectSheet('gita')">Gita</button>
-    <button onclick="selectSheet('bible')">Bible</button>
-    <button onclick="selectSheet('quran')">Quran</button>
-    <button onclick="selectSheet('hadith')">Hadith</button>
-    <button onclick="selectSheet('miscellaneous')">Miscellaneous</button>
-  </div>
-  -->
   <div class="single-verse-view" id="singleVerseView" style="display: none;"></div>
   <div class="controls" id="controls">
     <label for="sheetSelector">Select Gita/Bible/Quran+:</label>
@@ -701,7 +699,7 @@
         : "";
       html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
     });
-    html += `</div><div class="share-buttons">${addShareButton(verse, index)}</div>`;
+    html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index)}</div>`;
     singleVerseView.innerHTML = html;
     singleVerseView.style.display = "block";
   }
@@ -729,7 +727,7 @@
   function updateTable(rows) {
     const tbody = document.getElementById("verseBody");
     tbody.innerHTML = "";
-    if (rows.length === 0) {
+    if (rows.length == 0) {
       let tr = document.createElement("tr");
       let td = document.createElement("td");
       td.textContent = "No data available or error loading data";
@@ -785,16 +783,17 @@
 
   function addShareButton(row, index) {
     const verseText = row["Verse"] || row["Text"] || "";
-    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${currentSheet}&verse=${index}`;
+    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${index}`;
+    const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
     return `
       <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
       <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>
       <a href="https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(verseText)}" target="_blank"><img src="images/telegram_logo.png" alt="Telegram"></a>
       <a href="https://www.instagram.com/?url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/instagram_logo.png" alt="Instagram"></a>
       <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
-      <a href="#" onclick="copyToClipboard('${shareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
+      <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
       <!-- Future Share Anywhere option
-      <a href="#" onclick="shareAnywhere('${verseText}', '${shareUrl}'); return false;"><img src="images/share_anywhere.png" alt="Share Anywhere"></a>
+      <a href="#" onclick="shareAnywhere('${verseText}', '${escapedShareUrl}'); return false;"><img src="images/share_anywhere.png" alt="Share Anywhere"></a>
       -->
     `;
   }
@@ -804,6 +803,7 @@
       alert("Link copied to clipboard!");
     }).catch(err => {
       console.error("Failed to copy link:", err);
+      alert("Failed to copy link. Please try again.");
     });
   }
 
@@ -904,7 +904,6 @@
   window.loadSheetData = loadSheetData;
   window.filterTable = filterTable;
   window.searchTable = searchTable;
-  // window.selectSheet = selectSheet; // Commented out for future use
 
   // Initialize on page load
   window.onload = () => {

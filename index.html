@@ -12,7 +12,7 @@
   <style>
     body { 
       font-family: 'Poppins', sans-serif; 
-      margin: 5px; /* Reduced top margin */
+      margin: 5px;
       background: #f9f9f9; 
       min-height: 100vh; 
       display: flex;
@@ -555,7 +555,7 @@
 <body>
   <div class="header-info">
     <span class="visitor-count" id="visitorCount">Visitors: Loading...</span>
-    <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
+    <span class="last-updated" id="lastUpdated">Last updated: Loading...</span>
   </div>
   <div class="header-container">
     <img src="images/sastik_logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('SASTIK logo failed to load');">
@@ -633,7 +633,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc, runTransaction } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, getDoc, increment } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCou0LOLpeijDPxHlVN1pvpruvxdrLKVWk",
@@ -652,7 +652,77 @@
       db = getFirestore(app);
       console.log("Firebase initialized successfully");
     } catch (error) {
-      console.error("Firebase initialization error:", error);
+      console.error("Firebase initialization failed:", error.message);
+      document.getElementById("visitorCount").innerHTML = "Visitors: Unknown";
+      document.getElementById("visitorCount").classList.add("error");
+    }
+  }
+
+  async function updateVisitorCount() {
+    const visitorCount = document.getElementById("visitorCount");
+    if (!visitorCount) return;
+    try {
+      if (!db) throw new Error("Firestore not initialized");
+      const counterRef = doc(db, "counters", "viewerCount");
+      const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Firestore timeout")), 5000));
+      await Promise.race([
+        setDoc(counterRef, { count: increment(1) }, { merge: true }),
+        timeoutPromise
+      ]);
+      const counterSnap = await Promise.race([
+        getDoc(counterRef),
+        timeoutPromise
+      ]);
+      if (counterSnap.exists()) {
+        visitorCount.classList.remove("error");
+        visitorCount.innerHTML = `Visitors: ${counterSnap.data().count || 0}`;
+      } else {
+        throw new Error("Counter document does not exist");
+      }
+    } catch (error) {
+      console.error("Error updating visitor count:", error.message);
+      visitorCount.innerHTML = "Visitors: Unknown";
+      visitorCount.classList.add("error");
+    }
+  }
+
+  function updateLastUpdated() {
+    const lastUpdatedElement = document.getElementById("lastUpdated");
+    if (!lastUpdatedElement) return;
+    try {
+      let lastUpdated;
+      const modified = document.lastModified;
+      console.log("document.lastModified:", modified);
+      if (modified && !isNaN(new Date(modified).getTime())) {
+        const date = new Date(modified);
+        lastUpdated = date.toLocaleString('en-IN', { 
+          timeZone: 'Asia/Kolkata', 
+          day: '2-digit', 
+          month: '2-digit', 
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false 
+        }).replace(/(\d{2})\/(\d{2})\/(\d{4}),/, '$1/$2/$3');
+      } else {
+        console.warn("document.lastModified unavailable, using current date");
+        const now = new Date();
+        lastUpdated = now.toLocaleString('en-IN', { 
+          timeZone: 'Asia/Kolkata', 
+          day: '2-digit', 
+          month: '2-digit', 
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false 
+        }).replace(/(\d{2})\/(\d{2})\/(\d{4}),/, '$1/$2/$3');
+      }
+      lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${lastUpdated}</a>`;
+    } catch (error) {
+      console.error("Error updating last modified:", error.message);
+      lastUpdatedElement.innerHTML = `Last updated: Unknown`;
     }
   }
 
@@ -683,53 +753,6 @@
   let currentVerseIndex = -1;
   let isFiltered = false;
 
-  function updateLastUpdated() {
-    try {
-      const lastUpdatedElement = document.getElementById("lastUpdated");
-      if (lastUpdatedElement) {
-        let lastUpdated;
-        if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
-          const date = new Date(document.lastModified);
-          const dateStr = date.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
-          const timeStr = date.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-          lastUpdated = `${dateStr} ${timeStr}`;
-        } else {
-          const now = new Date();
-          const dateStr = now.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
-          const timeStr = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-          lastUpdated = `${dateStr} ${timeStr}`;
-          console.warn("document.lastModified unavailable, using current date:", lastUpdated);
-        }
-        lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${lastUpdated}</a>`;
-      }
-    } catch (error) {
-      console.error("Error updating last modified:", error);
-      document.getElementById("lastUpdated").innerHTML = `Last updated: Unknown`;
-    }
-  }
-
-  async function updateVisitorCount() {
-    const visitorCount = document.getElementById("visitorCount");
-    if (!visitorCount) return;
-    visitorCount.innerHTML = "Visitors: Loading...";
-    try {
-      if (!db) throw new Error("Firestore not initialized");
-      const counterRef = doc(db, "counters", "viewerCount");
-      await setDoc(counterRef, { count: increment(1) }, { merge: true });
-      const counterSnap = await getDoc(counterRef);
-      if (counterSnap.exists()) {
-        visitorCount.classList.remove("error");
-        visitorCount.innerHTML = `Visitors: ${counterSnap.data().count || 0}`;
-      } else {
-        throw new Error("Counter document does not exist");
-      }
-    } catch (error) {
-      console.error("Firestore error:", error);
-      visitorCount.innerHTML = "Visitors: Unknown";
-      visitorCount.classList.add("error");
-    }
-  }
-
   async function loadSheetData(sheetName = "", fromPopstate = false, retries = 2) {
     console.log(`loadSheetData: sheetName=${sheetName}, fromPopstate=${fromPopstate}, retries=${retries}`);
     const controls = document.getElementById("controls");
@@ -743,11 +766,17 @@
     const searchInput = document.getElementById("searchInput");
     const tabs = document.querySelectorAll(".sheet-tab");
 
+    // Reset UI state
     tabs.forEach(tab => tab.classList.remove("selected"));
-    if (sheetName) {
-      const tab = document.querySelector(`.sheet-tab[data-sheet="${sheetName.toLowerCase()}"]`);
-      if (tab) tab.classList.add("selected");
-    }
+    controls.style.display = "none";
+    searchRow.style.display = "none";
+    verseContainer.style.display = "none";
+    singleVerseView.style.display = "none";
+    errorDisplay.textContent = "";
+    verseNameFilter.disabled = true;
+    categoryFilter.disabled = true;
+    subCategoryFilter.disabled = true;
+    searchInput.disabled = true;
 
     if (!sheetName || !['gita', 'bible', 'quran', 'hadith', 'miscellaneous'].includes(sheetName.toLowerCase())) {
       console.log("No valid sheet selected, resetting to home");
@@ -756,41 +785,48 @@
       if (!fromPopstate) {
         history.pushState({ view: 'home' }, '', '/verse-viewer/');
       }
-      controls.style.display = "none";
-      searchRow.style.display = "none";
-      verseContainer.style.display = "none";
-      singleVerseView.style.display = "none";
-      errorDisplay.textContent = "";
-      verseNameFilter.disabled = true;
-      categoryFilter.disabled = true;
-      subCategoryFilter.disabled = true;
-      searchInput.disabled = true;
       return;
     }
 
+    // Normalize sheetName and highlight tab
     currentSheet = sheetName.toLowerCase();
     console.log(`Setting currentSheet to ${currentSheet}`);
+    const tab = document.querySelector(`.sheet-tab[data-sheet="${currentSheet}"]`);
+    if (tab) {
+      tab.classList.add("selected");
+      console.log(`Highlighted tab: ${currentSheet}`);
+    } else {
+      console.warn(`Tab not found for sheet: ${currentSheet}`);
+    }
+
     sessionStorage.setItem('currentSheet', currentSheet);
     if (!fromPopstate) {
       history.pushState({ view: 'sheet', sheet: currentSheet }, '', `?sheet=${encodeURIComponent(currentSheet)}`);
     }
 
+    // Show loading state
     controls.style.display = "flex";
     searchRow.style.display = "flex";
     verseContainer.style.display = "flex";
-    singleVerseView.style.display = "none";
     errorDisplay.textContent = "Loading...";
     verseNameFilter.disabled = false;
     categoryFilter.disabled = false;
     subCategoryFilter.disabled = false;
     searchInput.disabled = false;
 
-    const urlsToTry = [`${currentSheet}.json`, `${currentSheet.toLowerCase()}.json`, `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`];
+    // Try fetching JSON with multiple case variations
+    const urlsToTry = [
+      `${currentSheet}.json`,
+      `${currentSheet.toLowerCase()}.json`,
+      `${currentSheet.toUpperCase()}.json`,
+      `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`
+    ];
     let sheetData = null;
     for (const url of urlsToTry) {
       try {
+        console.log(`Attempting to fetch: ${url}`);
         const response = await fetch(url, { cache: 'no-store' });
-        console.log(`Fetch attempt for ${url}: Status ${response.status}`);
+        console.log(`Fetch status for ${url}: ${response.status}`);
         if (response.ok) {
           sheetData = await response.json();
           break;
@@ -814,8 +850,8 @@
       console.warn(`Retrying loadSheetData for ${currentSheet}, retries left: ${retries - 1}`);
       setTimeout(() => loadSheetData(sheetName, fromPopstate, retries - 1), 1000);
     } else {
-      console.error(`Failed to load ${currentSheet}.json`);
-      errorDisplay.textContent = `Unable to load ${currentSheet} data. Please try again later.`;
+      console.error(`Failed to load ${currentSheet}.json after all attempts`);
+      errorDisplay.textContent = `Unable to load ${currentSheet} data. Please check your connection or try again later.`;
       verseContainer.innerHTML = `<p style="text-align: center;">Failed to load data</p>`;
       updateContentCount(0);
       updateMatchCount(0);
@@ -863,7 +899,12 @@
     if (sheet && verseParam && ['gita', 'bible', 'quran', 'hadith', 'miscellaneous'].includes(sheet.toLowerCase())) {
       currentSheet = sheet.toLowerCase();
       sessionStorage.setItem('currentSheet', currentSheet);
-      const urlsToTry = [`${currentSheet}.json`, `${currentSheet.toLowerCase()}.json`, `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`];
+      const urlsToTry = [
+        `${currentSheet}.json`,
+        `${currentSheet.toLowerCase()}.json`,
+        `${currentSheet.toUpperCase()}.json`,
+        `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`
+      ];
       let sheetData;
       for (const url of urlsToTry) {
         try {
@@ -936,7 +977,7 @@
         if (button) button.classList.add('active');
       }
     } catch (error) {
-      console.error("Error loading reactions:", error);
+      console.error("Error loading reactions:", error.message);
     }
   }
 
@@ -973,26 +1014,29 @@
 
       await loadReactions(sheet, verseIndex);
     } catch (error) {
-      console.error("Error toggling reaction:", error);
+      console.error("Error toggling reaction:", error.message);
       alert("Failed to update reaction. Please try again.");
     }
   }
 
   function updateReactionButtons(counts) {
-    document.querySelector('#reactionButtons').textContent = counts.like || 0;
-    document.querySelector('#likeCount').textContent = counts.like ||  document.querySelector('#loveCount').textContent = counts.love || 0;
-    document.querySelector('#angryCount').textContent = counts.angry || 0;
+    const likeCount = document.querySelector('#likeCount');
+    const loveCount = document.querySelector('#loveCount');
+    const angryCount = document.querySelector('#angryCount');
+    if (likeCount) likeCount.textContent = counts.like || 0;
+    if (loveCount) loveCount.textContent = counts.love || 0;
+    if (angryCount) angryCount.textContent = counts.angry || 0;
   }
 
   function generateUserId() {
-    return 'user_' + Math.randomId().toString(36).substr(2, 9);
+    return 'user_' + Math.random().toString(36).substr(2, 9);
   }
 
   function getBengaliCategory(category) {
     const map = {
       "universal or ethical verse": "সর্বজনীন বা নৈতিক শ্লোক",
-      "general intra-community verse": "সাধারণ অন্তঃসম্প্রদায়ীক শ্লোক",
-      "controversial intra-community verse": "বিতর্কিত অন্তঃসম্প্রদায়ীক শ্লোক",
+      "general intra-community verse": "সাধারণ অন্তঃসম্প্রদায়িক শ্লোক",
+      "controversial intra-community verse": "বিতর্কিত অন্তঃসম্প্রদায়িক শ্লোক",
       "divisive or hateful inter-community verse": "বিভাজনমূলক বা বিদ্বেষমূলক আন্তঃসম্প্রদায়িক শ্লোক",
       "violent or aggressive inter-community verse": "হিংস্র বা আক্রমণাত্মক আন্তঃসম্প্রদায়িক শ্লোক",
       "historical or narrative verse": "ঐতিহাসিক বা কাহিনীমূলক শ্লোক",
@@ -1011,6 +1055,8 @@
       case "violent or aggressive inter-community verse": return "category-violent";
       default: return "";
     }
+  }
+
   function displaySingleVerse(verse, index) {
     const singleVerseView = document.getElementById("singleVerseView");
     if (!verse) {
@@ -1033,9 +1079,9 @@
     html += `<div class="reaction-buttons">
       <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
       <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
-      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😄 <span id="angryCount">0</span></button>
+      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount">0</span></button>
     </div>`;
-    html += `<div class="share-buttons">${addShareButton(verse, index)}</div>`;
+    html += `</div><div class="share-buttons">${addShareButton(verse, index)}</div>`;
     const prevDisabled = index <= 0 ? 'disabled' : '';
     const nextDisabled = index >= data.length - 1 ? 'disabled' : '';
     const verseNamePrev = data[index - 1]?.["Verse Name"] || data[index - 1]?.["Verse"] || (index - 1).toString();
@@ -1079,14 +1125,14 @@
       const transliteration = row["Transliteration"] || "";
       const translation = row["Translation"] || "";
       const bengaliTranslation = row["Bengali Translation"] || "";
-      let html = `<div class="verse-card" data-index="${currentSheet}">
+      let html = `<div class="verse-card" data-index="${index}">
         <h4>${verseName}</h4>
         <p><strong>Verse Category:</strong> <span class="category ${getCategoryClass(verseCategory)}">${verseCategory} / ${getBengaliCategory(verseCategory)}</span></p>
-        <p><strong>Sub Category:</strong> ${subCategory} / ${getBengaliCategory(subCategory)}<p></p>
+        <p><strong>Sub Category:</strong> ${subCategory} / ${getBengaliCategory(subCategory)}</p>
         ${transliteration ? `<p><strong>Transliteration:</strong> ${transliteration}</p>` : ""}
         ${translation ? `<p><strong>Translation:</strong> ${translation}</p>` : ""}
         ${bengaliTranslation ? `<p><strong>Bengali Translation:</strong> ${bengaliTranslation}</p>` : ""}
-        <button class="see-full" onclick="showFullVerse(${index}')">See Full Verse</button>
+        <button class="see-full" onclick="showFullVerse(${index})">See Full Verse</button>
       </div>`;
       verseContainer.innerHTML += html;
     });
@@ -1107,20 +1153,20 @@
   function filterTable() {
     console.log("Filtering table...");
     const verseName = document.getElementById("verseNameFilter").value;
-    const category = document.getElementById("categoryFilter").value(";
+    const category = document.getElementById("categoryFilter").value;
     const subCategory = document.getElementById("subCategoryFilter").value;
 
     if (currentSheet && data.length > 0) {
       sessionStorage.setItem(`filter_verseName_${currentSheet}`, verseName);
-      sessionStorage.setItem('filter_category_${currentSheet}`, category);
+      sessionStorage.setItem(`filter_category_${currentSheet}`, category);
       sessionStorage.setItem(`filter_subCategory_${currentSheet}`, subCategory);
       filteredData = data.filter(row => {
         const verseNameMatch = !verseName || (
-          ((row["Verse Name"] || row["Verse"] || "").trim() === verseName ||
-          ((row["Verse Name"] || row["Verse"]).replace(/\s+\d+\.\d+$/, '').trim() || "").replace(/^(?:C(\d+)-)?(.+)/, 'C$1-$2').trim() === verseName.toLowerCase()
+          (row["Verse Name"] || row["Verse"] || "").trim() === verseName ||
+          ((row["Verse Name"] || row["Verse"] || "").replace(/\s+\d+\.\d+$/, '').trim() || "").replace(/^(?:C(\d+)-)?(.+)/, 'C$1-$2').trim() === verseName
         );
         const categoryMatch = !category || (row["Verse Category"] || "").trim().toLowerCase() === category.toLowerCase();
-        const subCategoryMatch = !subCategory || (row["Sub Category"]. || "").trim().toLowerCase() === subCategory.toLowerCase();
+        const subCategoryMatch = !subCategory || (row["Sub Category"] || "").trim().toLowerCase() === subCategory.toLowerCase();
         return verseNameMatch && categoryMatch && subCategoryMatch;
       });
       isFiltered = verseName || category || subCategory;
@@ -1136,111 +1182,121 @@
     let matchCount = 0;
     let searchFilteredRows = filteredData;
     if (searchTerm) {
-      let searchFilteredRows = filteredRows.filter(row => {
+      searchFilteredRows = filteredData.filter(row =>
         Object.values(row).some(val =>
           (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
-          ((typeof val === "object" && val && val.text && val.to.text.toLowerCase().includes(searchTerm))
+          (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm))
         )
       );
       searchFilteredRows.forEach(row => {
         Object.values(row).forEach(val => {
           if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
-            matchCount += (val.toLowerCase().match(/${searchTerm}/g') || []).length;
-          } else if (typeof val === "object" && val && val.text && val.to.text.toLowerCase().includes(searchTerm)) {
-            matchCount += (val.text.toLowerCase().match(/${searchTerm}/g') || []).length;
+            matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+          } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm)) {
+            matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
           }
-          });
-        });
-      }
-      updateVerseCards(searchFilteredRows);
-      updateMatchCount(matchCount);
-    }
-
-    function updateContentCount(count) {
-      document.getElementById("contentCount").textContent = `Content Found: ${count}`;
-    }
-
-    function updateMatchCount(count) {
-      document.getElementById("matchCount").textContent = `Matches found: ${count}`;
-    }
-
-    function navigateVerse(newIndex) {
-      const verse = data[newIndex];
-      const verseName = verse["Verse Name"] || verse["Verse"] || newIndex.toString();
-      history.pushState({ view: 'verse', sheet: currentSheet, verse: verseName, index: newIndex }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`);
-      currentVerseIndex = newIndex;
-      displaySingleVerse(verse, newIndex);
-      loadReactions(currentSheet, newIndex);
-    }
-
-    function loadHome(fromPopstate = false) {
-      currentSheet = "";
-      sessionStorage.removeItem('currentSheet');
-      if (!fromPopstate) {
-        history.pushState({ view: 'home' }, '', '/verse-viewer/');
-      }
-      loadSheetData("");
-    }
-
-    function debounce(func, wait) {
-      let timeout;
-      return function executedFunction(...args) {
-        const later = () => {
-          clearTimeout(timeout);
-          func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, 200);
-      };
-    }
-
-    window.onpopstate = function(event) {
-      const state = event.state || {};
-      if (state.view === 'verse' && state.sheet && state.verse) {
-        loadSingleVerse(state.sheet, state.verse, true);
-      } else if (state.view === 'sheet' && state.sheet) {
-        loadSheetData(state.sheet, true);
-      } else {
-        loadHome(true);
-      }
-    };
-
-    window.loadSheetData = loadSheetData;
-    window.filterTable = filterTable;
-    window.searchTable = debounce(searchTable, 200);
-    window.navigateVerse = navigateVerse;
-    window.toggleReaction = toggleReaction;
-    window.loadHome = loadHome;
-    window.showFullVerse = showFullVerse;
-
-    window.onload = () => {
-      initializeFirebase();
-      updateLastUpdated();
-      updateVisitorCount();
-      const params = new URLSearchParams(window.location.search);
-      const sheet = params.get("sheet");
-      const verse = params.get("verse");
-      if (sheet && verse) {
-        loadSingleVerse(sheet, verse);
-      } else if (sheet) {
-        loadSheetData(sheet);
-      } else {
-        loadHome();
-      }
-      document.querySelectorAll(".sheet-tab").forEach(tab => {
-        tab.addEventListener("click", () => {
-          const sheetName = tab.dataset.sheet;
-          console.log(`Tab clicked: ${sheetName}`);
-          loadSheetData(sheetName);
         });
       });
-      const verseNameFilter = document.getElementById("verseNameFilter");
-      const categoryFilter = document.getElementById("categoryFilter");
-      const subCategoryFilter = document.getElementById("subCategoryFilter");
-      if (verseNameFilter) verseNameFilter.addEventListener("change", debounce(filterTable, 200));
-      if (categoryFilter) categoryFilter.addEventListener("change", debounce(filterTable, 200));
-      if (subCategoryFilter) subCategoryFilter.addEventListener("change", debounce(filterTable, 200));
+    }
+    updateVerseCards(searchFilteredRows);
+    updateMatchCount(matchCount);
+  }
+
+  function updateContentCount(count) {
+    document.getElementById("contentCount").textContent = `Content Found: ${count}`;
+  }
+
+  function updateMatchCount(count) {
+    document.getElementById("matchCount").textContent = `Matches found: ${count}`;
+  }
+
+  function navigateVerse(newIndex) {
+    const verse = data[newIndex];
+    const verseName = verse["Verse Name"] || verse["Verse"] || newIndex.toString();
+    history.pushState({ view: 'verse', sheet: currentSheet, verse: verseName, index: newIndex }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`);
+    currentVerseIndex = newIndex;
+    displaySingleVerse(verse, newIndex);
+    loadReactions(currentSheet, newIndex);
+  }
+
+  function loadHome(fromPopstate = false) {
+    currentSheet = "";
+    sessionStorage.removeItem('currentSheet');
+    if (!fromPopstate) {
+      history.pushState({ view: 'home' }, '', '/verse-viewer/');
+    }
+    loadSheetData("");
+  }
+
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
     };
+  }
+
+  function handleTabClick(event) {
+    const sheetName = event.target.dataset.sheet;
+    if (sheetName) {
+      console.log(`Tab clicked: ${sheetName}`);
+      loadSheetData(sheetName);
+    } else {
+      console.warn("No data-sheet attribute found on clicked tab");
+    }
+  }
+
+  window.onpopstate = function(event) {
+    const state = event.state || {};
+    if (state.view === 'verse' && state.sheet && state.verse) {
+      loadSingleVerse(state.sheet, state.verse, true);
+    } else if (state.view === 'sheet' && state.sheet) {
+      loadSheetData(state.sheet, true);
+    } else {
+      loadHome(true);
+    }
+  };
+
+  window.loadSheetData = loadSheetData;
+  window.filterTable = filterTable;
+  window.searchTable = debounce(searchTable, 200);
+  window.navigateVerse = navigateVerse;
+  window.toggleReaction = toggleReaction;
+  window.loadHome = loadHome;
+  window.showFullVerse = showFullVerse;
+
+  window.onload = async () => {
+    console.log("Window loaded, initializing...");
+    initializeFirebase();
+    updateLastUpdated();
+    await updateVisitorCount();
+    const params = new URLSearchParams(window.location.search);
+    const sheet = params.get("sheet");
+    const verse = params.get("verse");
+    if (sheet && verse) {
+      loadSingleVerse(sheet, verse);
+    } else if (sheet) {
+      loadSheetData(sheet);
+    } else {
+      loadHome();
+    }
+    const tabs = document.querySelectorAll(".sheet-tab");
+    tabs.forEach(tab => {
+      tab.removeEventListener("click", handleTabClick); // Prevent duplicate listeners
+      tab.addEventListener("click", handleTabClick);
+      console.log(`Attached click listener to tab: ${tab.dataset.sheet}`);
+    });
+    const verseNameFilter = document.getElementById("verseNameFilter");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const subCategoryFilter = document.getElementById("subCategoryFilter");
+    if (verseNameFilter) verseNameFilter.addEventListener("change", debounce(filterTable, 200));
+    if (categoryFilter) categoryFilter.addEventListener("change", debounce(filterTable, 200));
+    if (subCategoryFilter) subCategoryFilter.addEventListener("change", debounce(filterTable, 200));
+  };
 </script>
 </body>
 </html>

@@ -416,7 +416,7 @@
       }
       .footer { 
         max-width: 90%; 
-        margin: 5px 0 0;
+        margin: 5px auto 0;
       }
       .logos img { 
         width: 40px; 
@@ -466,7 +466,7 @@
       .navigation-arrows .next {
         right: -20px;
       }
-      .reaction-buttons {
+      .reaction-buttons button {
         font-size: 16px;
       }
     }
@@ -499,8 +499,8 @@
       <option value="hadith">Hadith</option>
       <option value="miscellaneous">Miscellaneous</option>
     </select>
-    <label for="categoryFilter">Category:</label>
-    <select id="categoryFilter" disabled onchange="filterTableData()">
+    <label for="categoryFilter">Filter by Sloka/Verse/Ayah Category:</label>
+    <select id="categoryFilter" disabled onchange="filterTable()">
       <option value="">All</option>
       <option value="Universal or Ethical Verse">Universal or Ethical Verse</option>
       <option value="General Intra-community Verse">General Intra-community Verse</option>
@@ -508,18 +508,18 @@
       <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
       <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
     </select>
-    <label for="subCategoryFilter">Sub Category:</label>
-    <select id="subCategoryFilter" disabled onchange="filterTableData()">
+    <label for="subCategoryFilter">Filter by Sub Category:</label>
+    <select id="subCategoryFilter" disabled onchange="filterTable()">
       <option value="">All</option>
-      <option value="Historical or Narrative verse">Logical or Historical</option>
-      <option value="Discriminatory or Prejudiced Verse">Prejudiced or Outdated</option>
-      <option value="Metaphorical or Symbolic verse">Metaphorical or Symbolic</option>
+      <option value="Historical or Narrative verse">Historical or Narrative verse</option>
+      <option value="Discriminatory or Prejudiced Verse">Discriminatory or Prejudiced Verse</option>
+      <option value="Metaphorical or Symbolic verse">Metaphorical or Symbolic verse</option>
     </select>
   </div>
   <div class="search-row" id="search-row">
     <div class="content-count" id="contentCount">Content Found: 0</div>
     <div class="search-input-container">
-      <input type="text" id="searchInput" placeholder="Search verses..." disabled oninput="searchTableData()">
+      <input type="text" id="searchInput" placeholder="Search in table..." disabled onkeyup="searchTable()">
     </div>
     <div class="match-count" id="matchCount">Matches found: 0</div>
   </div>
@@ -532,10 +532,10 @@
       <div class="support-text">
         <span>Developing and maintaining this unified platform requires continuous effort and dedication.</span>
         <span>We need your support to continue the SASTIK mission, which aims to create a better, harmonious society.</span>
-        <span>You can contribute by scanning the <a href="upi://pay?pa=subhendu.srk1993-1@okicdialogue&pn=Subhendu%20Ghosh&aid=uGICAgIDIyfg-Kw" target="_blank" style="color: #0066cc; text-decoration: none;">UPI QR code</a> below 🙏</span>
+        <span>You can encourage our efforts by scanning the <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank" style="color: #0066cc; text-decoration: none;">UPI QR code</a> below 🙏</span>
       </div>
       <div class="qr-code">
-        <a href="upi://pay?pa=subhendu.srk1993-1@okicdialogue&pn=Subhendu%20Ghosh&aid=uGICAgIDIyfg-Kw" target="_blank"><img src="images/qrcode_logo.jpg" alt="UPI QR Code" onerror="console.log('UPI QR code failed to load')"></a>
+        <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank"><img src="images/qrcode_logo.jpg" alt="UPI QR Code" onerror="console.log('UPI QR code failed to load')"></a>
       </div>
       <div class="follow-text">For more insights, follow me on 👇</div>
       <div class="logos">
@@ -545,15 +545,15 @@
       </div>
       <div class="name-text">Subhendu Ghosh Sastik</div>
       <div class="contact-text">
-        <span>Contribute to verse updates 📜 or share suggestions 💭</span>
-        <span>Connect on <a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">Messenger</a>, <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.png" alt="Telegram"></a>, or email <a href="mailto:sastikofficial@gmail.com" style="color: #0066cc; text-decoration: none;"><img src="images/gmail_logo.png" alt="Mail" onerror="console.log('Gmail logo failed to load')"></a> <a href="mailto:sastikofficial@gmail.com" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></span>
+        <span>If you’d like to contribute to verse updates 📜 or have any suggestions or feedback 💭</span>
+        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.png" alt="Telegram" style="width: 20px; height: auto; vertical-align: middle;"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="images/gmail_logo.png" alt="Mail" style="width: 20px; height: auto; vertical-align: middle;" onerror="console.log('Gmail logo failed to load')"></a><a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></span>
       </div>
     </div>
   </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc, runTransaction } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCou0LOLpeijDPxHlVN1pvpruvxdrLKVWk",
@@ -676,7 +676,7 @@
         visitorCount.innerHTML = `Visitors: ${data.visitors}`;
       } catch (jsonError) {
         console.error("Local counter fetch error:", jsonError);
-        visitorCount.innerHTML = "Visitors: Unknown";
+        visitorCount.innerHTML = "Visitors: 1";
         visitorCount.classList.add("error");
       }
     }
@@ -688,15 +688,12 @@
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
     const searchInput = document.getElementById("searchInput");
-    let errorDisplay = document.getElementById("errorDisplay");
-    if (!errorDisplay) {
-      errorDisplay = document.createElement("div");
-      errorDisplay.id = "errorDisplay";
-      errorDisplay.style.color = "red";
-      errorDisplay.style.textAlign = "center";
-      errorDisplay.style.marginBottom = "10px";
-      document.querySelector(".controls").after(errorDisplay);
-    }
+    const errorDisplay = document.createElement("div");
+    errorDisplay.id = "errorDisplay";
+    errorDisplay.style.color = "red";
+    errorDisplay.style.textAlign = "center";
+    errorDisplay.style.marginBottom = "10px";
+    document.querySelector(".controls").after(errorDisplay);
 
     if (currentSheet) {
       categoryFilter.disabled = false;
@@ -704,50 +701,41 @@
       searchInput.disabled = false;
       errorDisplay.textContent = "";
       document.querySelector('.search-row').style.display = 'flex';
-      const urlsToTry = [
-        `${currentSheet}.json`,
-        `${currentSheet.toLowerCase()}.json`,
-        `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`
-      ];
+      const urlsToTry = [`${currentSheet}.json`, `${currentSheet.toLowerCase()}.json`, `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`];
       let response, sheetData;
       for (const url of urlsToTry) {
         try {
-          console.log(`Attempting to fetch: ${url}`);
           response = await fetch(url, { cache: 'no-store' });
-          console.log(`Fetch response for ${url}: ${response.status} ${response.statusText}`);
           if (response.ok) {
             sheetData = await response.json();
-            console.log(`Successfully loaded ${url}`);
             break;
-          } else {
-            console.warn(`Fetch failed for ${url}: ${response.status} ${response.statusText}`);
           }
         } catch (err) {
-          console.error(`Error fetching ${url}:`, err.message);
+          console.warn(`Error fetching ${url}:`, err.message);
         }
       }
       if (sheetData) {
         data = sheetData;
-        updateTableHeaders(currentSheet);
-        updateTableData(data);
-        updateContentCountDisplay(data.length);
-        updateMatchCountDisplay(0);
+        updateHeaders(currentSheet);
+        updateTable(data);
+        updateContentCount(data.length);
+        updateMatchCount(0);
       } else {
         errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if the file exists or contact support.`;
-        document.getElementById("verseBody").innerHTML = `<tr><td colspan="5" style="text-align: center;">Error loading ${currentSheet}.json: File not found or inaccessible</td></tr>`;
-        updateContentCountDisplay(0);
-        updateMatchCountDisplay(0);
+        document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${currentSheet}.json: File not found or inaccessible</td></tr>`;
+        updateContentCount(0);
+        updateMatchCount(0);
       }
     } else {
       categoryFilter.disabled = true;
       subCategoryFilter.disabled = true;
       searchInput.disabled = true;
       errorDisplay.textContent = "";
-      document.getElementById("verseBody").innerHTML = `<tr><td colspan="5" style="text-align: center;">Please select a sheet to view verses.</td></tr>`;
+      document.getElementById("verseBody").innerHTML = "";
       document.getElementById("tableHeaders").innerHTML = "";
       document.querySelector('.search-row').style.display = 'flex';
-      updateContentCountDisplay(0);
-      updateMatchCountDisplay(0);
+      updateContentCount(0);
+      updateMatchCount(0);
     }
   }
 
@@ -759,26 +747,17 @@
 
     if (sheet && verseParam) {
       currentSheet = sheet;
-      const urlsToTry = [
-        `${sheet}.json`,
-        `${sheet.toLowerCase()}.json`,
-        `${sheet.charAt(0).toUpperCase() + sheet.slice(1).toLowerCase()}.json`
-      ];
+      const urlsToTry = [`${sheet}.json`, `${sheet.toLowerCase()}.json`, `${sheet.charAt(0).toUpperCase() + sheet.slice(1).toLowerCase()}.json`];
       let response, sheetData;
       for (const url of urlsToTry) {
         try {
-          console.log(`Attempting to fetch: ${url}`);
           response = await fetch(url, { cache: 'no-store' });
-          console.log(`Fetch response for ${url}: ${response.status} ${response.statusText}`);
           if (response.ok) {
             sheetData = await response.json();
-            console.log(`Successfully loaded ${url}`);
             break;
-          } else {
-            console.warn(`Fetch failed for ${url}: ${response.status} ${response.statusText}`);
           }
         } catch (err) {
-          console.error(`Error fetching ${url}:`, err.message);
+          console.warn(`Error fetching ${url}:`, err.message);
         }
       }
       if (sheetData) {
@@ -791,107 +770,46 @@
         if (verseIndex === -1) {
           verseIndex = parseInt(verseParam, 10);
         }
-        if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < data.length) {
+        if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < sheetData.length) {
           currentVerseIndex = verseIndex;
-          const verse = data[verseIndex];
-          displaySingleVerse(verse, { index: verseIndex });
+          const verse = sheetData[verseIndex];
+          displaySingleVerse(verse, verseIndex);
           document.getElementById("controls").style.display = "none";
           document.getElementById("verseTable").style.display = "none";
           document.querySelector('.search-row').style.display = 'none';
-          await fetchReactions(sheet, verseIndex);
+          await loadReactions(sheet, verseIndex);
         } else {
           console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
-          displaySingleVerseData(null, null);
+          displaySingleVerse(null, -1);
           document.getElementById("controls").style.display = "none";
           document.getElementById("verseTable").style.display = "none";
           document.querySelector('.search-row').style.display = 'none';
         }
       } else {
         console.error(`Failed to load ${sheet}.json`);
-        displaySingleVerseData(null, null);
+        displaySingleVerse(null, -1);
         document.getElementById("controls").style.display = "none";
         document.getElementById("verseTable").style.display = "none";
         document.querySelector('.search-row').style.display = 'none';
       }
     } else {
-      document.getElementById("singleVerseView").style.display = 'none';
+      document.getElementById("singleVerseView").style.display = "none";
       document.querySelector('.search-row').style.display = 'flex';
     }
   }
 
-  function displaySingleVerse(verse, row) {
-    const singleVerseElement = document.getElementById("singleVerseView");
-    if (!verse) {
-      singleVerseElement.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
-      singleVerseElement.style.display = "block";
-      return;
-    }
-    displaySingleVerseRow(verse, row);
-  }
-
-  function displaySingleVerseData(verse, row) {
-    const singleVerseElement = document.getElementById("singleVerseView");
-    if (!verse) {
-      singleVerseElement.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
-      singleVerseElement.style.display = "block";
-    } else {
-      displaySingleVerseRow(verse, row);
-    }
-  }
-
-  function displaySingleVerseRow(verse, row) {
-    const singleVerseElement = document.getElementById("singleVerseView");
-    if (!verse) {
-      singleVerseElement.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
-      singleVerseElement.style.display = "block";
-      return;
-    }
-    const verseRowName = verse["Verse Name"] || verse["Verse"] || "Verse";
-    const headingElement = `${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)} ${verseRowName}`;
-    let htmlContent = `<h3>${headingElement}</h3><div class="verse-details">`;
-    const headersList = Object.keys(verse).filter(h => h !== "sheet");
-    headersList.forEach(header => {
-      let content = verse[header] || "-";
-      if (typeof content === "object" && content.text && content.url) {
-        content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
-      }
-      const className = header === "Verse Category" && typeof verse[header] === "string" 
-        ? getCategoryClassName(verse[header].trim().toLowerCase()) 
-        : "";
-      htmlContent += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
-    });
-    htmlContent += `<div class="navigation-arrows">
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${row.index - 1}" class="prev ${row.index <= 0 ? 'disabled' : ''}" ${row.index <= 0 ? '' : `onclick="navigateVerse(${row.index - 1}); return false;"`}>
-        <img src="images/leftarrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';">
-      </a>
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${row.index + 1}" class="next ${row.index >= data.length - 1 ? 'disabled' : ''}" ${row.index >= data.length - 1 ? '' : `onclick="navigateVerse(${row.index + 1}); return false;"`}>
-        <img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';">
-      </a>
-    </div>`;
-    htmlContent += `<div class="reaction-buttons">
-      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${row.index})">👍 <span id="likesCount">0</span></button>
-      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${row.index})">❤️ <span id="lovesCount">0</span></button>
-      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${row.index})">😡 <span id="commentsCount">0</span></button>
-    </div>`;
-    htmlContent += `</div><div class="single-verse-share-buttons">${addShareButton(verse, row.index, false)}</div>`;
-    singleVerseElement.innerHTML = htmlContent;
-    singleVerseElement.style.display = "block";
-  }
-
-  async function fetchReactions(sheet, verseIndex) {
+  async function loadReactions(sheet, verseIndex) {
     try {
-      const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`); // Fixed collection name
-      const reactionSnapshot = await getDoc(reactionRef);
-      const reactionCounts = reactionSnapshot.exists() ? reactionSnapshot.data() : { like: 0, love: 0, angry: 0 };
-      updateReactionCountsDisplay(reactionCounts);
-
-      const userId = localStorage.getItem('userId') || generateUniqueId();
+      const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
+      const reactionSnap = await getDoc(reactionRef);
+      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
+      updateReactionButtons(reactionCounts);
+      const userId = localStorage.getItem('userId') || generateUserId();
       localStorage.setItem('userId', userId);
       const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
-      const userReactionSnapshot = await getDoc(userReactionRef);
-      
-      if (userReactionSnapshot.exists()) {
-        const userReaction = userReactionSnapshot.data().reaction;
+      const userReactionSnap = await getDoc(userReactionRef);
+      if (userReactionSnap.exists()) {
+        const userReaction = userReactionSnap.data().reaction;
         const button = document.querySelector(`.reaction-buttons button[data-reaction="${userReaction}"]`);
         if (button) button.classList.add('active');
       }
@@ -902,143 +820,166 @@
 
   async function toggleReaction(reaction, sheet, verseIndex) {
     try {
-      if (!db) throw new Error("Firestore not initialized");
       let userId = localStorage.getItem('userId');
       if (!userId) {
-        userId = generateUniqueId();
-        localStorage.setItem('userId', userId); // Fix typo: was 'userId'
+        userId = generateUserId();
+        localStorage.setItem('userId', userId);
       }
       const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
       const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
-      await runTransaction(db, async (transaction) => {
-        const reactionDoc = await transaction.get(reactionRef);
-        const userReactionDoc = await transaction.get(userReactionRef);
-        
-        let reactionCounts = reactionDoc.exists() ? reactionDoc.data() : { like: 0, love: 0, angry: 0 };
-        const currentUserReaction = userReactionDoc.exists() ? userReactionDoc.data().reaction : null;
+      const userReactionSnap = await getDoc(userReactionRef);
+      const currentReaction = userReactionSnap.exists() ? userReactionSnap.data().reaction : null;
 
-        let updates = {};
-        if (currentUserReaction === reaction) {
-          updates[reaction] = (reactionCounts[reaction] || 0) - 1;
-          transaction.set(userReactionRef, { reaction: null }, { merge: true });
-          document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.remove('selected');
-        } else {
-          updates[reaction] = (reactionCounts[reaction] || 0) + 1;
-          if (currentUserReaction) {
-            updates[currentUserReaction] = (reactionCounts[currentUserReaction] || 0) - 1;
-            document.querySelector(`.reaction-buttons button[data-reaction="${currentUserReaction}"]`)?.classList.remove('selected');
-          }
-          transaction.set(userReactionRef, { reaction: reaction }, { merge: true });
-          document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.add('selected');
+      if (currentReaction === reaction) {
+        await updateDoc(reactionRef, { [reaction]: increment(-1) });
+        await setDoc(userReactionRef, { reaction: null }, { merge: true });
+        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.remove('active');
+      } else {
+        const updates = { [reaction]: increment(1) };
+        if (currentReaction) {
+          updates[currentReaction] = increment(-1);
+          document.querySelector(`.reaction-buttons button[data-reaction="${currentReaction}"]`)?.classList.remove('active');
         }
+        await setDoc(reactionRef, { like: 0, love: 0, angry: 0 }, { merge: true });
+        await updateDoc(reactionRef, updates);
+        await setDoc(userReactionRef, { reaction: reaction }, { merge: true });
+        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.add('active');
+      }
 
-        updates = {
-          like: updates.like ?? (reactionCounts.like ?? 0),
-          love: updates.love ?? (reactionCounts.love ?? 0),
-          angry: updates.angry ?? (reactionCounts.angry ?? 0)
-        };
-
-        transaction.set(reactionRef, updates, { merge: true });
-      });
-
-      const reactionSnapshot = await getDoc(reactionRef);
-      const reactionCounts = reactionSnapshot.exists() ? reactionSnapshot.data() : { like: 0, love: 0, angry: 0 };
-      updateReactionCountsDisplay(reactionCounts);
+      const reactionSnap = await getDoc(reactionRef);
+      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
+      updateReactionButtons(reactionCounts);
     } catch (error) {
       console.error("Error toggling reaction:", error.code, error.message);
       alert(`Failed to update reaction: ${error.message}. Please try again.`);
     }
   }
 
-  function updateReactionCountsDisplay(counts) {
-    const likesCount = document.querySelector('#likesCount');
-    const lovesCount = document.querySelector('#lovesCount');
-    const commentsCount = document.querySelector('#commentsCount');
-    if (likesCount) likesCount.textContent = counts.like ?? 0;
-    if (lovesCount) lovesCount.textContent = counts.love ?? 0;
-    if (commentsCount) commentsCount.textContent = counts.angry ?? 0;
+  function updateReactionButtons(counts) {
+    document.querySelector('#likeCount').textContent = counts.like || 0;
+    document.querySelector('#loveCount').textContent = counts.love || 0;
+    document.querySelector('#angryCount').textContent = counts.angry || 0;
   }
 
-  function generateUniqueId() {
+  function generateUserId() {
     return 'user_' + Math.random().toString(36).substr(2, 9);
+  }
+
+  function displaySingleVerse(verse, index) {
+    const singleVerseView = document.getElementById("singleVerseView");
+    if (!verse) {
+      singleVerseView.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
+      singleVerseView.style.display = "block";
+      return;
+    }
+    const verseName = verse["Verse Name"] || verse["Verse"] || "Verse";
+    const heading = `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} ${verseName}`;
+    let html = `<h3>${heading}</h3><div class="verse-details">`;
+    const headers = Object.keys(verse).filter(h => h !== "sheet");
+    headers.forEach(header => {
+      let content = verse[header] || "-";
+      if (typeof content === "object" && content.text && content.url) {
+        content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
+      }
+      const className = header === "Verse Category " && typeof verse[header] === "string" 
+        ? getCategoryClass(verse[header].trim().toLowerCase()) 
+        : "";
+      html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
+    });
+    html += `<div class="navigation-arrows">
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>
+        <img src="images/leftarrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';">
+      </a>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="next ${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>
+        <img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';">
+      </a>
+    </div>`;
+    html += `<div class="reaction-buttons">
+      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
+      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
+      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount">0</span></button>
+    </div>`;
+    html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
+    singleVerseView.innerHTML = html;
+    singleVerseView.style.display = "block";
   }
 
   function navigateVerse(newIndex) {
     const verse = data[newIndex];
-    const verseRowName = verse["Verse Name"] || verse["Verse"] || newIndex;
-    history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseRowName)}`);
+    const verseName = verse["Verse Name"] || verse["Verse"] || newIndex;
+    history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`);
     currentVerseIndex = newIndex;
-    displaySingleVerseRow(verse, { index: newIndex });
-    fetchReactions(currentSheet, newIndex);
+    displaySingleVerse(verse, newIndex);
+    loadReactions(currentSheet, newIndex);
   }
 
-  function updateTableHeaders(sheetName) {
-    const theadElement = document.getElementById("tableHeaders");
-    theadElement.innerHTML = "";
+  function updateHeaders(sheetName) {
+    const thead = document.getElementById("tableHeaders");
+    thead.innerHTML = "";
     if (data.length > 0) {
-      let trElement = document.createElement("tr");
-      const headersList = Object.keys(data[0]).filter(h => h !== "sheet");
-      headersList.forEach(header => {
-        let thElement = document.createElement("th");
-        thElement.textContent = header;
-        thElement.classList.add(`${sheetName}-header`);
-        trElement.appendChild(thElement);
+      let tr = document.createElement("tr");
+      const headers = Object.keys(data[0]).filter(h => h !== "sheet");
+      headers.forEach(header => {
+        let th = document.createElement("th");
+        th.textContent = header;
+        th.classList.add(`${sheetName}-header`);
+        tr.appendChild(th);
       });
-      let shareThElement = document.createElement("th");
-      shareThElement.textContent = "Share";
-      shareThElement.style.width = "60px";
-      trElement.appendChild(shareThElement);
-      theadElement.appendChild(trElement);
+      let shareTh = document.createElement("th");
+      shareTh.textContent = "Share";
+      shareTh.style.width = "60px";
+      tr.appendChild(shareTh);
+      thead.appendChild(tr);
     }
   }
 
-  function updateTableData(rows) {
-    const tbodyElement = document.getElementById("verseBody");
-    tbodyElement.innerHTML = "";
+  function updateTable(rows) {
+    const tbody = document.getElementById("verseBody");
+    tbody.innerHTML = "";
     if (rows.length === 0) {
-      let trElement = document.createElement("tr");
-      let tdElement = document.createElement("td");
-      tdElement.textContent = "No verses available";
-      tdElement.colSpan = 5;
-      tdElement.style.textAlign = "center";
-      trElement.appendChild(tdElement);
-      tbodyElement.appendChild(trElement);
+      let tr = document.createElement("tr");
+      let td = document.createElement("td");
+      td.textContent = "No data available or error loading data";
+      td.colSpan = Object.keys(data[0] || {}).length + 1 || 2;
+      td.style.textAlign = "center";
+      tr.appendChild(td);
+      tbody.appendChild(tr);
     } else {
       rows.forEach((row, index) => {
-        let trElement = document.createElement("tr");
-        const headersList = Object.keys(row).filter(h => h !== "sheet");
-        headersList.forEach(header => {
-          let tdElement = document.createElement("td");
+        let tr = document.createElement("tr");
+        const headers = Object.keys(row).filter(h => h !== "sheet");
+        headers.forEach(header => {
+          let td = document.createElement("td");
           let content = row[header] || "";
           if (typeof content === "string" || (typeof content === "object" && content && content.text)) {
             const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
             if (searchTerm && !document.getElementById("searchInput").disabled) {
               const textToSearch = typeof content === "object" ? content.text : content;
-              const highlightedText = textToSearch.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
-              content = typeof content === "object" ? { text: highlightedText, url: content.url } : highlightedText;
+              const highlighted = textToSearch.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
+              content = typeof content === "object" ? { text: highlighted, url: content.url } : highlighted;
             }
-            tdElement.innerHTML = typeof content === "object" && content.url
+            td.innerHTML = typeof content === "object" && content.url
               ? `<a href="${content.url}" target="_blank">${content.text}</a>`
               : content;
           } else {
-            tdElement.textContent = content || "-";
+            td.textContent = content || "-";
           }
-          if (header === "Verse Category" && typeof row[header] === "string") {
-            tdElement.className = getCategoryClassName(row[header].trim().toLowerCase());
+          if (header === "Verse Category " && typeof row[header] === "string") {
+            td.className = getCategoryClass(row[header].trim().toLowerCase());
           }
-          trElement.appendChild(tdElement);
+          tr.appendChild(td);
         });
-        let shareTdElement = document.createElement("td");
-        shareTdElement.className = "share-buttons";
-        shareTdElement.innerHTML = addShareButton(row, index, true);
-        trElement.appendChild(shareTdElement);
-        tbodyElement.appendChild(trElement);
+        let shareTd = document.createElement("td");
+        shareTd.className = "share-buttons";
+        shareTd.innerHTML = addShareButton(row, index, true);
+        tr.appendChild(shareTd);
+        tbody.appendChild(tr);
       });
     }
-    updateContentCountDisplay(rows.length);
+    updateContentCount(rows.length);
   }
 
-  function getCategoryClassName(category) {
+  function getCategoryClass(category) {
     switch (category?.toLowerCase()) {
       case "universal or ethical verse": return "category-universal";
       case "general intra-community verse": return "category-general";
@@ -1050,111 +991,109 @@
   }
 
   function addShareButton(row, index, isTableView = true) {
-    const verseTextContent = row["Verse"] || row["Text"] || "";
-    let verseRowName = row["Verse Name"] || row["Verse"] || index.toString();
-    if (typeof verseRowName !== "string") {
-      verseRowName = index.toString();
-      console.warn(`Invalid Verse Name for sheet=${currentSheet}, index=${index}:`, verseRowName);
+    const verseText = row["Verse"] || row["Text"] || "";
+    let verseName = row["Verse Name"] || row["Verse"] || index.toString();
+    if (typeof verseName !== "string") {
+      verseName = index.toString();
+      console.warn(`Invalid Verse Name for sheet=${currentSheet}, index=${index}:`, verseName);
     }
-    verseRowName = verseRowName.trim();
-    const shareUrlLink = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseRowName)}`;
-    const escapedShareUrlLink = shareUrlLink.replace(/'/g, "\\'");
-    let htmlContent = '';
+    verseName = verseName.trim();
+    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`;
+    const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
+    let html = '';
     if (isTableView) {
-      htmlContent += `<a href="${shareUrlLink}" target="_blank" class="view-link"><img src="images/click_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
+      html += `<a href="${shareUrl}" target="_blank" class="view-link"><img src="images/click_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
     }
-    htmlContent += `
-      <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseTextContent + ' ' + shareUrlLink)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrlLink)}" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
-      <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseTextContent)}&url=${encodeURIComponent(shareUrlLink)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
-      <a href="#" onclick="copyToClipboard('${escapedShareUrlLink}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
-      <a href="#" onclick="shareAnywhere('${verseTextContent.replace(/'/g, "\\'")}', '${escapedShareUrlLink}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
+    html += `
+      <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
+      <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
+      <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
+      <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
     `;
-    return htmlContent;
+    return html;
   }
 
-  function filterTableData() {
-    const categoryValue = document.getElementById("categoryFilter").value;
-    const subCategoryValue = document.getElementById("subCategoryFilter").value;
-    const sheetNameValue = document.getElementById("sheetSelector").value;
-    const searchInputElement = document.getElementById("searchInput");
-    const searchTermValue = searchInputElement.value.toLowerCase().trim();
+  function filterTable() {
+    const category = document.getElementById("categoryFilter").value;
+    const subCategory = document.getElementById("subCategoryFilter").value;
+    const sheetName = document.getElementById("sheetSelector").value;
+    const searchInput = document.getElementById("searchInput");
+    const searchTerm = searchInput.value.toLowerCase().trim();
 
-    if (sheetNameValue && data.length > 0) {
-      let filteredRowsData = data.filter(row => {
-        const categoryMatchResult = !categoryValue || (row["Verse Category"] && typeof row["Verse Category"] === "string" && 
-                                          row["Verse Category"].trim().toLowerCase() === categoryValue.toLowerCase());
-        const subCategoryMatchResult = !subCategoryValue || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                                row["Sub Category"].trim().toLowerCase() === subCategoryValue.toLowerCase());
-        return categoryMatchResult && subCategoryMatchResult;
+    if (sheetName && data.length > 0) {
+      let filteredRows = data.filter(row => {
+        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
+                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+        const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
+                                                row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+        return categoryMatch && subCategoryMatch;
       });
-      updateTableData(filteredRowsData);
-      if (searchTermValue) {
-        searchTableData();
+      updateTable(filteredRows);
+      if (searchTerm) {
+        searchTable();
       } else {
-        updateMatchCountDisplay(0);
+        updateMatchCount(0);
       }
     }
   }
 
-  function searchTableData() {
-    const searchInputElement = document.getElementById("searchInput");
-    if (searchInputElement.disabled) return; 
-    const searchTermValue = searchInputElement.value.toLowerCase().trim();
-    const categoryValue = document.getElementById("categoryFilter").value;
-    const subCategoryValue = document.getElementById("subCategoryFilter").value;
-    const sheetNameValue = document.getElementById("sheetSelector").value;
+  function searchTable() {
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput.disabled) return; 
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    const category = document.getElementById("categoryFilter").value;
+    const subCategory = document.getElementById("subCategoryFilter").value;
+    const sheetName = document.getElementById("sheetSelector").value;
 
-    if (sheetNameValue && data.length > 0) {
-      let filteredRowsData = data.filter(row => {
-        const categoryMatchResult = !categoryValue || (row["Verse Category"] && typeof row["Verse Category"] === "string" && 
-                                          row["Verse Category"].trim().toLowerCase() === categoryValue.toLowerCase());
-        const subCategoryMatchResult = !subCategoryValue || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                                row["Sub Category"].trim().toLowerCase() === subCategoryValue.toLowerCase());
-        return categoryMatchResult && subCategoryMatchResult;
+    if (sheetName && data.length > 0) {
+      let filteredRows = data.filter(row => {
+        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
+                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+        const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
+                                                row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+        return categoryMatch && subCategoryMatch;
       });
-      if (searchTermValue) {
-        let searchFilteredRowsData = filteredRowsData.filter(row =>
+      if (searchTerm) {
+        let searchFilteredRows = filteredRows.filter(row =>
           Object.values(row).some(val =>
-            (typeof val === "string" && val.toLowerCase().includes(searchTermValue)) ||
-            (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTermValue))
+            (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
+            (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm))
           )
         );
-        let matchCountValue = 0;
-        searchFilteredRowsData.forEach(row => {
+        let matchCount = 0;
+        searchFilteredRows.forEach(row => {
           Object.values(row).forEach(val => {
-            if (typeof val === "string" && val.toLowerCase().includes(searchTermValue)) {
-              matchCountValue += (val.toLowerCase().match(new RegExp(searchTermValue, 'g')) || []).length;
-            } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTermValue)) {
-              matchCountValue += (val.text.toLowerCase().match(new RegExp(searchTermValue, 'g')) || []).length;
+            if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
+              matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+            } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm)) {
+              matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
             }
           });
         });
-        updateTableData(searchFilteredRowsData);
-        updateMatchCountDisplay(matchCountValue);
+        updateTable(searchFilteredRows);
+        updateMatchCount(matchCount);
       } else {
-        updateTableData(filteredRowsData);
-        updateMatchCountDisplay(0);
+        updateTable(filteredRows);
+        updateMatchCount(0);
       }
     } else {
-      updateTableData(data);
-      updateMatchCountDisplay(0);
+      updateTable(data);
+      updateMatchCount(0);
     }
   }
 
-  function updateContentCountDisplay(count) {
-    const contentCount = document.getElementById("contentCount");
-    if (contentCount) contentCount.textContent = `Content Found: ${count}`;
+  function updateContentCount(count) {
+    document.getElementById("contentCount").textContent = `Content Found: ${count}`;
   }
 
-  function updateMatchCountDisplay(count) {
-    const matchCount = document.getElementById("matchCount");
-    if (matchCount) matchCount.textContent = `Matches found: ${count}`;
+  function updateMatchCount(count) {
+    document.getElementById("matchCount").textContent = `Matches found: ${count}`;
   }
 
   window.loadSheetData = loadSheetData;
-  window.filterTableData = filterTableData;
-  window.searchTableData = searchTableData;
+  window.filterTable = filterTable;
+  window.searchTable = searchTable;
   window.navigateVerse = navigateVerse;
   window.toggleReaction = toggleReaction;
 
@@ -1163,7 +1102,6 @@
     updateLastUpdated();
     updateVisitorCount();
     loadSingleVerse();
-    loadSheetData(); // Ensure table is initialized
   };
 </script>
 </body>

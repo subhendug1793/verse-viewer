@@ -181,6 +181,7 @@
       right: 0;
       height: 60px;
       background: linear-gradient(to bottom, transparent, #fff);
+      pointer-events: none;
     }
     .verse-card h4 {
       margin: 0 0 10px;
@@ -208,6 +209,8 @@
       border-radius: 4px;
       cursor: pointer;
       font-size: 0.8em;
+      z-index: 1;
+      pointer-events: auto;
     }
     .see-full:hover {
       background: #004c99;
@@ -576,10 +579,6 @@
     <button class="sheet-tab" data-sheet="miscellaneous">Miscellaneous</button>
   </div>
   <div class="controls" id="controls" style="display: none;">
-    <label for="verseNameFilter">Filter by Verse/Sloka/Ayah Chapter:</label>
-    <select id="verseNameFilter" disabled>
-      <option value="">All</option>
-    </select>
     <label for="categoryFilter">Filter by Verse Category:</label>
     <select id="categoryFilter" disabled>
       <option value="">All</option>
@@ -760,7 +759,6 @@
     const verseContainer = document.getElementById("verseContainer");
     const singleVerseView = document.getElementById("singleVerseView");
     const errorDisplay = document.getElementById("errorDisplay");
-    const verseNameFilter = document.getElementById("verseNameFilter");
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
     const searchInput = document.getElementById("searchInput");
@@ -773,10 +771,11 @@
     verseContainer.style.display = "none";
     singleVerseView.style.display = "none";
     errorDisplay.textContent = "";
-    verseNameFilter.disabled = true;
     categoryFilter.disabled = true;
     subCategoryFilter.disabled = true;
     searchInput.disabled = true;
+    data = []; // Clear previous data
+    filteredData = [];
 
     if (!sheetName || !['gita', 'bible', 'quran', 'hadith', 'miscellaneous'].includes(sheetName.toLowerCase())) {
       console.log("No valid sheet selected, resetting to home");
@@ -808,18 +807,18 @@
     controls.style.display = "flex";
     searchRow.style.display = "flex";
     verseContainer.style.display = "flex";
-    errorDisplay.textContent = "Loading...";
-    verseNameFilter.disabled = false;
+    errorDisplay.textContent = `Loading ${currentSheet} data...`;
     categoryFilter.disabled = false;
     subCategoryFilter.disabled = false;
     searchInput.disabled = false;
 
     // Try fetching JSON with multiple case variations
+    const baseUrl = 'https://subhendug1793.github.io/verse-viewer/';
     const urlsToTry = [
-      `${currentSheet}.json`,
-      `${currentSheet.toLowerCase()}.json`,
-      `${currentSheet.toUpperCase()}.json`,
-      `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`
+      `${baseUrl}${currentSheet}.json`,
+      `${baseUrl}${currentSheet.toLowerCase()}.json`,
+      `${baseUrl}${currentSheet.toUpperCase()}.json`,
+      `${baseUrl}${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`
     ];
     let sheetData = null;
     for (const url of urlsToTry) {
@@ -830,6 +829,8 @@
         if (response.ok) {
           sheetData = await response.json();
           break;
+        } else {
+          console.warn(`Fetch failed for ${url}: Status ${response.status}`);
         }
       } catch (err) {
         console.warn(`Error fetching ${url}:`, err.message);
@@ -841,7 +842,6 @@
       data = sheetData;
       filteredData = data;
       errorDisplay.textContent = "";
-      populateVerseNameFilter();
       resetFilters();
       filterTable();
       updateContentCount(data.length);
@@ -851,40 +851,18 @@
       setTimeout(() => loadSheetData(sheetName, fromPopstate, retries - 1), 1000);
     } else {
       console.error(`Failed to load ${currentSheet}.json after all attempts`);
-      errorDisplay.textContent = `Unable to load ${currentSheet} data. Please check your connection or try again later.`;
-      verseContainer.innerHTML = `<p style="text-align: center;">Failed to load data</p>`;
+      errorDisplay.textContent = `Unable to load ${currentSheet} data. Please check if ${currentSheet}.json exists or try again later.`;
+      verseContainer.innerHTML = `<p style="text-align: center;">Failed to load ${currentSheet} data</p>`;
       updateContentCount(0);
       updateMatchCount(0);
     }
   }
 
-  function populateVerseNameFilter() {
-    const verseNameFilter = document.getElementById("verseNameFilter");
-    verseNameFilter.innerHTML = '<option value="">All</option>';
-    const verseNames = [...new Set(data.map(row => {
-      const name = row["Verse Name"] || row["Verse"] || "";
-      if (name) {
-        const match = name.match(/^(?:C(\d+)-)?(.+?)(?:\s+\d+\.\d+)?$/i);
-        return match ? `C${match[1] || '1'}-${match[2].trim()}` : name.replace(/\s+\d+\.\d+$/, '').trim();
-      }
-      return "";
-    }).filter(name => name))].sort();
-    verseNames.forEach(name => {
-      const option = document.createElement("option");
-      option.value = name;
-      option.textContent = name;
-      verseNameFilter.appendChild(option);
-    });
-  }
-
   function resetFilters() {
-    const verseNameFilter = document.getElementById("verseNameFilter");
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
-    verseNameFilter.value = "";
     categoryFilter.value = "";
     subCategoryFilter.value = "";
-    sessionStorage.removeItem(`filter_verseName_${currentSheet}`);
     sessionStorage.removeItem(`filter_category_${currentSheet}`);
     sessionStorage.removeItem(`filter_subCategory_${currentSheet}`);
   }
@@ -899,15 +877,17 @@
     if (sheet && verseParam && ['gita', 'bible', 'quran', 'hadith', 'miscellaneous'].includes(sheet.toLowerCase())) {
       currentSheet = sheet.toLowerCase();
       sessionStorage.setItem('currentSheet', currentSheet);
+      const baseUrl = 'https://subhendug1793.github.io/verse-viewer/';
       const urlsToTry = [
-        `${currentSheet}.json`,
-        `${currentSheet.toLowerCase()}.json`,
-        `${currentSheet.toUpperCase()}.json`,
-        `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`
+        `${baseUrl}${currentSheet}.json`,
+        `${baseUrl}${currentSheet.toLowerCase()}.json`,
+        `${baseUrl}${currentSheet.toUpperCase()}.json`,
+        `${baseUrl}${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`
       ];
       let sheetData;
       for (const url of urlsToTry) {
         try {
+          console.log(`Attempting to fetch for single verse: ${url}`);
           const response = await fetch(url, { cache: 'no-store' });
           if (response.ok) {
             sheetData = await response.json();
@@ -1058,6 +1038,7 @@
   }
 
   function displaySingleVerse(verse, index) {
+    console.log(`displaySingleVerse: index=${index}, verse=`, verse);
     const singleVerseView = document.getElementById("singleVerseView");
     if (!verse) {
       singleVerseView.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
@@ -1112,64 +1093,68 @@
   }
 
   function updateVerseCards(rows) {
+    console.log(`updateVerseCards: Rendering ${rows.length} verses for ${currentSheet}`);
     const verseContainer = document.getElementById("verseContainer");
     verseContainer.innerHTML = "";
     if (rows.length === 0) {
       verseContainer.innerHTML = `<p style="text-align: center;">No verses found</p>`;
       return;
     }
-    rows.forEach((row, index) => {
-      const verseName = row["Verse Name"] || row["Verse"] || index.toString();
+    rows.forEach((row, filteredIndex) => {
+      const verseName = row["Verse Name"] || row["Verse"] || filteredIndex.toString();
       const verseCategory = row["Verse Category"] || "";
       const subCategory = row["Sub Category"] || "";
       const transliteration = row["Transliteration"] || "";
       const translation = row["Translation"] || "";
       const bengaliTranslation = row["Bengali Translation"] || "";
-      let html = `<div class="verse-card" data-index="${index}">
+      // Find original index in data array
+      const dataIndex = data.findIndex(item => item["Verse Name"] === row["Verse Name"] && item["Verse"] === row["Verse"]);
+      let html = `<div class="verse-card" data-filtered-index="${filteredIndex}" data-data-index="${dataIndex}">
         <h4>${verseName}</h4>
         <p><strong>Verse Category:</strong> <span class="category ${getCategoryClass(verseCategory)}">${verseCategory} / ${getBengaliCategory(verseCategory)}</span></p>
         <p><strong>Sub Category:</strong> ${subCategory} / ${getBengaliCategory(subCategory)}</p>
         ${transliteration ? `<p><strong>Transliteration:</strong> ${transliteration}</p>` : ""}
         ${translation ? `<p><strong>Translation:</strong> ${translation}</p>` : ""}
         ${bengaliTranslation ? `<p><strong>Bengali Translation:</strong> ${bengaliTranslation}</p>` : ""}
-        <button class="see-full" onclick="showFullVerse(${index})">See Full Verse</button>
+        <button class="see-full" onclick="showFullVerse(${dataIndex})">See Full Verse</button>
       </div>`;
       verseContainer.innerHTML += html;
     });
     updateContentCount(rows.length);
   }
 
-  function showFullVerse(index) {
-    console.log(`Showing full verse for index: ${index}`);
-    const verse = data[index];
+  window.showFullVerse = function(filteredIndex) {
+    console.log(`showFullVerse: filteredIndex=${filteredIndex}`);
+    const verse = filteredData[filteredIndex];
     if (verse) {
-      displaySingleVerse(verse, index);
+      const dataIndex = data.findIndex(item => item["Verse Name"] === verse["Verse Name"] && item["Verse"] === verse["Verse"]);
+      console.log(`Mapped to dataIndex=${dataIndex}, verse=`, verse);
+      if (dataIndex >= 0) {
+        displaySingleVerse(data[dataIndex], dataIndex);
+      } else {
+        console.error("Verse not found in data array");
+        document.getElementById("errorDisplay").textContent = "Error displaying full verse.";
+      }
     } else {
-      console.error("Verse not found at index:", index);
+      console.error("Verse not found at filteredIndex:", filteredIndex);
       document.getElementById("errorDisplay").textContent = "Error displaying full verse.";
     }
-  }
+  };
 
   function filterTable() {
     console.log("Filtering table...");
-    const verseName = document.getElementById("verseNameFilter").value;
     const category = document.getElementById("categoryFilter").value;
     const subCategory = document.getElementById("subCategoryFilter").value;
 
     if (currentSheet && data.length > 0) {
-      sessionStorage.setItem(`filter_verseName_${currentSheet}`, verseName);
       sessionStorage.setItem(`filter_category_${currentSheet}`, category);
       sessionStorage.setItem(`filter_subCategory_${currentSheet}`, subCategory);
       filteredData = data.filter(row => {
-        const verseNameMatch = !verseName || (
-          (row["Verse Name"] || row["Verse"] || "").trim() === verseName ||
-          ((row["Verse Name"] || row["Verse"] || "").replace(/\s+\d+\.\d+$/, '').trim() || "").replace(/^(?:C(\d+)-)?(.+)/, 'C$1-$2').trim() === verseName
-        );
         const categoryMatch = !category || (row["Verse Category"] || "").trim().toLowerCase() === category.toLowerCase();
         const subCategoryMatch = !subCategory || (row["Sub Category"] || "").trim().toLowerCase() === subCategory.toLowerCase();
-        return verseNameMatch && categoryMatch && subCategoryMatch;
+        return categoryMatch && subCategoryMatch;
       });
-      isFiltered = verseName || category || subCategory;
+      isFiltered = category || subCategory;
       updateVerseCards(filteredData);
       searchTable();
     }
@@ -1267,7 +1252,6 @@
   window.navigateVerse = navigateVerse;
   window.toggleReaction = toggleReaction;
   window.loadHome = loadHome;
-  window.showFullVerse = showFullVerse;
 
   window.onload = async () => {
     console.log("Window loaded, initializing...");
@@ -1286,14 +1270,12 @@
     }
     const tabs = document.querySelectorAll(".sheet-tab");
     tabs.forEach(tab => {
-      tab.removeEventListener("click", handleTabClick); // Prevent duplicate listeners
+      tab.removeEventListener("click", handleTabClick);
       tab.addEventListener("click", handleTabClick);
       console.log(`Attached click listener to tab: ${tab.dataset.sheet}`);
     });
-    const verseNameFilter = document.getElementById("verseNameFilter");
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
-    if (verseNameFilter) verseNameFilter.addEventListener("change", debounce(filterTable, 200));
     if (categoryFilter) categoryFilter.addEventListener("change", debounce(filterTable, 200));
     if (subCategoryFilter) subCategoryFilter.addEventListener("change", debounce(filterTable, 200));
   };

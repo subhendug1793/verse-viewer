@@ -259,6 +259,18 @@
         max-width: 90%; 
         margin: 5px auto 0;
       }
+      .social-links, .contact-methods {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+      }
+      .qr-code img {
+        width: 120px;
+        height: 120px;
+      }
+      .support-text p, .contact-text p {
+        font-size: 0.9em;
+      }
       .logos img { 
         width: 40px; 
         margin-right: 3px; 
@@ -290,6 +302,82 @@
       text-align: center;
       font-size: 1.2em;
       color: #0066cc;
+    }
+    .footer {
+      background-color: #f5f5f5;
+      padding: 25px 15px;
+      border-top: 1px solid #ddd;
+      margin-top: 30px;
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+    .support-section, .social-section, .contact-section {
+      max-width: 800px;
+      margin: 0 auto 25px;
+      text-align: center;
+    }
+    .support-text p {
+      margin: 8px 0;
+      line-height: 1.5;
+    }
+    .donation-cta {
+      font-weight: bold;
+      color: #0066cc;
+      margin-top: 15px !important;
+    }
+    .qr-code {
+      margin: 15px auto;
+      text-align: center;
+    }
+    .qr-code img {
+      width: 150px;
+      height: 150px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      transition: transform 0.3s;
+    }
+    .qr-code img:hover {
+      transform: scale(1.05);
+    }
+    .qr-hint {
+      display: block;
+      font-size: 0.8em;
+      color: #666;
+      margin-top: 5px;
+    }
+    .social-links, .contact-methods {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin: 15px 0;
+    }
+    .social-links a, .contact-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 15px;
+      background: #0066cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    .social-links a:hover, .contact-btn:hover {
+      background: #0055aa;
+    }
+    .social-links img, .contact-btn img {
+      width: 20px;
+      height: 20px;
+    }
+    .creator-name {
+      font-weight: bold;
+      margin-top: 10px;
+      color: #0066cc;
+    }
+    .contact-text p {
+      margin: 8px 0;
+      line-height: 1.4;
     }
   </style>
 </head>
@@ -345,25 +433,51 @@
   </div>
   <div class="verse-container" id="verseContainer"></div>
   <div class="footer">
-    <div class="text-group">
+    <div class="support-section">
       <div class="support-text">
-        <span>Developing and maintaining this unified platform requires continuous effort and dedication.</span>
-        <span>We need your support to continue the SASTIK mission, which aims to create a better, harmonious society.</span>
-        <span>You can encourage our efforts by scanning the <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank" style="color: #0066cc; text-decoration: none;">UPI QR code</a> below 🙏</span>
+        <p>Developing and maintaining this unified platform requires continuous effort and dedication.</p>
+        <p>Your support helps sustain the SASTIK mission to create a harmonious society through interfaith understanding.</p>
+        <p class="donation-cta">Please consider contributing via UPI to support this initiative:</p>
       </div>
       <div class="qr-code">
-        <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank"><img src="images/qrcode_logo.jpg" alt="UPI QR Code" onerror="console.log('UPI QR code failed to load')"></a>
+        <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank">
+          <img src="images/qrcode_logo.jpg" alt="UPI QR Code for Donations" onerror="this.onerror=null;this.src='images/qr_placeholder.png'">
+          <span class="qr-hint">(Tap/Click to donate)</span>
+        </a>
       </div>
-      <div class="follow-text">For more insights, follow me on 👇</div>
-      <div class="logos">
-        <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="images/facebook_logo.png" alt="Facebook" onload="console.log('Facebook logo loaded')" onerror="console.log('Facebook logo failed to load')"></a>
-        <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="images/youtube_logo.png" alt="YouTube" onload="console.log('YouTube logo loaded')" onerror="console.log('YouTube logo failed to load')"></a>
-        <a href="https://x.com/subhendug1793" target="_blank"><img src="images/x_logo.png" alt="X" onload="console.log('X logo loaded')" onerror="console.log('X logo failed to load')"></a>
+    </div>
+    <div class="social-section">
+      <div class="follow-text">For more interfaith insights, follow on:</div>
+      <div class="social-links">
+        <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank" aria-label="Facebook">
+          <img src="images/facebook_logo.png" alt="Facebook" loading="lazy">
+          <span>Facebook</span>
+        </a>
+        <a href="https://www.youtube.com/@SGSastik" target="_blank" aria-label="YouTube">
+          <img src="images/youtube_logo.png" alt="YouTube" loading="lazy">
+          <span>YouTube</span>
+        </a>
+        <a href="https://x.com/subhendug1793" target="_blank" aria-label="Twitter/X">
+          <img src="images/x_logo.png" alt="X (Twitter)" loading="lazy">
+          <span>Twitter/X</span>
+        </a>
       </div>
-      <div class="name-text">Subhendu Ghosh Sastik</div>
+      <div class="creator-name">Subhendu Ghosh Sastik</div>
+    </div>
+    <div class="contact-section">
       <div class="contact-text">
-        <span>If you’d like to contribute to verse updates 📜 or have any suggestions or feedback 💭</span>
-        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.png" alt="Telegram" style="width: 20px; height: auto; vertical-align: middle;"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="images/gmail_logo.png" alt="Mail" style="width: 20px; height: auto; vertical-align: middle;" onerror="console.log('Gmail logo failed to load')"></a><a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></span>
+        <p>To contribute verse updates 📜 or share suggestions/feedback 💭</p>
+        <p>Connect directly via:</p>
+      </div>
+      <div class="contact-methods">
+        <a href="https://t.me/Sg1793" target="_blank" class="contact-btn">
+          <img src="images/telegram_logo.png" alt="Telegram" loading="lazy">
+          <span>Telegram</span>
+        </a>
+        <a href="mailto:sastikofficial@gmail.com" target="_blank" class="contact-btn">
+          <img src="images/gmail_logo.png" alt="Email" loading="lazy">
+          <span>sastikofficial@gmail.com</span>
+        </a>
       </div>
     </div>
   </div>
@@ -383,6 +497,9 @@
   };
 
   let db = null;
+  let data = [];
+  let currentSheet = "";
+
   function initializeFirebase() {
     try {
       const app = initializeApp(firebaseConfig);
@@ -414,9 +531,6 @@
       alert('Share not supported on this browser. Copy the link instead.');
     }
   };
-
-  let data = [];
-  let currentSheet = "";
 
   function updateLastUpdated() {
     try {
@@ -500,71 +614,158 @@
   }
 
   async function loadSheetData() {
-    const sheetSelector = document.getElementById("sheetSelector");
-    currentSheet = sheetSelector.value;
+    try {
+      const sheetSelector = document.getElementById("sheetSelector");
+      currentSheet = sheetSelector.value;
+      
+      if (!currentSheet) {
+        resetFilters();
+        return;
+      }
+
+      setLoadingState(true);
+      
+      const urlsToTry = [
+        `data/${currentSheet.toLowerCase()}.json`,
+        `${currentSheet.toLowerCase()}.json`,
+        `https://example.com/data/${currentSheet.toLowerCase()}.json`
+      ];
+      
+      let response, sheetData;
+      for (const url of urlsToTry) {
+        try {
+          response = await fetch(url, { cache: 'no-store' });
+          if (response.ok) {
+            sheetData = await response.json();
+            if (Array.isArray(sheetData) && sheetData.length > 0) {
+              break;
+            }
+          }
+        } catch (err) {
+          console.error(`Error loading ${url}:`, err);
+        }
+      }
+
+      if (!sheetData || !Array.isArray(sheetData)) {
+        throw new Error("Failed to load valid data from all sources");
+      }
+
+      data = sheetData;
+      enableFilters();
+      updateVerseDisplay(data);
+    } catch (error) {
+      console.error("Error in loadSheetData:", error);
+      showErrorToUser("Failed to load data. Please try again later.");
+      resetFilters();
+    } finally {
+      setLoadingState(false);
+    }
+  }
+
+  function searchTable() {
+    try {
+      const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+      
+      if (!searchTerm) {
+        filterTable();
+        return;
+      }
+
+      const filteredRows = getFilteredRows();
+      
+      const searchResults = filteredRows.map(row => {
+        const highlightedRow = {...row};
+        let matchCount = 0;
+        
+        Object.keys(highlightedRow).forEach(key => {
+          const value = highlightedRow[key];
+          if (typeof value === "string") {
+            const highlighted = value.replace(
+              new RegExp(escapeRegExp(searchTerm), 'gi'),
+              match => {
+                matchCount++;
+                return `<mark>${match}</mark>`;
+              }
+            );
+            highlightedRow[key] = highlighted;
+          } else if (value && typeof value === "object" && value.text) {
+            const highlighted = value.text.replace(
+              new RegExp(escapeRegExp(searchTerm), 'gi'),
+              match => {
+                matchCount++;
+                return `<mark>${match}</mark>`;
+              }
+            );
+            highlightedRow[key] = {...value, text: highlighted};
+          }
+        });
+        
+        return {row: highlightedRow, matchCount};
+      }).filter(result => result.matchCount > 0);
+
+      updateVerseDisplay(searchResults.map(r => r.row));
+      updateMatchCount(searchResults.reduce((sum, r) => sum + r.matchCount, 0));
+    } catch (error) {
+      console.error("Error in searchTable:", error);
+    }
+  }
+
+  function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function setLoadingState(isLoading) {
+    const verseContainer = document.getElementById("verseContainer");
+    if (isLoading) {
+      verseContainer.innerHTML = "<div class='spinner'>Loading...</div>";
+    } else if (verseContainer.innerHTML === "<div class='spinner'>Loading...</div>") {
+      verseContainer.innerHTML = "";
+    }
+  }
+
+  function enableFilters() {
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
     const searchInput = document.getElementById("searchInput");
+    categoryFilter.disabled = false;
+    subCategoryFilter.disabled = false;
+    searchInput.disabled = false;
+    document.querySelector('.search-row').style.display = 'flex';
+  }
+
+  function resetFilters() {
+    const categoryFilter = document.getElementById("categoryFilter");
+    const subCategoryFilter = document.getElementById("subCategoryFilter");
+    const searchInput = document.getElementById("searchInput");
+    categoryFilter.disabled = true;
+    subCategoryFilter.disabled = true;
+    searchInput.disabled = true;
+    document.getElementById("verseContainer").innerHTML = "";
+    document.querySelector('.search-row').style.display = 'flex';
+    updateContentCount(0);
+    updateMatchCount(0);
+  }
+
+  function showErrorToUser(message) {
     const errorDisplay = document.getElementById("errorDisplay") || document.createElement("div");
     errorDisplay.id = "errorDisplay";
     errorDisplay.style.color = "red";
     errorDisplay.style.textAlign = "center";
     errorDisplay.style.marginBottom = "10px";
+    errorDisplay.textContent = message;
     document.querySelector(".controls").after(errorDisplay);
+  }
 
-    if (currentSheet) {
-      categoryFilter.disabled = false;
-      subCategoryFilter.disabled = false;
-      searchInput.disabled = false;
-      errorDisplay.textContent = "";
-      document.querySelector('.search-row').style.display = 'flex';
-      const verseContainer = document.getElementById("verseContainer");
-      verseContainer.innerHTML = "<div class='spinner'>Loading...</div>";
-
-      const urlsToTry = [`${currentSheet}.json`, `${currentSheet.toLowerCase()}.json`, `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`];
-      let response, sheetData;
-      for (const url of urlsToTry) {
-        try {
-          console.log(`Attempting to fetch: ${url} at`, new Date().toISOString());
-          response = await fetch(url, { cache: 'no-store' });
-          if (response.ok) {
-            sheetData = await response.json();
-            console.log(`Successfully loaded ${url}:`, sheetData, "at", new Date().toISOString());
-            break;
-          } else {
-            console.warn(`Fetch failed for ${url} with status ${response.status} at`, new Date().toISOString());
-          }
-        } catch (err) {
-          console.error(`Error fetching ${url}:`, err.message, "at", new Date().toISOString());
-        }
-      }
-      if (sheetData && Array.isArray(sheetData) && sheetData.length > 0) {
-        data = sheetData;
-        updateVerseDisplay(data);
-        updateContentCount(data.length);
-        updateMatchCount(0);
-        errorDisplay.textContent = "";
-        localStorage.setItem("lastSheet", currentSheet);
-      } else if (sheetData && Array.isArray(sheetData) && sheetData.length === 0) {
-        verseContainer.innerHTML = "<div style='text-align: center;'>No data available in this sheet.</div>";
-        updateContentCount(0);
-        updateMatchCount(0);
-      } else {
-        console.error("No valid data loaded:", sheetData, "at", new Date().toISOString());
-        verseContainer.innerHTML = `<div style="text-align: center; color: red;">Error: No valid data found in ${currentSheet}.json. Check file structure or availability.</div>`;
-        updateContentCount(0);
-        updateMatchCount(0);
-      }
-    } else {
-      categoryFilter.disabled = true;
-      subCategoryFilter.disabled = true;
-      searchInput.disabled = true;
-      errorDisplay.textContent = "";
-      document.getElementById("verseContainer").innerHTML = "";
-      document.querySelector('.search-row').style.display = 'flex';
-      updateContentCount(0);
-      updateMatchCount(0);
-    }
+  function getFilteredRows() {
+    const category = document.getElementById("categoryFilter").value;
+    const subCategory = document.getElementById("subCategoryFilter").value;
+    return data.filter(row => {
+      const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
+                                        row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+      const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
+                                              row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+      return categoryMatch && subCategoryMatch;
+    });
   }
 
   function updateVerseDisplay(rows) {
@@ -595,15 +796,10 @@
       headers.forEach(header => {
         let content = row[header] || "-";
         let displayContent;
-        const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
         if (typeof content === "string" || (typeof content === "object" && content && content.text)) {
           const textToSearch = typeof content === "object" ? content.text : content;
-          if (searchTerm && !document.getElementById("searchInput").disabled) {
-            const highlighted = textToSearch.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
-            content = typeof content === "object" ? { text: highlighted, url: content.url } : highlighted;
-          }
           displayContent = typeof content === "object" && content.url
-            ? `<a href="${content.url}" target="_blank">${content.text}</a>`
+            ? `<a href="${content.url}" target="_blank">${textToSearch}</a>`
             : content;
         } else if (typeof content === "object" && content && !content.text) {
           displayContent = "-";
@@ -716,11 +912,10 @@
   function filterTable() {
     const category = document.getElementById("categoryFilter").value;
     const subCategory = document.getElementById("subCategoryFilter").value;
-    const sheetName = document.getElementById("sheetSelector").value;
     const searchInput = document.getElementById("searchInput");
     const searchTerm = searchInput.value.toLowerCase().trim();
 
-    if (sheetName && data.length > 0) {
+    if (currentSheet && data.length > 0) {
       let filteredRows = data.filter(row => {
         const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
                                           row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
@@ -737,67 +932,12 @@
     }
   }
 
-  function searchTable() {
-    const searchInput = document.getElementById("searchInput");
-    if (searchInput.disabled) return; 
-    const searchTerm = searchInput.value.toLowerCase().trim();
-    const category = document.getElementById("categoryFilter").value;
-    const subCategory = document.getElementById("subCategoryFilter").value;
-    const sheetName = document.getElementById("sheetSelector").value;
-
-    if (sheetName && data.length > 0) {
-      let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
-        const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                                row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
-        return categoryMatch && subCategoryMatch;
-      });
-      if (searchTerm) {
-        let searchFilteredRows = filteredRows.filter(row =>
-          Object.values(row).some(val =>
-            (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
-            (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm))
-          )
-        );
-        let matchCount = 0;
-        searchFilteredRows.forEach(row => {
-          Object.values(row).forEach(val => {
-            if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
-              matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
-            } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm)) {
-              matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
-            }
-          });
-        });
-        updateVerseDisplay(searchFilteredRows);
-        updateMatchCount(matchCount);
-      } else {
-        updateVerseDisplay(filteredRows);
-        updateMatchCount(0);
-      }
-    } else {
-      updateVerseDisplay(data);
-      updateMatchCount(0);
-    }
-  }
-
   function updateContentCount(count) {
     document.getElementById("contentCount").textContent = `Content Found: ${count}`;
   }
 
   function updateMatchCount(count) {
     document.getElementById("matchCount").textContent = `Matches found: ${count}`;
-  }
-
-  function displayError(message) {
-    const errorDisplay = document.getElementById("errorDisplay") || document.createElement("div");
-    errorDisplay.id = "errorDisplay";
-    errorDisplay.style.color = "red";
-    errorDisplay.style.textAlign = "center";
-    errorDisplay.style.marginBottom = "10px";
-    errorDisplay.textContent = message;
-    document.querySelector(".controls").after(errorDisplay);
   }
 
   window.loadSheetData = loadSheetData;

@@ -15,97 +15,46 @@
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      margin: 0;
-      background: linear-gradient(135deg, #e0f7fa, #f9f9f9);
+      margin: 20px;
+      background: #f9f9f9;
       position: relative;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
-    /* Hero Section */
-    .hero {
-      background: url('https://source.unsplash.com/1600x400/?spiritual') no-repeat center/cover;
-      padding: 40px 20px;
-      text-align: center;
-      color: #fff;
-      position: relative;
-      z-index: 1;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    .hero::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.3);
-      z-index: -1;
-    }
-    .hero h1 {
-      font-family: 'Merriweather', serif;
-      font-weight: 700;
-      font-size: 2.2em;
-      margin: 0;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-    }
-
-    /* Sticky Navigation */
-    .sticky-nav {
-      position: sticky;
-      top: 0;
-      background: rgba(255,255,255,0.95);
-      padding: 10px 0;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      z-index: 1000;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-    }
-    .sticky-nav a {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 500;
-      color: #0066cc;
-      text-decoration: none;
-      font-size: 1em;
-    }
-    .sticky-nav a:hover {
-      color: #0033cc;
-      text-decoration: underline;
-    }
-
     /* Header Info */
     .header-info {
       position: absolute;
-      top: 10px;
+      top: 20px;
       right: 20px;
       font-family: 'Poppins', sans-serif;
       font-size: 0.9em;
-      color: #fff;
+      color: #666;
       z-index: 10;
     }
     .header-info .last-updated a {
-      color: #e0f7fa;
+      color: #0066cc;
       text-decoration: none;
     }
     .header-info .visitor-count {
       margin-left: 20px;
+      vertical-align: middle;
       display: inline-block;
-      font-weight: 500;
-      color: #fff;
+      font-weight: bold;
+      color: #333;
     }
     .header-info .visitor-count.error {
       font-weight: normal;
-      color: #ccc;
+      color: #999;
     }
 
-    /* Logo and Title */
+    /* Header */
     .header-container {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 20px 0;
+      margin-bottom: 20px;
     }
     .logo {
       width: 80px;
@@ -159,7 +108,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 8px;
+      gap: 2px;
       flex-wrap: wrap;
       background: #fff;
       padding: 10px;
@@ -172,7 +121,7 @@
       font-size: 0.9em;
     }
     select, input {
-      padding: 8px;
+      padding: 5px;
       margin-right: 10px;
       border: 1px solid #ddd;
       border-radius: 4px;
@@ -197,12 +146,17 @@
       justify-content: center;
       align-items: center;
       gap: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
     }
     .content-count, .match-count {
       font-family: 'Poppins', sans-serif;
-      font-size: 0.9em;
+      font-size: 1em;
       color: #333;
+      text-align: left;
+    }
+    .search-input-container {
+      flex-grow: 0;
+      text-align: center;
     }
 
     /* Verse Cards */
@@ -211,7 +165,7 @@
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 20px;
       width: 80%;
-      margin: 0 auto 20px;
+      margin: 0 auto 5px;
     }
     .verse-card {
       background: #fff;
@@ -288,72 +242,131 @@
 
     /* Footer */
     .footer {
-      background: linear-gradient(135deg, #0066cc, #0033cc);
-      color: #fff;
-      padding: 20px 0;
+      position: relative;
       margin-top: auto;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 80%;
+      margin: 5px auto 0;
+      padding: 10px 0;
+      pointer-events: auto;
     }
     .footer a {
-      color: #e0f7fa;
       text-decoration: none;
+      cursor: pointer;
+      pointer-events: auto;
+      color: #0066cc;
     }
     .footer a:hover {
       text-decoration: underline;
     }
     .footer img {
       vertical-align: middle;
+      pointer-events: auto;
+    }
+    .logos {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
     }
     .logos img {
-      width: 50px;
+      width: 60px;
+      height: auto;
+      margin-right: 5px;
       transition: transform 0.3s ease;
     }
     .logos img:hover {
       transform: scale(1.1);
     }
-    .support-text, .follow-text, .name-text, .contact-text {
-      font-family: 'Poppins', sans-serif;
+    .logos img:last-child {
+      margin-right: 0;
+    }
+    .text-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
     }
     .support-text {
-      font-weight: 500;
+      font-family: 'Poppins', sans-serif;
+      font-weight: bold;
       font-size: 0.9em;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .support-text span {
+      display: block;
     }
     .follow-text {
-      font-size: 1em;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1em;
+      margin: 2px 0;
+      color: #333;
     }
     .name-text {
       font-family: 'Merriweather', serif;
-      font-size: 1.8em;
+      font-size: 2em;
+      margin: 5px 0;
+      color: #2c3e50;
     }
     .contact-text {
-      font-size: 0.9em;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1em;
+      max-width: 90%;
+      text-align: center;
+      color: #333;
+      pointer-events: auto;
+    }
+    .contact-text span {
+      display: block;
+      white-space: nowrap;
+      line-height: 1.4;
+    }
+    .contact-text img {
+      width: 20px;
+      height: auto;
+      vertical-align: middle;
+    }
+    .qr-code {
+      margin: 10px 0;
     }
     .qr-code img {
-      width: 180px;
+      width: 200px;
+      height: auto;
       border-radius: 8px;
     }
 
     /* Single Verse View */
     .single-verse-view {
-      max-width: 80%;
+      text-align: center;
       margin: 20px auto;
+      max-width: 80%;
       padding: 20px;
-      background: #fff;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     .single-verse-view h3 {
       font-family: 'Merriweather', serif;
       font-weight: 700;
       color: #0066cc;
+      margin-bottom: 10px;
+    }
+    .verse-details {
+      margin-bottom: 20px;
+      text-align: left;
     }
     .verse-details p {
+      margin: 5px 0;
       font-family: 'Merriweather', serif;
-      font-size: 0.9em;
+      font-size: 1em;
     }
     .verse-details strong {
       font-family: 'Poppins', sans-serif;
-      font-weight: 500;
+      font-weight: bold;
+      display: inline-block;
+      width: 150px;
     }
     .navigation-arrows {
       position: absolute;
@@ -370,6 +383,7 @@
     }
     .navigation-arrows img {
       width: 40px;
+      height: auto;
       transition: opacity 0.3s ease;
     }
     .navigation-arrows a.disabled img {
@@ -453,56 +467,134 @@
 
     /* Media Queries */
     @media (max-width: 600px) {
-      .hero h1 { font-size: 1.8em; }
-      .sticky-nav { flex-direction: column; gap: 10px; }
-      .header-info { position: static; text-align: center; margin: 10px 0; }
-      .header-container { flex-direction: column; margin-bottom: 10px; }
-      .logo { width: 50px; }
-      h2 { font-size: 1.2em; }
-      .mission-statement { font-size: 0.9em; max-width: 90%; }
-      .mission-subtext { font-size: 0.7em; }
-      .controls { flex-direction: column; gap: 8px; }
-      select, input { width: 100%; padding: 6px; }
-      #searchInput { max-width: 250px; }
-      .verse-grid { grid-template-columns: 1fr; width: 90%; }
-      table { width: 100%; font-size: 0.9em; }
-      th, td { padding: 6px; }
-      .footer { max-width: 90%; }
-      .logos img { width: 40px; }
-      .qr-code img { width: 150px; }
-      .support-text { font-size: 0.7em; }
-      .single-verse-view { max-width: 90%; padding: 15px; }
-      .verse-details p { font-size: 0.9em; }
-      .verse-details strong { width: 120px; }
-      .navigation-arrows .prev { left: -20px; }
-      .navigation-arrows .next { right: -20px; }
-      .reaction-buttons button { font-size: 16px; }
-      .share-buttons img, .single-verse-share-buttons img { width: 20px; height: 20px; }
-      .share-buttons a, .single-verse-share-buttons a { width: 30px; }
+      .header-info {
+        position: relative;
+        top: 0;
+        right: 0;
+        text-align: center;
+        margin: 10px 0;
+        font-size: 0.8em;
+      }
+      .header-container {
+        flex-direction: column;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .logo {
+        margin-right: 0;
+        margin-bottom: 5px;
+        width: 50px;
+      }
+      h2 {
+        font-size: 1.2em;
+      }
+      .mission-statement {
+        font-size: 0.9em;
+        max-width: 90%;
+      }
+      .mission-subtext {
+        font-size: 0.7em;
+        max-width: 90%;
+      }
+      .controls {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+      select, input {
+        width: 100%;
+        margin-bottom: 8px;
+        padding: 4px;
+      }
+      .search-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 5px;
+      }
+      .content-count, .match-count {
+        text-align: center;
+      }
+      .search-input-container {
+        width: 100%;
+      }
+      #searchInput {
+        width: 100%;
+        max-width: 250px;
+      }
+      .verse-grid {
+        grid-template-columns: 1fr;
+        width: 90%;
+      }
+      table {
+        width: 100%;
+        font-size: 0.9em;
+      }
+      th, td {
+        padding: 6px;
+      }
+      .footer {
+        max-width: 90%;
+      }
+      .logos img {
+        width: 40px;
+        margin-right: 3px;
+      }
+      .logos img:last-child {
+        margin-right: 0;
+      }
+      .follow-text {
+        font-size: 0.9em;
+      }
+      .contact-text {
+        font-size: 0.75em;
+      }
+      .contact-text img {
+        width: 20px;
+      }
+      .qr-code img {
+        width: 150px;
+      }
+      .support-text {
+        font-size: 0.7em;
+      }
+      .single-verse-view {
+        max-width: 90%;
+        padding: 15px;
+      }
+      .verse-details p {
+        font-size: 0.9em;
+      }
+      .verse-details strong {
+        width: 120px;
+      }
+      .share-buttons img, .single-verse-share-buttons img {
+        width: 20px;
+        height: 20px;
+      }
+      .share-buttons a, .single-verse-share-buttons a {
+        width: 30px;
+      }
+      .navigation-arrows img {
+        width: 30px;
+      }
+      .navigation-arrows .prev {
+        left: -30px;
+      }
+      .navigation-arrows .next {
+        right: -20px;
+      }
+      .reaction-buttons button {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Hero Section -->
-  <div class="hero">
-    <div class="header-info">
-      <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
-      <span class="visitor-count" id="visitorCount">Visitors: Loading...</span>
-    </div>
-    <h1>Explore Sacred Verses</h1>
+  <div class="header-info">
+    <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
+    <span class="visitor-count" id="visitorCount">Visitors: Loading...</span>
   </div>
-
-  <!-- Sticky Navigation -->
-  <div class="sticky-nav">
-    <a href="#gita" onclick="selectSheet('gita')">Gita</a>
-    <a href="#bible" onclick="selectSheet('bible')">Bible</a>
-    <a href="#quran" onclick="selectSheet('quran')">Quran</a>
-    <a href="#hadith" onclick="selectSheet('hadith')">Hadith</a>
-    <a href="#miscellaneous" onclick="selectSheet('miscellaneous')">Miscellaneous</a>
-    <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank">Support <i class="fas fa-heart"></i></a>
-  </div>
-
-  <!-- Header -->
   <div class="header-container">
     <img src="images/sastik_logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('SASTIK logo failed to load');">
     <h2><a href="https://www.facebook.com/sastikofficial/" target="_blank">SASTIK GBQ+</a></h2>
@@ -514,11 +606,7 @@
   <div class="mission-subtext">
     <i class="fas fa-arrow-down"></i> A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. <i class="fas fa-arrow-down"></i>
   </div>
-
-  <!-- Single Verse View -->
   <div class="single-verse-view" id="singleVerseView" style="display: none;"></div>
-
-  <!-- Controls -->
   <div class="controls" id="controls">
     <label for="sheetSelector"><i class="fas fa-book"></i> Select Gita/Bible/Quran+:</label>
     <select id="sheetSelector" onchange="loadSheetData()">
@@ -546,29 +634,21 @@
       <option value="Metaphorical or Symbolic verse">Metaphorical or Symbolic verse</option>
     </select>
   </div>
-
-  <!-- Search Row -->
   <div class="search-row" id="search-row">
     <div class="content-count" id="contentCount">Content Found: 0</div>
     <div class="search-input-container">
-      <input type="text" id="searchInput" placeholder="Search in verses..." disabled onkeyup="searchTable()">
+      <input type="text" id="searchInput" placeholder="Search in table..." disabled onkeyup="searchTable()">
     </div>
     <div class="match-count" id="matchCount">Matches found: 0</div>
   </div>
-
-  <!-- Loading Spinner -->
   <div class="loading-spinner" id="loadingSpinner">
     <i class="fas fa-spinner"></i>
   </div>
-
-  <!-- Verse Grid -->
   <div class="verse-grid" id="verseGrid"></div>
   <table id="verseTable" style="display: none;">
     <thead id="tableHeaders"></thead>
     <tbody id="verseBody"></tbody>
   </table>
-
-  <!-- Footer -->
   <div class="footer">
     <div class="text-group">
       <div class="support-text">
@@ -588,7 +668,7 @@
       <div class="name-text">Subhendu Ghosh Sastik</div>
       <div class="contact-text">
         <span>If you’d like to contribute to verse updates <i class="fas fa-scroll"></i> or have any suggestions or feedback <i class="fas fa-comment"></i></span>
-        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.png" alt="Telegram"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="images/gmail_logo.png" alt="Mail" onerror="console.log('Gmail logo failed to load')"></a><a href="https://m.me/subhendu.ghosh.790349" target="_blank">sastikofficial@gmail.com</a></span>
+        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.png" alt="Telegram"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="images/gmail_logo.png" alt="Mail" onerror="console.log('Gmail logo failed to load')"></a> <a href="mailto:sastikofficial@gmail.com" target="_blank">sastikofficial@gmail.com</a></span>
       </div>
     </div>
   </div>
@@ -643,11 +723,86 @@
     let currentSheet = "";
     let currentVerseIndex = -1;
 
-    window.selectSheet = function(sheet) {
-      const sheetSelector = document.getElementById("sheetSelector");
-      sheetSelector.value = sheet;
-      loadSheetData();
-    };
+    function updateLastUpdated() {
+      try {
+        const lastUpdatedElement = document.getElementById("lastUpdated");
+        if (lastUpdatedElement) {
+          let lastUpdated;
+          if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
+            const date = new Date(document.lastModified);
+            const dateStr = date.toLocaleDateString('en-IN', {
+              timeZone: 'Asia/Kolkata',
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric'
+            }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
+            const timeStr = date.toLocaleTimeString('en-IN', {
+              timeZone: 'Asia/Kolkata',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false
+            });
+            lastUpdated = `${dateStr} ${timeStr}`;
+          } else {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-IN', {
+              timeZone: 'Asia/Kolkata',
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric'
+            }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
+            const timeStr = now.toLocaleTimeString('en-IN', {
+              timeZone: 'Asia/Kolkata',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false
+            });
+            lastUpdated = `${dateStr} ${timeStr}`;
+            console.warn("document.lastModified unavailable, using current date:", lastUpdated);
+          }
+          lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${lastUpdated}</a>`;
+        }
+      } catch (error) {
+        console.error("Error updating last modified:", error);
+        const lastUpdatedElement = document.getElementById("lastUpdated");
+        if (lastUpdatedElement) {
+          lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Unknown</a>`;
+        }
+      }
+    }
+
+    async function updateVisitorCount() {
+      const visitorCount = document.getElementById("visitorCount");
+      if (!visitorCount) return;
+      visitorCount.innerHTML = "Visitors: Loading...";
+      try {
+        if (!db) throw new Error("Firestore not initialized");
+        const counterRef = doc(db, "counters", "viewerCount");
+        await setDoc(counterRef, { count: increment(1) }, { merge: true });
+        const counterSnap = await getDoc(counterRef);
+        if (counterSnap.exists()) {
+          visitorCount.classList.remove("error");
+          visitorCount.innerHTML = `Visitors: ${counterSnap.data().count || 0}`;
+        } else {
+          throw new Error("Counter document does not exist");
+        }
+      } catch (error) {
+        console.error("Firestore error:", error);
+        try {
+          const response = await fetch('counter.json', { cache: 'no-store' });
+          if (!response.ok) throw new Error(`counter.json fetch error: ${response.status}`);
+          const data = await response.json();
+          visitorCount.classList.remove("error");
+          visitorCount.innerHTML = `Visitors: ${data.visitors}`;
+        } catch (jsonError) {
+          console.error("Local counter fetch error:", jsonError);
+          visitorCount.innerHTML = "Visitors: 1";
+          visitorCount.classList.add("error");
+        }
+      }
+    }
 
     async function loadSheetData() {
       const sheetSelector = document.getElementById("sheetSelector");
@@ -966,7 +1121,7 @@
       const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
       let html = '';
       if (isTableView) {
-        html += `<a href="${shareUrl}" target="_blank" class="view-link"><i class="fas fa-eye"></i></a>`;
+        html += `<a href="#" onclick="navigateVerse(${index}); return false;" class="view-link"><i class="fas fa-eye"></i></a>`;
       }
       html += `
         <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>

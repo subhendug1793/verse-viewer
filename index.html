@@ -122,7 +122,6 @@
     #searchInput { 
       width: 200px; 
     }
-    /* New Landscape Card Layout */
     .verse-cards-container {
       display: flex;
       flex-direction: column;
@@ -174,7 +173,6 @@
     .see-full-verse:hover {
       background: #005bb5;
     }
-    /* Retain Original Category Colors */
     .category-universal { background-color: #00FF00; }
     .category-general { background-color: #00FFFF; }
     .category-controversial { background-color: #FFFF00; }
@@ -306,16 +304,6 @@
       height: 24px; 
       vertical-align: middle; 
     }
-    .share-buttons a, .single-verse-share-buttons a { 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      width: 40px; 
-      position: relative; 
-    }
-    .share-buttons a.view-link::after { 
-      content: none; /* Removed 👆 emoji */
-    }
     .navigation-arrows {
       position: absolute;
       top: 50%;
@@ -339,7 +327,7 @@
     }
     .navigation-arrows .prev {
       position: absolute;
-      left: -40px; /* Moved left to avoid text overlap */
+      left: -40px;
     }
     .navigation-arrows .next {
       position: absolute;
@@ -482,7 +470,7 @@
         width: 30px;
       }
       .navigation-arrows .prev {
-        left: -30px; /* Adjusted for mobile */
+        left: -30px;
       }
       .navigation-arrows .next {
         right: -20px;
@@ -490,6 +478,11 @@
       .reaction-buttons button {
         font-size: 16px;
       }
+    }
+    .spinner {
+      text-align: center;
+      font-size: 1.2em;
+      color: #0066cc;
     }
   </style>
 </head>
@@ -588,9 +581,10 @@
     try {
       const app = initializeApp(firebaseConfig);
       db = getFirestore(app);
-      console.log("Firebase initialized successfully");
+      console.log("Firebase initialized successfully at", new Date().toISOString());
     } catch (error) {
-      console.error("Firebase initialization error:", error);
+      console.error("Firebase initialization error:", error.message, "at", new Date().toISOString());
+      displayError("Firebase initialization failed. Check console for details.");
     }
   }
 
@@ -617,7 +611,6 @@
 
   let data = [];
   let currentSheet = "";
-  let currentVerseIndex = -1;
 
   function updateLastUpdated() {
     try {
@@ -661,7 +654,7 @@
         lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${lastUpdated}</a>`;
       }
     } catch (error) {
-      console.error("Error updating last modified:", error);
+      console.error("Error updating last modified:", error.message, "at", new Date().toISOString());
       const lastUpdatedElement = document.getElementById("lastUpdated");
       if (lastUpdatedElement) {
         lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Unknown</a>`;
@@ -685,15 +678,15 @@
         throw new Error("Counter document does not exist");
       }
     } catch (error) {
-      console.error("Firestore error:", error);
+      console.error("Firestore error:", error.message, "at", new Date().toISOString());
       try {
         const response = await fetch('counter.json', { cache: 'no-store' });
         if (!response.ok) throw new Error(`counter.json fetch error: ${response.status}`);
         const data = await response.json();
         visitorCount.classList.remove("error");
-        visitorCount.innerHTML = `Visitors: ${data.visitors}`;
+        visitorCount.innerHTML = `Visitors: ${data.visitors || 0}`;
       } catch (jsonError) {
-        console.error("Local counter fetch error:", jsonError);
+        console.error("Local counter fetch error:", jsonError.message, "at", new Date().toISOString());
         visitorCount.innerHTML = "Visitors: 1";
         visitorCount.classList.add("error");
       }
@@ -706,10 +699,10 @@
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
     const searchInput = document.getElementById("searchInput");
-    const errorDisplay = document.createElement("div");
+    const errorDisplay = document.getElementById("errorDisplay") || document.createElement("div");
     errorDisplay.id = "errorDisplay";
     errorDisplay.style.color = "red";
-    errorDisplay.style.text-align = "center";
+    errorDisplay.style.textAlign = "center";
     errorDisplay.style.marginBottom = "10px";
     document.querySelector(".controls").after(errorDisplay);
 
@@ -720,23 +713,23 @@
       errorDisplay.textContent = "";
       document.querySelector('.search-row').style.display = 'flex';
       const verseCardsContainer = document.getElementById("verseCards");
-      verseCardsContainer.innerHTML = "<div style='text-align: center;'>Loading...</div>";
+      verseCardsContainer.innerHTML = "<div class='spinner'>Loading...</div>";
 
       const urlsToTry = [`${currentSheet}.json`, `${currentSheet.toLowerCase()}.json`, `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`];
       let response, sheetData;
       for (const url of urlsToTry) {
         try {
-          console.log(`Attempting to fetch: ${url}`);
+          console.log(`Attempting to fetch: ${url} at`, new Date().toISOString());
           response = await fetch(url, { cache: 'no-store' });
           if (response.ok) {
             sheetData = await response.json();
-            console.log(`Successfully loaded ${url}:`, sheetData);
+            console.log(`Successfully loaded ${url}:`, sheetData, "at", new Date().toISOString());
             break;
           } else {
-            console.warn(`Fetch failed for ${url} with status ${response.status}`);
+            console.warn(`Fetch failed for ${url} with status ${response.status} at`, new Date().toISOString());
           }
         } catch (err) {
-          console.error(`Error fetching ${url}:`, err.message);
+          console.error(`Error fetching ${url}:`, err.message, "at", new Date().toISOString());
         }
       }
       if (sheetData && Array.isArray(sheetData) && sheetData.length > 0) {
@@ -745,8 +738,13 @@
         updateContentCount(data.length);
         updateMatchCount(0);
         errorDisplay.textContent = "";
+        localStorage.setItem("lastSheet", currentSheet); // Remember last sheet
+      } else if (sheetData && Array.isArray(sheetData) && sheetData.length === 0) {
+        verseCardsContainer.innerHTML = "<div style='text-align: center;'>No data available in this sheet.</div>";
+        updateContentCount(0);
+        updateMatchCount(0);
       } else {
-        console.error("No valid data loaded:", sheetData);
+        console.error("No valid data loaded:", sheetData, "at", new Date().toISOString());
         verseCardsContainer.innerHTML = `<div style="text-align: center; color: red;">Error: No valid data found in ${currentSheet}.json. Check file structure or availability.</div>`;
         updateContentCount(0);
         updateMatchCount(0);
@@ -781,20 +779,17 @@
             break;
           }
         } catch (err) {
-          console.warn(`Error fetching ${url}:`, err.message);
+          console.warn(`Error fetching ${url}:`, err.message, "at", new Date().toISOString());
         }
       }
       if (sheetData) {
         data = sheetData;
-        const normalizedVerseParam = decodeURIComponent(verseParam).trim();
+        const normalizedVerseParam = decodeURIComponent(verseParam).trim().toLowerCase();
         verseIndex = data.findIndex(row => {
-          const verseName = (row["Verse Name"] || row["Verse"] || "").trim();
-          return verseName === normalizedVerseParam;
+          const verseName = (row["Verse Name"] || row["Verse"] || "").trim().toLowerCase();
+          return verseName.includes(normalizedVerseParam) || parseInt(verseParam) === data.indexOf(row);
         });
-        if (verseIndex === -1) {
-          verseIndex = parseInt(verseParam, 10);
-        }
-        if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < sheetData.length) {
+        if (verseIndex >= 0 && verseIndex < sheetData.length) {
           currentVerseIndex = verseIndex;
           const verse = sheetData[verseIndex];
           displaySingleVerse(verse, verseIndex);
@@ -803,14 +798,14 @@
           document.querySelector('.search-row').style.display = 'none';
           await loadReactions(sheet, verseIndex);
         } else {
-          console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
+          console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`, "at", new Date().toISOString());
           displaySingleVerse(null, -1);
           document.getElementById("controls").style.display = "none";
           document.getElementById("verseCards").style.display = "none";
           document.querySelector('.search-row').style.display = 'none';
         }
       } else {
-        console.error(`Failed to load ${sheet}.json`);
+        console.error(`Failed to load ${sheet}.json`, "at", new Date().toISOString());
         displaySingleVerse(null, -1);
         document.getElementById("controls").style.display = "none";
         document.getElementById("verseCards").style.display = "none";
@@ -838,7 +833,7 @@
         if (button) button.classList.add('active');
       }
     } catch (error) {
-      console.error("Error loading reactions:", error);
+      console.error("Error loading reactions:", error.message, "at", new Date().toISOString());
     }
   }
 
@@ -874,7 +869,7 @@
       const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
       updateReactionButtons(reactionCounts);
     } catch (error) {
-      console.error("Error toggling reaction:", error.code, error.message);
+      console.error("Error toggling reaction:", error.message, "at", new Date().toISOString());
       alert(`Failed to update reaction: ${error.message}. Please try again.`);
     }
   }
@@ -905,7 +900,7 @@
       if (typeof content === "object" && content.text && content.url) {
         content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
       }
-      const className = header === "Verse Category " && typeof verse[header] === "string" 
+      const className = header === "Verse Category" && typeof verse[header] === "string" 
         ? getCategoryClass(verse[header].trim().toLowerCase()) 
         : "";
       html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
@@ -941,8 +936,8 @@
     const verseCardsContainer = document.getElementById("verseCards");
     verseCardsContainer.innerHTML = "";
     if (!rows || rows.length === 0) {
-      verseCardsContainer.innerHTML = `<div style="text-align: center; color: red;">No data available or error loading data</div>`;
-      console.error("No rows to display:", rows);
+      verseCardsContainer.innerHTML = "<div style='text-align: center; color: red;'>No data available or error loading data</div>";
+      console.error("No rows to display:", rows, "at", new Date().toISOString());
       return;
     }
     rows.forEach((row, index) => {
@@ -967,7 +962,7 @@
         } else {
           displayContent = content.toString();
         }
-        const className = header === "Verse Category " && typeof row[header] === "string"
+        const className = header === "Verse Category" && typeof row[header] === "string"
           ? getCategoryClass(row[header].trim().toLowerCase())
           : "";
         detailsHtml += `
@@ -1000,7 +995,7 @@
     let verseName = row["Verse Name"] || row["Verse"] || index.toString();
     if (typeof verseName !== "string") {
       verseName = index.toString();
-      console.warn(`Invalid Verse Name for sheet=${currentSheet}, index=${index}:`, verseName);
+      console.warn(`Invalid Verse Name for sheet=${currentSheet}, index=${index}:`, verseName, "at", new Date().toISOString());
     }
     verseName = verseName.trim();
     const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`;
@@ -1009,12 +1004,24 @@
     if (isTableView) {
       html += `<a href="${shareUrl}" target="_blank" class="view-link"><img src="images/click_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
     }
+    const copyLink = document.createElement("a");
+    copyLink.href = "#";
+    copyLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      copyToClipboard(escapedShareUrl);
+    });
+    copyLink.innerHTML = `<img src="images/link_logo.png" alt="Copy Link" onerror="this.src='https://via.placeholder.com/24?text=🔗';">`;
+    const shareLink = document.createElement("a");
+    shareLink.href = "#";
+    shareLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      shareAnywhere(verseText.replace(/'/g, "\\'"), escapedShareUrl);
+    });
+    shareLink.innerHTML = `<img src="images/share_logo.png" alt="Share" onerror="this.src='https://via.placeholder.com/24?text=📤';">`;
     html += `
       <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>
       <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
       <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
-      <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
-      <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
     `;
     return html;
   }
@@ -1028,8 +1035,8 @@
 
     if (sheetName && data.length > 0) {
       let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+        const categoryMatch = !category || (row["Verse Category"] && typeof row["Verse Category"] === "string" && 
+                                          row["Verse Category"].trim().toLowerCase() === category.toLowerCase());
         const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
                                                 row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
         return categoryMatch && subCategoryMatch;
@@ -1053,8 +1060,8 @@
 
     if (sheetName && data.length > 0) {
       let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+        const categoryMatch = !category || (row["Verse Category"] && typeof row["Verse Category"] === "string" && 
+                                          row["Verse Category"].trim().toLowerCase() === category.toLowerCase());
         const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
                                                 row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
         return categoryMatch && subCategoryMatch;
@@ -1096,6 +1103,16 @@
     document.getElementById("matchCount").textContent = `Matches found: ${count}`;
   }
 
+  function displayError(message) {
+    const errorDisplay = document.getElementById("errorDisplay") || document.createElement("div");
+    errorDisplay.id = "errorDisplay";
+    errorDisplay.style.color = "red";
+    errorDisplay.style.textAlign = "center";
+    errorDisplay.style.marginBottom = "10px";
+    errorDisplay.textContent = message;
+    document.querySelector(".controls").after(errorDisplay);
+  }
+
   window.loadSheetData = loadSheetData;
   window.filterTable = filterTable;
   window.searchTable = searchTable;
@@ -1103,10 +1120,17 @@
   window.toggleReaction = toggleReaction;
 
   window.onload = () => {
+    console.log("Window loaded at", new Date().toISOString());
     initializeFirebase();
     updateLastUpdated();
     updateVisitorCount();
     loadSingleVerse();
+
+    // Auto-load first sheet and remember last sheet
+    const lastSheet = localStorage.getItem("lastSheet") || "gita";
+    const sheetSelector = document.getElementById("sheetSelector");
+    sheetSelector.value = lastSheet;
+    loadSheetData();
   };
 </script>
 </body>

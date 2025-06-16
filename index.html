@@ -8,725 +8,487 @@
   <meta property="og:description" content="Explore categorized theological verses from the Gita, Bible, Quran, and more.">
   <meta property="og:image" content="https://subhendug1793.github.io/verse-viewer/images/sastik_logo.png">
   <meta property="og:url" content="https://subhendug1793.github.io/verse-viewer/">
-  
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-  
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
   <style>
-    :root {
-      --primary: #4a6bff;
-      --primary-dark: #3a5bef;
-      --text-light: #333;
-      --text-dark: #f0f0f0;
-      --bg-light: #f8f9ff;
-      --bg-dark: #121212;
-      --card-light: rgba(255, 255, 255, 0.95);
-      --card-dark: rgba(30, 30, 30, 0.95);
-      --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.15);
-    }
-    
-    /* Modern Smooth Scroll */
-    html {
-      scroll-behavior: smooth;
-    }
-    
     body { 
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 20px; 
-      background: var(--bg-light);
-      min-height: 100vh;
+      font-family: Arial, sans-serif; 
+      margin: 20px; 
+      background: #f9f9f9; 
+      position: relative; 
+      min-height: 100vh; 
       display: flex;
       flex-direction: column;
-      transition: background 0.3s ease;
-      color: var(--text-light);
     }
-    
-    /* Dark Mode */
-    body.dark-mode {
-      background: var(--bg-dark);
-      color: var(--text-dark);
-    }
-    
-    /* Header Styles */
     .header-container { 
       display: flex; 
       justify-content: center; 
       align-items: center; 
-      margin-bottom: 20px;
-      position: relative;
+      margin-bottom: 20px; 
     }
-    
     .header-info { 
       position: absolute; 
       top: 20px; 
       right: 20px; 
       font-size: 0.9em; 
-      color: #666;
-      display: flex;
-      gap: 15px;
+      color: #666; 
+      z-index: 10; 
     }
-    
-    .dark-mode .header-info {
-      color: #aaa;
-    }
-    
     .header-info .last-updated a {
-      color: var(--primary);
+      color: #0066cc;
       text-decoration: none;
-      transition: color 0.2s;
     }
-    
-    .header-info .last-updated a:hover {
-      text-decoration: underline;
-    }
-    
     .header-info .visitor-count {
-      font-weight: 500;
-      color: var(--text-light);
+      margin-left: 20px;
+      vertical-align: middle;
+      display: inline-block;
+      min-height: 20px; 
+      font-weight: bold;
+      color: #333;
+      z-index: 10;
     }
-    
-    .dark-mode .header-info .visitor-count {
-      color: var(--text-dark);
+    .header-info .visitor-count.error {
+      font-weight: normal;
+      color: #999;
     }
-    
     .logo { 
       width: 80px; 
       height: auto; 
-      margin-right: 15px;
-      border-radius: 50%;
-      box-shadow: var(--shadow);
-      transition: transform 0.3s;
+      margin-right: 10px; 
     }
-    
-    .logo:hover {
-      transform: scale(1.05);
-    }
-    
     h2 { 
-      color: var(--primary);
+      color: #0066cc;
       text-align: center; 
       margin: 0; 
       font-size: 1.8em;
-      font-weight: 700;
-      text-decoration: none;
-      transition: color 0.3s;
+      font-weight: bold; 
+      white-space: nowrap; 
+      text-decoration: none; 
     }
-    
     h2 a { 
-      color: inherit; 
-      text-decoration: none;
+      color: #0066cc; 
+      text-decoration: none; 
     }
-    
     h2 a:hover { 
-      color: var(--primary-dark);
+      text-decoration: underline; 
     }
-    
     .mission-statement { 
       text-align: center; 
-      margin: 0 auto 15px;
-      max-width: 800px; 
+      margin: 0 auto 10px;
+      max-width: 80%; 
       font-size: 1.1em; 
-      line-height: 1.6; 
-      font-weight: 500;
-      padding: 0 20px;
+      line-height: 1.5; 
+      font-weight: bold; 
     }
-    
     .mission-subtext { 
       text-align: center; 
-      margin: 0 auto 30px; 
-      max-width: 800px; 
-      font-size: 0.9em;
-      line-height: 1.5; 
-      color: #666;
-      padding: 0 20px;
+      margin: 0 auto 20px; 
+      max-width: 80%; 
+      font-size: 0.8em;
+      line-height: 1.2; 
+      font-weight: normal; 
     }
-    
-    .dark-mode .mission-subtext {
-      color: #aaa;
-    }
-    
-    /* Theme Toggle Button */
-    #theme-toggle {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--primary);
-      color: white;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(74, 107, 255, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      z-index: 100;
-      transition: all 0.3s;
-    }
-    
-    #theme-toggle:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 20px rgba(74, 107, 255, 0.4);
-    }
-    
-    /* Controls Section */
     .controls { 
-      margin-bottom: 20px; 
+      margin-bottom: 10px; 
       text-align: center; 
       display: flex; 
       justify-content: center; 
       align-items: center; 
-      gap: 15px; 
-      flex-wrap: wrap;
-      background: var(--card-light);
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      max-width: 1000px;
-      margin-left: auto;
-      margin-right: auto;
+      gap: 2px; 
+      flex-wrap: wrap; 
     }
-    
-    .dark-mode .controls {
-      background: var(--card-dark);
-    }
-    
     .search-row { 
       display: flex; 
       justify-content: center; 
       align-items: center; 
-      gap: 15px; 
-      margin-bottom: 15px;
-      background: var(--card-light);
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      max-width: 1000px;
-      margin-left: auto;
-      margin-right: auto;
+      gap: 10px; 
+      margin-bottom: 5px;
     }
-    
-    .dark-mode .search-row {
-      background: var(--card-dark);
-    }
-    
     .content-count, .match-count { 
       font-size: 1em; 
-      font-weight: 500;
-      min-width: 150px;
+      color: #333; 
+      text-align: left; 
+    }
+    .search-input-container {
+      flex-grow: 0;
       text-align: center;
     }
-    
-    .search-input-container {
-      flex-grow: 1;
-      max-width: 400px;
-    }
-    
-    /* Form Elements */
     select, input { 
-      padding: 10px 15px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.95em;
-      transition: all 0.3s;
-      background: white;
+      padding: 5px; 
+      margin-right: 10px; 
     }
-    
-    .dark-mode select,
-    .dark-mode input {
-      background: #333;
-      border-color: #444;
-      color: white;
+    select:disabled, input:disabled {
+      background-color: #e0e0e0;
+      cursor: not-allowed;
     }
-    
-    select:focus, input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
-    }
-    
     #searchInput { 
-      width: 100%;
-      max-width: 400px;
+      width: 200px; 
     }
-    
-    /* Table Styles */
     table { 
-      border-collapse: separate; 
-      border-spacing: 0;
-      width: 100%; 
-      max-width: 1200px;
-      margin: 0 auto 20px;
-      background-color: var(--card-light); 
-      box-shadow: var(--shadow); 
-      border-radius: 12px;
-      overflow: hidden;
+      border-collapse: collapse; 
+      width: 80%; 
+      margin: 0 auto 5px;
+      background-color: #fff; 
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+      position: relative; 
+      z-index: 1; 
     }
-    
-    .dark-mode table {
-      background-color: var(--card-dark);
-    }
-    
     th, td { 
       border: 1px solid #ddd; 
-      padding: 12px 15px; 
-      text-align: center;
-      transition: background 0.2s;
+      padding: 10px; 
+      text-align: center; 
     }
-    
-    .dark-mode th,
-    .dark-mode td {
-      border-color: #444;
-    }
-    
-    th { 
-      background-color: var(--primary);
-      color: white;
-      font-weight: 600;
-      position: sticky;
-      top: 0;
-    }
-    
     td a { 
-      color: var(--primary); 
-      text-decoration: none;
-      transition: color 0.2s;
+      color: #0066cc; 
+      text-decoration: none; 
     }
-    
     td a:hover { 
-      text-decoration: underline;
-      color: var(--primary-dark);
+      text-decoration: underline; 
     }
-    
-    /* Category Colors */
     td.category-universal { 
-      background-color: rgba(0, 200, 83, 0.1); 
+      background-color: #00FF00; 
     }
     td.category-general { 
-      background-color: rgba(0, 188, 212, 0.1); 
+      background-color: #00FFFF; 
     }
     td.category-controversial { 
-      background-color: rgba(255, 235, 59, 0.1); 
+      background-color: #FFFF00; 
     }
     td.category-divisive { 
-      background-color: rgba(255, 87, 34, 0.1); 
+      background-color: #FF0000; 
     }
     td.category-violent { 
-      background-color: rgba(244, 67, 54, 0.1); 
-      color: inherit;
+      background-color: #000000; 
+      color: #FFFFFF; 
     }
-    
-    .dark-mode td.category-universal { background-color: rgba(0, 200, 83, 0.2); }
-    .dark-mode td.category-general { background-color: rgba(0, 188, 212, 0.2); }
-    .dark-mode td.category-controversial { background-color: rgba(255, 235, 59, 0.2); }
-    .dark-mode td.category-divisive { background-color: rgba(255, 87, 34, 0.2); }
-    .dark-mode td.category-violent { background-color: rgba(244, 67, 54, 0.2); }
-    
+    th.gita-header, th.bible-header, th.quran-header, th.hadith-header, th.miscellaneous-header { 
+      background-color: white; 
+      color: black; 
+    }
     mark { 
-      background-color: #ffeb3b;
-      color: inherit;
-      padding: 2px 4px;
-      border-radius: 3px;
+      background-color: yellow; 
+      font-weight: bold; 
     }
-    
-    /* Single Verse View */
+    .footer { 
+      position: relative; 
+      margin-top: auto; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      max-width: 80%; 
+      margin: 5px auto 0;
+      padding: 10px 0; 
+      pointer-events: auto; 
+    }
+    .footer a { 
+      text-decoration: none; 
+      cursor: pointer; 
+      pointer-events: auto; 
+    }
+    .footer img { 
+      vertical-align: middle; 
+      pointer-events: auto; 
+    }
+    .logos { 
+      display: flex; 
+      align-items: center; 
+      margin-bottom: 5px; 
+    }
+    .logos img { 
+      width: 60px; 
+      height: auto; 
+      margin-right: 5px; 
+    }
+    .logos img:last-child { 
+      margin-right: 0; 
+    }
+    .text-group { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      text-align: center; 
+    }
+    .support-text { 
+      font-weight: bold; 
+      font-size: 0.9em; 
+      margin-bottom: 10px; 
+    }
+    .support-text span { 
+      display: block; 
+    }
+    .follow-text { 
+      font-size: 1.1em; 
+      margin: 2px 0; 
+    }
+    .name-text { 
+      font-size: 2em; 
+      margin: 5px 0; 
+    }
+    .contact-text { 
+      font-size: 1em; 
+      max-width: 90%; 
+      text-align: center; 
+      pointer-events: auto; 
+    }
+    .contact-text span { 
+      display: block; 
+      white-space: nowrap; 
+      line-height: 1.4; 
+    }
+    .contact-text img { 
+      width: 20px; 
+      height: auto; 
+      vertical-align: middle; 
+    }
+    .qr-code { 
+      margin: 10px 0; 
+    }
+    .qr-code img { 
+      width: 200px; 
+      height: auto; 
+    }
     .single-verse-view { 
       text-align: center; 
-      margin: 30px auto; 
-      max-width: 800px; 
-      padding: 30px; 
-      background-color: var(--card-light); 
-      box-shadow: var(--shadow); 
-      border-radius: 12px;
-      position: relative;
+      margin: 20px auto; 
+      max-width: 80%; 
+      padding: 20px; 
+      background-color: #fff; 
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+      position: relative; 
     }
-    
-    .dark-mode .single-verse-view {
-      background-color: var(--card-dark);
-    }
-    
     .single-verse-view h3 { 
-      color: var(--primary); 
-      margin-bottom: 20px;
-      font-size: 1.5em;
+      color: #0066cc; 
+      margin-bottom: 10px; 
     }
-    
     .verse-details { 
-      margin-bottom: 25px; 
-      text-align: left;
+      margin-bottom: 20px; 
+      text-align: left; 
     }
-    
     .verse-details p { 
-      margin: 10px 0; 
-      font-size: 1em;
-      line-height: 1.6;
+      margin: 5px 0; 
+      font-size: 1em; 
     }
-    
     .verse-details strong { 
       display: inline-block; 
-      width: 180px; 
-      font-weight: 600;
-      color: var(--primary);
+      width: 150px; 
+      font-weight: bold; 
     }
-    
-    /* Share Buttons */
     .share-buttons { 
       display: flex; 
-      gap: 10px; 
-      justify-content: center;
-      flex-wrap: wrap;
+      flex-direction: column; 
+      align-items: center; 
+      gap: 8px; 
     }
-    
-    .share-buttons a { 
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #f0f0f0;
-      color: #555;
-      transition: all 0.3s;
+    .single-verse-share-buttons { 
+      display: flex; 
+      flex-direction: row; 
+      justify-content: center; 
+      gap: 12px; 
+      flex-wrap: wrap; 
     }
-    
-    .dark-mode .share-buttons a {
-      background: #333;
-      color: #ddd;
+    .share-buttons img, .single-verse-share-buttons img { 
+      width: 24px; 
+      height: 24px; 
+      vertical-align: middle; 
     }
-    
-    .share-buttons a:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    .share-buttons a, .single-verse-share-buttons a { 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      width: 40px; 
+      position: relative; 
     }
-    
-    .share-buttons a.whatsapp { background: #25D366; color: white; }
-    .share-buttons a.facebook { background: #3b5998; color: white; }
-    .share-buttons a.twitter { background: #1DA1F2; color: white; }
-    .share-buttons a.link { background: #4a6bff; color: white; }
-    .share-buttons a.share { background: #666; color: white; }
-    
-    /* Navigation Arrows */
+    .share-buttons a.view-link::after { 
+      content: none; /* Removed 👆 emoji */
+    }
     .navigation-arrows {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: calc(100% + 100px);
+      width: 100%;
       display: flex;
       justify-content: space-between;
       pointer-events: none;
     }
-    
     .navigation-arrows a {
       text-decoration: none;
       pointer-events: auto;
-      background: rgba(255,255,255,0.8);
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      transition: all 0.3s;
     }
-    
-    .dark-mode .navigation-arrows a {
-      background: rgba(30,30,30,0.8);
-    }
-    
-    .navigation-arrows a:hover {
-      transform: scale(1.1);
-      background: var(--primary);
-      color: white;
-    }
-    
     .navigation-arrows img {
-      width: 24px;
+      width: 40px;
       height: auto;
     }
-    
-    .navigation-arrows a.disabled {
+    .navigation-arrows a.disabled img {
       opacity: 0.3;
       cursor: not-allowed;
-      pointer-events: none;
     }
-    
-    /* Reaction Buttons */
+    .navigation-arrows .prev {
+      position: absolute;
+      left: -40px; /* Moved left to avoid text overlap */
+    }
+    .navigation-arrows .next {
+      position: absolute;
+      right: -30px;
+    }
     .reaction-buttons {
       display: flex;
       justify-content: center;
-      gap: 20px;
-      margin: 20px 0;
+      gap: 10px;
+      margin-bottom: 10px;
     }
-    
     .reaction-buttons button {
       background: none;
       border: none;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 1.2em;
-      padding: 8px 15px;
-      border-radius: 20px;
-      background: rgba(0,0,0,0.05);
-      transition: all 0.3s;
+      gap: 5px;
+      font-size: 18px;
     }
-    
-    .dark-mode .reaction-buttons button {
-      background: rgba(255,255,255,0.05);
-    }
-    
-    .reaction-buttons button:hover {
-      transform: translateY(-3px);
-      background: rgba(0,0,0,0.1);
-    }
-    
-    .dark-mode .reaction-buttons button:hover {
-      background: rgba(255,255,255,0.1);
-    }
-    
     .reaction-buttons button.active {
       font-weight: bold;
     }
-    
-    .reaction-buttons button.active.like { color: #4CAF50; }
-    .reaction-buttons button.active.love { color: #F44336; }
-    .reaction-buttons button.active.angry { color: #FF9800; }
-    
     .reaction-buttons span {
       font-size: 0.9em;
-      color: inherit;
+      color: #333;
     }
-    
-    /* Footer Styles */
-    .footer { 
-      margin-top: 40px;
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      max-width: 800px; 
-      margin-left: auto;
-      margin-right: auto;
-      padding: 20px 0; 
-      text-align: center;
-    }
-    
-    .footer a { 
-      text-decoration: none; 
-      color: var(--primary);
-      transition: color 0.2s;
-    }
-    
-    .footer a:hover {
-      text-decoration: underline;
-    }
-    
-    .logos { 
-      display: flex; 
-      align-items: center; 
-      margin: 15px 0; 
-      gap: 15px;
-    }
-    
-    .logos img { 
-      width: 40px; 
-      height: 40px;
-      border-radius: 50%;
-      transition: transform 0.3s;
-    }
-    
-    .logos img:hover {
-      transform: scale(1.1);
-    }
-    
-    .text-group { 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .support-text { 
-      font-weight: 500; 
-      font-size: 0.95em; 
-      margin-bottom: 15px;
-      line-height: 1.6;
-      color: #555;
-    }
-    
-    .dark-mode .support-text {
-      color: #aaa;
-    }
-    
-    .follow-text { 
-      font-size: 1.1em; 
-      margin: 5px 0; 
-    }
-    
-    .name-text { 
-      font-size: 1.8em; 
-      margin: 10px 0 5px;
-      font-weight: 600;
-      color: var(--primary);
-    }
-    
-    .contact-text { 
-      font-size: 0.95em; 
-      margin-top: 10px;
-      color: #555;
-      line-height: 1.6;
-    }
-    
-    .dark-mode .contact-text {
-      color: #aaa;
-    }
-    
-    .qr-code { 
-      margin: 20px 0; 
-    }
-    
-    .qr-code img { 
-      width: 180px; 
-      height: auto;
-      border-radius: 8px;
-      box-shadow: var(--shadow);
-      transition: transform 0.3s;
-    }
-    
-    .qr-code img:hover {
-      transform: scale(1.03);
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 768px) {
+    @media (max-width: 600px) {
       .header-info { 
-        position: static; 
+        position: relative; 
+        top: 0; 
+        right: 0; 
         text-align: center; 
         margin: 10px 0; 
-        justify-content: center;
+        font-size: 0.8em; 
       }
-      
       .header-container { 
         flex-direction: column; 
-      }
-      
-      .logo { 
-        margin-right: 0; 
+        text-align: center; 
         margin-bottom: 10px; 
       }
-      
-      .mission-statement,
-      .mission-subtext {
-        max-width: 95%;
+      .logo { 
+        margin-right: 0; 
+        margin-bottom: 5px; 
+        width: 50px; 
       }
-      
+      h2 { 
+        font-size: 1.2em; 
+      }
+      .mission-statement { 
+        font-size: 0.9em; 
+        max-width: 90%; 
+      }
+      .mission-subtext { 
+        font-size: 0.7em; 
+        max-width: 90%; 
+      }
+      select, input { 
+        width: 100%; 
+        margin-bottom: 8px; 
+        padding: 4px; 
+      }
       .controls { 
-        flex-direction: column;
-        gap: 10px;
-        padding: 15px 10px;
+        flex-direction: column; 
+        align-items: center; 
+        gap: 8px; 
       }
-      
       .search-row { 
-        flex-direction: column;
-        gap: 10px;
+        flex-direction: column; 
+        align-items: center; 
+        gap: 8px; 
+        margin-bottom: 5px;
       }
-      
-      .content-count,
-      .match-count {
-        min-width: auto;
+      .content-count, .match-count { 
+        text-align: center; 
       }
-      
-      table {
-        font-size: 0.9em;
+      .search-input-container { 
+        width: 100%; 
       }
-      
-      th, td {
-        padding: 8px 10px;
+      #searchInput { 
+        width: 100%; 
+        max-width: 250px; 
       }
-      
-      .verse-details strong {
-        width: 120px;
-        display: block;
+      table { 
+        width: 100%; 
+        font-size: 0.9em; 
+        margin-bottom: 5px;
       }
-      
-      .navigation-arrows {
-        width: calc(100% + 60px);
+      th, td { 
+        padding: 6px; 
       }
-      
-      .navigation-arrows a {
-        width: 40px;
-        height: 40px;
+      .footer { 
+        max-width: 90%; 
+        margin: 5px auto 0;
       }
-      
-      #theme-toggle {
-        width: 45px;
-        height: 45px;
-        font-size: 1.1rem;
+      .logos img { 
+        width: 40px; 
+        margin-right: 3px; 
       }
-    }
-    
-    /* Animations */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .verse-container, .single-verse-view, table {
-      animation: fadeIn 0.5s ease-out;
-    }
-    
-    /* Loading Animation */
-    .loading {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      border-top-color: white;
-      animation: spin 1s ease-in-out infinite;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+      .logos img:last-child { 
+        margin-right: 0; 
+      }
+      .follow-text { 
+        font-size: 0.9em; 
+      }
+      .contact-text { 
+        font-size: 0.75em; 
+      }
+      .contact-text img { 
+        width: 20px; 
+      }
+      .qr-code img { 
+        width: 150px; 
+      }
+      .support-text { 
+        font-size: 0.7em; 
+      }
+      .single-verse-view { 
+        max-width: 90%; 
+        padding: 15px; 
+      }
+      .verse-details p { 
+        font-size: 0.9em; 
+      }
+      .verse-details strong { 
+        width: 120px; 
+      }
+      .share-buttons img, .single-verse-share-buttons img { 
+        width: 20px; 
+        height: 20px; 
+      }
+      .share-buttons a, .single-verse-share-buttons a { 
+        width: 30px; 
+      }
+      .navigation-arrows img {
+        width: 30px;
+      }
+      .navigation-arrows .prev {
+        left: -30px; /* Adjusted for mobile */
+      }
+      .navigation-arrows .next {
+        right: -20px;
+      }
+      .reaction-buttons button {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Theme Toggle Button -->
-  <button id="theme-toggle" title="Toggle Dark Mode">
-    <i class="fas fa-moon"></i>
-  </button>
-  
   <div class="header-info">
     <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
     <span class="visitor-count" id="visitorCount">Visitors: Loading...</span>
   </div>
-  
   <div class="header-container">
     <img src="images/sastik_logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('SASTIK logo failed to load');">
-    <h2><a href="https://www.facebook.com/bastikofficial/" target="_blank">SASTIK GBQ+</a></h2>
+    <h2><a href="https://www.facebook.com/sastikofficial/" target="_blank">SASTIK GBQ+</a></h2>
   </div>
-  
   <div class="mission-statement">
     <b>সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে 🚫 সম্প্রীতি ও মানবতার পক্ষে ✅</b><br>
     <b>To Propagate Sane Theism, Against Hatred and Violence 🚫 In Favor of Harmony and Humanity ✅</b>
   </div>
-  
   <div class="mission-subtext">
     ⬇️ A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. ⬇️
   </div>
-  
   <div class="single-verse-view" id="singleVerseView" style="display: none;"></div>
-  
   <div class="controls" id="controls">
     <label for="sheetSelector">Select Gita/Bible/Quran+:</label>
     <select id="sheetSelector" onchange="loadSheetData()">
@@ -737,7 +499,6 @@
       <option value="hadith">Hadith</option>
       <option value="miscellaneous">Miscellaneous</option>
     </select>
-    
     <label for="categoryFilter">Filter by Sloka/Verse/Ayah Category:</label>
     <select id="categoryFilter" disabled onchange="filterTable()">
       <option value="">All</option>
@@ -747,7 +508,6 @@
       <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
       <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
     </select>
-    
     <label for="subCategoryFilter">Filter by Sub Category:</label>
     <select id="subCategoryFilter" disabled onchange="filterTable()">
       <option value="">All</option>
@@ -756,7 +516,6 @@
       <option value="Metaphorical or Symbolic verse">Metaphorical or Symbolic verse</option>
     </select>
   </div>
-  
   <div class="search-row" id="search-row">
     <div class="content-count" id="contentCount">Content Found: 0</div>
     <div class="search-input-container">
@@ -764,78 +523,586 @@
     </div>
     <div class="match-count" id="matchCount">Matches found: 0</div>
   </div>
-  
   <table id="verseTable">
     <thead id="tableHeaders"></thead>
     <tbody id="verseBody"></tbody>
   </table>
-  
   <div class="footer">
     <div class="text-group">
       <div class="support-text">
         <span>Developing and maintaining this unified platform requires continuous effort and dedication.</span>
         <span>We need your support to continue the SASTIK mission, which aims to create a better, harmonious society.</span>
-        <span>You can encourage our efforts by scanning the <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank">UPI QR code</a> below 🙏</span>
+        <span>You can encourage our efforts by scanning the <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank" style="color: #0066cc; text-decoration: none;">UPI QR code</a> below 🙏</span>
       </div>
-      
       <div class="qr-code">
-        <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank">
-          <img src="images/qrcode_logo.jpg" alt="UPI QR Code" onerror="console.log('UPI QR code failed to load')">
-        </a>
+        <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank"><img src="images/qrcode_logo.jpg" alt="UPI QR Code" onerror="console.log('UPI QR code failed to load')"></a>
       </div>
-      
       <div class="follow-text">For more insights, follow me on 👇</div>
-      
       <div class="logos">
-        <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank">
-          <img src="images/facebook_logo.png" alt="Facebook" onerror="console.log('Facebook logo failed to load')">
-        </a>
-        <a href="https://www.youtube.com/@SGSastik" target="_blank">
-          <img src="images/youtube_logo.png" alt="YouTube" onerror="console.log('YouTube logo failed to load')">
-        </a>
-        <a href="https://x.com/subhendug1793" target="_blank">
-          <img src="images/x_logo.png" alt="X" onerror="console.log('X logo failed to load')">
-        </a>
+        <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="images/facebook_logo.png" alt="Facebook" onload="console.log('Facebook logo loaded')" onerror="console.log('Facebook logo failed to load')"></a>
+        <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="images/youtube_logo.png" alt="YouTube" onload="console.log('YouTube logo loaded')" onerror="console.log('YouTube logo failed to load')"></a>
+        <a href="https://x.com/subhendug1793" target="_blank"><img src="images/x_logo.png" alt="X" onload="console.log('X logo loaded')" onerror="console.log('X logo failed to load')"></a>
       </div>
-      
       <div class="name-text">Subhendu Ghosh Sastik</div>
-      
       <div class="contact-text">
-        <span>If you'd like to contribute to verse updates 📜 or have any suggestions or feedback 💭</span>
-        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank">me</a> on 
-          <a href="https://t.me/Sg1793" target="_blank"><i class="fab fa-telegram"></i></a> 
-          or reach out via email at 
-          <a href="mailto:sastikofficial@gmail.com" target="_blank"><i class="fas fa-envelope"></i></a>
-          sastikofficial@gmail.com
-        </span>
+        <span>If you’d like to contribute to verse updates 📜 or have any suggestions or feedback 💭</span>
+        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.png" alt="Telegram" style="width: 20px; height: auto; vertical-align: middle;"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="images/gmail_logo.png" alt="Mail" style="width: 20px; height: auto; vertical-align: middle;" onerror="console.log('Gmail logo failed to load')"></a><a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></span>
       </div>
     </div>
   </div>
 
-  <!-- All your original JavaScript remains unchanged -->
-  <script type="module">
-    // Your existing JavaScript code remains exactly the same
-    // I've preserved all functionality while only enhancing the visuals
-    
-    // [Previous JavaScript code remains unchanged...]
-    
-    // Dark Mode Toggle
-    const themeToggle = document.getElementById('theme-toggle');
-    themeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      const icon = themeToggle.querySelector('i');
-      if (document.body.classList.contains('dark-mode')) {
-        icon.classList.replace('fa-moon', 'fa-sun');
-      } else {
-        icon.classList.replace('fa-sun', 'fa-moon');
-      }
-    });
-    
-    // Initialize dark mode preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      document.body.classList.add('dark-mode');
-      themeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCou0LOLpeijDPxHlVN1pvpruvxdrLKVWk",
+    authDomain: "verseviewercounter.firebaseapp.com",
+    projectId: "verseviewercounter",
+    storageBucket: "verseviewercounter.firebasestorage.app",
+    messagingSenderId: "486076065573",
+    appId: "1:486076065573:web:363e819071b11880089ccc",
+    measurementId: "G-NE4PCNMR8D"
+  };
+
+  let db = null;
+  function initializeFirebase() {
+    try {
+      const app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      console.log("Firebase initialized successfully");
+    } catch (error) {
+      console.error("Firebase initialization error:", error);
     }
-  </script>
+  }
+
+  window.copyToClipboard = function(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Link copied to clipboard!");
+    }).catch(err => {
+      console.error("Failed to copy link:", err);
+      alert("Failed to copy link. Please try again.");
+    });
+  };
+
+  window.shareAnywhere = function(verseText, shareUrl) {
+    if (navigator.share) {
+      navigator.share({
+        title: 'SASTIK GBQ+ Verse',
+        text: verseText,
+        url: shareUrl
+      }).catch(err => console.error('Share error:', err));
+    } else {
+      alert('Share not supported on this browser. Copy the link instead.');
+    }
+  };
+
+  let data = [];
+  let currentSheet = "";
+  let currentVerseIndex = -1;
+
+  function updateLastUpdated() {
+    try {
+      const lastUpdatedElement = document.getElementById("lastUpdated");
+      if (lastUpdatedElement) {
+        let lastUpdated;
+        if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
+          const date = new Date(document.lastModified);
+          const dateStr = date.toLocaleDateString('en-IN', {
+            timeZone: 'Asia/Kolkata',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
+          const timeStr = date.toLocaleTimeString('en-IN', {
+            timeZone: 'Asia/Kolkata',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+          });
+          lastUpdated = `${dateStr} ${timeStr}`;
+        } else {
+          const now = new Date();
+          const dateStr = now.toLocaleDateString('en-IN', {
+            timeZone: 'Asia/Kolkata',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
+          const timeStr = now.toLocaleTimeString('en-IN', {
+            timeZone: 'Asia/Kolkata',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+          });
+          lastUpdated = `${dateStr} ${timeStr}`;
+          console.warn("document.lastModified unavailable, using current date:", lastUpdated);
+        }
+        lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${lastUpdated}</a>`;
+      }
+    } catch (error) {
+      console.error("Error updating last modified:", error);
+      const lastUpdatedElement = document.getElementById("lastUpdated");
+      if (lastUpdatedElement) {
+        lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Unknown</a>`;
+      }
+    }
+  }
+
+  async function updateVisitorCount() {
+    const visitorCount = document.getElementById("visitorCount");
+    if (!visitorCount) return;
+    visitorCount.innerHTML = "Visitors: Loading...";
+    try {
+      if (!db) throw new Error("Firestore not initialized");
+      const counterRef = doc(db, "counters", "viewerCount");
+      await setDoc(counterRef, { count: increment(1) }, { merge: true });
+      const counterSnap = await getDoc(counterRef);
+      if (counterSnap.exists()) {
+        visitorCount.classList.remove("error");
+        visitorCount.innerHTML = `Visitors: ${counterSnap.data().count || 0}`;
+      } else {
+        throw new Error("Counter document does not exist");
+      }
+    } catch (error) {
+      console.error("Firestore error:", error);
+      try {
+        const response = await fetch('counter.json', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`counter.json fetch error: ${response.status}`);
+        const data = await response.json();
+        visitorCount.classList.remove("error");
+        visitorCount.innerHTML = `Visitors: ${data.visitors}`;
+      } catch (jsonError) {
+        console.error("Local counter fetch error:", jsonError);
+        visitorCount.innerHTML = "Visitors: 1";
+        visitorCount.classList.add("error");
+      }
+    }
+  }
+
+  async function loadSheetData() {
+    const sheetSelector = document.getElementById("sheetSelector");
+    currentSheet = sheetSelector.value;
+    const categoryFilter = document.getElementById("categoryFilter");
+    const subCategoryFilter = document.getElementById("subCategoryFilter");
+    const searchInput = document.getElementById("searchInput");
+    const errorDisplay = document.createElement("div");
+    errorDisplay.id = "errorDisplay";
+    errorDisplay.style.color = "red";
+    errorDisplay.style.textAlign = "center";
+    errorDisplay.style.marginBottom = "10px";
+    document.querySelector(".controls").after(errorDisplay);
+
+    if (currentSheet) {
+      categoryFilter.disabled = false;
+      subCategoryFilter.disabled = false;
+      searchInput.disabled = false;
+      errorDisplay.textContent = "";
+      document.querySelector('.search-row').style.display = 'flex';
+      const urlsToTry = [`${currentSheet}.json`, `${currentSheet.toLowerCase()}.json`, `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`];
+      let response, sheetData;
+      for (const url of urlsToTry) {
+        try {
+          response = await fetch(url, { cache: 'no-store' });
+          if (response.ok) {
+            sheetData = await response.json();
+            break;
+          }
+        } catch (err) {
+          console.warn(`Error fetching ${url}:`, err.message);
+        }
+      }
+      if (sheetData) {
+        data = sheetData;
+        updateHeaders(currentSheet);
+        updateTable(data);
+        updateContentCount(data.length);
+        updateMatchCount(0);
+      } else {
+        errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if the file exists or contact support.`;
+        document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${currentSheet}.json: File not found or inaccessible</td></tr>`;
+        updateContentCount(0);
+        updateMatchCount(0);
+      }
+    } else {
+      categoryFilter.disabled = true;
+      subCategoryFilter.disabled = true;
+      searchInput.disabled = true;
+      errorDisplay.textContent = "";
+      document.getElementById("verseBody").innerHTML = "";
+      document.getElementById("tableHeaders").innerHTML = "";
+      document.querySelector('.search-row').style.display = 'flex';
+      updateContentCount(0);
+      updateMatchCount(0);
+    }
+  }
+
+  async function loadSingleVerse() {
+    const params = new URLSearchParams(window.location.search);
+    const sheet = params.get("sheet");
+    const verseParam = params.get("verse");
+    let verseIndex = -1;
+
+    if (sheet && verseParam) {
+      currentSheet = sheet;
+      const urlsToTry = [`${sheet}.json`, `${sheet.toLowerCase()}.json`, `${sheet.charAt(0).toUpperCase() + sheet.slice(1).toLowerCase()}.json`];
+      let response, sheetData;
+      for (const url of urlsToTry) {
+        try {
+          response = await fetch(url, { cache: 'no-store' });
+          if (response.ok) {
+            sheetData = await response.json();
+            break;
+          }
+        } catch (err) {
+          console.warn(`Error fetching ${url}:`, err.message);
+        }
+      }
+      if (sheetData) {
+        data = sheetData;
+        const normalizedVerseParam = decodeURIComponent(verseParam).trim();
+        verseIndex = data.findIndex(row => {
+          const verseName = (row["Verse Name"] || row["Verse"] || "").trim();
+          return verseName === normalizedVerseParam;
+        });
+        if (verseIndex === -1) {
+          verseIndex = parseInt(verseParam, 10);
+        }
+        if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < sheetData.length) {
+          currentVerseIndex = verseIndex;
+          const verse = sheetData[verseIndex];
+          displaySingleVerse(verse, verseIndex);
+          document.getElementById("controls").style.display = "none";
+          document.getElementById("verseTable").style.display = "none";
+          document.querySelector('.search-row').style.display = 'none';
+          await loadReactions(sheet, verseIndex);
+        } else {
+          console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
+          displaySingleVerse(null, -1);
+          document.getElementById("controls").style.display = "none";
+          document.getElementById("verseTable").style.display = "none";
+          document.querySelector('.search-row').style.display = 'none';
+        }
+      } else {
+        console.error(`Failed to load ${sheet}.json`);
+        displaySingleVerse(null, -1);
+        document.getElementById("controls").style.display = "none";
+        document.getElementById("verseTable").style.display = "none";
+        document.querySelector('.search-row').style.display = 'none';
+      }
+    } else {
+      document.getElementById("singleVerseView").style.display = "none";
+      document.querySelector('.search-row').style.display = 'flex';
+    }
+  }
+
+  async function loadReactions(sheet, verseIndex) {
+    try {
+      const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
+      const reactionSnap = await getDoc(reactionRef);
+      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
+      updateReactionButtons(reactionCounts);
+      const userId = localStorage.getItem('userId') || generateUserId();
+      localStorage.setItem('userId', userId);
+      const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
+      const userReactionSnap = await getDoc(userReactionRef);
+      if (userReactionSnap.exists()) {
+        const userReaction = userReactionSnap.data().reaction;
+        const button = document.querySelector(`.reaction-buttons button[data-reaction="${userReaction}"]`);
+        if (button) button.classList.add('active');
+      }
+    } catch (error) {
+      console.error("Error loading reactions:", error);
+    }
+  }
+
+  async function toggleReaction(reaction, sheet, verseIndex) {
+    try {
+      let userId = localStorage.getItem('userId');
+      if (!userId) {
+        userId = generateUserId();
+        localStorage.setItem('userId', userId);
+      }
+      const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
+      const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
+      const userReactionSnap = await getDoc(userReactionRef);
+      const currentReaction = userReactionSnap.exists() ? userReactionSnap.data().reaction : null;
+
+      if (currentReaction === reaction) {
+        await updateDoc(reactionRef, { [reaction]: increment(-1) });
+        await setDoc(userReactionRef, { reaction: null }, { merge: true });
+        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.remove('active');
+      } else {
+        const updates = { [reaction]: increment(1) };
+        if (currentReaction) {
+          updates[currentReaction] = increment(-1);
+          document.querySelector(`.reaction-buttons button[data-reaction="${currentReaction}"]`)?.classList.remove('active');
+        }
+        await setDoc(reactionRef, { like: 0, love: 0, angry: 0 }, { merge: true });
+        await updateDoc(reactionRef, updates);
+        await setDoc(userReactionRef, { reaction: reaction }, { merge: true });
+        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.add('active');
+      }
+
+      const reactionSnap = await getDoc(reactionRef);
+      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
+      updateReactionButtons(reactionCounts);
+    } catch (error) {
+      console.error("Error toggling reaction:", error.code, error.message);
+      alert(`Failed to update reaction: ${error.message}. Please try again.`);
+    }
+  }
+
+  function updateReactionButtons(counts) {
+    document.querySelector('#likeCount').textContent = counts.like || 0;
+    document.querySelector('#loveCount').textContent = counts.love || 0;
+    document.querySelector('#angryCount').textContent = counts.angry || 0;
+  }
+
+  function generateUserId() {
+    return 'user_' + Math.random().toString(36).substr(2, 9);
+  }
+
+  function displaySingleVerse(verse, index) {
+    const singleVerseView = document.getElementById("singleVerseView");
+    if (!verse) {
+      singleVerseView.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
+      singleVerseView.style.display = "block";
+      return;
+    }
+    const verseName = verse["Verse Name"] || verse["Verse"] || "Verse";
+    const heading = `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} ${verseName}`;
+    let html = `<h3>${heading}</h3><div class="verse-details">`;
+    const headers = Object.keys(verse).filter(h => h !== "sheet");
+    headers.forEach(header => {
+      let content = verse[header] || "-";
+      if (typeof content === "object" && content.text && content.url) {
+        content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
+      }
+      const className = header === "Verse Category " && typeof verse[header] === "string" 
+        ? getCategoryClass(verse[header].trim().toLowerCase()) 
+        : "";
+      html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
+    });
+    html += `<div class="navigation-arrows">
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>
+        <img src="images/leftarrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';">
+      </a>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="next ${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>
+        <img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';">
+      </a>
+    </div>`;
+    html += `<div class="reaction-buttons">
+      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
+      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
+      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount">0</span></button>
+    </div>`;
+    html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
+    singleVerseView.innerHTML = html;
+    singleVerseView.style.display = "block";
+  }
+
+  function navigateVerse(newIndex) {
+    const verse = data[newIndex];
+    const verseName = verse["Verse Name"] || verse["Verse"] || newIndex;
+    history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`);
+    currentVerseIndex = newIndex;
+    displaySingleVerse(verse, newIndex);
+    loadReactions(currentSheet, newIndex);
+  }
+
+  function updateHeaders(sheetName) {
+    const thead = document.getElementById("tableHeaders");
+    thead.innerHTML = "";
+    if (data.length > 0) {
+      let tr = document.createElement("tr");
+      const headers = Object.keys(data[0]).filter(h => h !== "sheet");
+      headers.forEach(header => {
+        let th = document.createElement("th");
+        th.textContent = header;
+        th.classList.add(`${sheetName}-header`);
+        tr.appendChild(th);
+      });
+      let shareTh = document.createElement("th");
+      shareTh.textContent = "Share";
+      shareTh.style.width = "60px";
+      tr.appendChild(shareTh);
+      thead.appendChild(tr);
+    }
+  }
+
+  function updateTable(rows) {
+    const tbody = document.getElementById("verseBody");
+    tbody.innerHTML = "";
+    if (rows.length === 0) {
+      let tr = document.createElement("tr");
+      let td = document.createElement("td");
+      td.textContent = "No data available or error loading data";
+      td.colSpan = Object.keys(data[0] || {}).length + 1 || 2;
+      td.style.textAlign = "center";
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    } else {
+      rows.forEach((row, index) => {
+        let tr = document.createElement("tr");
+        const headers = Object.keys(row).filter(h => h !== "sheet");
+        headers.forEach(header => {
+          let td = document.createElement("td");
+          let content = row[header] || "";
+          if (typeof content === "string" || (typeof content === "object" && content && content.text)) {
+            const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+            if (searchTerm && !document.getElementById("searchInput").disabled) {
+              const textToSearch = typeof content === "object" ? content.text : content;
+              const highlighted = textToSearch.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
+              content = typeof content === "object" ? { text: highlighted, url: content.url } : highlighted;
+            }
+            td.innerHTML = typeof content === "object" && content.url
+              ? `<a href="${content.url}" target="_blank">${content.text}</a>`
+              : content;
+          } else {
+            td.textContent = content || "-";
+          }
+          if (header === "Verse Category " && typeof row[header] === "string") {
+            td.className = getCategoryClass(row[header].trim().toLowerCase());
+          }
+          tr.appendChild(td);
+        });
+        let shareTd = document.createElement("td");
+        shareTd.className = "share-buttons";
+        shareTd.innerHTML = addShareButton(row, index, true);
+        tr.appendChild(shareTd);
+        tbody.appendChild(tr);
+      });
+    }
+    updateContentCount(rows.length);
+  }
+
+  function getCategoryClass(category) {
+    switch (category?.toLowerCase()) {
+      case "universal or ethical verse": return "category-universal";
+      case "general intra-community verse": return "category-general";
+      case "controversial intra-community verse": return "category-controversial";
+      case "divisive or hateful inter-community verse": return "category-divisive";
+      case "violent or aggressive inter-community verse": return "category-violent";
+      default: return "";
+    }
+  }
+
+  function addShareButton(row, index, isTableView = true) {
+    const verseText = row["Verse"] || row["Text"] || "";
+    let verseName = row["Verse Name"] || row["Verse"] || index.toString();
+    if (typeof verseName !== "string") {
+      verseName = index.toString();
+      console.warn(`Invalid Verse Name for sheet=${currentSheet}, index=${index}:`, verseName);
+    }
+    verseName = verseName.trim();
+    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`;
+    const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
+    let html = '';
+    if (isTableView) {
+      html += `<a href="${shareUrl}" target="_blank" class="view-link"><img src="images/click_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
+    }
+    html += `
+      <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
+      <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
+      <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
+      <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
+    `;
+    return html;
+  }
+
+  function filterTable() {
+    const category = document.getElementById("categoryFilter").value;
+    const subCategory = document.getElementById("subCategoryFilter").value;
+    const sheetName = document.getElementById("sheetSelector").value;
+    const searchInput = document.getElementById("searchInput");
+    const searchTerm = searchInput.value.toLowerCase().trim();
+
+    if (sheetName && data.length > 0) {
+      let filteredRows = data.filter(row => {
+        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
+                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+        const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
+                                                row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+        return categoryMatch && subCategoryMatch;
+      });
+      updateTable(filteredRows);
+      if (searchTerm) {
+        searchTable();
+      } else {
+        updateMatchCount(0);
+      }
+    }
+  }
+
+  function searchTable() {
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput.disabled) return; 
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    const category = document.getElementById("categoryFilter").value;
+    const subCategory = document.getElementById("subCategoryFilter").value;
+    const sheetName = document.getElementById("sheetSelector").value;
+
+    if (sheetName && data.length > 0) {
+      let filteredRows = data.filter(row => {
+        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
+                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+        const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
+                                                row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+        return categoryMatch && subCategoryMatch;
+      });
+      if (searchTerm) {
+        let searchFilteredRows = filteredRows.filter(row =>
+          Object.values(row).some(val =>
+            (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
+            (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm))
+          )
+        );
+        let matchCount = 0;
+        searchFilteredRows.forEach(row => {
+          Object.values(row).forEach(val => {
+            if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
+              matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+            } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm)) {
+              matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+            }
+          });
+        });
+        updateTable(searchFilteredRows);
+        updateMatchCount(matchCount);
+      } else {
+        updateTable(filteredRows);
+        updateMatchCount(0);
+      }
+    } else {
+      updateTable(data);
+      updateMatchCount(0);
+    }
+  }
+
+  function updateContentCount(count) {
+    document.getElementById("contentCount").textContent = `Content Found: ${count}`;
+  }
+
+  function updateMatchCount(count) {
+    document.getElementById("matchCount").textContent = `Matches found: ${count}`;
+  }
+
+  window.loadSheetData = loadSheetData;
+  window.filterTable = filterTable;
+  window.searchTable = searchTable;
+  window.navigateVerse = navigateVerse;
+  window.toggleReaction = toggleReaction;
+
+  window.onload = () => {
+    initializeFirebase();
+    updateLastUpdated();
+    updateVisitorCount();
+    loadSingleVerse();
+  };
+</script>
 </body>
 </html>

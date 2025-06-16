@@ -122,42 +122,39 @@
     #searchInput { 
       width: 200px; 
     }
-    .verse-cards-container {
+    .verse-container {
       display: flex;
       flex-direction: column;
       gap: 15px;
       margin-bottom: 20px;
     }
-    .verse-card {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .verse-item {
       background: #fff;
       padding: 15px;
       border: 1px solid #ddd;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      min-height: 120px;
       width: 100%;
       transition: transform 0.3s;
     }
-    .verse-card:hover {
+    .verse-item:hover {
       transform: translateY(-5px);
     }
+    .verse-header {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #0066cc;
+      margin-bottom: 10px;
+    }
     .verse-details {
-      display: flex;
-      flex-grow: 1;
-      gap: 10px;
-      text-align: left;
-      flex-wrap: wrap;
+      margin-bottom: 10px;
     }
-    .verse-detail {
-      flex: 1;
-      min-width: 150px;
-      padding: 5px;
+    .verse-details div {
+      margin: 5px 0;
     }
-    .verse-detail strong {
-      display: block;
+    .verse-details strong {
+      display: inline-block;
+      width: 200px;
       font-weight: bold;
       color: #0066cc;
     }
@@ -264,62 +261,12 @@
       display: flex;
       gap: 5px;
       align-items: center;
+      margin-top: 10px;
     }
     .share-buttons img {
       width: 24px;
       height: 24px;
       vertical-align: middle;
-    }
-    .navigation-arrows {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      pointer-events: none;
-    }
-    .navigation-arrows a {
-      text-decoration: none;
-      pointer-events: auto;
-    }
-    .navigation-arrows img {
-      width: 40px;
-      height: auto;
-    }
-    .navigation-arrows a.disabled img {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
-    .navigation-arrows .prev {
-      position: absolute;
-      left: -40px;
-    }
-    .navigation-arrows .next {
-      position: absolute;
-      right: -30px;
-    }
-    .reaction-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    .reaction-buttons button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 18px;
-    }
-    .reaction-buttons button.active {
-      font-weight: bold;
-    }
-    .reaction-buttons span {
-      font-size: 0.9em;
-      color: #333;
     }
     @media (max-width: 600px) {
       .header-info { 
@@ -377,17 +324,14 @@
         width: 100%; 
         max-width: 250px; 
       }
-      .verse-card {
-        flex-direction: column;
-        min-height: auto;
-        text-align: center;
+      .verse-item {
+        padding: 10px;
       }
-      .verse-details {
-        flex-direction: column;
-        gap: 10px;
+      .verse-header {
+        font-size: 1.2em;
       }
-      .verse-detail {
-        min-width: 100%;
+      .verse-details strong {
+        width: 150px;
       }
       .footer { 
         max-width: 90%; 
@@ -418,18 +362,6 @@
       .share-buttons img {
         width: 20px;
         height: 20px;
-      }
-      .navigation-arrows img {
-        width: 30px;
-      }
-      .navigation-arrows .prev {
-        left: -30px;
-      }
-      .navigation-arrows .next {
-        right: -20px;
-      }
-      .reaction-buttons button {
-        font-size: 16px;
       }
     }
     .spinner {
@@ -489,7 +421,7 @@
     </div>
     <div class="match-count" id="matchCount">Matches found: 0</div>
   </div>
-  <div class="verse-cards-container" id="verseCards"></div>
+  <div class="verse-container" id="verseContainer"></div>
   <div class="footer">
     <div class="text-group">
       <div class="support-text">
@@ -664,8 +596,8 @@
       searchInput.disabled = false;
       errorDisplay.textContent = "";
       document.querySelector('.search-row').style.display = 'flex';
-      const verseCardsContainer = document.getElementById("verseCards");
-      verseCardsContainer.innerHTML = "<div class='spinner'>Loading...</div>";
+      const verseContainer = document.getElementById("verseContainer");
+      verseContainer.innerHTML = "<div class='spinner'>Loading...</div>";
 
       const urlsToTry = [`${currentSheet}.json`, `${currentSheet.toLowerCase()}.json`, `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`];
       let response, sheetData;
@@ -686,18 +618,18 @@
       }
       if (sheetData && Array.isArray(sheetData) && sheetData.length > 0) {
         data = sheetData;
-        updateTable(data);
+        updateVerseDisplay(data);
         updateContentCount(data.length);
         updateMatchCount(0);
         errorDisplay.textContent = "";
         localStorage.setItem("lastSheet", currentSheet);
       } else if (sheetData && Array.isArray(sheetData) && sheetData.length === 0) {
-        verseCardsContainer.innerHTML = "<div style='text-align: center;'>No data available in this sheet.</div>";
+        verseContainer.innerHTML = "<div style='text-align: center;'>No data available in this sheet.</div>";
         updateContentCount(0);
         updateMatchCount(0);
       } else {
         console.error("No valid data loaded:", sheetData, "at", new Date().toISOString());
-        verseCardsContainer.innerHTML = `<div style="text-align: center; color: red;">Error: No valid data found in ${currentSheet}.json. Check file structure or availability.</div>`;
+        verseContainer.innerHTML = `<div style="text-align: center; color: red;">Error: No valid data found in ${currentSheet}.json. Check file structure or availability.</div>`;
         updateContentCount(0);
         updateMatchCount(0);
       }
@@ -706,55 +638,28 @@
       subCategoryFilter.disabled = true;
       searchInput.disabled = true;
       errorDisplay.textContent = "";
-      document.getElementById("verseCards").innerHTML = "";
+      document.getElementById("verseContainer").innerHTML = "";
       document.querySelector('.search-row').style.display = 'flex';
       updateContentCount(0);
       updateMatchCount(0);
     }
   }
 
-  async function loadSingleVerse() {
-    // Removed single verse view functionality
-  }
-
-  async function loadReactions(sheet, verseIndex) {
-    // Removed as single verse view is no longer used
-  }
-
-  async function toggleReaction(reaction, sheet, verseIndex) {
-    // Removed as single verse view is no longer used
-  }
-
-  function updateReactionButtons(counts) {
-    // Removed as single verse view is no longer used
-  }
-
-  function generateUserId() {
-    return 'user_' + Math.random().toString(36).substr(2, 9);
-  }
-
-  function displaySingleVerse(verse, index) {
-    // Removed as single verse view is no longer used
-  }
-
-  function navigateVerse(newIndex) {
-    // Removed as single verse view is no longer used
-  }
-
-  function updateTable(rows) {
-    const verseCardsContainer = document.getElementById("verseCards");
-    verseCardsContainer.innerHTML = "";
+  function updateVerseDisplay(rows) {
+    const verseContainer = document.getElementById("verseContainer");
+    verseContainer.innerHTML = "";
     if (!rows || rows.length === 0) {
-      verseCardsContainer.innerHTML = "<div style='text-align: center; color: red;'>No data available or error loading data</div>";
+      verseContainer.innerHTML = "<div style='text-align: center; color: red;'>No data available or error loading data</div>";
       console.error("No rows to display:", rows, "at", new Date().toISOString());
       return;
     }
     rows.forEach((row, index) => {
-      let card = document.createElement("div");
-      card.className = "verse-card";
+      let item = document.createElement("div");
+      item.className = "verse-item";
       
-      let detailsHtml = `<div class="verse-details">`;
-      const headers = ["Verse Category", "Sub Category", "Verse Name", "Verse Transliteration (B/E)", "Bengali Translation", "English Translation", "Sanskrit Transliteration", "Reference Links and Files", "SGS Remarks"];
+      let detailsHtml = `<div class="verse-header">${row["Verse Name"] || "Unnamed Verse"}</div>`;
+      detailsHtml += `<div class="verse-details">`;
+      const headers = ["Sub Category", "Bengali Translation", "Verse Transliteration (B/E)", "English Translation", "Sanskrit Transliteration", "Reference Links and Files", "SGS Remarks"];
       headers.forEach(header => {
         let content = row[header] || "-";
         let displayContent;
@@ -771,22 +676,55 @@
         } else {
           displayContent = content.toString();
         }
-        const className = header === "Verse Category" && typeof row[header] === "string"
-          ? getCategoryClass(row[header].trim().toLowerCase())
+        const className = header === "Sub Category" && typeof row["Verse Category"] === "string"
+          ? getCategoryClass(row["Verse Category"].trim().toLowerCase())
           : "";
         detailsHtml += `
-          <div class="verse-detail ${className}">
+          <div class="${className}">
             <strong>${header}:</strong> ${displayContent}
           </div>`;
       });
       detailsHtml += `</div>`;
       let shareHtml = addShareButton(row, index, true);
-      let seeFullVerseHtml = `<a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(row["Verse Name"] || row["Verse"] || index.toString())}" class="see-full-verse">See Full Verse</a>`;
+      let seeFullVerseHtml = `<a href="#" class="see-full-verse" onclick="viewFullVerse(${index}); return false;">See Full Verse</a>`;
 
-      card.innerHTML = detailsHtml + `<div class="share-buttons">${shareHtml}</div>` + seeFullVerseHtml;
-      verseCardsContainer.appendChild(card);
+      item.innerHTML = detailsHtml + `<div class="share-buttons">${shareHtml}</div>` + seeFullVerseHtml;
+      verseContainer.appendChild(item);
     });
     updateContentCount(rows.length);
+  }
+
+  function viewFullVerse(index) {
+    const row = data[index];
+    if (row) {
+      let fullDetails = `<div class="verse-item">`;
+      fullDetails += `<div class="verse-header">${row["Verse Name"] || "Unnamed Verse"}</div>`;
+      fullDetails += `<div class="verse-details">`;
+      const headers = ["Verse Category", "Sub Category", "Bengali Translation", "Verse Transliteration (B/E)", "English Translation", "Sanskrit Transliteration", "Reference Links and Files", "SGS Remarks"];
+      headers.forEach(header => {
+        let content = row[header] || "-";
+        let displayContent;
+        if (typeof content === "string" || (typeof content === "object" && content && content.text)) {
+          displayContent = typeof content === "object" && content.url
+            ? `<a href="${content.url}" target="_blank">${content.text}</a>`
+            : content;
+        } else {
+          displayContent = content.toString();
+        }
+        fullDetails += `<div><strong>${header}:</strong> ${displayContent}</div>`;
+      });
+      fullDetails += `</div>`;
+      let shareHtml = addShareButton(row, index, true);
+      fullDetails += `<div class="share-buttons">${shareHtml}</div>`;
+      fullDetails += `<a href="#" class="see-full-verse" onclick="hideFullVerse(); return false;">Hide Full Verse</a>`;
+      fullDetails += `</div>`;
+      const verseContainer = document.getElementById("verseContainer");
+      verseContainer.innerHTML = fullDetails;
+    }
+  }
+
+  function hideFullVerse() {
+    updateVerseDisplay(data);
   }
 
   function getCategoryClass(category) {
@@ -851,7 +789,7 @@
                                                 row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
         return categoryMatch && subCategoryMatch;
       });
-      updateTable(filteredRows);
+      updateVerseDisplay(filteredRows);
       if (searchTerm) {
         searchTable();
       } else {
@@ -893,14 +831,14 @@
             }
           });
         });
-        updateTable(searchFilteredRows);
+        updateVerseDisplay(searchFilteredRows);
         updateMatchCount(matchCount);
       } else {
-        updateTable(filteredRows);
+        updateVerseDisplay(filteredRows);
         updateMatchCount(0);
       }
     } else {
-      updateTable(data);
+      updateVerseDisplay(data);
       updateMatchCount(0);
     }
   }
@@ -926,6 +864,8 @@
   window.loadSheetData = loadSheetData;
   window.filterTable = filterTable;
   window.searchTable = searchTable;
+  window.viewFullVerse = viewFullVerse;
+  window.hideFullVerse = hideFullVerse;
 
   window.onload = () => {
     console.log("Window loaded at", new Date().toISOString());

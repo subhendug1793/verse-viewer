@@ -91,7 +91,7 @@
       text-align: center; 
       margin: 0 auto 20px; 
       max-width: 80%; 
-      font-size: 0.8em;
+      font-size: 0.75em; /* Adjusted to fit single line */
       line-height: 1.2; 
       font-weight: normal; 
     }
@@ -379,6 +379,12 @@
       font-size: 0.9em;
       color: #333;
     }
+    #errorDisplay {
+      color: red;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 0.9em;
+    }
     @media (max-width: 600px) {
       .header-info { 
         flex-direction: column;
@@ -408,7 +414,7 @@
         max-width: 90%; 
       }
       .mission-subtext { 
-        font-size: 0.7em; 
+        font-size: 0.65em; /* Adjusted to fit single line */
         max-width: 90%; 
       }
       select, input { 
@@ -521,7 +527,7 @@
   <div class="single-verse-view" id="singleVerseView" style="display: none;"></div>
   <div class="controls" id="controls">
     <label for="sheetSelector">Select Gita/Bible/Quran+:</label>
-    <select id="sheetSelector" onchange="loadSheetData()">
+    <select id="sheetSelector">
       <option value="">Select a sheet</option>
       <option value="gita">Gita</option>
       <option value="bible">Bible</option>
@@ -530,7 +536,7 @@
       <option value="miscellaneous">Miscellaneous</option>
     </select>
     <label for="categoryFilter">Filter by Sloka/Verse/Ayah Category:</label>
-    <select id="categoryFilter" disabled onchange="filterTable()">
+    <select id="categoryFilter" disabled>
       <option value="">All</option>
       <option value="Universal or Ethical Verse">Universal or Ethical Verse</option>
       <option value="General Intra-community Verse">General Intra-community Verse</option>
@@ -539,13 +545,14 @@
       <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
     </select>
     <label for="subCategoryFilter">Filter by Sub Category:</label>
-    <select id="subCategoryFilter" disabled onchange="filterTable()">
+    <select id="subCategoryFilter" disabled>
       <option value="">All</option>
       <option value="Historical or Narrative verse">Historical or Narrative verse</option>
       <option value="Discriminatory or Prejudiced Verse">Discriminatory or Prejudiced Verse</option>
       <option value="Metaphorical or Symbolic verse">Metaphorical or Symbolic verse</option>
     </select>
   </div>
+  <div id="errorDisplay"></div>
   <div class="search-row" id="search-row">
     <div class="content-count" id="contentCount">Content Found: 0</div>
     <div class="search-input-container">
@@ -640,35 +647,13 @@
         let lastUpdated;
         if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
           const date = new Date(document.lastModified);
-          const dateStr = date.toLocaleDateString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
-          const timeStr = date.toLocaleTimeString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-          });
+          const dateStr = date.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
+          const timeStr = date.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
           lastUpdated = `${dateStr} ${timeStr}`;
         } else {
           const now = new Date();
-          const dateStr = now.toLocaleDateString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
-          const timeStr = now.toLocaleTimeString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-          });
+          const dateStr = now.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
+          const timeStr = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
           lastUpdated = `${dateStr} ${timeStr}`;
           console.warn("document.lastModified unavailable, using current date:", lastUpdated);
         }
@@ -676,7 +661,7 @@
       }
     } catch (error) {
       console.error("Error updating last modified:", error);
-      const lastUpdatedElement = document.getId("lastUpdated");
+      const lastUpdatedElement = document.getElementById("lastUpdated");
       if (lastUpdatedElement) {
         lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Unknown</a>`;
       }
@@ -715,6 +700,7 @@
   }
 
   async function loadSheetData(sheetName = currentSheet, fromPopstate = false) {
+    console.log(`loadSheetData called with sheetName: ${sheetName}, fromPopstate: ${fromPopstate}`);
     const sheetSelector = document.getElementById("sheetSelector");
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
@@ -725,6 +711,7 @@
     const searchRow = document.querySelector('.search-row');
     let errorDisplay = document.getElementById("errorDisplay");
     if (!errorDisplay) {
+      console.warn("errorDisplay not found, creating new one");
       errorDisplay = document.createElement("div");
       errorDisplay.id = "errorDisplay";
       errorDisplay.style.color = "red";
@@ -733,14 +720,21 @@
       document.querySelector(".controls").after(errorDisplay);
     }
 
-    if (sheetName) {
-      currentSheet = sheetName;
-      sheetSelector.value = sheetName;
-      // Update URL for sheet selection
+    if (!sheetSelector) {
+      console.error("sheetSelector element not found");
+      errorDisplay.textContent = "Internal error: Sheet selector not found. Please refresh the page.";
+      return;
+    }
+
+    if (sheetName && ['gita', 'bible', 'quran', 'hadith', 'miscellaneous'].includes(sheetName.toLowerCase())) {
+      currentSheet = sheetName.toLowerCase();
+      sheetSelector.value = currentSheet;
+      console.log(`Setting currentSheet to ${currentSheet}, updating sheetSelector value`);
       if (!fromPopstate) {
-        history.pushState({ view: 'sheet', sheet: sheetName }, '', `?sheet=${encodeURIComponent(sheetName)}`);
+        history.pushState({ view: 'sheet', sheet: currentSheet }, '', `?sheet=${encodeURIComponent(currentSheet)}`);
+        console.log(`Updated URL to ?sheet=${currentSheet}`);
       }
-      sessionStorage.setItem('currentSheet', sheetName);
+      sessionStorage.setItem('currentSheet', currentSheet);
       singleVerseView.style.display = "none";
       controls.style.display = "block";
       verseTable.style.display = "table";
@@ -749,48 +743,55 @@
       subCategoryFilter.disabled = false;
       searchInput.disabled = false;
       errorDisplay.textContent = "";
-      const urlsToTry = [`${sheetName}.json`, `${sheetName.toLowerCase()}.json`, `${sheetName.charAt(0).toUpperCase() + sheetName.slice(1).toLowerCase()}.json`];
+      const urlsToTry = [`${currentSheet}.json`, `${currentSheet.toLowerCase()}.json`, `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`];
+      console.log(`Attempting to fetch JSON for ${currentSheet}. URLs:`, urlsToTry);
       let response, sheetData;
       for (const url of urlsToTry) {
         try {
           response = await fetch(url, { cache: 'no-store' });
+          console.log(`Fetch attempt for ${url}: Status ${response.status}`);
           if (response.ok) {
             sheetData = await response.json();
+            console.log(`Successfully fetched ${url}`);
             break;
           }
         } catch (err) {
           console.warn(`Error fetching ${url}:`, err.message);
         }
       }
-      if (sheetData) {
+      if (sheetData && Array.isArray(sheetData)) {
+        console.log(`Loaded ${sheetData.length} records for ${currentSheet}`);
         data = sheetData;
         filteredData = data;
-        updateHeaders(sheetName);
-        // Restore filters from sessionStorage
-        const savedCategory = sessionStorage.getItem(`filter_category_${sheetName}`);
-        const savedSubCategory = sessionStorage.getItem(`filter_subCategory_${sheetName}`);
-        if (savedCategory) {
+        updateHeaders(currentSheet);
+        const savedCategory = sessionStorage.getItem(`filter_category_${currentSheet}`);
+        const savedSubCategory = sessionStorage.getItem(`filter_subCategory_${currentSheet}`);
+        if (savedCategory && categoryFilter.options.namedItem(savedCategory)) {
           categoryFilter.value = savedCategory;
+          console.log(`Restored category filter: ${savedCategory}`);
         }
-        if (savedSubCategory) {
+        if (savedSubCategory && subCategoryFilter.options.namedItem(savedSubCategory)) {
           subCategoryFilter.value = savedSubCategory;
+          console.log(`Restored subCategory filter: ${savedSubCategory}`);
         }
         filterTable();
         updateContentCount(data.length);
         updateMatchCount(0);
       } else {
-        errorDisplay.textContent = `Error loading ${sheetName}.json. Please check if the file exists or contact support.`;
-        document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${sheetName}.json: File not found or inaccessible</td></tr>`;
+        console.error(`Failed to load ${currentSheet}.json or invalid data format`);
+        errorDisplay.textContent = `Unable to load ${currentSheet} data. Please check your connection or contact support.`;
+        document.getElementById("verseBody").innerHTML = `<tr><td colspan="5" style="text-align: center;">Failed to load ${currentSheet} data</td></tr>`;
         updateContentCount(0);
         updateMatchCount(0);
       }
     } else {
+      console.log("No valid sheet selected, resetting to home state");
       currentSheet = "";
       sheetSelector.value = "";
       sessionStorage.removeItem('currentSheet');
-      // Update URL for home page
       if (!fromPopstate) {
         history.pushState({ view: 'home' }, '', '/verse-viewer/');
+        console.log("Updated URL to /verse-viewer/");
       }
       singleVerseView.style.display = "none";
       controls.style.display = "block";
@@ -808,33 +809,36 @@
   }
 
   async function loadSingleVerse(sheet, verseParam, fromPopstate = false) {
+    console.log(`loadSingleVerse called with sheet: ${sheet}, verseParam: ${verseParam}, fromPopstate: ${fromPopstate}`);
     const singleVerseView = document.getElementById("singleVerseView");
     const controls = document.getElementById("controls");
     const verseTable = document.getElementById("verseTable");
     const searchRow = document.querySelector('.search-row');
     let verseIndex = -1;
 
-    if (sheet && verseParam) {
-      currentSheet = sheet;
-      sessionStorage.setItem('currentSheet', sheet);
-      const urlsToTry = [`${sheet}.json`, `${sheet.toLowerCase()}.json`, `${sheet.charAt(0).toUpperCase() + sheet.slice(1).toLowerCase()}.json`];
+    if (sheet && verseParam && ['gita', 'bible', 'quran', 'hadith', 'miscellaneous'].includes(sheet.toLowerCase())) {
+      currentSheet = sheet.toLowerCase();
+      sessionStorage.setItem('currentSheet', currentSheet);
+      console.log(`Setting currentSheet to ${currentSheet} for single verse`);
+      const urlsToTry = [`${currentSheet}.json`, `${currentSheet.toLowerCase()}.json`, `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`];
       let response, sheetData;
       for (const url of urlsToTry) {
         try {
           response = await fetch(url, { cache: 'no-store' });
+          console.log(`Fetch attempt for ${url}: Status ${response.status}`);
           if (response.ok) {
             sheetData = await response.json();
+            console.log(`Successfully fetched ${url}`);
             break;
           }
         } catch (err) {
           console.warn(`Error fetching ${url}:`, err.message);
         }
       }
-      if (sheetData) {
+      if (sheetData && Array.isArray(sheetData)) {
         data = sheetData;
-        // Check for filters in sessionStorage
-        const savedCategory = sessionStorage.getItem(`filter_category_${sheet}`);
-        const savedSubCategory = sessionStorage.getItem(`filter_subCategory_${sheet}`);
+        const savedCategory = sessionStorage.getItem(`filter_category_${currentSheet}`);
+        const savedSubCategory = sessionStorage.getItem(`filter_subCategory_${currentSheet}`);
         if (savedCategory || savedSubCategory) {
           isFiltered = true;
           filteredData = data.filter(row => {
@@ -844,9 +848,11 @@
                                                           row["Sub Category"].trim().toLowerCase() === savedSubCategory.toLowerCase());
             return categoryMatch && subCategoryMatch;
           });
+          console.log(`Applied filters: category=${savedCategory}, subCategory=${savedSubCategory}, filtered ${filteredData.length} verses`);
         } else {
           isFiltered = false;
           filteredData = data;
+          console.log("No filters applied, using full data");
         }
         const normalizedVerseParam = decodeURIComponent(verseParam).trim();
         verseIndex = filteredData.findIndex(row => {
@@ -861,25 +867,27 @@
           if (verseIndex !== -1 && isFiltered) {
             isFiltered = false;
             filteredData = data;
+            console.log("Verse not in filtered data, switching to full data");
           } else {
             verseIndex = parseInt(verseParam, 10);
             if (isNaN(verseIndex)) verseIndex = -1;
+            console.log(`Verse not found by name, tried index: ${verseParam}, result: ${verseIndex}`);
           }
         }
         if (verseIndex >= 0 && verseIndex < filteredData.length) {
           currentVerseIndex = verseIndex;
           const verse = filteredData[verseIndex];
-          // Update URL for single verse
           const verseName = verse["Verse Name"] || verse["Verse"] || verseIndex.toString();
           if (!fromPopstate) {
-            history.pushState({ view: 'verse', sheet: sheet, verse: verseName, index: verseIndex }, '', `?sheet=${encodeURIComponent(sheet)}&verse=${encodeURIComponent(verseName)}`);
+            history.pushState({ view: 'verse', sheet: currentSheet, verse: verseName, index: verseIndex }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`);
+            console.log(`Updated URL to ?sheet=${currentSheet}&verse=${verseName}`);
           }
           displaySingleVerse(verse, verseIndex);
           singleVerseView.style.display = "block";
           controls.style.display = "none";
           verseTable.style.display = "none";
           searchRow.style.display = 'none';
-          await loadReactions(sheet, verseIndex);
+          await loadReactions(currentSheet, verseIndex);
         } else {
           console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
           displaySingleVerse(null, -1);
@@ -889,7 +897,7 @@
           searchRow.style.display = 'none';
         }
       } else {
-        console.error(`Failed to load ${sheet}.json`);
+        console.error(`Failed to load ${sheet}.json or invalid data format`);
         displaySingleVerse(null, -1);
         singleVerseView.style.display = "block";
         controls.style.display = "none";
@@ -897,7 +905,7 @@
         searchRow.style.display = 'none';
       }
     } else {
-      // Load home page
+      console.log("Invalid sheet or verse, loading home page");
       loadSheetData("", fromPopstate);
     }
   }
@@ -996,7 +1004,6 @@
       <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount">0</span></button>
     </div>`;
     html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
-    // Navigation buttons
     const prevDisabled = index <= 0 ? 'disabled' : '';
     const nextDisabled = index >= filteredData.length - 1 ? 'disabled' : '';
     const verseNamePrev = filteredData[index - 1]?.["Verse Name"] || filteredData[index - 1]?.["Verse"] || (index - 1).toString();
@@ -1140,7 +1147,6 @@
     const searchTerm = searchInput.value.toLowerCase().trim();
 
     if (sheetName && data.length > 0) {
-      // Save filters to sessionStorage
       sessionStorage.setItem(`filter_category_${sheetName}`, category);
       sessionStorage.setItem(`filter_subCategory_${sheetName}`, subCategory);
       let filteredRows = data.filter(row => {
@@ -1214,7 +1220,6 @@
     document.getElementById("matchCount").textContent = `Matches found: ${count}`;
   }
 
-  // Handle browser back/forward navigation
   window.onpopstate = function(event) {
     const state = event.state || {};
     if (state.view === 'verse' && state.sheet && state.verse) {
@@ -1237,7 +1242,6 @@
     initializeFirebase();
     updateLastUpdated();
     updateVisitorCount();
-    // Check URL parameters on initial load
     const params = new URLSearchParams(window.location.search);
     const sheet = params.get("sheet");
     const verse = params.get("verse");
@@ -1247,6 +1251,13 @@
       loadSheetData(sheet);
     } else {
       loadHome();
+    }
+    const sheetSelector = document.getElementById("sheetSelector");
+    if (sheetSelector) {
+      sheetSelector.addEventListener('change', () => {
+        console.log(`Sheet selector changed to: ${sheetSelector.value}`);
+        loadSheetData(sheetSelector.value);
+      });
     }
   };
 </script>

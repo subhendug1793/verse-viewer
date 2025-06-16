@@ -676,7 +676,7 @@
       }
     } catch (error) {
       console.error("Error updating last modified:", error);
-      const lastUpdatedElement = document.getElementById("lastUpdated");
+      const lastUpdatedElement = document.getId("lastUpdated");
       if (lastUpdatedElement) {
         lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Unknown</a>`;
       }
@@ -714,28 +714,42 @@
     }
   }
 
-  async function loadSheetData() {
+  async function loadSheetData(sheetName = currentSheet, fromPopstate = false) {
     const sheetSelector = document.getElementById("sheetSelector");
-    currentSheet = sheetSelector.value;
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
     const searchInput = document.getElementById("searchInput");
-    const errorDisplay = document.createElement("div");
-    errorDisplay.id = "errorDisplay";
-    errorDisplay.style.color = "red";
-    errorDisplay.style.textAlign = "center";
-    errorDisplay.style.marginBottom = "10px";
-    document.querySelector(".controls").after(errorDisplay);
+    const singleVerseView = document.getElementById("singleVerseView");
+    const controls = document.getElementById("controls");
+    const verseTable = document.getElementById("verseTable");
+    const searchRow = document.querySelector('.search-row');
+    let errorDisplay = document.getElementById("errorDisplay");
+    if (!errorDisplay) {
+      errorDisplay = document.createElement("div");
+      errorDisplay.id = "errorDisplay";
+      errorDisplay.style.color = "red";
+      errorDisplay.style.textAlign = "center";
+      errorDisplay.style.marginBottom = "10px";
+      document.querySelector(".controls").after(errorDisplay);
+    }
 
-    if (currentSheet) {
-      // Update URL to reflect sheet selection
-      history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}`);
+    if (sheetName) {
+      currentSheet = sheetName;
+      sheetSelector.value = sheetName;
+      // Update URL for sheet selection
+      if (!fromPopstate) {
+        history.pushState({ view: 'sheet', sheet: sheetName }, '', `?sheet=${encodeURIComponent(sheetName)}`);
+      }
+      sessionStorage.setItem('currentSheet', sheetName);
+      singleVerseView.style.display = "none";
+      controls.style.display = "block";
+      verseTable.style.display = "table";
+      searchRow.style.display = 'flex';
       categoryFilter.disabled = false;
       subCategoryFilter.disabled = false;
       searchInput.disabled = false;
       errorDisplay.textContent = "";
-      document.querySelector('.search-row').style.display = 'flex';
-      const urlsToTry = [`${currentSheet}.json`, `${currentSheet.toLowerCase()}.json`, `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`];
+      const urlsToTry = [`${sheetName}.json`, `${sheetName.toLowerCase()}.json`, `${sheetName.charAt(0).toUpperCase() + sheetName.slice(1).toLowerCase()}.json`];
       let response, sheetData;
       for (const url of urlsToTry) {
         try {
@@ -750,49 +764,59 @@
       }
       if (sheetData) {
         data = sheetData;
-        filteredData = data; // Initialize filteredData
-        updateHeaders(currentSheet);
+        filteredData = data;
+        updateHeaders(sheetName);
         // Restore filters from sessionStorage
-        const savedCategory = sessionStorage.getItem(`filter_category_${currentSheet}`);
-        const savedSubCategory = sessionStorage.getItem(`filter_subCategory_${currentSheet}`);
+        const savedCategory = sessionStorage.getItem(`filter_category_${sheetName}`);
+        const savedSubCategory = sessionStorage.getItem(`filter_subCategory_${sheetName}`);
         if (savedCategory) {
           categoryFilter.value = savedCategory;
         }
         if (savedSubCategory) {
           subCategoryFilter.value = savedSubCategory;
         }
-        filterTable(); // Apply filters
+        filterTable();
         updateContentCount(data.length);
         updateMatchCount(0);
       } else {
-        errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if the file exists or contact support.`;
-        document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${currentSheet}.json: File not found or inaccessible</td></tr>`;
+        errorDisplay.textContent = `Error loading ${sheetName}.json. Please check if the file exists or contact support.`;
+        document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${sheetName}.json: File not found or inaccessible</td></tr>`;
         updateContentCount(0);
         updateMatchCount(0);
       }
     } else {
+      currentSheet = "";
+      sheetSelector.value = "";
+      sessionStorage.removeItem('currentSheet');
+      // Update URL for home page
+      if (!fromPopstate) {
+        history.pushState({ view: 'home' }, '', '/verse-viewer/');
+      }
+      singleVerseView.style.display = "none";
+      controls.style.display = "block";
+      verseTable.style.display = "table";
+      searchRow.style.display = 'flex';
       categoryFilter.disabled = true;
       subCategoryFilter.disabled = true;
       searchInput.disabled = true;
       errorDisplay.textContent = "";
       document.getElementById("verseBody").innerHTML = "";
       document.getElementById("tableHeaders").innerHTML = "";
-      document.querySelector('.search-row').style.display = 'flex';
       updateContentCount(0);
       updateMatchCount(0);
-      // Clear URL when no sheet is selected
-      history.pushState(null, '', '/verse-viewer/');
     }
   }
 
-  async function loadSingleVerse() {
-    const params = new URLSearchParams(window.location.search);
-    const sheet = params.get("sheet");
-    const verseParam = params.get("verse");
+  async function loadSingleVerse(sheet, verseParam, fromPopstate = false) {
+    const singleVerseView = document.getElementById("singleVerseView");
+    const controls = document.getElementById("controls");
+    const verseTable = document.getElementById("verseTable");
+    const searchRow = document.querySelector('.search-row');
     let verseIndex = -1;
 
     if (sheet && verseParam) {
       currentSheet = sheet;
+      sessionStorage.setItem('currentSheet', sheet);
       const urlsToTry = [`${sheet}.json`, `${sheet.toLowerCase()}.json`, `${sheet.charAt(0).toUpperCase() + sheet.slice(1).toLowerCase()}.json`];
       let response, sheetData;
       for (const url of urlsToTry) {
@@ -808,9 +832,9 @@
       }
       if (sheetData) {
         data = sheetData;
-        // Check if user came from sheet selection (filters exist in sessionStorage)
-        const savedCategory = sessionStorage.getItem(`filter_category_${currentSheet}`);
-        const savedSubCategory = sessionStorage.getItem(`filter_subCategory_${currentSheet}`);
+        // Check for filters in sessionStorage
+        const savedCategory = sessionStorage.getItem(`filter_category_${sheet}`);
+        const savedSubCategory = sessionStorage.getItem(`filter_subCategory_${sheet}`);
         if (savedCategory || savedSubCategory) {
           isFiltered = true;
           filteredData = data.filter(row => {
@@ -835,7 +859,6 @@
             return verseName === normalizedVerseParam;
           });
           if (verseIndex !== -1 && isFiltered) {
-            // If verse is not in filtered data but exists in full data, reset to full data
             isFiltered = false;
             filteredData = data;
           } else {
@@ -846,28 +869,36 @@
         if (verseIndex >= 0 && verseIndex < filteredData.length) {
           currentVerseIndex = verseIndex;
           const verse = filteredData[verseIndex];
+          // Update URL for single verse
+          const verseName = verse["Verse Name"] || verse["Verse"] || verseIndex.toString();
+          if (!fromPopstate) {
+            history.pushState({ view: 'verse', sheet: sheet, verse: verseName, index: verseIndex }, '', `?sheet=${encodeURIComponent(sheet)}&verse=${encodeURIComponent(verseName)}`);
+          }
           displaySingleVerse(verse, verseIndex);
-          document.getElementById("controls").style.display = "none";
-          document.getElementById("verseTable").style.display = "none";
-          document.querySelector('.search-row').style.display = 'none';
+          singleVerseView.style.display = "block";
+          controls.style.display = "none";
+          verseTable.style.display = "none";
+          searchRow.style.display = 'none';
           await loadReactions(sheet, verseIndex);
         } else {
           console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
           displaySingleVerse(null, -1);
-          document.getElementById("controls").style.display = "none";
-          document.getElementById("verseTable").style.display = "none";
-          document.querySelector('.search-row').style.display = 'none';
+          singleVerseView.style.display = "block";
+          controls.style.display = "none";
+          verseTable.style.display = "none";
+          searchRow.style.display = 'none';
         }
       } else {
         console.error(`Failed to load ${sheet}.json`);
         displaySingleVerse(null, -1);
-        document.getElementById("controls").style.display = "none";
-        document.getElementById("verseTable").style.display = "none";
-        document.querySelector('.search-row').style.display = 'none';
+        singleVerseView.style.display = "block";
+        controls.style.display = "none";
+        verseTable.style.display = "none";
+        searchRow.style.display = 'none';
       }
     } else {
-      document.getElementById("singleVerseView").style.display = "none";
-      document.querySelector('.search-row').style.display = 'flex';
+      // Load home page
+      loadSheetData("", fromPopstate);
     }
   }
 
@@ -971,10 +1002,10 @@
     const verseNamePrev = filteredData[index - 1]?.["Verse Name"] || filteredData[index - 1]?.["Verse"] || (index - 1).toString();
     const verseNameNext = filteredData[index + 1]?.["Verse Name"] || filteredData[index + 1]?.["Verse"] || (index + 1).toString();
     html += `<div class="navigation-buttons">
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNamePrev)}" class="prev ${prevDisabled}" ${prevDisabled ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>&lt;</a>
-      <a href="https://subhendug1793.github.io/verse-viewer/">Home</a>
-      <a href="?sheet=${encodeURIComponent(currentSheet)}">Back to ${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)}</a>
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameNext)}" class="next ${nextDisabled}" ${nextDisabled ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>&gt;</a>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNamePrev)}" class="prev ${prevDisabled}" ${prevDisabled ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}><</a>
+      <a href="/verse-viewer/" onclick="loadHome(); return false;">Home</a>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}" onclick="loadSheetData('${currentSheet}'); return false;">Back to ${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)}</a>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameNext)}" class="next ${nextDisabled}" ${nextDisabled ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>></a>
     </div>`;
     singleVerseView.innerHTML = html;
     singleVerseView.style.display = "block";
@@ -983,10 +1014,21 @@
   function navigateVerse(newIndex) {
     const verse = filteredData[newIndex];
     const verseName = verse["Verse Name"] || verse["Verse"] || newIndex.toString();
-    history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`);
+    history.pushState({ view: 'verse', sheet: currentSheet, verse: verseName, index: newIndex }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`);
     currentVerseIndex = newIndex;
     displaySingleVerse(verse, newIndex);
     loadReactions(currentSheet, newIndex);
+  }
+
+  function loadHome(fromPopstate = false) {
+    const sheetSelector = document.getElementById("sheetSelector");
+    sheetSelector.value = "";
+    currentSheet = "";
+    sessionStorage.removeItem('currentSheet');
+    if (!fromPopstate) {
+      history.pushState({ view: 'home' }, '', '/verse-viewer/');
+    }
+    loadSheetData("");
   }
 
   function updateHeaders(sheetName) {
@@ -1172,17 +1214,40 @@
     document.getElementById("matchCount").textContent = `Matches found: ${count}`;
   }
 
+  // Handle browser back/forward navigation
+  window.onpopstate = function(event) {
+    const state = event.state || {};
+    if (state.view === 'verse' && state.sheet && state.verse) {
+      loadSingleVerse(state.sheet, state.verse, true);
+    } else if (state.view === 'sheet' && state.sheet) {
+      loadSheetData(state.sheet, true);
+    } else {
+      loadHome(true);
+    }
+  };
+
   window.loadSheetData = loadSheetData;
   window.filterTable = filterTable;
   window.searchTable = searchTable;
   window.navigateVerse = navigateVerse;
   window.toggleReaction = toggleReaction;
+  window.loadHome = loadHome;
 
   window.onload = () => {
     initializeFirebase();
     updateLastUpdated();
     updateVisitorCount();
-    loadSingleVerse();
+    // Check URL parameters on initial load
+    const params = new URLSearchParams(window.location.search);
+    const sheet = params.get("sheet");
+    const verse = params.get("verse");
+    if (sheet && verse) {
+      loadSingleVerse(sheet, verse);
+    } else if (sheet) {
+      loadSheetData(sheet);
+    } else {
+      loadHome();
+    }
   };
 </script>
 </body>

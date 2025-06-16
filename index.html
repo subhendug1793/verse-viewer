@@ -20,36 +20,41 @@
       display: flex;
       flex-direction: column;
     }
+    .header-info { 
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      font-size: 0.9em; 
+      color: #666; 
+      z-index: 10;
+      margin-bottom: 10px;
+    }
+    .header-info .last-updated {
+      text-align: right;
+    }
+    .header-info .last-updated a {
+      color: #0066cc;
+      text-decoration: none;
+      font-family: 'Poppins', sans-serif;
+    }
+    .header-info .last-updated a:hover {
+      text-decoration: underline;
+    }
+    .header-info .visitor-count {
+      text-align: left;
+      font-weight: 500;
+      color: #333;
+    }
+    .header-info .visitor-count.error {
+      font-weight: normal;
+      color: #999;
+    }
     .header-container { 
       display: flex; 
       justify-content: center; 
       align-items: center; 
       margin-bottom: 20px; 
-    }
-    .header-info { 
-      position: absolute; 
-      top: 20px; 
-      right: 20px; 
-      font-size: 0.9em; 
-      color: #666; 
-      z-index: 10; 
-    }
-    .header-info .last-updated a {
-      color: #0066cc;
-      text-decoration: none;
-    }
-    .header-info .visitor-count {
-      margin-left: 20px;
-      vertical-align: middle;
-      display: inline-block;
-      min-height: 20px; 
-      font-weight: 500;
-      color: #333;
-      z-index: 10;
-    }
-    .header-info .visitor-count.error {
-      font-weight: normal;
-      color: #999;
     }
     .logo { 
       width: 80px; 
@@ -285,7 +290,7 @@
     .verse-details strong { 
       display: inline-block; 
       width: 150px; 
-      font-weight: 700;
+      font-weight: 500;
       font-family: 'Poppins', sans-serif;
     }
     .share-buttons { 
@@ -320,7 +325,8 @@
     .navigation-buttons {
       display: flex;
       justify-content: center;
-      gap: 20px;
+      align-items: center;
+      gap: 15px;
       margin-top: 10px;
     }
     .navigation-buttons a {
@@ -340,9 +346,15 @@
       background-color: #e6f0ff;
       text-decoration: none;
     }
-    .navigation-buttons img {
-      width: 16px;
-      height: auto;
+    .navigation-buttons a.disabled {
+      color: #999;
+      border-color: #999;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .navigation-buttons a.prev, .navigation-buttons a.next {
+      font-size: 1.2em;
+      padding: 5px;
     }
     .reaction-buttons {
       display: flex;
@@ -369,12 +381,14 @@
     }
     @media (max-width: 600px) {
       .header-info { 
-        position: relative; 
-        top: 0; 
-        right: 0; 
-        text-align: center; 
-        margin: 10px 0; 
+        flex-direction: column;
+        align-items: center;
         font-size: 0.8em; 
+        margin-bottom: 15px;
+      }
+      .header-info .visitor-count, .header-info .last-updated {
+        text-align: center;
+        width: 100%;
       }
       .header-container { 
         flex-direction: column; 
@@ -478,8 +492,9 @@
         font-size: 0.8em;
         padding: 4px 8px;
       }
-      .navigation-buttons img {
-        width: 14px;
+      .navigation-buttons a.prev, .navigation-buttons a.next {
+        font-size: 1em;
+        padding: 4px;
       }
       .reaction-buttons button {
         font-size: 16px;
@@ -489,8 +504,8 @@
 </head>
 <body>
   <div class="header-info">
-    <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
     <span class="visitor-count" id="visitorCount">Visitors: Loading...</span>
+    <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
   </div>
   <div class="header-container">
     <img src="images/sastik_logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('SASTIK logo failed to load');">
@@ -613,8 +628,10 @@
   };
 
   let data = [];
+  let filteredData = [];
   let currentSheet = "";
   let currentVerseIndex = -1;
+  let isFiltered = false;
 
   function updateLastUpdated() {
     try {
@@ -711,6 +728,8 @@
     document.querySelector(".controls").after(errorDisplay);
 
     if (currentSheet) {
+      // Update URL to reflect sheet selection
+      history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}`);
       categoryFilter.disabled = false;
       subCategoryFilter.disabled = false;
       searchInput.disabled = false;
@@ -731,8 +750,18 @@
       }
       if (sheetData) {
         data = sheetData;
+        filteredData = data; // Initialize filteredData
         updateHeaders(currentSheet);
-        updateTable(data);
+        // Restore filters from sessionStorage
+        const savedCategory = sessionStorage.getItem(`filter_category_${currentSheet}`);
+        const savedSubCategory = sessionStorage.getItem(`filter_subCategory_${currentSheet}`);
+        if (savedCategory) {
+          categoryFilter.value = savedCategory;
+        }
+        if (savedSubCategory) {
+          subCategoryFilter.value = savedSubCategory;
+        }
+        filterTable(); // Apply filters
         updateContentCount(data.length);
         updateMatchCount(0);
       } else {
@@ -751,6 +780,8 @@
       document.querySelector('.search-row').style.display = 'flex';
       updateContentCount(0);
       updateMatchCount(0);
+      // Clear URL when no sheet is selected
+      history.pushState(null, '', '/verse-viewer/');
     }
   }
 
@@ -777,17 +808,44 @@
       }
       if (sheetData) {
         data = sheetData;
+        // Check if user came from sheet selection (filters exist in sessionStorage)
+        const savedCategory = sessionStorage.getItem(`filter_category_${currentSheet}`);
+        const savedSubCategory = sessionStorage.getItem(`filter_subCategory_${currentSheet}`);
+        if (savedCategory || savedSubCategory) {
+          isFiltered = true;
+          filteredData = data.filter(row => {
+            const categoryMatch = !savedCategory || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
+                                                    row["Verse Category "].trim().toLowerCase() === savedCategory.toLowerCase());
+            const subCategoryMatch = !savedSubCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
+                                                          row["Sub Category"].trim().toLowerCase() === savedSubCategory.toLowerCase());
+            return categoryMatch && subCategoryMatch;
+          });
+        } else {
+          isFiltered = false;
+          filteredData = data;
+        }
         const normalizedVerseParam = decodeURIComponent(verseParam).trim();
-        verseIndex = data.findIndex(row => {
+        verseIndex = filteredData.findIndex(row => {
           const verseName = (row["Verse Name"] || row["Verse"] || "").trim();
           return verseName === normalizedVerseParam;
         });
         if (verseIndex === -1) {
-          verseIndex = parseInt(verseParam, 10);
+          verseIndex = data.findIndex(row => {
+            const verseName = (row["Verse Name"] || row["Verse"] || "").trim();
+            return verseName === normalizedVerseParam;
+          });
+          if (verseIndex !== -1 && isFiltered) {
+            // If verse is not in filtered data but exists in full data, reset to full data
+            isFiltered = false;
+            filteredData = data;
+          } else {
+            verseIndex = parseInt(verseParam, 10);
+            if (isNaN(verseIndex)) verseIndex = -1;
+          }
         }
-        if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < sheetData.length) {
+        if (verseIndex >= 0 && verseIndex < filteredData.length) {
           currentVerseIndex = verseIndex;
-          const verse = sheetData[verseIndex];
+          const verse = filteredData[verseIndex];
           displaySingleVerse(verse, verseIndex);
           document.getElementById("controls").style.display = "none";
           document.getElementById("verseTable").style.display = "none";
@@ -907,17 +965,24 @@
       <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount">0</span></button>
     </div>`;
     html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
+    // Navigation buttons
+    const prevDisabled = index <= 0 ? 'disabled' : '';
+    const nextDisabled = index >= filteredData.length - 1 ? 'disabled' : '';
+    const verseNamePrev = filteredData[index - 1]?.["Verse Name"] || filteredData[index - 1]?.["Verse"] || (index - 1).toString();
+    const verseNameNext = filteredData[index + 1]?.["Verse Name"] || filteredData[index + 1]?.["Verse"] || (index + 1).toString();
     html += `<div class="navigation-buttons">
-      <a href="https://subhendug1793.github.io/verse-viewer/"><img src="images/leftarrow_logo.png" alt="Back" onerror="this.src='https://via.placeholder.com/16?text=←';"> Back to Home</a>
-      <a href="https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}"><img src="images/rightarrow_logo.png" alt="Back" onerror="this.src='https://via.placeholder.com/16?text=→';"> Back to ${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)}</a>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNamePrev)}" class="prev ${prevDisabled}" ${prevDisabled ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>&lt;</a>
+      <a href="https://subhendug1793.github.io/verse-viewer/">Home</a>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}">Back to ${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)}</a>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameNext)}" class="next ${nextDisabled}" ${nextDisabled ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>&gt;</a>
     </div>`;
     singleVerseView.innerHTML = html;
     singleVerseView.style.display = "block";
   }
 
   function navigateVerse(newIndex) {
-    const verse = data[newIndex];
-    const verseName = verse["Verse Name"] || verse["Verse"] || newIndex;
+    const verse = filteredData[newIndex];
+    const verseName = verse["Verse Name"] || verse["Verse"] || newIndex.toString();
     history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`);
     currentVerseIndex = newIndex;
     displaySingleVerse(verse, newIndex);
@@ -1033,6 +1098,9 @@
     const searchTerm = searchInput.value.toLowerCase().trim();
 
     if (sheetName && data.length > 0) {
+      // Save filters to sessionStorage
+      sessionStorage.setItem(`filter_category_${sheetName}`, category);
+      sessionStorage.setItem(`filter_subCategory_${sheetName}`, subCategory);
       let filteredRows = data.filter(row => {
         const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
                                           row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
@@ -1040,6 +1108,8 @@
                                                 row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
         return categoryMatch && subCategoryMatch;
       });
+      filteredData = filteredRows;
+      isFiltered = category || subCategory;
       updateTable(filteredRows);
       if (searchTerm) {
         searchTable();

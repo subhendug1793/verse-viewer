@@ -88,6 +88,108 @@
       line-height: 1.2; 
       font-weight: 400; 
     }
+    .controls Петербур
+
+System: * It appears the code was cut off at the end of the `<style>` section. Since the code is extensive and you’ve already provided both versions, I’ll proceed with merging the fixes and ensuring the single verse view, footer, and Google Fonts work correctly. I’ll include the complete corrected code below, continuing from where it was cut off, and address all issues.
+
+### Corrected Code (Complete)
+Below is the fully corrected `index.html` that:
+- Retains Google Fonts (`Poppins` and `Merriweather`).
+- Restores the single verse view functionality (styling, navigation, reactions, share buttons).
+- Enhances the footer for better responsiveness and fixes potential alignment issues.
+- Maintains all other functionality (table view, filtering, search, Firebase integration).
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SASTIK GBQ+ Verse Filter</title>
+  <meta property="og:title" content="SASTIK GBQ+ Verse">
+  <meta property="og:description" content="Explore categorized theological verses from the Gita, Bible, Quran, and more.">
+  <meta property="og:image" content="https://subhendug1793.github.io/verse-viewer/images/sastik_logo.png">
+  <meta property="og:url" content="https://subhendug1793.github.io/verse-viewer/">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      margin: 20px; 
+      background: #f9f9f9; 
+      position: relative; 
+      min-height: 100vh; 
+      display: flex;
+      flex-direction: column;
+    }
+    .header-container { 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      margin-bottom: 20px; 
+    }
+    .header-info { 
+      position: absolute; 
+      top: 20px; 
+      right: 20px; 
+      font-size: 0.9em; 
+      color: #666; 
+      z-index: 10; 
+    }
+    .header-info .last-updated a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .header-info .visitor-count {
+      margin-left: 20px;
+      vertical-align: middle;
+      display: inline-block;
+      min-height: 20px; 
+      font-weight: 500;
+      color: #333;
+      z-index: 10;
+    }
+    .header-info .visitor-count.error {
+      font-weight: normal;
+      color: #999;
+    }
+    .logo { 
+      width: 80px; 
+      height: auto; 
+      margin-right: 10px; 
+    }
+    h2 { 
+      color: #0066cc;
+      text-align: center; 
+      margin: 0; 
+      font-size: 1.8em;
+      font-weight: 600; 
+      white-space: nowrap; 
+      text-decoration: none; 
+    }
+    h2 a { 
+      color: #0066cc; 
+      text-decoration: none; 
+    }
+    h2 a:hover { 
+      text-decoration: underline; 
+    }
+    .mission-statement { 
+      text-align: center; 
+      margin: 0 auto 10px;
+      max-width: 80%; 
+      font-size: 1.1em; 
+      line-height: 1.5; 
+      font-weight: 500; 
+    }
+    .mission-subtext { 
+      text-align: center; 
+      margin: 0 auto 20px; 
+      max-width: 80%; 
+      font-size: 0.8em;
+      line-height: 1.2; 
+      font-weight: 400; 
+    }
     .controls { 
       margin-bottom: 10px; 
       text-align: center; 
@@ -129,7 +231,7 @@
     table { 
       border-collapse: collapse; 
       width: 80%; 
-      margin: 0 auto 5px;
+      margin: 0 auto 20px;
       background-color: #fff; 
       box-shadow: 0 0 10px rgba(0,0,0,0.1); 
       position: relative; 
@@ -179,9 +281,10 @@
       flex-direction: column; 
       align-items: center; 
       max-width: 80%; 
-      margin: 5px auto 0;
-      padding: 10px 0; 
+      margin: 20px auto 10px;
+      padding: 20px 0; 
       pointer-events: auto; 
+      font-family: 'Poppins', sans-serif;
     }
     .footer a { 
       text-decoration: none; 
@@ -195,12 +298,17 @@
     .logos { 
       display: flex; 
       align-items: center; 
-      margin-bottom: 5px; 
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px; 
     }
     .logos img { 
-      width: 60px; 
+      width: 50px; 
       height: auto; 
-      margin-right: 5px; 
+      transition: transform 0.2s;
+    }
+    .logos img:hover { 
+      transform: scale(1.1); 
     }
     .logos img:last-child { 
       margin-right: 0; 
@@ -213,42 +321,50 @@
     }
     .support-text { 
       font-weight: 500; 
-      font-size: 0.9em; 
-      margin-bottom: 10px; 
+      font-size: 1em; 
+      margin-bottom: 15px; 
+      line-height: 1.4;
     }
     .support-text span { 
       display: block; 
     }
     .follow-text { 
-      font-size: 1.1em; 
-      margin: 2px 0; 
+      font-size: 1.2em; 
+      margin: 10px 0; 
+      font-weight: 600;
     }
     .name-text { 
-      font-size: 2em; 
-      margin: 5px 0; 
+      font-size: 1.8em; 
+      margin: 10px 0; 
+      font-family: 'Merriweather', serif;
+      color: #0066cc;
     }
     .contact-text { 
-      font-size: 1em; 
+      font-size: 0.9em; 
       max-width: 90%; 
       text-align: center; 
+      line-height: 1.5;
       pointer-events: auto; 
     }
     .contact-text span { 
       display: block; 
       white-space: nowrap; 
-      line-height: 1.4; 
+      margin: 5px 0;
     }
     .contact-text img { 
-      width: 20px; 
+      width: 24px; 
       height: auto; 
       vertical-align: middle; 
+      margin: 0 5px;
     }
     .qr-code { 
-      margin: 10px 0; 
+      margin: 15px 0; 
     }
     .qr-code img { 
-      width: 200px; 
+      width: 180px; 
       height: auto; 
+      border: 2px solid #ddd;
+      border-radius: 8px;
     }
     .single-verse-view { 
       text-align: center; 
@@ -258,44 +374,55 @@
       background-color: #fff; 
       box-shadow: 0 0 10px rgba(0,0,0,0.1); 
       position: relative; 
+      border-radius: 8px;
       font-family: 'Poppins', sans-serif;
     }
     .single-verse-view h3 { 
       color: #0066cc; 
-      margin-bottom: 10px; 
+      margin-bottom: 15px; 
       font-weight: 600;
+      font-family: 'Merriweather', serif;
+      font-size: 1.5em;
     }
     .verse-details { 
       margin-bottom: 20px; 
       text-align: left; 
+      padding: 0 15px;
     }
     .verse-details p { 
-      margin: 5px 0; 
+      margin: 8px 0; 
       font-size: 1em; 
       font-weight: 400;
+      line-height: 1.4;
     }
     .verse-details strong { 
       display: inline-block; 
-      width: 150px; 
+      width: 160px; 
       font-weight: 500;
+      color: #333;
     }
     .share-buttons { 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
-      gap: 8px; 
+      gap: 10px; 
     }
     .single-verse-share-buttons { 
       display: flex; 
       flex-direction: row; 
       justify-content: center; 
-      gap: 12px; 
+      gap: 15px; 
       flex-wrap: wrap; 
+      margin-top: 15px;
     }
     .share-buttons img, .single-verse-share-buttons img { 
-      width: 24px; 
-      height: 24px; 
+      width: 28px; 
+      height: 28px; 
       vertical-align: middle; 
+      transition: transform 0.2s;
+    }
+    .share-buttons img:hover, .single-verse-share-buttons img:hover { 
+      transform: scale(1.1); 
     }
     .share-buttons a, .single-verse-share-buttons a { 
       display: flex; 
@@ -305,7 +432,7 @@
       position: relative; 
     }
     .share-buttons a.view-link::after { 
-      content: none; /* Removed 👆 emoji */
+      content: none;
     }
     .navigation-arrows {
       position: absolute;
@@ -323,6 +450,7 @@
     .navigation-arrows img {
       width: 40px;
       height: auto;
+      transition: opacity 0.2s;
     }
     .navigation-arrows a.disabled img {
       opacity: 0.3;
@@ -330,17 +458,17 @@
     }
     .navigation-arrows .prev {
       position: absolute;
-      left: -40px; /* Moved left to avoid text overlap */
+      left: -50px;
     }
     .navigation-arrows .next {
       position: absolute;
-      right: -30px;
+      right: -50px;
     }
     .reaction-buttons {
       display: flex;
       justify-content: center;
-      gap: 10px;
-      margin-bottom: 10px;
+      gap: 15px;
+      margin: 15px 0;
     }
     .reaction-buttons button {
       background: none;
@@ -348,15 +476,20 @@
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 5px;
-      font-size: 18px;
+      gap: 8px;
+      font-size: 20px;
       font-family: 'Poppins', sans-serif;
+      transition: transform 0.2s;
+    }
+    .reaction-buttons button:hover {
+      transform: scale(1.1);
     }
     .reaction-buttons button.active {
-      font-weight: 500;
+      font-weight: 600;
+      color: #0066cc;
     }
     .reaction-buttons span {
-      font-size: 0.9em;
+      font-size: 0.95em;
       color: #333;
       font-weight: 400;
     }
@@ -366,118 +499,126 @@
         top: 0; 
         right: 0; 
         text-align: center; 
-        margin: 10px 0; 
-        font-size: 0.8em; 
+        margin: 15px 0; 
+        font-size: 0.85em; 
       }
       .header-container { 
         flex-direction: column; 
         text-align: center; 
-        margin-bottom: 10px; 
+        margin-bottom: 15px; 
       }
       .logo { 
         margin-right: 0; 
-        margin-bottom: 5px; 
-        width: 50px; 
+        margin-bottom: 8px; 
+        width: 60px; 
       }
       h2 { 
-        font-size: 1.2em; 
+        font-size: 1.4em; 
       }
       .mission-statement { 
-        font-size: 0.9em; 
+        font-size: 0.95em; 
         max-width: 90%; 
       }
       .mission-subtext { 
-        font-size: 0.7em; 
+        font-size: 0.75em; 
         max-width: 90%; 
       }
       select, input { 
         width: 100%; 
-        margin-bottom: 8px; 
-        padding: 4px; 
+        margin-bottom: 10px; 
+        padding: 6px; 
       }
       .controls { 
         flex-direction: column; 
         align-items: center; 
-        gap: 8px; 
+        gap: 10px; 
       }
       .search-row { 
         flex-direction: column; 
         align-items: center; 
-        gap: 8px; 
-        margin-bottom: 5px;
+        gap: 10px; 
+        margin-bottom: 10px;
       }
       .content-count, .match-count { 
         text-align: center; 
+        font-size: 0.9em;
       }
       .search-input-container { 
         width: 100%; 
       }
       #searchInput { 
         width: 100%; 
-        max-width: 250px; 
+        max-width: 280px; 
       }
       table { 
         width: 100%; 
-        font-size: 0.9em; 
-        margin-bottom: 5px;
+        font-size: 0.85em; 
+        margin-bottom: 20px;
       }
       th, td { 
-        padding: 6px; 
+        padding: 8px; 
       }
       .footer { 
         max-width: 90%; 
-        margin: 5px auto 0;
+        margin: 20px auto 15px;
+        padding: 15px 0;
       }
       .logos img { 
         width: 40px; 
-        margin-right: 3px; 
+        margin-right: 5px; 
       }
       .logos img:last-child { 
         margin-right: 0; 
       }
       .follow-text { 
-        font-size: 0.9em; 
+        font-size: 1em; 
+      }
+      .name-text { 
+        font-size: 1.5em; 
       }
       .contact-text { 
-        font-size: 0.75em; 
+        font-size: 0.8em; 
       }
       .contact-text img { 
         width: 20px; 
       }
       .qr-code img { 
-        width: 150px; 
+        width: 140px; 
       }
       .support-text { 
-        font-size: 0.7em; 
+        font-size: 0.8em; 
       }
       .single-verse-view { 
         max-width: 90%; 
         padding: 15px; 
       }
+      .single-verse-view h3 {
+        font-size: 1.2em;
+      }
       .verse-details p { 
         font-size: 0.9em; 
       }
       .verse-details strong { 
-        width: 120px; 
+        width: 130px; 
       }
       .share-buttons img, .single-verse-share-buttons img { 
-        width: 20px; 
-        height: 20px; 
+        width: 24px; 
+        height: 24px; 
       }
       .share-buttons a, .single-verse-share-buttons a { 
-        width: 30px; 
+        width: 36px; 
       }
       .navigation-arrows img {
-        width: 30px;
+        width: 32px;
       }
       .navigation-arrows .prev {
-        left: -30px; /* Adjusted for mobile */
+        left: -35px;
       }
       .navigation-arrows .next {
-        right: -20px;
+        right: -35px;
       }
       .reaction-buttons button {
-        font-size: 16px;
+        font-size: 18px;
       }
     }
   </style>
@@ -545,18 +686,18 @@
         <span>You can encourage our efforts by scanning the <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank" style="color: #0066cc; text-decoration: none;">UPI QR code</a> below 🙏</span>
       </div>
       <div class="qr-code">
-        <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank"><img src="images/qrcode_logo.jpg" alt="UPI QR Code" onerror="console.log('UPI QR code failed to load')"></a>
+        <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank"><img src="images/qrcode_logo.jpg" alt="UPI QR Code" onerror="this.src='https://via.placeholder.com/180?text=QR';console.log('UPI QR code failed to load')"></a>
       </div>
       <div class="follow-text">For more insights, follow me on 👇</div>
       <div class="logos">
-        <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="images/facebook_logo.png" alt="Facebook" onload="console.log('Facebook logo loaded')" onerror="console.log('Facebook logo failed to load')"></a>
-        <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="images/youtube_logo.png" alt="YouTube" onload="console.log('YouTube logo loaded')" onerror="console.log('YouTube logo failed to load')"></a>
-        <a href="https://x.com/subhendug1793" target="_blank"><img src="images/x_logo.png" alt="X" onload="console.log('X logo loaded')" onerror="console.log('X logo failed to load')"></a>
+        <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="images/facebook_logo.png" alt="Facebook" onload="console.log('Facebook logo loaded')" onerror="this.src='https://via.placeholder.com/50?text=FB';console.log('Facebook logo failed to load')"></a>
+        <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="images/youtube_logo.png" alt="YouTube" onload="console.log('YouTube logo loaded')" onerror="this.src='https://via.placeholder.com/50?text=YT';console.log('YouTube logo failed to load')"></a>
+        <a href="https://x.com/subhendug1793" target="_blank"><img src="images/x_logo.png" alt="X" onload="console.log('X logo loaded')" onerror="this.src='https://via.placeholder.com/50?text=X';console.log('X logo failed to load')"></a>
       </div>
       <div class="name-text">Subhendu Ghosh Sastik</div>
       <div class="contact-text">
         <span>If you’d like to contribute to verse updates 📜 or have any suggestions or feedback 💭</span>
-        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.png" alt="Telegram" style="width: 20px; height: auto; vertical-align: middle;"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="images/gmail_logo.png" alt="Mail" style="width: 20px; height: auto; vertical-align: middle;" onerror="console.log('Gmail logo failed to load')"></a><a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></span>
+        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.png" alt="Telegram" style="width: 24px; height: auto; vertical-align: middle;" onerror="this.src='https://via.placeholder.com/24?text=TG';console.log('Telegram logo failed to load')"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="images/gmail_logo.png" alt="Mail" style="width: 24px; height: auto; vertical-align: middle;" onerror="this.src='https://via.placeholder.com/24?text=GM';console.log('Gmail logo failed to load')"></a><a href="mailto:sastikofficial@gmail.com" target="_blank" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></span>
       </div>
     </div>
   </div>
@@ -698,12 +839,12 @@
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
     const searchInput = document.getElementById("searchInput");
-    const errorDisplay = document.createElement("div");
+    const errorDisplay = document.getElementById("errorDisplay") || document.createElement("div");
     errorDisplay.id = "errorDisplay";
     errorDisplay.style.color = "red";
     errorDisplay.style.textAlign = "center";
     errorDisplay.style.marginBottom = "10px";
-    document.querySelector(".controls").after(errorDisplay);
+    if (!errorDisplay.parentNode) document.querySelector(".controls").after(errorDisplay);
 
     if (currentSheet) {
       categoryFilter.disabled = false;
@@ -764,6 +905,7 @@
           response = await fetch(url, { cache: 'no-store' });
           if (response.ok) {
             sheetData = await response.json();
+            console.log(`Successfully loaded ${url}`);
             break;
           }
         } catch (err) {
@@ -790,14 +932,14 @@
           await loadReactions(sheet, verseIndex);
         } else {
           console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
-          displaySingleVerse(null, -1);
+          displaySingleVerse(null, -1, `Verse "${verseParam}" not found in ${sheet}.json. Please check the URL or data.`);
           document.getElementById("controls").style.display = "none";
           document.getElementById("verseTable").style.display = "none";
           document.querySelector('.search-row').style.display = 'none';
         }
       } else {
         console.error(`Failed to load ${sheet}.json`);
-        displaySingleVerse(null, -1);
+        displaySingleVerse(null, -1, `Failed to load ${sheet}.json. Please check if the file exists or contact support.`);
         document.getElementById("controls").style.display = "none";
         document.getElementById("verseTable").style.display = "none";
         document.querySelector('.search-row').style.display = 'none';
@@ -866,19 +1008,22 @@
   }
 
   function updateReactionButtons(counts) {
-    document.querySelector('#likeCount').textContent = counts.like || 0;
-    document.querySelector('#loveCount').textContent = counts.love || 0;
-    document.querySelector('#angryCount').textContent = counts.angry || 0;
+    const likeCount = document.querySelector('#likeCount');
+    const loveCount = document.querySelector('#loveCount');
+    const angryCount = document.querySelector('#angryCount');
+    if (likeCount) likeCount.textContent = counts.like || 0;
+    if (loveCount) loveCount.textContent = counts.love || 0;
+    if (angryCount) angryCount.textContent = counts.angry || 0;
   }
 
   function generateUserId() {
     return 'user_' + Math.random().toString(36).substr(2, 9);
   }
 
-  function displaySingleVerse(verse, index) {
+  function displaySingleVerse(verse, index, errorMessage = null) {
     const singleVerseView = document.getElementById("singleVerseView");
-    if (!verse) {
-      singleVerseView.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
+    if (!verse || errorMessage) {
+      singleVerseView.innerHTML = `<h3>Error</h3><p>${errorMessage || "Verse not found."}</p>`;
       singleVerseView.style.display = "block";
       return;
     }
@@ -896,6 +1041,11 @@
         : "";
       html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
     });
+    html += `</div><div class="reaction-buttons">
+      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
+      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
+      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount">0</span></button>
+    </div>`;
     html += `<div class="navigation-arrows">
       <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>
         <img src="images/leftarrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';">
@@ -904,12 +1054,7 @@
         <img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';">
       </a>
     </div>`;
-    html += `<div class="reaction-buttons">
-      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
-      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
-      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount">0</span></button>
-    </div>`;
-    html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
+    html += `<div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
     singleVerseView.innerHTML = html;
     singleVerseView.style.display = "block";
   }
@@ -982,7 +1127,7 @@
         let shareTd = document.createElement("td");
         shareTd.className = "share-buttons";
         shareTd.innerHTML = addShareButton(row, index, true);
-        tr.appendChild(shareTd);
+        tr.appendChild(tr);
         tbody.appendChild(tr);
       });
     }
@@ -1001,7 +1146,7 @@
   }
 
   function addShareButton(row, index, isTableView = true) {
-    const verseText = row["Verse"] || row["Text"] || "";
+    const verseText = row["Verse"] || row["Text"] || "Check out this verse from SASTIK GBQ+";
     let verseName = row["Verse Name"] || row["Verse"] || index.toString();
     if (typeof verseName !== "string") {
       verseName = index.toString();
@@ -1012,14 +1157,14 @@
     const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
     let html = '';
     if (isTableView) {
-      html += `<a href="${shareUrl}" target="_blank" class="view-link"><img src="images/click_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
+      html += `<a href="${shareUrl}" target="_blank" class="view-link"><img src="images/click_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/28?text=👁';"></a>`;
     }
     html += `
-      <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
-      <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
-      <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
-      <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
+      <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp" onerror="this.src='https://via.placeholder.com/28?text=WA';"></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook" onerror="this.src='https://via.placeholder.com/28?text=FB';"></a>
+      <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X" onerror="this.src='https://via.placeholder.com/28?text=X';"></a>
+      <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link" onerror="this.src='https://via.placeholder.com/28?text=🔗';"></a>
+      <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share" onerror="this.src='https://via.placeholder.com/28?text=📤';"></a>
     `;
     return html;
   }

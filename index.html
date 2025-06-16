@@ -738,7 +738,7 @@
         updateContentCount(data.length);
         updateMatchCount(0);
         errorDisplay.textContent = "";
-        localStorage.setItem("lastSheet", currentSheet); // Remember last sheet
+        localStorage.setItem("lastSheet", currentSheet);
       } else if (sheetData && Array.isArray(sheetData) && sheetData.length === 0) {
         verseCardsContainer.innerHTML = "<div style='text-align: center;'>No data available in this sheet.</div>";
         updateContentCount(0);
@@ -945,7 +945,7 @@
       card.className = "verse-card";
       
       let detailsHtml = `<div class="verse-details">`;
-      const headers = Object.keys(row).filter(h => h !== "sheet" && h !== "Verse Name");
+      const headers = ["Verse Name", "Verse Category", "Sub Category", "Bengali Translation", "English Translation", "Sanskrit Transliteration", "Reference Links and Files", "SGS Remarks", "Share"];
       headers.forEach(header => {
         let content = row[header] || "-";
         let displayContent;
@@ -1126,7 +1126,6 @@
     updateVisitorCount();
     loadSingleVerse();
 
-    // Auto-load first sheet and remember last sheet
     const lastSheet = localStorage.getItem("lastSheet") || "gita";
     const sheetSelector = document.getElementById("sheetSelector");
     sheetSelector.value = lastSheet;

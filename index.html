@@ -172,6 +172,7 @@
       position: relative;
       width: 100%;
       overflow: hidden;
+      text-align: center;
     }
     .verse-card::after {
       content: '';
@@ -183,15 +184,22 @@
       background: linear-gradient(to bottom, transparent, #fff);
       pointer-events: none;
     }
-    .verse-card h4 {
-      margin: 0 0 10px;
+    .verse-name {
       font-family: 'Merriweather', serif;
-      font-size: 1.1em;
+      font-size: 1.3em;
+      font-weight: 600;
+      color: #000000;
+      margin: 0 0 10px;
+      text-align: center;
+    }
+    .verse-name a {
       color: #0066cc;
+      text-decoration: underline;
     }
     .verse-card p {
-      margin: 5px 0;
+      margin: 8px 0;
       font-size: 0.9em;
+      text-align: center;
     }
     .verse-card .category {
       padding: 2px 8px;
@@ -209,7 +217,7 @@
       border-radius: 4px;
       cursor: pointer;
       font-size: 0.8em;
-      z-index: 1;
+      z-index: 10;
       pointer-events: auto;
     }
     .see-full:hover {
@@ -278,6 +286,7 @@
       font-family: 'Merriweather', serif;
       font-size: 1em; 
       display: flex;
+      flex-wrap: wrap;
     }
     .verse-details strong { 
       width: 200px; 
@@ -499,8 +508,8 @@
       .verse-card {
         padding: 10px;
       }
-      .verse-card h4 {
-        font-size: 1em;
+      .verse-name {
+        font-size: 1.1em;
       }
       .verse-card p {
         font-size: 0.8em;
@@ -774,7 +783,7 @@
     categoryFilter.disabled = true;
     subCategoryFilter.disabled = true;
     searchInput.disabled = true;
-    data = []; // Clear previous data
+    data = [];
     filteredData = [];
 
     if (!sheetName || !['gita', 'bible', 'quran', 'hadith', 'miscellaneous'].includes(sheetName.toLowerCase())) {
@@ -1046,49 +1055,49 @@
       return;
     }
     const verseName = verse["Verse Name"] || verse["Verse"] || "Verse";
-    const heading = `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} ${verseName}`;
+    const heading = `${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)} ${verseName}`;
     let html = `<h3>${heading}</h3><div class="verse-details">`;
     const headers = Object.keys(verse).filter(h => h !== "sheet");
     headers.forEach(header => {
       let content = verse[header] || "-";
-      if (typeof content === "object" && content.text && content.url) {
+      if (content && typeof content === "object" && content.text && content.url) {
         content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
       }
-      const className = header === "Verse Category" ? getCategoryClass(content) : "";
+      const className = header === "Verse Category" ? getCategoryClass(verse[header] || "") : "";
       html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}${header === "Verse Category" || header === "Sub Category" ? ` / ${getBengaliCategory(verse[header] || "")}` : ""}</p>`;
     });
     html += `<div class="reaction-buttons">
       <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
-      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
-      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount">0</span></button>
+      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="love">0</span></button>
+      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCode">0</span></button>
     </div>`;
-    html += `</div><div class="share-buttons">${addShareButton(verse, index)}</div>`;
+    html += `</div><div class="share-buttons">${addShareButtons(verse, index)}</div>`;
     const prevDisabled = index <= 0 ? 'disabled' : '';
     const nextDisabled = index >= data.length - 1 ? 'disabled' : '';
     const verseNamePrev = data[index - 1]?.["Verse Name"] || data[index - 1]?.["Verse"] || (index - 1).toString();
     const verseNameNext = data[index + 1]?.["Verse Name"] || data[index + 1]?.["Verse"] || (index + 1).toString();
     html += `<div class="navigation-buttons">
       <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNamePrev)}" class="prev ${prevDisabled}" ${prevDisabled ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}><</a>
-      <a href="/verse-viewer/" onclick="loadHome(); return false;">Home</a>
-      <a href="?sheet=${encodeURIComponent(currentSheet)}" onclick="loadSheetData('${currentSheet}'); return false;">Back to ${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)}</a>
+      <a href="/verse-viewer/" target="_blank" onclick="loadHome(); return false;">Home</a>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}" onclick="loadSheetData('${currentSheet}'); return false;">Back to ${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)}</a>
       <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameNext)}" class="next ${nextDisabled}" ${nextDisabled ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>></a>
     </div>`;
     singleVerseView.innerHTML = html;
     singleVerseView.style.display = "block";
   }
 
-  function addShareButton(row, index) {
+  function addShareButtons(verse, index) {
     const verseText = row["Verse"] || row["Text"] || "";
     const verseName = row["Verse Name"] || row["Verse"] || index.toString();
     const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`;
     const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
-    console.log(`Generating share URL: ${shareUrl}`);
+    console.log(`Generating shareable URL: ${shareUrl}`);
     return `
       <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>
       <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
       <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
       <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
-      <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
+      <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share.png" alt="Share"></a>
     `;
   }
 
@@ -1105,38 +1114,35 @@
       const verseCategory = row["Verse Category"] || "";
       const subCategory = row["Sub Category"] || "";
       const transliteration = row["Transliteration"] || "";
-      const translation = row["Translation"] || "";
       const bengaliTranslation = row["Bengali Translation"] || "";
-      // Find original index in data array
+      const translation = row["Translation"] || "";
       const dataIndex = data.findIndex(item => item["Verse Name"] === row["Verse Name"] && item["Verse"] === row["Verse"]);
       let html = `<div class="verse-card" data-filtered-index="${filteredIndex}" data-data-index="${dataIndex}">
-        <h4>${verseName}</h4>
-        <p><strong>Verse Category:</strong> <span class="category ${getCategoryClass(verseCategory)}">${verseCategory} / ${getBengaliCategory(verseCategory)}</span></p>
-        <p><strong>Sub Category:</strong> ${subCategory} / ${getBengaliCategory(subCategory)}</p>
-        ${transliteration ? `<p><strong>Transliteration:</strong> ${transliteration}</p>` : ""}
-        ${translation ? `<p><strong>Translation:</strong> ${translation}</p>` : ""}
-        ${bengaliTranslation ? `<p><strong>Bengali Translation:</strong> ${bengaliTranslation}</p>` : ""}
-        <button class="see-full" onclick="showFullVerse(${dataIndex})">See Full Verse</button>
-      </div>`;
+        <div class="verse-name">${typeof verseName === "object" && verseName.text && verseName.url ? `<a href="${verseName.url}" target="_blank">${verseName.text}</a>` : verseName}</div>`;
+      const fields = [
+        { label: "Verse Category", value: verseCategory, className: getCategoryClass(verseCategory) },
+        { label: "Sub Category", value: subCategory },
+        { label: "Verse Transliteration", value: transliteration },
+        { label: "Bengali Translation", value: bengaliTranslation },
+        { label: "English Translation", value: translation }
+      ].filter(field => field.value).slice(0, 5); // Limit to 5 fields in preview
+      fields.forEach(field => {
+        html += `<p${field.className ? ` class="${field.className}"` : ""}><strong>${field.label}</strong>: ${field.value}${field.label === "Verse Category" || field.label === "Sub Category" ? ` / ${getBengaliCategory(field.value)}` : ""}</p>`;
+      });
+      html += `<button class="see-full" onclick="showFullVerse(${dataIndex})">See Full Verse</button></div>`;
       verseContainer.innerHTML += html;
     });
     updateContentCount(rows.length);
   }
 
-  window.showFullVerse = function(filteredIndex) {
-    console.log(`showFullVerse: filteredIndex=${filteredIndex}`);
-    const verse = filteredData[filteredIndex];
+  window.showFullVerse = function(dataIndex) {
+    console.log(`showFullVerse: dataIndex=${dataIndex}`);
+    const verse = data[dataIndex];
     if (verse) {
-      const dataIndex = data.findIndex(item => item["Verse Name"] === verse["Verse Name"] && item["Verse"] === verse["Verse"]);
-      console.log(`Mapped to dataIndex=${dataIndex}, verse=`, verse);
-      if (dataIndex >= 0) {
-        displaySingleVerse(data[dataIndex], dataIndex);
-      } else {
-        console.error("Verse not found in data array");
-        document.getElementById("errorDisplay").textContent = "Error displaying full verse.";
-      }
+      console.log(`Displaying full verse for dataIndex=${dataIndex}, verse=`, verse);
+      displaySingleVerse(verse, dataIndex);
     } else {
-      console.error("Verse not found at filteredIndex:", filteredIndex);
+      console.error("Verse not found at dataIndex:", dataIndex);
       document.getElementById("errorDisplay").textContent = "Error displaying full verse.";
     }
   };
@@ -1229,7 +1235,12 @@
     const sheetName = event.target.dataset.sheet;
     if (sheetName) {
       console.log(`Tab clicked: ${sheetName}`);
-      loadSheetData(sheetName);
+      if (sheetName.toLowerCase() === currentSheet) {
+        console.log(`Unclicking tab: ${sheetName}`);
+        loadHome();
+      } else {
+        loadSheetData(sheetName);
+      }
     } else {
       console.warn("No data-sheet attribute found on clicked tab");
     }

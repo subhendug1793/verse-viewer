@@ -248,34 +248,70 @@
     .single-verse-view { 
       text-align: center; 
       margin: 20px auto; 
-      max-width: 80%; 
+      max-width: 700px; /* Wider for landscape feel */
       padding: 20px; 
       background-color: #fff; 
       box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+      border-radius: 10px; 
       position: relative; 
     }
-    .single-verse-view h3 { 
-      color: #0066cc; 
-      margin-bottom: 10px; 
+    .verse-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
     }
-    .verse-details { 
-      margin-bottom: 20px; 
-      text-align: left; 
+    .verse-name {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #000;
+      text-align: center;
     }
-    .verse-details p { 
-      margin: 5px 0; 
-      font-size: 1em; 
+    .verse-name a {
+      color: #0066cc;
+      text-decoration: underline;
     }
-    .verse-details strong { 
-      display: inline-block; 
-      width: 150px; 
-      font-weight: bold; 
+    .verse-details {
+      width: 100%;
+      margin-bottom: 20px;
     }
-    .share-buttons { 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      gap: 8px; 
+    .verse-detail {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      margin: 8px 0;
+    }
+    .verse-detail strong {
+      text-align: left;
+      font-weight: bold;
+      min-width: 200px;
+      font-size: 16px;
+    }
+    .verse-detail span {
+      text-align: center;
+      flex: 1;
+      font-size: 16px;
+    }
+    .verse-detail a {
+      color: #0066cc;
+      text-decoration: underline;
+    }
+    .verse-detail.category-universal {
+      background-color: #00FF00;
+    }
+    .verse-detail.category-general {
+      background-color: #00FFFF;
+    }
+    .verse-detail.category-controversial {
+      background-color: #FFFF00;
+    }
+    .verse-detail.category-divisive {
+      background-color: #FF0000;
+    }
+    .verse-detail.category-violent {
+      background-color: #000000;
+      color: #FFFFFF;
     }
     .single-verse-share-buttons { 
       display: flex; 
@@ -283,6 +319,7 @@
       justify-content: center; 
       gap: 12px; 
       flex-wrap: wrap; 
+      margin-top: 15px;
     }
     .share-buttons img, .single-verse-share-buttons img { 
       width: 24px; 
@@ -297,7 +334,7 @@
       position: relative; 
     }
     .share-buttons a.view-link::after { 
-      content: none; /* Removed 👆 emoji */
+      content: none;
     }
     .navigation-arrows {
       position: absolute;
@@ -322,7 +359,7 @@
     }
     .navigation-arrows .prev {
       position: absolute;
-      left: -40px; /* Moved left to avoid text overlap */
+      left: -40px;
     }
     .navigation-arrows .next {
       position: absolute;
@@ -332,7 +369,7 @@
       display: flex;
       justify-content: center;
       gap: 10px;
-      margin-bottom: 10px;
+      margin: 10px 0;
     }
     .reaction-buttons button {
       background: none;
@@ -444,11 +481,15 @@
         max-width: 90%; 
         padding: 15px; 
       }
-      .verse-details p { 
-        font-size: 0.9em; 
+      .verse-name {
+        font-size: 18px;
       }
-      .verse-details strong { 
-        width: 120px; 
+      .verse-detail strong {
+        min-width: 120px;
+        font-size: 14px;
+      }
+      .verse-detail span {
+        font-size: 14px;
       }
       .share-buttons img, .single-verse-share-buttons img { 
         width: 20px; 
@@ -461,7 +502,7 @@
         width: 30px;
       }
       .navigation-arrows .prev {
-        left: -30px; /* Adjusted for mobile */
+        left: -30px;
       }
       .navigation-arrows .next {
         right: -20px;
@@ -873,19 +914,40 @@
       return;
     }
     const verseName = verse["Verse Name"] || verse["Verse"] || "Verse";
-    const heading = `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} ${verseName}`;
-    let html = `<h3>${heading}</h3><div class="verse-details">`;
+    let html = `<div class="verse-card">`;
+    
+    // Verse Name
+    html += `<div class="verse-name">`;
+    if (typeof verse["Verse Name"] === "object" && verse["Verse Name"].url) {
+      html += `<a href="${verse["Verse Name"].url}" target="_blank">${verse["Verse Name"].text}</a>`;
+    } else {
+      html += `${verseName}`;
+    }
+    html += `</div>`;
+
+    // Verse Details
+    html += `<div class="verse-details">`;
     const headers = Object.keys(verse).filter(h => h !== "sheet");
     headers.forEach(header => {
       let content = verse[header] || "-";
+      let displayContent;
       if (typeof content === "object" && content.text && content.url) {
-        content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
+        displayContent = `<a href="${content.url}" target="_blank">${content.text}</a>`;
+      } else {
+        displayContent = content.toString();
       }
-      const className = header === "Verse Category " && typeof verse[header] === "string" 
-        ? getCategoryClass(verse[header].trim().toLowerCase()) 
+      const className = header === "Verse Category " && typeof verse[header] === "string"
+        ? getCategoryClass(verse[header].trim().toLowerCase())
         : "";
-      html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
+      html += `
+        <div class="verse-detail ${className}">
+          <strong>${header}:</strong>
+          <span>${displayContent}</span>
+        </div>`;
     });
+    html += `</div>`;
+
+    // Navigation Arrows
     html += `<div class="navigation-arrows">
       <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>
         <img src="images/leftarrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';">
@@ -894,12 +956,18 @@
         <img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';">
       </a>
     </div>`;
+
+    // Reaction Buttons
     html += `<div class="reaction-buttons">
       <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
       <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
       <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount">0</span></button>
     </div>`;
-    html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
+
+    // Share Buttons
+    html += `<div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
+
+    html += `</div>`;
     singleVerseView.innerHTML = html;
     singleVerseView.style.display = "block";
   }

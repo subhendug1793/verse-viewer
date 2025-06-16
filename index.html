@@ -8,296 +8,352 @@
   <meta property="og:description" content="Explore categorized theological verses from the Gita, Bible, Quran, and more.">
   <meta property="og:image" content="https://subhendug1793.github.io/verse-viewer/images/sastik_logo.png">
   <meta property="og:url" content="https://subhendug1793.github.io/verse-viewer/">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { 
-      font-family: Arial, sans-serif; 
-      margin: 20px; 
-      background: #f9f9f9; 
-      position: relative; 
-      min-height: 100vh; 
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #e0f7fa, #f9f9f9);
+      position: relative;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
-    .header-container { 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      margin-bottom: 20px; 
+
+    /* Hero Section */
+    .hero {
+      background: url('https://source.unsplash.com/1600x400/?spiritual') no-repeat center/cover;
+      padding: 40px 20px;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
-    .header-info { 
-      position: absolute; 
-      top: 20px; 
-      right: 20px; 
-      font-size: 0.9em; 
-      color: #666; 
-      z-index: 10; 
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.3);
+      z-index: -1;
+    }
+    .hero h1 {
+      font-family: 'Merriweather', serif;
+      font-weight: 700;
+      font-size: 2.2em;
+      margin: 0;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+
+    /* Sticky Navigation */
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      background: rgba(255,255,255,0.95);
+      padding: 10px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .sticky-nav a {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      color: #0066cc;
+      text-decoration: none;
+      font-size: 1em;
+    }
+    .sticky-nav a:hover {
+      color: #0033cc;
+      text-decoration: underline;
+    }
+
+    /* Header Info */
+    .header-info {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9em;
+      color: #fff;
+      z-index: 10;
     }
     .header-info .last-updated a {
-      color: #0066cc;
+      color: #e0f7fa;
       text-decoration: none;
     }
     .header-info .visitor-count {
       margin-left: 20px;
-      vertical-align: middle;
       display: inline-block;
-      min-height: 20px; 
-      font-weight: bold;
-      color: #333;
-      z-index: 10;
+      font-weight: 500;
+      color: #fff;
     }
     .header-info .visitor-count.error {
       font-weight: normal;
-      color: #999;
+      color: #ccc;
     }
-    .logo { 
-      width: 80px; 
-      height: auto; 
-      margin-right: 10px; 
+
+    /* Logo and Title */
+    .header-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
     }
-    h2 { 
+    .logo {
+      width: 80px;
+      height: auto;
+      margin-right: 10px;
+    }
+    h2 {
+      font-family: 'Merriweather', serif;
+      font-weight: 700;
       color: #0066cc;
-      text-align: center; 
-      margin: 0; 
-      font-size: 1.8em;
-      font-weight: bold; 
-      white-space: nowrap; 
-      text-decoration: none; 
-    }
-    h2 a { 
-      color: #0066cc; 
-      text-decoration: none; 
-    }
-    h2 a:hover { 
-      text-decoration: underline; 
-    }
-    .mission-statement { 
-      text-align: center; 
-      margin: 0 auto 10px;
-      max-width: 80%; 
-      font-size: 1.1em; 
-      line-height: 1.5; 
-      font-weight: bold; 
-    }
-    .mission-subtext { 
-      text-align: center; 
-      margin: 0 auto 20px; 
-      max-width: 80%; 
-      font-size: 0.8em;
-      line-height: 1.2; 
-      font-weight: normal; 
-    }
-    .controls { 
-      margin-bottom: 10px; 
-      text-align: center; 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      gap: 2px; 
-      flex-wrap: wrap; 
-    }
-    .search-row { 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      gap: 10px; 
-      margin-bottom: 5px;
-    }
-    .content-count, .match-count { 
-      font-size: 1em; 
-      color: #333; 
-      text-align: left; 
-    }
-    .search-input-container {
-      flex-grow: 0;
       text-align: center;
+      margin: 0;
+      font-size: 1.8em;
     }
-    select, input { 
-      padding: 5px; 
-      margin-right: 10px; 
+    h2 a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    h2 a:hover {
+      text-decoration: underline;
+    }
+
+    /* Mission Statement */
+    .mission-statement {
+      font-family: 'Merriweather', serif;
+      text-align: center;
+      margin: 0 auto 10px;
+      max-width: 80%;
+      font-size: 1.1em;
+      line-height: 1.5;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+    .mission-subtext {
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      margin: 0 auto 20px;
+      max-width: 80%;
+      font-size: 0.8em;
+      line-height: 1.2;
+      color: #555;
+    }
+    .mission-subtext i {
+      margin: 0 5px;
+    }
+
+    /* Controls */
+    .controls {
+      margin-bottom: 10px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .controls label {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-size: 0.9em;
+    }
+    select, input {
+      padding: 8px;
+      margin-right: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9em;
+      transition: border-color 0.3s ease;
+    }
+    select:hover, input:hover {
+      border-color: #0066cc;
     }
     select:disabled, input:disabled {
       background-color: #e0e0e0;
       cursor: not-allowed;
     }
-    #searchInput { 
-      width: 200px; 
+    #searchInput {
+      width: 200px;
     }
-    table { 
-      border-collapse: collapse; 
-      width: 80%; 
+
+    /* Search Row */
+    .search-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .content-count, .match-count {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9em;
+      color: #333;
+    }
+
+    /* Verse Cards */
+    .verse-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      width: 80%;
+      margin: 0 auto 20px;
+    }
+    .verse-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .verse-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    .verse-card h3 {
+      font-family: 'Merriweather', serif;
+      font-weight: 700;
+      font-size: 1.2em;
+      color: #0066cc;
+      margin: 0 0 10px;
+    }
+    .verse-card p {
+      font-family: 'Merriweather', serif;
+      font-size: 0.9em;
+      margin: 5px 0;
+      color: #333;
+    }
+    .verse-card p strong {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      color: #2c3e50;
+    }
+    .verse-card .share-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    .verse-card .category-universal { background-color: #00FF00; padding: 2px 5px; }
+    .verse-card .category-general { background-color: #00FFFF; padding: 2px 5px; }
+    .verse-card .category-controversial { background-color: #FFFF00; padding: 2px 5px; }
+    .verse-card .category-divisive { background-color: #FF0000; padding: 2px 5px; }
+    .verse-card .category-violent { background-color: #000000; color: #FFFFFF; padding: 2px 5px; }
+
+    /* Table (Fallback) */
+    table {
+      border-collapse: collapse;
+      width: 80%;
       margin: 0 auto 5px;
-      background-color: #fff; 
-      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
-      position: relative; 
-      z-index: 1; 
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    th, td { 
-      border: 1px solid #ddd; 
-      padding: 10px; 
-      text-align: center; 
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+      font-family: 'Merriweather', serif;
+      font-size: 0.9em;
     }
-    td a { 
-      color: #0066cc; 
-      text-decoration: none; 
+    td a {
+      color: #0066cc;
+      text-decoration: none;
     }
-    td a:hover { 
-      text-decoration: underline; 
+    td a:hover {
+      text-decoration: underline;
     }
-    td.category-universal { 
-      background-color: #00FF00; 
+    th.gita-header, th.bible-header, th.quran-header, th.hadith-header, th.miscellaneous-header {
+      background-color: #f1f1f1;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
     }
-    td.category-general { 
-      background-color: #00FFFF; 
+    mark {
+      background-color: yellow;
+      font-weight: bold;
     }
-    td.category-controversial { 
-      background-color: #FFFF00; 
+
+    /* Footer */
+    .footer {
+      background: linear-gradient(135deg, #0066cc, #0033cc);
+      color: #fff;
+      padding: 20px 0;
+      margin-top: auto;
+      text-align: center;
     }
-    td.category-divisive { 
-      background-color: #FF0000; 
+    .footer a {
+      color: #e0f7fa;
+      text-decoration: none;
     }
-    td.category-violent { 
-      background-color: #000000; 
-      color: #FFFFFF; 
+    .footer a:hover {
+      text-decoration: underline;
     }
-    th.gita-header, th.bible-header, th.quran-header, th.hadith-header, th.miscellaneous-header { 
-      background-color: white; 
-      color: black; 
+    .footer img {
+      vertical-align: middle;
     }
-    mark { 
-      background-color: yellow; 
-      font-weight: bold; 
+    .logos img {
+      width: 50px;
+      transition: transform 0.3s ease;
     }
-    .footer { 
-      position: relative; 
-      margin-top: auto; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      max-width: 80%; 
-      margin: 5px auto 0;
-      padding: 10px 0; 
-      pointer-events: auto; 
+    .logos img:hover {
+      transform: scale(1.1);
     }
-    .footer a { 
-      text-decoration: none; 
-      cursor: pointer; 
-      pointer-events: auto; 
+    .support-text, .follow-text, .name-text, .contact-text {
+      font-family: 'Poppins', sans-serif;
     }
-    .footer img { 
-      vertical-align: middle; 
-      pointer-events: auto; 
+    .support-text {
+      font-weight: 500;
+      font-size: 0.9em;
     }
-    .logos { 
-      display: flex; 
-      align-items: center; 
-      margin-bottom: 5px; 
+    .follow-text {
+      font-size: 1em;
     }
-    .logos img { 
-      width: 60px; 
-      height: auto; 
-      margin-right: 5px; 
+    .name-text {
+      font-family: 'Merriweather', serif;
+      font-size: 1.8em;
     }
-    .logos img:last-child { 
-      margin-right: 0; 
+    .contact-text {
+      font-size: 0.9em;
     }
-    .text-group { 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      text-align: center; 
+    .qr-code img {
+      width: 180px;
+      border-radius: 8px;
     }
-    .support-text { 
-      font-weight: bold; 
-      font-size: 0.9em; 
-      margin-bottom: 10px; 
+
+    /* Single Verse View */
+    .single-verse-view {
+      max-width: 80%;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
-    .support-text span { 
-      display: block; 
+    .single-verse-view h3 {
+      font-family: 'Merriweather', serif;
+      font-weight: 700;
+      color: #0066cc;
     }
-    .follow-text { 
-      font-size: 1.1em; 
-      margin: 2px 0; 
+    .verse-details p {
+      font-family: 'Merriweather', serif;
+      font-size: 0.9em;
     }
-    .name-text { 
-      font-size: 2em; 
-      margin: 5px 0; 
-    }
-    .contact-text { 
-      font-size: 1em; 
-      max-width: 90%; 
-      text-align: center; 
-      pointer-events: auto; 
-    }
-    .contact-text span { 
-      display: block; 
-      white-space: nowrap; 
-      line-height: 1.4; 
-    }
-    .contact-text img { 
-      width: 20px; 
-      height: auto; 
-      vertical-align: middle; 
-    }
-    .qr-code { 
-      margin: 10px 0; 
-    }
-    .qr-code img { 
-      width: 200px; 
-      height: auto; 
-    }
-    .single-verse-view { 
-      text-align: center; 
-      margin: 20px auto; 
-      max-width: 80%; 
-      padding: 20px; 
-      background-color: #fff; 
-      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
-      position: relative; 
-    }
-    .single-verse-view h3 { 
-      color: #0066cc; 
-      margin-bottom: 10px; 
-    }
-    .verse-details { 
-      margin-bottom: 20px; 
-      text-align: left; 
-    }
-    .verse-details p { 
-      margin: 5px 0; 
-      font-size: 1em; 
-    }
-    .verse-details strong { 
-      display: inline-block; 
-      width: 150px; 
-      font-weight: bold; 
-    }
-    .share-buttons { 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      gap: 8px; 
-    }
-    .single-verse-share-buttons { 
-      display: flex; 
-      flex-direction: row; 
-      justify-content: center; 
-      gap: 12px; 
-      flex-wrap: wrap; 
-    }
-    .share-buttons img, .single-verse-share-buttons img { 
-      width: 24px; 
-      height: 24px; 
-      vertical-align: middle; 
-    }
-    .share-buttons a, .single-verse-share-buttons a { 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      width: 40px; 
-      position: relative; 
-    }
-    .share-buttons a.view-link::after { 
-      content: none; /* Removed 👆 emoji */
+    .verse-details strong {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
     }
     .navigation-arrows {
       position: absolute;
@@ -314,7 +370,7 @@
     }
     .navigation-arrows img {
       width: 40px;
-      height: auto;
+      transition: opacity 0.3s ease;
     }
     .navigation-arrows a.disabled img {
       opacity: 0.3;
@@ -322,7 +378,7 @@
     }
     .navigation-arrows .prev {
       position: absolute;
-      left: -40px; /* Moved left to avoid text overlap */
+      left: -40px;
     }
     .navigation-arrows .next {
       position: absolute;
@@ -342,164 +398,138 @@
       align-items: center;
       gap: 5px;
       font-size: 18px;
+      transition: transform 0.3s ease;
+    }
+    .reaction-buttons button:hover {
+      transform: scale(1.2);
     }
     .reaction-buttons button.active {
       font-weight: bold;
+      color: #0066cc;
     }
     .reaction-buttons span {
+      font-family: 'Poppins', sans-serif;
       font-size: 0.9em;
       color: #333;
     }
+    .single-verse-share-buttons {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .share-buttons img, .single-verse-share-buttons img {
+      width: 24px;
+      height: 24px;
+      vertical-align: middle;
+    }
+    .share-buttons a, .single-verse-share-buttons a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      position: relative;
+    }
+    .share-buttons a.view-link::after {
+      content: none;
+    }
+
+    /* Loading Spinner */
+    .loading-spinner {
+      display: none;
+      text-align: center;
+      margin: 20px auto;
+    }
+    .loading-spinner i {
+      font-size: 24px;
+      color: #0066cc;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Media Queries */
     @media (max-width: 600px) {
-      .header-info { 
-        position: relative; 
-        top: 0; 
-        right: 0; 
-        text-align: center; 
-        margin: 10px 0; 
-        font-size: 0.8em; 
-      }
-      .header-container { 
-        flex-direction: column; 
-        text-align: center; 
-        margin-bottom: 10px; 
-      }
-      .logo { 
-        margin-right: 0; 
-        margin-bottom: 5px; 
-        width: 50px; 
-      }
-      h2 { 
-        font-size: 1.2em; 
-      }
-      .mission-statement { 
-        font-size: 0.9em; 
-        max-width: 90%; 
-      }
-      .mission-subtext { 
-        font-size: 0.7em; 
-        max-width: 90%; 
-      }
-      select, input { 
-        width: 100%; 
-        margin-bottom: 8px; 
-        padding: 4px; 
-      }
-      .controls { 
-        flex-direction: column; 
-        align-items: center; 
-        gap: 8px; 
-      }
-      .search-row { 
-        flex-direction: column; 
-        align-items: center; 
-        gap: 8px; 
-        margin-bottom: 5px;
-      }
-      .content-count, .match-count { 
-        text-align: center; 
-      }
-      .search-input-container { 
-        width: 100%; 
-      }
-      #searchInput { 
-        width: 100%; 
-        max-width: 250px; 
-      }
-      table { 
-        width: 100%; 
-        font-size: 0.9em; 
-        margin-bottom: 5px;
-      }
-      th, td { 
-        padding: 6px; 
-      }
-      .footer { 
-        max-width: 90%; 
-        margin: 5px auto 0;
-      }
-      .logos img { 
-        width: 40px; 
-        margin-right: 3px; 
-      }
-      .logos img:last-child { 
-        margin-right: 0; 
-      }
-      .follow-text { 
-        font-size: 0.9em; 
-      }
-      .contact-text { 
-        font-size: 0.75em; 
-      }
-      .contact-text img { 
-        width: 20px; 
-      }
-      .qr-code img { 
-        width: 150px; 
-      }
-      .support-text { 
-        font-size: 0.7em; 
-      }
-      .single-verse-view { 
-        max-width: 90%; 
-        padding: 15px; 
-      }
-      .verse-details p { 
-        font-size: 0.9em; 
-      }
-      .verse-details strong { 
-        width: 120px; 
-      }
-      .share-buttons img, .single-verse-share-buttons img { 
-        width: 20px; 
-        height: 20px; 
-      }
-      .share-buttons a, .single-verse-share-buttons a { 
-        width: 30px; 
-      }
-      .navigation-arrows img {
-        width: 30px;
-      }
-      .navigation-arrows .prev {
-        left: -30px; /* Adjusted for mobile */
-      }
-      .navigation-arrows .next {
-        right: -20px;
-      }
-      .reaction-buttons button {
-        font-size: 16px;
-      }
+      .hero h1 { font-size: 1.8em; }
+      .sticky-nav { flex-direction: column; gap: 10px; }
+      .header-info { position: static; text-align: center; margin: 10px 0; }
+      .header-container { flex-direction: column; margin-bottom: 10px; }
+      .logo { width: 50px; }
+      h2 { font-size: 1.2em; }
+      .mission-statement { font-size: 0.9em; max-width: 90%; }
+      .mission-subtext { font-size: 0.7em; }
+      .controls { flex-direction: column; gap: 8px; }
+      select, input { width: 100%; padding: 6px; }
+      #searchInput { max-width: 250px; }
+      .verse-grid { grid-template-columns: 1fr; width: 90%; }
+      table { width: 100%; font-size: 0.9em; }
+      th, td { padding: 6px; }
+      .footer { max-width: 90%; }
+      .logos img { width: 40px; }
+      .qr-code img { width: 150px; }
+      .support-text { font-size: 0.7em; }
+      .single-verse-view { max-width: 90%; padding: 15px; }
+      .verse-details p { font-size: 0.9em; }
+      .verse-details strong { width: 120px; }
+      .navigation-arrows .prev { left: -20px; }
+      .navigation-arrows .next { right: -20px; }
+      .reaction-buttons button { font-size: 16px; }
+      .share-buttons img, .single-verse-share-buttons img { width: 20px; height: 20px; }
+      .share-buttons a, .single-verse-share-buttons a { width: 30px; }
     }
   </style>
 </head>
 <body>
-  <div class="header-info">
-    <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
-    <span class="visitor-count" id="visitorCount">Visitors: Loading...</span>
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="header-info">
+      <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
+      <span class="visitor-count" id="visitorCount">Visitors: Loading...</span>
+    </div>
+    <h1>Explore Sacred Verses</h1>
   </div>
+
+  <!-- Sticky Navigation -->
+  <div class="sticky-nav">
+    <a href="#gita" onclick="selectSheet('gita')">Gita</a>
+    <a href="#bible" onclick="selectSheet('bible')">Bible</a>
+    <a href="#quran" onclick="selectSheet('quran')">Quran</a>
+    <a href="#hadith" onclick="selectSheet('hadith')">Hadith</a>
+    <a href="#miscellaneous" onclick="selectSheet('miscellaneous')">Miscellaneous</a>
+    <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank">Support <i class="fas fa-heart"></i></a>
+  </div>
+
+  <!-- Header -->
   <div class="header-container">
     <img src="images/sastik_logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('SASTIK logo failed to load');">
     <h2><a href="https://www.facebook.com/sastikofficial/" target="_blank">SASTIK GBQ+</a></h2>
   </div>
   <div class="mission-statement">
-    <b>সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে 🚫 সম্প্রীতি ও মানবতার পক্ষে ✅</b><br>
-    <b>To Propagate Sane Theism, Against Hatred and Violence 🚫 In Favor of Harmony and Humanity ✅</b>
+    <b>সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে <i class="fas fa-ban"></i> সম্প্রীতি ও মানবতার পক্ষে <i class="fas fa-check-circle"></i></b><br>
+    <b>To Propagate Sane Theism, Against Hatred and Violence <i class="fas fa-ban"></i> In Favor of Harmony and Humanity <i class="fas fa-check-circle"></i></b>
   </div>
   <div class="mission-subtext">
-    ⬇️ A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. ⬇️
+    <i class="fas fa-arrow-down"></i> A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. <i class="fas fa-arrow-down"></i>
   </div>
+
+  <!-- Single Verse View -->
   <div class="single-verse-view" id="singleVerseView" style="display: none;"></div>
+
+  <!-- Controls -->
   <div class="controls" id="controls">
-    <label for="sheetSelector">Select Gita/Bible/Quran+:</label>
+    <label for="sheetSelector"><i class="fas fa-book"></i> Select Gita/Bible/Quran+:</label>
     <select id="sheetSelector" onchange="loadSheetData()">
       <option value="">Select a sheet</option>
-      <option value="gita">Gita</option>
-      <option value="bible">Bible</option>
-      <option value="quran">Quran</option>
-      <option value="hadith">Hadith</option>
-      <option value="miscellaneous">Miscellaneous</option>
+      <option value="gita"><i class="fas fa-leaf"></i> Gita</option>
+      <option value="bible"><i class="fas fa-cross"></i> Bible</option>
+      <option value="quran"><i class="fas fa-star-and-crescent"></i> Quran</option>
+      <option value="hadith"><i class="fas fa-book-open"></i> Hadith</option>
+      <option value="miscellaneous"><i class="fas fa-globe"></i> Miscellaneous</option>
     </select>
-    <label for="categoryFilter">Filter by Sloka/Verse/Ayah Category:</label>
+    <label for="categoryFilter"><i class="fas fa-filter"></i> Filter by Sloka/Verse/Ayah Category:</label>
     <select id="categoryFilter" disabled onchange="filterTable()">
       <option value="">All</option>
       <option value="Universal or Ethical Verse">Universal or Ethical Verse</option>
@@ -508,7 +538,7 @@
       <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
       <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
     </select>
-    <label for="subCategoryFilter">Filter by Sub Category:</label>
+    <label for="subCategoryFilter"><i class="fas fa-tags"></i> Filter by Sub Category:</label>
     <select id="subCategoryFilter" disabled onchange="filterTable()">
       <option value="">All</option>
       <option value="Historical or Narrative verse">Historical or Narrative verse</option>
@@ -516,28 +546,40 @@
       <option value="Metaphorical or Symbolic verse">Metaphorical or Symbolic verse</option>
     </select>
   </div>
+
+  <!-- Search Row -->
   <div class="search-row" id="search-row">
     <div class="content-count" id="contentCount">Content Found: 0</div>
     <div class="search-input-container">
-      <input type="text" id="searchInput" placeholder="Search in table..." disabled onkeyup="searchTable()">
+      <input type="text" id="searchInput" placeholder="Search in verses..." disabled onkeyup="searchTable()">
     </div>
     <div class="match-count" id="matchCount">Matches found: 0</div>
   </div>
-  <table id="verseTable">
+
+  <!-- Loading Spinner -->
+  <div class="loading-spinner" id="loadingSpinner">
+    <i class="fas fa-spinner"></i>
+  </div>
+
+  <!-- Verse Grid -->
+  <div class="verse-grid" id="verseGrid"></div>
+  <table id="verseTable" style="display: none;">
     <thead id="tableHeaders"></thead>
     <tbody id="verseBody"></tbody>
   </table>
+
+  <!-- Footer -->
   <div class="footer">
     <div class="text-group">
       <div class="support-text">
         <span>Developing and maintaining this unified platform requires continuous effort and dedication.</span>
         <span>We need your support to continue the SASTIK mission, which aims to create a better, harmonious society.</span>
-        <span>You can encourage our efforts by scanning the <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank" style="color: #0066cc; text-decoration: none;">UPI QR code</a> below 🙏</span>
+        <span>You can encourage our efforts by scanning the <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank">UPI QR code</a> below <i class="fas fa-heart"></i></span>
       </div>
       <div class="qr-code">
         <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank"><img src="images/qrcode_logo.jpg" alt="UPI QR Code" onerror="console.log('UPI QR code failed to load')"></a>
       </div>
-      <div class="follow-text">For more insights, follow me on 👇</div>
+      <div class="follow-text">For more insights, follow me on <i class="fas fa-arrow-down"></i></div>
       <div class="logos">
         <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="images/facebook_logo.png" alt="Facebook" onload="console.log('Facebook logo loaded')" onerror="console.log('Facebook logo failed to load')"></a>
         <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="images/youtube_logo.png" alt="YouTube" onload="console.log('YouTube logo loaded')" onerror="console.log('YouTube logo failed to load')"></a>
@@ -545,564 +587,486 @@
       </div>
       <div class="name-text">Subhendu Ghosh Sastik</div>
       <div class="contact-text">
-        <span>If you’d like to contribute to verse updates 📜 or have any suggestions or feedback 💭</span>
-        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.png" alt="Telegram" style="width: 20px; height: auto; vertical-align: middle;"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="images/gmail_logo.png" alt="Mail" style="width: 20px; height: auto; vertical-align: middle;" onerror="console.log('Gmail logo failed to load')"></a><a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></span>
+        <span>If you’d like to contribute to verse updates <i class="fas fa-scroll"></i> or have any suggestions or feedback <i class="fas fa-comment"></i></span>
+        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.png" alt="Telegram"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="images/gmail_logo.png" alt="Mail" onerror="console.log('Gmail logo failed to load')"></a><a href="https://m.me/subhendu.ghosh.790349" target="_blank">sastikofficial@gmail.com</a></span>
       </div>
     </div>
   </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc, increment, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCou0LOLpeijDPxHlVN1pvpruvxdrLKVWk",
-    authDomain: "verseviewercounter.firebaseapp.com",
-    projectId: "verseviewercounter",
-    storageBucket: "verseviewercounter.firebasestorage.app",
-    messagingSenderId: "486076065573",
-    appId: "1:486076065573:web:363e819071b11880089ccc",
-    measurementId: "G-NE4PCNMR8D"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyCou0LOLpeijDPxHlVN1pvpruvxdrLKVWk",
+      authDomain: "verseviewercounter.firebaseapp.com",
+      projectId: "verseviewercounter",
+      storageBucket: "verseviewercounter.firebasestorage.app",
+      messagingSenderId: "486076065573",
+      appId: "1:486076065573:web:363e819071b11880089ccc",
+      measurementId: "G-NE4PCNMR8D"
+    };
 
-  let db = null;
-  function initializeFirebase() {
-    try {
-      const app = initializeApp(firebaseConfig);
-      db = getFirestore(app);
-      console.log("Firebase initialized successfully");
-    } catch (error) {
-      console.error("Firebase initialization error:", error);
-    }
-  }
-
-  window.copyToClipboard = function(text) {
-    navigator.clipboard.writeText(text).then(() => {
-      alert("Link copied to clipboard!");
-    }).catch(err => {
-      console.error("Failed to copy link:", err);
-      alert("Failed to copy link. Please try again.");
-    });
-  };
-
-  window.shareAnywhere = function(verseText, shareUrl) {
-    if (navigator.share) {
-      navigator.share({
-        title: 'SASTIK GBQ+ Verse',
-        text: verseText,
-        url: shareUrl
-      }).catch(err => console.error('Share error:', err));
-    } else {
-      alert('Share not supported on this browser. Copy the link instead.');
-    }
-  };
-
-  let data = [];
-  let currentSheet = "";
-  let currentVerseIndex = -1;
-
-  function updateLastUpdated() {
-    try {
-      const lastUpdatedElement = document.getElementById("lastUpdated");
-      if (lastUpdatedElement) {
-        let lastUpdated;
-        if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
-          const date = new Date(document.lastModified);
-          const dateStr = date.toLocaleDateString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
-          const timeStr = date.toLocaleTimeString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-          });
-          lastUpdated = `${dateStr} ${timeStr}`;
-        } else {
-          const now = new Date();
-          const dateStr = now.toLocaleDateString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
-          const timeStr = now.toLocaleTimeString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-          });
-          lastUpdated = `${dateStr} ${timeStr}`;
-          console.warn("document.lastModified unavailable, using current date:", lastUpdated);
-        }
-        lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${lastUpdated}</a>`;
-      }
-    } catch (error) {
-      console.error("Error updating last modified:", error);
-      const lastUpdatedElement = document.getElementById("lastUpdated");
-      if (lastUpdatedElement) {
-        lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Unknown</a>`;
-      }
-    }
-  }
-
-  async function updateVisitorCount() {
-    const visitorCount = document.getElementById("visitorCount");
-    if (!visitorCount) return;
-    visitorCount.innerHTML = "Visitors: Loading...";
-    try {
-      if (!db) throw new Error("Firestore not initialized");
-      const counterRef = doc(db, "counters", "viewerCount");
-      await setDoc(counterRef, { count: increment(1) }, { merge: true });
-      const counterSnap = await getDoc(counterRef);
-      if (counterSnap.exists()) {
-        visitorCount.classList.remove("error");
-        visitorCount.innerHTML = `Visitors: ${counterSnap.data().count || 0}`;
-      } else {
-        throw new Error("Counter document does not exist");
-      }
-    } catch (error) {
-      console.error("Firestore error:", error);
+    let db = null;
+    function initializeFirebase() {
       try {
-        const response = await fetch('counter.json', { cache: 'no-store' });
-        if (!response.ok) throw new Error(`counter.json fetch error: ${response.status}`);
-        const data = await response.json();
-        visitorCount.classList.remove("error");
-        visitorCount.innerHTML = `Visitors: ${data.visitors}`;
-      } catch (jsonError) {
-        console.error("Local counter fetch error:", jsonError);
-        visitorCount.innerHTML = "Visitors: 1";
-        visitorCount.classList.add("error");
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        console.log("Firebase initialized successfully");
+      } catch (error) {
+        console.error("Firebase initialization error:", error);
       }
     }
-  }
 
-  async function loadSheetData() {
-    const sheetSelector = document.getElementById("sheetSelector");
-    currentSheet = sheetSelector.value;
-    const categoryFilter = document.getElementById("categoryFilter");
-    const subCategoryFilter = document.getElementById("subCategoryFilter");
-    const searchInput = document.getElementById("searchInput");
-    const errorDisplay = document.createElement("div");
-    errorDisplay.id = "errorDisplay";
-    errorDisplay.style.color = "red";
-    errorDisplay.style.textAlign = "center";
-    errorDisplay.style.marginBottom = "10px";
-    document.querySelector(".controls").after(errorDisplay);
+    window.copyToClipboard = function(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Link copied to clipboard!");
+      }).catch(err => {
+        console.error("Failed to copy link:", err);
+        alert("Failed to copy link. Please try again.");
+      });
+    };
 
-    if (currentSheet) {
-      categoryFilter.disabled = false;
-      subCategoryFilter.disabled = false;
-      searchInput.disabled = false;
-      errorDisplay.textContent = "";
-      document.querySelector('.search-row').style.display = 'flex';
-      const urlsToTry = [`${currentSheet}.json`, `${currentSheet.toLowerCase()}.json`, `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`];
-      let response, sheetData;
-      for (const url of urlsToTry) {
-        try {
-          response = await fetch(url, { cache: 'no-store' });
-          if (response.ok) {
-            sheetData = await response.json();
-            break;
-          }
-        } catch (err) {
-          console.warn(`Error fetching ${url}:`, err.message);
-        }
-      }
-      if (sheetData) {
-        data = sheetData;
-        updateHeaders(currentSheet);
-        updateTable(data);
-        updateContentCount(data.length);
-        updateMatchCount(0);
+    window.shareAnywhere = function(verseText, shareUrl) {
+      if (navigator.share) {
+        navigator.share({
+          title: 'SASTIK GBQ+ Verse',
+          text: verseText,
+          url: shareUrl
+        }).catch(err => console.error('Share error:', err));
       } else {
-        errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if the file exists or contact support.`;
-        document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${currentSheet}.json: File not found or inaccessible</td></tr>`;
+        alert('Share not supported on this browser. Copy the link instead.');
+      }
+    };
+
+    let data = [];
+    let currentSheet = "";
+    let currentVerseIndex = -1;
+
+    window.selectSheet = function(sheet) {
+      const sheetSelector = document.getElementById("sheetSelector");
+      sheetSelector.value = sheet;
+      loadSheetData();
+    };
+
+    async function loadSheetData() {
+      const sheetSelector = document.getElementById("sheetSelector");
+      currentSheet = sheetSelector.value;
+      const categoryFilter = document.getElementById("categoryFilter");
+      const subCategoryFilter = document.getElementById("subCategoryFilter");
+      const searchInput = document.getElementById("searchInput");
+      const errorDisplay = document.createElement("div");
+      errorDisplay.id = "errorDisplay";
+      errorDisplay.style.color = "red";
+      errorDisplay.style.textAlign = "center";
+      errorDisplay.style.marginBottom = "10px";
+      document.querySelector(".controls").after(errorDisplay);
+      const loadingSpinner = document.getElementById("loadingSpinner");
+
+      if (currentSheet) {
+        categoryFilter.disabled = false;
+        subCategoryFilter.disabled = false;
+        searchInput.disabled = false;
+        errorDisplay.textContent = "";
+        document.querySelector('.search-row').style.display = 'flex';
+        loadingSpinner.style.display = 'block';
+        document.getElementById("verseGrid").style.display = 'none';
+        const urlsToTry = [`${currentSheet}.json`, `${currentSheet.toLowerCase()}.json`, `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`];
+        let response, sheetData;
+        for (const url of urlsToTry) {
+          try {
+            response = await fetch(url, { cache: 'no-store' });
+            if (response.ok) {
+              sheetData = await response.json();
+              break;
+            }
+          } catch (err) {
+            console.warn(`Error fetching ${url}:`, err.message);
+          }
+        }
+        if (sheetData) {
+          data = sheetData;
+          updateHeaders(currentSheet);
+          updateTable(data);
+          updateContentCount(data.length);
+          updateMatchCount(0);
+        } else {
+          errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if the file exists or contact support.`;
+          document.getElementById("verseGrid").innerHTML = `<div style="text-align: center; padding: 20px;">Error loading ${currentSheet}.json: File not found or inaccessible</div>`;
+          updateContentCount(0);
+          updateMatchCount(0);
+        }
+        loadingSpinner.style.display = 'none';
+        document.getElementById("verseGrid").style.display = 'grid';
+      } else {
+        categoryFilter.disabled = true;
+        subCategoryFilter.disabled = true;
+        searchInput.disabled = true;
+        errorDisplay.textContent = "";
+        document.getElementById("verseGrid").innerHTML = "";
+        document.getElementById("tableHeaders").innerHTML = "";
+        document.querySelector('.search-row').style.display = 'flex';
+        loadingSpinner.style.display = 'none';
         updateContentCount(0);
         updateMatchCount(0);
       }
-    } else {
-      categoryFilter.disabled = true;
-      subCategoryFilter.disabled = true;
-      searchInput.disabled = true;
-      errorDisplay.textContent = "";
-      document.getElementById("verseBody").innerHTML = "";
-      document.getElementById("tableHeaders").innerHTML = "";
-      document.querySelector('.search-row').style.display = 'flex';
-      updateContentCount(0);
-      updateMatchCount(0);
     }
-  }
 
-  async function loadSingleVerse() {
-    const params = new URLSearchParams(window.location.search);
-    const sheet = params.get("sheet");
-    const verseParam = params.get("verse");
-    let verseIndex = -1;
+    async function loadSingleVerse() {
+      const params = new URLSearchParams(window.location.search);
+      const sheet = params.get("sheet");
+      const verseParam = params.get("verse");
+      let verseIndex = -1;
 
-    if (sheet && verseParam) {
-      currentSheet = sheet;
-      const urlsToTry = [`${sheet}.json`, `${sheet.toLowerCase()}.json`, `${sheet.charAt(0).toUpperCase() + sheet.slice(1).toLowerCase()}.json`];
-      let response, sheetData;
-      for (const url of urlsToTry) {
-        try {
-          response = await fetch(url, { cache: 'no-store' });
-          if (response.ok) {
-            sheetData = await response.json();
-            break;
+      if (sheet && verseParam) {
+        currentSheet = sheet;
+        const urlsToTry = [`${sheet}.json`, `${sheet.toLowerCase()}.json`, `${sheet.charAt(0).toUpperCase() + sheet.slice(1).toLowerCase()}.json`];
+        let response, sheetData;
+        for (const url of urlsToTry) {
+          try {
+            response = await fetch(url, { cache: 'no-store' });
+            if (response.ok) {
+              sheetData = await response.json();
+              break;
+            }
+          } catch (err) {
+            console.warn(`Error fetching ${url}:`, err.message);
           }
-        } catch (err) {
-          console.warn(`Error fetching ${url}:`, err.message);
         }
-      }
-      if (sheetData) {
-        data = sheetData;
-        const normalizedVerseParam = decodeURIComponent(verseParam).trim();
-        verseIndex = data.findIndex(row => {
-          const verseName = (row["Verse Name"] || row["Verse"] || "").trim();
-          return verseName === normalizedVerseParam;
-        });
-        if (verseIndex === -1) {
-          verseIndex = parseInt(verseParam, 10);
-        }
-        if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < sheetData.length) {
-          currentVerseIndex = verseIndex;
-          const verse = sheetData[verseIndex];
-          displaySingleVerse(verse, verseIndex);
-          document.getElementById("controls").style.display = "none";
-          document.getElementById("verseTable").style.display = "none";
-          document.querySelector('.search-row').style.display = 'none';
-          await loadReactions(sheet, verseIndex);
+        if (sheetData) {
+          data = sheetData;
+          const normalizedVerseParam = decodeURIComponent(verseParam).trim();
+          verseIndex = data.findIndex(row => {
+            const verseName = (row["Verse Name"] || row["Verse"] || "").trim();
+            return verseName === normalizedVerseParam;
+          });
+          if (verseIndex === -1) {
+            verseIndex = parseInt(verseParam, 10);
+          }
+          if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < sheetData.length) {
+            currentVerseIndex = verseIndex;
+            const verse = sheetData[verseIndex];
+            displaySingleVerse(verse, verseIndex);
+            document.getElementById("controls").style.display = "none";
+            document.getElementById("verseTable").style.display = "none";
+            document.getElementById("verseGrid").style.display = "none";
+            document.querySelector('.search-row').style.display = 'none';
+            await loadReactions(sheet, verseIndex);
+          } else {
+            console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
+            displaySingleVerse(null, -1);
+            document.getElementById("controls").style.display = "none";
+            document.getElementById("verseTable").style.display = "none";
+            document.getElementById("verseGrid").style.display = "none";
+            document.querySelector('.search-row').style.display = 'none';
+          }
         } else {
-          console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
+          console.error(`Failed to load ${sheet}.json`);
           displaySingleVerse(null, -1);
           document.getElementById("controls").style.display = "none";
           document.getElementById("verseTable").style.display = "none";
+          document.getElementById("verseGrid").style.display = "none";
           document.querySelector('.search-row').style.display = 'none';
         }
       } else {
-        console.error(`Failed to load ${sheet}.json`);
-        displaySingleVerse(null, -1);
-        document.getElementById("controls").style.display = "none";
-        document.getElementById("verseTable").style.display = "none";
-        document.querySelector('.search-row').style.display = 'none';
+        document.getElementById("singleVerseView").style.display = "none";
+        document.querySelector('.search-row').style.display = 'flex';
       }
-    } else {
-      document.getElementById("singleVerseView").style.display = "none";
-      document.querySelector('.search-row').style.display = 'flex';
     }
-  }
 
-  async function loadReactions(sheet, verseIndex) {
-    try {
-      const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
-      const reactionSnap = await getDoc(reactionRef);
-      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
-      updateReactionButtons(reactionCounts);
-      const userId = localStorage.getItem('userId') || generateUserId();
-      localStorage.setItem('userId', userId);
-      const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
-      const userReactionSnap = await getDoc(userReactionRef);
-      if (userReactionSnap.exists()) {
-        const userReaction = userReactionSnap.data().reaction;
-        const button = document.querySelector(`.reaction-buttons button[data-reaction="${userReaction}"]`);
-        if (button) button.classList.add('active');
-      }
-    } catch (error) {
-      console.error("Error loading reactions:", error);
-    }
-  }
-
-  async function toggleReaction(reaction, sheet, verseIndex) {
-    try {
-      let userId = localStorage.getItem('userId');
-      if (!userId) {
-        userId = generateUserId();
+    async function loadReactions(sheet, verseIndex) {
+      try {
+        const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
+        const reactionSnap = await getDoc(reactionRef);
+        const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
+        updateReactionButtons(reactionCounts);
+        const userId = localStorage.getItem('userId') || generateUserId();
         localStorage.setItem('userId', userId);
-      }
-      const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
-      const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
-      const userReactionSnap = await getDoc(userReactionRef);
-      const currentReaction = userReactionSnap.exists() ? userReactionSnap.data().reaction : null;
-
-      if (currentReaction === reaction) {
-        await updateDoc(reactionRef, { [reaction]: increment(-1) });
-        await setDoc(userReactionRef, { reaction: null }, { merge: true });
-        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.remove('active');
-      } else {
-        const updates = { [reaction]: increment(1) };
-        if (currentReaction) {
-          updates[currentReaction] = increment(-1);
-          document.querySelector(`.reaction-buttons button[data-reaction="${currentReaction}"]`)?.classList.remove('active');
+        const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
+        const userReactionSnap = await getDoc(userReactionRef);
+        if (userReactionSnap.exists()) {
+          const userReaction = userReactionSnap.data().reaction;
+          const button = document.querySelector(`.reaction-buttons button[data-reaction="${userReaction}"]`);
+          if (button) button.classList.add('active');
         }
-        await setDoc(reactionRef, { like: 0, love: 0, angry: 0 }, { merge: true });
-        await updateDoc(reactionRef, updates);
-        await setDoc(userReactionRef, { reaction: reaction }, { merge: true });
-        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.add('active');
+      } catch (error) {
+        console.error("Error loading reactions:", error);
       }
-
-      const reactionSnap = await getDoc(reactionRef);
-      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
-      updateReactionButtons(reactionCounts);
-    } catch (error) {
-      console.error("Error toggling reaction:", error.code, error.message);
-      alert(`Failed to update reaction: ${error.message}. Please try again.`);
     }
-  }
 
-  function updateReactionButtons(counts) {
-    document.querySelector('#likeCount').textContent = counts.like || 0;
-    document.querySelector('#loveCount').textContent = counts.love || 0;
-    document.querySelector('#angryCount').textContent = counts.angry || 0;
-  }
+    async function toggleReaction(reaction, sheet, verseIndex) {
+      try {
+        let userId = localStorage.getItem('userId');
+        if (!userId) {
+          userId = generateUserId();
+          localStorage.setItem('userId', userId);
+        }
+        const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
+        const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
+        const userReactionSnap = await getDoc(userReactionRef);
+        const currentReaction = userReactionSnap.exists() ? userReactionSnap.data().reaction : null;
 
-  function generateUserId() {
-    return 'user_' + Math.random().toString(36).substr(2, 9);
-  }
+        if (currentReaction === reaction) {
+          await updateDoc(reactionRef, { [reaction]: increment(-1) });
+          await setDoc(userReactionRef, { reaction: null }, { merge: true });
+          document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.remove('active');
+        } else {
+          const updates = { [reaction]: increment(1) };
+          if (currentReaction) {
+            updates[currentReaction] = increment(-1);
+            document.querySelector(`.reaction-buttons button[data-reaction="${currentReaction}"]`)?.classList.remove('active');
+          }
+          await setDoc(reactionRef, { like: 0, love: 0, angry: 0 }, { merge: true });
+          await updateDoc(reactionRef, updates);
+          await setDoc(userReactionRef, { reaction: reaction }, { merge: true });
+          document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.add('active');
+        }
 
-  function displaySingleVerse(verse, index) {
-    const singleVerseView = document.getElementById("singleVerseView");
-    if (!verse) {
-      singleVerseView.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
-      singleVerseView.style.display = "block";
-      return;
-    }
-    const verseName = verse["Verse Name"] || verse["Verse"] || "Verse";
-    const heading = `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} ${verseName}`;
-    let html = `<h3>${heading}</h3><div class="verse-details">`;
-    const headers = Object.keys(verse).filter(h => h !== "sheet");
-    headers.forEach(header => {
-      let content = verse[header] || "-";
-      if (typeof content === "object" && content.text && content.url) {
-        content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
+        const reactionSnap = await getDoc(reactionRef);
+        const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
+        updateReactionButtons(reactionCounts);
+      } catch (error) {
+        console.error("Error toggling reaction:", error.code, error.message);
+        alert(`Failed to update reaction: ${error.message}. Please try again.`);
       }
-      const className = header === "Verse Category " && typeof verse[header] === "string" 
-        ? getCategoryClass(verse[header].trim().toLowerCase()) 
-        : "";
-      html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
-    });
-    html += `<div class="navigation-arrows">
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>
-        <img src="images/leftarrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';">
-      </a>
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="next ${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>
-        <img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';">
-      </a>
-    </div>`;
-    html += `<div class="reaction-buttons">
-      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
-      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
-      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount">0</span></button>
-    </div>`;
-    html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
-    singleVerseView.innerHTML = html;
-    singleVerseView.style.display = "block";
-  }
+    }
 
-  function navigateVerse(newIndex) {
-    const verse = data[newIndex];
-    const verseName = verse["Verse Name"] || verse["Verse"] || newIndex;
-    history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`);
-    currentVerseIndex = newIndex;
-    displaySingleVerse(verse, newIndex);
-    loadReactions(currentSheet, newIndex);
-  }
+    function updateReactionButtons(counts) {
+      document.querySelector('#likeCount').textContent = counts.like || 0;
+      document.querySelector('#loveCount').textContent = counts.love || 0;
+      document.querySelector('#angryCount').textContent = counts.angry || 0;
+    }
 
-  function updateHeaders(sheetName) {
-    const thead = document.getElementById("tableHeaders");
-    thead.innerHTML = "";
-    if (data.length > 0) {
-      let tr = document.createElement("tr");
-      const headers = Object.keys(data[0]).filter(h => h !== "sheet");
+    function generateUserId() {
+      return 'user_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    function displaySingleVerse(verse, index) {
+      const singleVerseView = document.getElementById("singleVerseView");
+      if (!verse) {
+        singleVerseView.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
+        singleVerseView.style.display = "block";
+        return;
+      }
+      const verseName = verse["Verse Name"] || verse["Verse"] || "Verse";
+      const heading = `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} ${verseName}`;
+      let html = `<h3>${heading}</h3><div class="verse-details">`;
+      const headers = Object.keys(verse).filter(h => h !== "sheet");
       headers.forEach(header => {
-        let th = document.createElement("th");
-        th.textContent = header;
-        th.classList.add(`${sheetName}-header`);
-        tr.appendChild(th);
+        let content = verse[header] || "-";
+        if (typeof content === "object" && content.text && content.url) {
+          content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
+        }
+        const className = header === "Verse Category " && typeof verse[header] === "string"
+          ? getCategoryClass(verse[header].trim().toLowerCase())
+          : "";
+        html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
       });
-      let shareTh = document.createElement("th");
-      shareTh.textContent = "Share";
-      shareTh.style.width = "60px";
-      tr.appendChild(shareTh);
-      thead.appendChild(tr);
+      html += `<div class="navigation-arrows">
+        <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>
+          <img src="images/leftarrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';">
+        </a>
+        <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="next ${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>
+          <img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';">
+        </a>
+      </div>`;
+      html += `<div class="reaction-buttons">
+        <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
+        <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
+        <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount">0</span></button>
+      </div>`;
+      html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
+      singleVerseView.innerHTML = html;
+      singleVerseView.style.display = "block";
     }
-  }
 
-  function updateTable(rows) {
-    const tbody = document.getElementById("verseBody");
-    tbody.innerHTML = "";
-    if (rows.length === 0) {
-      let tr = document.createElement("tr");
-      let td = document.createElement("td");
-      td.textContent = "No data available or error loading data";
-      td.colSpan = Object.keys(data[0] || {}).length + 1 || 2;
-      td.style.textAlign = "center";
-      tr.appendChild(td);
-      tbody.appendChild(tr);
-    } else {
-      rows.forEach((row, index) => {
+    function navigateVerse(newIndex) {
+      const verse = data[newIndex];
+      const verseName = verse["Verse Name"] || verse["Verse"] || newIndex;
+      history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`);
+      currentVerseIndex = newIndex;
+      displaySingleVerse(verse, newIndex);
+      loadReactions(currentSheet, newIndex);
+    }
+
+    function updateHeaders(sheetName) {
+      const thead = document.getElementById("tableHeaders");
+      thead.innerHTML = "";
+      if (data.length > 0) {
         let tr = document.createElement("tr");
-        const headers = Object.keys(row).filter(h => h !== "sheet");
+        const headers = Object.keys(data[0]).filter(h => h !== "sheet");
         headers.forEach(header => {
-          let td = document.createElement("td");
-          let content = row[header] || "";
-          if (typeof content === "string" || (typeof content === "object" && content && content.text)) {
-            const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
-            if (searchTerm && !document.getElementById("searchInput").disabled) {
-              const textToSearch = typeof content === "object" ? content.text : content;
-              const highlighted = textToSearch.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
-              content = typeof content === "object" ? { text: highlighted, url: content.url } : highlighted;
-            }
-            td.innerHTML = typeof content === "object" && content.url
-              ? `<a href="${content.url}" target="_blank">${content.text}</a>`
-              : content;
-          } else {
-            td.textContent = content || "-";
-          }
-          if (header === "Verse Category " && typeof row[header] === "string") {
-            td.className = getCategoryClass(row[header].trim().toLowerCase());
-          }
-          tr.appendChild(td);
+          let th = document.createElement("th");
+          th.textContent = header;
+          th.classList.add(`${sheetName}-header`);
+          tr.appendChild(th);
         });
-        let shareTd = document.createElement("td");
-        shareTd.className = "share-buttons";
-        shareTd.innerHTML = addShareButton(row, index, true);
-        tr.appendChild(shareTd);
-        tbody.appendChild(tr);
-      });
-    }
-    updateContentCount(rows.length);
-  }
-
-  function getCategoryClass(category) {
-    switch (category?.toLowerCase()) {
-      case "universal or ethical verse": return "category-universal";
-      case "general intra-community verse": return "category-general";
-      case "controversial intra-community verse": return "category-controversial";
-      case "divisive or hateful inter-community verse": return "category-divisive";
-      case "violent or aggressive inter-community verse": return "category-violent";
-      default: return "";
-    }
-  }
-
-  function addShareButton(row, index, isTableView = true) {
-    const verseText = row["Verse"] || row["Text"] || "";
-    let verseName = row["Verse Name"] || row["Verse"] || index.toString();
-    if (typeof verseName !== "string") {
-      verseName = index.toString();
-      console.warn(`Invalid Verse Name for sheet=${currentSheet}, index=${index}:`, verseName);
-    }
-    verseName = verseName.trim();
-    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`;
-    const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
-    let html = '';
-    if (isTableView) {
-      html += `<a href="${shareUrl}" target="_blank" class="view-link"><img src="images/click_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
-    }
-    html += `
-      <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
-      <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
-      <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
-      <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
-    `;
-    return html;
-  }
-
-  function filterTable() {
-    const category = document.getElementById("categoryFilter").value;
-    const subCategory = document.getElementById("subCategoryFilter").value;
-    const sheetName = document.getElementById("sheetSelector").value;
-    const searchInput = document.getElementById("searchInput");
-    const searchTerm = searchInput.value.toLowerCase().trim();
-
-    if (sheetName && data.length > 0) {
-      let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
-        const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                                row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
-        return categoryMatch && subCategoryMatch;
-      });
-      updateTable(filteredRows);
-      if (searchTerm) {
-        searchTable();
-      } else {
-        updateMatchCount(0);
+        let shareTh = document.createElement("th");
+        shareTh.textContent = "Share";
+        shareTh.style.width = "60px";
+        tr.appendChild(shareTh);
+        thead.appendChild(tr);
       }
     }
-  }
 
-  function searchTable() {
-    const searchInput = document.getElementById("searchInput");
-    if (searchInput.disabled) return; 
-    const searchTerm = searchInput.value.toLowerCase().trim();
-    const category = document.getElementById("categoryFilter").value;
-    const subCategory = document.getElementById("subCategoryFilter").value;
-    const sheetName = document.getElementById("sheetSelector").value;
-
-    if (sheetName && data.length > 0) {
-      let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
-        const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                                row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
-        return categoryMatch && subCategoryMatch;
-      });
-      if (searchTerm) {
-        let searchFilteredRows = filteredRows.filter(row =>
-          Object.values(row).some(val =>
-            (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
-            (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm))
-          )
-        );
-        let matchCount = 0;
-        searchFilteredRows.forEach(row => {
-          Object.values(row).forEach(val => {
-            if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
-              matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
-            } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm)) {
-              matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+    function updateTable(rows) {
+      const grid = document.getElementById("verseGrid");
+      grid.innerHTML = "";
+      if (rows.length === 0) {
+        grid.innerHTML = `<div style="text-align: center; padding: 20px;">No data available or error loading data</div>`;
+      } else {
+        rows.forEach((row, index) => {
+          let card = document.createElement("div");
+          card.className = "verse-card";
+          const verseName = row["Verse Name"] || row["Verse"] || `Verse ${index + 1}`;
+          card.innerHTML = `<h3>${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} ${verseName}</h3>`;
+          const headers = Object.keys(row).filter(h => h !== "sheet");
+          headers.forEach(header => {
+            let content = row[header] || "-";
+            if (typeof content === "object" && content.text && content.url) {
+              content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
+            } else if (typeof content === "string") {
+              const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+              if (searchTerm && !document.getElementById("searchInput").disabled) {
+                content = content.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
+              }
             }
+            const className = header === "Verse Category " && typeof row[header] === "string"
+              ? getCategoryClass(row[header].trim().toLowerCase())
+              : "";
+            card.innerHTML += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
           });
+          card.innerHTML += `<div class="share-buttons">${addShareButton(row, index, true)}</div>`;
+          grid.appendChild(card);
         });
-        updateTable(searchFilteredRows);
-        updateMatchCount(matchCount);
-      } else {
+      }
+      updateContentCount(rows.length);
+    }
+
+    function getCategoryClass(category) {
+      switch (category?.toLowerCase()) {
+        case "universal or ethical verse": return "category-universal";
+        case "general intra-community verse": return "category-general";
+        case "controversial intra-community verse": return "category-controversial";
+        case "divisive or hateful inter-community verse": return "category-divisive";
+        case "violent or aggressive inter-community verse": return "category-violent";
+        default: return "";
+      }
+    }
+
+    function addShareButton(row, index, isTableView = true) {
+      const verseText = row["Verse"] || row["Text"] || "";
+      let verseName = row["Verse Name"] || row["Verse"] || index.toString();
+      if (typeof verseName !== "string") {
+        verseName = index.toString();
+        console.warn(`Invalid Verse Name for sheet=${currentSheet}, index=${index}:`, verseName);
+      }
+      verseName = verseName.trim();
+      const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`;
+      const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
+      let html = '';
+      if (isTableView) {
+        html += `<a href="${shareUrl}" target="_blank" class="view-link"><i class="fas fa-eye"></i></a>`;
+      }
+      html += `
+        <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
+        <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
+        <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
+        <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
+      `;
+      return html;
+    }
+
+    function filterTable() {
+      const category = document.getElementById("categoryFilter").value;
+      const subCategory = document.getElementById("subCategoryFilter").value;
+      const sheetName = document.getElementById("sheetSelector").value;
+      const searchInput = document.getElementById("searchInput");
+      const searchTerm = searchInput.value.toLowerCase().trim();
+
+      if (sheetName && data.length > 0) {
+        let filteredRows = data.filter(row => {
+          const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" &&
+                                            row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+          const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" &&
+                                                  row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+          return categoryMatch && subCategoryMatch;
+        });
         updateTable(filteredRows);
+        if (searchTerm) {
+          searchTable();
+        } else {
+          updateMatchCount(0);
+        }
+      }
+    }
+
+    function searchTable() {
+      const searchInput = document.getElementById("searchInput");
+      if (searchInput.disabled) return;
+      const searchTerm = searchInput.value.toLowerCase().trim();
+      const category = document.getElementById("categoryFilter").value;
+      const subCategory = document.getElementById("subCategoryFilter").value;
+      const sheetName = document.getElementById("sheetSelector").value;
+
+      if (sheetName && data.length > 0) {
+        let filteredRows = data.filter(row => {
+          const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" &&
+                                            row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+          const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" &&
+                                                  row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+          return categoryMatch && subCategoryMatch;
+        });
+        if (searchTerm) {
+          let searchFilteredRows = filteredRows.filter(row =>
+            Object.values(row).some(val =>
+              (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
+              (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm))
+            )
+          );
+          let matchCount = 0;
+          searchFilteredRows.forEach(row => {
+            Object.values(row).forEach(val => {
+              if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
+                matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+              } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm)) {
+                matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+              }
+            });
+          });
+          updateTable(searchFilteredRows);
+          updateMatchCount(matchCount);
+        } else {
+          updateTable(filteredRows);
+          updateMatchCount(0);
+        }
+      } else {
+        updateTable(data);
         updateMatchCount(0);
       }
-    } else {
-      updateTable(data);
-      updateMatchCount(0);
     }
-  }
 
-  function updateContentCount(count) {
-    document.getElementById("contentCount").textContent = `Content Found: ${count}`;
-  }
+    function updateContentCount(count) {
+      document.getElementById("contentCount").textContent = `Content Found: ${count}`;
+    }
 
-  function updateMatchCount(count) {
-    document.getElementById("matchCount").textContent = `Matches found: ${count}`;
-  }
+    function updateMatchCount(count) {
+      document.getElementById("matchCount").textContent = `Matches found: ${count}`;
+    }
 
-  window.loadSheetData = loadSheetData;
-  window.filterTable = filterTable;
-  window.searchTable = searchTable;
-  window.navigateVerse = navigateVerse;
-  window.toggleReaction = toggleReaction;
+    window.loadSheetData = loadSheetData;
+    window.filterTable = filterTable;
+    window.searchTable = searchTable;
+    window.navigateVerse = navigateVerse;
+    window.toggleReaction = toggleReaction;
 
-  window.onload = () => {
-    initializeFirebase();
-    updateLastUpdated();
-    updateVisitorCount();
-    loadSingleVerse();
-  };
-</script>
+    window.onload = () => {
+      initializeFirebase();
+      updateLastUpdated();
+      updateVisitorCount();
+      loadSingleVerse();
+    };
+  </script>
 </body>
 </html>

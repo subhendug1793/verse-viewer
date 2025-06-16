@@ -88,108 +88,6 @@
       line-height: 1.2; 
       font-weight: 400; 
     }
-    .controls Петербур
-
-System: * It appears the code was cut off at the end of the `<style>` section. Since the code is extensive and you’ve already provided both versions, I’ll proceed with merging the fixes and ensuring the single verse view, footer, and Google Fonts work correctly. I’ll include the complete corrected code below, continuing from where it was cut off, and address all issues.
-
-### Corrected Code (Complete)
-Below is the fully corrected `index.html` that:
-- Retains Google Fonts (`Poppins` and `Merriweather`).
-- Restores the single verse view functionality (styling, navigation, reactions, share buttons).
-- Enhances the footer for better responsiveness and fixes potential alignment issues.
-- Maintains all other functionality (table view, filtering, search, Firebase integration).
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SASTIK GBQ+ Verse Filter</title>
-  <meta property="og:title" content="SASTIK GBQ+ Verse">
-  <meta property="og:description" content="Explore categorized theological verses from the Gita, Bible, Quran, and more.">
-  <meta property="og:image" content="https://subhendug1793.github.io/verse-viewer/images/sastik_logo.png">
-  <meta property="og:url" content="https://subhendug1793.github.io/verse-viewer/">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    body { 
-      font-family: 'Poppins', sans-serif; 
-      margin: 20px; 
-      background: #f9f9f9; 
-      position: relative; 
-      min-height: 100vh; 
-      display: flex;
-      flex-direction: column;
-    }
-    .header-container { 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      margin-bottom: 20px; 
-    }
-    .header-info { 
-      position: absolute; 
-      top: 20px; 
-      right: 20px; 
-      font-size: 0.9em; 
-      color: #666; 
-      z-index: 10; 
-    }
-    .header-info .last-updated a {
-      color: #0066cc;
-      text-decoration: none;
-    }
-    .header-info .visitor-count {
-      margin-left: 20px;
-      vertical-align: middle;
-      display: inline-block;
-      min-height: 20px; 
-      font-weight: 500;
-      color: #333;
-      z-index: 10;
-    }
-    .header-info .visitor-count.error {
-      font-weight: normal;
-      color: #999;
-    }
-    .logo { 
-      width: 80px; 
-      height: auto; 
-      margin-right: 10px; 
-    }
-    h2 { 
-      color: #0066cc;
-      text-align: center; 
-      margin: 0; 
-      font-size: 1.8em;
-      font-weight: 600; 
-      white-space: nowrap; 
-      text-decoration: none; 
-    }
-    h2 a { 
-      color: #0066cc; 
-      text-decoration: none; 
-    }
-    h2 a:hover { 
-      text-decoration: underline; 
-    }
-    .mission-statement { 
-      text-align: center; 
-      margin: 0 auto 10px;
-      max-width: 80%; 
-      font-size: 1.1em; 
-      line-height: 1.5; 
-      font-weight: 500; 
-    }
-    .mission-subtext { 
-      text-align: center; 
-      margin: 0 auto 20px; 
-      max-width: 80%; 
-      font-size: 0.8em;
-      line-height: 1.2; 
-      font-weight: 400; 
-    }
     .controls { 
       margin-bottom: 10px; 
       text-align: center; 
@@ -852,13 +750,18 @@ Below is the fully corrected `index.html` that:
       searchInput.disabled = false;
       errorDisplay.textContent = "";
       document.querySelector('.search-row').style.display = 'flex';
-      const urlsToTry = [`${currentSheet}.json`, `${currentSheet.toLowerCase()}.json`, `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`];
+      const urlsToTry = [
+        `${currentSheet}.json`,
+        `${currentSheet.toLowerCase()}.json`,
+        `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`
+      ];
       let response, sheetData;
       for (const url of urlsToTry) {
         try {
           response = await fetch(url, { cache: 'no-store' });
           if (response.ok) {
             sheetData = await response.json();
+            console.log(`Successfully loaded ${url}`);
             break;
           }
         } catch (err) {
@@ -866,7 +769,7 @@ Below is the fully corrected `index.html` that:
         }
       }
       if (sheetData) {
-        data = sheetData;
+        data = sheetData.filter(row => row["Verse Name"] && (typeof row["Verse Name"] === "string" || row["Verse Name"].text));
         updateHeaders(currentSheet);
         updateTable(data);
         updateContentCount(data.length);
@@ -898,7 +801,11 @@ Below is the fully corrected `index.html` that:
 
     if (sheet && verseParam) {
       currentSheet = sheet;
-      const urlsToTry = [`${sheet}.json`, `${sheet.toLowerCase()}.json`, `${sheet.charAt(0).toUpperCase() + sheet.slice(1).toLowerCase()}.json`];
+      const urlsToTry = [
+        `${sheet}.json`,
+        `${sheet.toLowerCase()}.json`,
+        `${sheet.charAt(0).toUpperCase() + sheet.slice(1).toLowerCase()}.json`
+      ];
       let response, sheetData;
       for (const url of urlsToTry) {
         try {
@@ -913,18 +820,23 @@ Below is the fully corrected `index.html` that:
         }
       }
       if (sheetData) {
-        data = sheetData;
+        data = sheetData.filter(row => row["Verse Name"] && (typeof row["Verse Name"] === "string" || row["Verse Name"].text));
         const normalizedVerseParam = decodeURIComponent(verseParam).trim();
         verseIndex = data.findIndex(row => {
-          const verseName = (row["Verse Name"] || row["Verse"] || "").trim();
-          return verseName === normalizedVerseParam;
+          const verseName = typeof row["Verse Name"] === "string" ? row["Verse Name"].trim() : row["Verse Name"].text.trim();
+          return verseName === normalizedVerseParam || verseName.includes(normalizedVerseParam);
         });
         if (verseIndex === -1) {
-          verseIndex = parseInt(verseParam, 10);
+          const match = normalizedVerseParam.match(/^(\d+)\.(\d+)$/);
+          if (match) {
+            verseIndex = (parseInt(match[1], 10) - 1) * 100 + parseInt(match[2], 10) - 1;
+          } else {
+            verseIndex = parseInt(normalizedVerseParam, 10);
+          }
         }
-        if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < sheetData.length) {
+        if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < data.length) {
           currentVerseIndex = verseIndex;
-          const verse = sheetData[verseIndex];
+          const verse = data[verseIndex];
           displaySingleVerse(verse, verseIndex);
           document.getElementById("controls").style.display = "none";
           document.getElementById("verseTable").style.display = "none";
@@ -1020,6 +932,16 @@ Below is the fully corrected `index.html` that:
     return 'user_' + Math.random().toString(36).substr(2, 9);
   }
 
+  function getFieldValue(field, verse) {
+    const value = verse[field];
+    if (value == null || value === "") return "-";
+    if (typeof value === "string") return value;
+    if (typeof value === "object" && value.text) {
+      return value.url ? `<a href="${value.url}" target="_blank">${value.text}</a>` : value.text;
+    }
+    return JSON.stringify(value);
+  }
+
   function displaySingleVerse(verse, index, errorMessage = null) {
     const singleVerseView = document.getElementById("singleVerseView");
     if (!verse || errorMessage) {
@@ -1027,19 +949,17 @@ Below is the fully corrected `index.html` that:
       singleVerseView.style.display = "block";
       return;
     }
-    const verseName = verse["Verse Name"] || verse["Verse"] || "Verse";
-    const heading = `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} ${verseName}`;
+    const verseName = getFieldValue("Verse Name", verse);
+    const heading = `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} ${verseName.replace(/<[^>]+>/g, '')}`;
     let html = `<h3>${heading}</h3><div class="verse-details">`;
     const headers = Object.keys(verse).filter(h => h !== "sheet");
     headers.forEach(header => {
-      let content = verse[header] || "-";
-      if (typeof content === "object" && content.text && content.url) {
-        content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
-      }
-      const className = header === "Verse Category " && typeof verse[header] === "string" 
+      const normalizedHeader = header.trim();
+      const content = getFieldValue(header, verse);
+      const className = normalizedHeader === "Verse Category" && typeof verse[header] === "string" 
         ? getCategoryClass(verse[header].trim().toLowerCase()) 
         : "";
-      html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
+      html += `<p${className ? ` class="${className}"` : ""}><strong>${normalizedHeader}:</strong> ${content}</p>`;
     });
     html += `</div><div class="reaction-buttons">
       <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
@@ -1061,7 +981,7 @@ Below is the fully corrected `index.html` that:
 
   function navigateVerse(newIndex) {
     const verse = data[newIndex];
-    const verseName = verse["Verse Name"] || verse["Verse"] || newIndex;
+    const verseName = getFieldValue("Verse Name", verse).replace(/<[^>]+>/g, '');
     history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`);
     currentVerseIndex = newIndex;
     displaySingleVerse(verse, newIndex);
@@ -1073,7 +993,7 @@ Below is the fully corrected `index.html` that:
     thead.innerHTML = "";
     if (data.length > 0) {
       let tr = document.createElement("tr");
-      const headers = Object.keys(data[0]).filter(h => h !== "sheet");
+      const headers = Object.keys(data[0]).filter(h => h !== "sheet").map(h => h.trim());
       headers.forEach(header => {
         let th = document.createElement("th");
         th.textContent = header;
@@ -1105,21 +1025,15 @@ Below is the fully corrected `index.html` that:
         const headers = Object.keys(row).filter(h => h !== "sheet");
         headers.forEach(header => {
           let td = document.createElement("td");
-          let content = row[header] || "";
-          if (typeof content === "string" || (typeof content === "object" && content && content.text)) {
+          let content = getFieldValue(header, row);
+          if (typeof content === "string") {
             const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
             if (searchTerm && !document.getElementById("searchInput").disabled) {
-              const textToSearch = typeof content === "object" ? content.text : content;
-              const highlighted = textToSearch.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
-              content = typeof content === "object" ? { text: highlighted, url: content.url } : highlighted;
+              content = content.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
             }
-            td.innerHTML = typeof content === "object" && content.url
-              ? `<a href="${content.url}" target="_blank">${content.text}</a>`
-              : content;
-          } else {
-            td.textContent = content || "-";
           }
-          if (header === "Verse Category " && typeof row[header] === "string") {
+          td.innerHTML = content;
+          if (header.trim() === "Verse Category" && typeof row[header] === "string") {
             td.className = getCategoryClass(row[header].trim().toLowerCase());
           }
           tr.appendChild(td);
@@ -1127,7 +1041,7 @@ Below is the fully corrected `index.html` that:
         let shareTd = document.createElement("td");
         shareTd.className = "share-buttons";
         shareTd.innerHTML = addShareButton(row, index, true);
-        tr.appendChild(tr);
+        tr.appendChild(shareTd);
         tbody.appendChild(tr);
       });
     }
@@ -1146,13 +1060,8 @@ Below is the fully corrected `index.html` that:
   }
 
   function addShareButton(row, index, isTableView = true) {
-    const verseText = row["Verse"] || row["Text"] || "Check out this verse from SASTIK GBQ+";
-    let verseName = row["Verse Name"] || row["Verse"] || index.toString();
-    if (typeof verseName !== "string") {
-      verseName = index.toString();
-      console.warn(`Invalid Verse Name for sheet=${currentSheet}, index=${index}:`, verseName);
-    }
-    verseName = verseName.trim();
+    const verseText = getFieldValue("Verse Name", row).replace(/<[^>]+>/g, '') || "Check out this verse from SASTIK GBQ+";
+    const verseName = verseText || index.toString();
     const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`;
     const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
     let html = '';
@@ -1211,10 +1120,11 @@ Below is the fully corrected `index.html` that:
       });
       if (searchTerm) {
         let searchFilteredRows = filteredRows.filter(row =>
-          Object.values(row).some(val =>
-            (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
-            (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm))
-          )
+          Object.values(row).some(val => {
+            if (typeof val === "string") return val.toLowerCase().includes(searchTerm);
+            if (typeof val === "object" && val && val.text) return val.text.toLowerCase().includes(searchTerm);
+            return false;
+          })
         );
         let matchCount = 0;
         searchFilteredRows.forEach(row => {

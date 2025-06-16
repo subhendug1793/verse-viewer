@@ -158,6 +158,15 @@
       font-weight: bold;
       color: #0066cc;
     }
+    .category-universal { background-color: #00FF00; }
+    .category-general { background-color: #00FFFF; }
+    .category-controversial { background-color: #FFFF00; }
+    .category-divisive { background-color: #FF0000; }
+    .category-violent { background-color: #000000; color: #FFFFFF; }
+    mark { 
+      background-color: yellow; 
+      font-weight: bold; 
+    }
     .see-full-verse {
       display: inline-block;
       padding: 8px 15px;
@@ -169,93 +178,6 @@
     }
     .see-full-verse:hover {
       background: #005bb5;
-    }
-    .category-universal { background-color: #00FF00; }
-    .category-general { background-color: #00FFFF; }
-    .category-controversial { background-color: #FFFF00; }
-    .category-divisive { background-color: #FF0000; }
-    .category-violent { background-color: #000000; color: #FFFFFF; }
-    mark { 
-      background-color: yellow; 
-      font-weight: bold; 
-    }
-    .footer { 
-      position: relative; 
-      margin-top: auto; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      max-width: 80%; 
-      margin: 5px auto 0;
-      padding: 10px 0; 
-      pointer-events: auto; 
-    }
-    .footer a { 
-      text-decoration: none; 
-      cursor: pointer; 
-      pointer-events: auto; 
-    }
-    .footer img { 
-      vertical-align: middle; 
-      pointer-events: auto; 
-    }
-    .logos { 
-      display: flex; 
-      align-items: center; 
-      margin-bottom: 5px; 
-    }
-    .logos img { 
-      width: 60px; 
-      height: auto; 
-      margin-right: 5px; 
-    }
-    .logos img:last-child { 
-      margin-right: 0; 
-    }
-    .text-group { 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      text-align: center; 
-    }
-    .support-text { 
-      font-weight: bold; 
-      font-size: 0.9em; 
-      margin-bottom: 10px; 
-    }
-    .support-text span { 
-      display: block; 
-    }
-    .follow-text { 
-      font-size: 1.1em; 
-      margin: 2px 0; 
-    }
-    .name-text { 
-      font-size: 2em; 
-      margin: 5px 0; 
-    }
-    .contact-text { 
-      font-size: 1em; 
-      max-width: 90%; 
-      text-align: center; 
-      pointer-events: auto; 
-    }
-    .contact-text span { 
-      display: block; 
-      white-space: nowrap; 
-      line-height: 1.4; 
-    }
-    .contact-text img { 
-      width: 20px; 
-      height: auto; 
-      vertical-align: middle; 
-    }
-    .qr-code { 
-      margin: 10px 0; 
-    }
-    .qr-code img { 
-      width: 200px; 
-      height: auto; 
     }
     .share-buttons {
       display: flex;
@@ -657,9 +579,19 @@
       let item = document.createElement("div");
       item.className = "verse-item";
       
-      let detailsHtml = `<div class="verse-header">${row["Verse Name"] || "Unnamed Verse"}</div>`;
+      let detailsHtml = `<div class="verse-header">${row["Verse Name"]?.text || row["Verse Name"] || "Unnamed Verse"}</div>`;
       detailsHtml += `<div class="verse-details">`;
-      const headers = ["Sub Category", "Bengali Translation", "Verse Transliteration (B/E)", "English Translation", "Sanskrit Transliteration", "Reference Links and Files", "SGS Remarks"];
+      let categoryClass = "";
+      if (row["Verse Category "]) {
+        categoryClass = getCategoryClass(row["Verse Category "].trim().toLowerCase());
+        detailsHtml += `<div class="${categoryClass}"><strong>Verse Category:</strong> ${row["Verse Category "] || "-"}</div>`;
+      }
+      const headers = {
+        "gita": ["Sub Category", "Bengali Translation", "Verse Transliteration (B/E)", "English Translation", "Sanskrit Transliteration", "Reference Links and Files", "SGS Remarks"],
+        "bible": ["Sub Category", "Bengali Translation", "Verse in English", "Reference Links and Files", "SGS Remarks"],
+        "quran": ["Sub Category", "Bengali Meaning", "Verse Transliteration (B/E)", "English Meaning", "Reference Links and Files", "SGS Remarks"]
+      }[currentSheet] || ["Sub Category", "Bengali Translation", "English Translation", "Reference Links and Files", "SGS Remarks"];
+
       headers.forEach(header => {
         let content = row[header] || "-";
         let displayContent;
@@ -673,16 +605,12 @@
           displayContent = typeof content === "object" && content.url
             ? `<a href="${content.url}" target="_blank">${content.text}</a>`
             : content;
+        } else if (typeof content === "object" && content && !content.text) {
+          displayContent = "-";
         } else {
           displayContent = content.toString();
         }
-        const className = header === "Sub Category" && typeof row["Verse Category"] === "string"
-          ? getCategoryClass(row["Verse Category"].trim().toLowerCase())
-          : "";
-        detailsHtml += `
-          <div class="${className}">
-            <strong>${header}:</strong> ${displayContent}
-          </div>`;
+        detailsHtml += `<div><strong>${header.replace("Verse in English", "English Translation").replace("Bengali Meaning", "Bengali Translation")}:</strong> ${displayContent}</div>`;
       });
       detailsHtml += `</div>`;
       let shareHtml = addShareButton(row, index, true);
@@ -698,20 +626,30 @@
     const row = data[index];
     if (row) {
       let fullDetails = `<div class="verse-item">`;
-      fullDetails += `<div class="verse-header">${row["Verse Name"] || "Unnamed Verse"}</div>`;
+      fullDetails += `<div class="verse-header">${row["Verse Name"]?.text || row["Verse Name"] || "Unnamed Verse"}</div>`;
       fullDetails += `<div class="verse-details">`;
-      const headers = ["Verse Category", "Sub Category", "Bengali Translation", "Verse Transliteration (B/E)", "English Translation", "Sanskrit Transliteration", "Reference Links and Files", "SGS Remarks"];
-      headers.forEach(header => {
-        let content = row[header] || "-";
-        let displayContent;
-        if (typeof content === "string" || (typeof content === "object" && content && content.text)) {
-          displayContent = typeof content === "object" && content.url
-            ? `<a href="${content.url}" target="_blank">${content.text}</a>`
-            : content;
-        } else {
-          displayContent = content.toString();
+      let categoryClass = "";
+      if (row["Verse Category "]) {
+        categoryClass = getCategoryClass(row["Verse Category "].trim().toLowerCase());
+        fullDetails += `<div class="${categoryClass}"><strong>Verse Category:</strong> ${row["Verse Category "] || "-"}</div>`;
+      }
+      const allHeaders = ["Verse Category ", "Sub Category", "Bengali Translation", "Verse Transliteration (B/E)", "English Translation", "Verse in English", "Sanskrit Transliteration", "Bengali Meaning", "English Meaning", "Reference Links and Files", "SGS Remarks"];
+      allHeaders.forEach(header => {
+        if (row[header] !== undefined) {
+          let content = row[header] || "-";
+          let displayContent;
+          if (typeof content === "string" || (typeof content === "object" && content && content.text)) {
+            const textToSearch = typeof content === "object" ? content.text : content;
+            displayContent = typeof content === "object" && content.url
+              ? `<a href="${content.url}" target="_blank">${textToSearch}</a>`
+              : content;
+          } else if (typeof content === "object" && content && !content.text) {
+            displayContent = "-";
+          } else {
+            displayContent = content.toString();
+          }
+          fullDetails += `<div><strong>${header.replace("Verse in English", "English Translation").replace("Bengali Meaning", "Bengali Translation")}:</strong> ${displayContent}</div>`;
         }
-        fullDetails += `<div><strong>${header}:</strong> ${displayContent}</div>`;
       });
       fullDetails += `</div>`;
       let shareHtml = addShareButton(row, index, true);
@@ -739,8 +677,9 @@
   }
 
   function addShareButton(row, index, isTableView = true) {
-    const verseText = row["Verse"] || row["Text"] || "";
-    let verseName = row["Verse Name"] || row["Verse"] || index.toString();
+    const verseText = (row["Bengali Translation"]?.text || row["Bengali Meaning"]?.text || row["Bengali Translation"] || row["Bengali Meaning"] || "") +
+                     (row["English Translation"]?.text || row["Verse in English"]?.text || row["English Meaning"]?.text || row["English Translation"] || row["Verse in English"] || row["English Meaning"] || "");
+    let verseName = row["Verse Name"]?.text || row["Verse Name"] || index.toString();
     if (typeof verseName !== "string") {
       verseName = index.toString();
       console.warn(`Invalid Verse Name for sheet=${currentSheet}, index=${index}:`, verseName, "at", new Date().toISOString());
@@ -783,8 +722,8 @@
 
     if (sheetName && data.length > 0) {
       let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category"] && typeof row["Verse Category"] === "string" && 
-                                          row["Verse Category"].trim().toLowerCase() === category.toLowerCase());
+        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
+                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
         const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
                                                 row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
         return categoryMatch && subCategoryMatch;
@@ -808,8 +747,8 @@
 
     if (sheetName && data.length > 0) {
       let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category"] && typeof row["Verse Category"] === "string" && 
-                                          row["Verse Category"].trim().toLowerCase() === category.toLowerCase());
+        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
+                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
         const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
                                                 row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
         return categoryMatch && subCategoryMatch;

@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SASTIK GBQ+ Verse Filter</title>
-  <!-- Open Graph Meta Tags for Facebook Sharing -->
   <meta property="og:title" content="SASTIK GBQ+ Verse">
   <meta property="og:description" content="Explore categorized theological verses from the Gita, Bible, Quran, and more.">
   <meta property="og:image" content="https://subhendug1793.github.io/verse-viewer/images/sastik_logo.png">
@@ -298,10 +297,7 @@
       position: relative; 
     }
     .share-buttons a.view-link::after { 
-      content: '👆'; 
-      position: absolute; 
-      top: -10px; 
-      font-size: 0.8em; 
+      content: none; /* Removed 👆 emoji */
     }
     .navigation-arrows {
       position: absolute;
@@ -326,7 +322,7 @@
     }
     .navigation-arrows .prev {
       position: absolute;
-      left: -30px;
+      left: -40px; /* Moved left to avoid text overlap */
     }
     .navigation-arrows .next {
       position: absolute;
@@ -345,10 +341,10 @@
       display: flex;
       align-items: center;
       gap: 5px;
-      font-size: 18px; /* Emoji size */
+      font-size: 18px;
     }
     .reaction-buttons button.active {
-      font-weight: bold; /* Highlight active */
+      font-weight: bold;
     }
     .reaction-buttons span {
       font-size: 0.9em;
@@ -465,13 +461,13 @@
         width: 30px;
       }
       .navigation-arrows .prev {
-        left: -20px;
+        left: -30px; /* Adjusted for mobile */
       }
       .navigation-arrows .next {
         right: -20px;
       }
       .reaction-buttons button {
-        font-size: 16px; /* Smaller emojis on mobile */
+        font-size: 16px;
       }
     }
   </style>
@@ -556,11 +552,9 @@
   </div>
 
 <script type="module">
-  // Import Firebase SDKs
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-  // Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyCou0LOLpeijDPxHlVN1pvpruvxdrLKVWk",
     authDomain: "verseviewercounter.firebaseapp.com",
@@ -571,7 +565,6 @@
     measurementId: "G-NE4PCNMR8D"
   };
 
-  // Initialize Firebase
   let db = null;
   function initializeFirebase() {
     try {
@@ -583,7 +576,6 @@
     }
   }
 
-  // Expose copyToClipboard to global scope
   window.copyToClipboard = function(text) {
     navigator.clipboard.writeText(text).then(() => {
       alert("Link copied to clipboard!");
@@ -593,7 +585,6 @@
     });
   };
 
-  // Expose shareAnywhere to global scope
   window.shareAnywhere = function(verseText, shareUrl) {
     if (navigator.share) {
       navigator.share({
@@ -606,7 +597,6 @@
     }
   };
 
-  // Data storage
   let data = [];
   let currentSheet = "";
   let currentVerseIndex = -1;
@@ -812,7 +802,7 @@
     try {
       const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
       const reactionSnap = await getDoc(reactionRef);
-      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 }; // Removed dislike
+      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
       updateReactionButtons(reactionCounts);
       const userId = localStorage.getItem('userId') || generateUserId();
       localStorage.setItem('userId', userId);
@@ -830,7 +820,11 @@
 
   async function toggleReaction(reaction, sheet, verseIndex) {
     try {
-      const userId = localStorage.getItem('userId');
+      let userId = localStorage.getItem('userId');
+      if (!userId) {
+        userId = generateUserId();
+        localStorage.setItem('userId', userId);
+      }
       const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
       const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
       const userReactionSnap = await getDoc(userReactionRef);
@@ -839,30 +833,32 @@
       if (currentReaction === reaction) {
         await updateDoc(reactionRef, { [reaction]: increment(-1) });
         await setDoc(userReactionRef, { reaction: null }, { merge: true });
-        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`).classList.remove('active');
+        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.remove('active');
       } else {
+        const updates = { [reaction]: increment(1) };
         if (currentReaction) {
-          await updateDoc(reactionRef, { [currentReaction]: increment(-1) });
-          document.querySelector(`.reaction-buttons button[data-reaction="${currentReaction}"]`).classList.remove('active');
+          updates[currentReaction] = increment(-1);
+          document.querySelector(`.reaction-buttons button[data-reaction="${currentReaction}"]`)?.classList.remove('active');
         }
-        await updateDoc(reactionRef, { [reaction]: increment(1) }, { merge: true });
+        await setDoc(reactionRef, { like: 0, love: 0, angry: 0 }, { merge: true });
+        await updateDoc(reactionRef, updates);
         await setDoc(userReactionRef, { reaction: reaction }, { merge: true });
-        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`).classList.add('active');
+        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.add('active');
       }
 
       const reactionSnap = await getDoc(reactionRef);
-      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 }; // Removed dislike
+      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
       updateReactionButtons(reactionCounts);
     } catch (error) {
-      console.error("Error toggling reaction:", error);
-      alert("Failed to update reaction. Please try again.");
+      console.error("Error toggling reaction:", error.code, error.message);
+      alert(`Failed to update reaction: ${error.message}. Please try again.`);
     }
   }
 
   function updateReactionButtons(counts) {
     document.querySelector('#likeCount').textContent = counts.like || 0;
     document.querySelector('#loveCount').textContent = counts.love || 0;
-    document.querySelector('#angryCount').textContent = counts.angry || 0; // Removed dislike
+    document.querySelector('#angryCount').textContent = counts.angry || 0;
   }
 
   function generateUserId() {
@@ -898,7 +894,6 @@
         <img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';">
       </a>
     </div>`;
-    // Updated reaction buttons with emojis, removed dislike
     html += `<div class="reaction-buttons">
       <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
       <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
@@ -1096,14 +1091,12 @@
     document.getElementById("matchCount").textContent = `Matches found: ${count}`;
   }
 
-  // Expose functions to global scope
   window.loadSheetData = loadSheetData;
   window.filterTable = filterTable;
   window.searchTable = searchTable;
   window.navigateVerse = navigateVerse;
   window.toggleReaction = toggleReaction;
 
-  // Initialize on page load
   window.onload = () => {
     initializeFirebase();
     updateLastUpdated();

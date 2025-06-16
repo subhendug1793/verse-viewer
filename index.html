@@ -200,6 +200,7 @@
       margin: 8px 0;
       font-size: 0.9em;
       text-align: center;
+      display: block;
     }
     .verse-card .category {
       padding: 2px 8px;
@@ -847,7 +848,7 @@
     }
 
     if (sheetData && Array.isArray(sheetData)) {
-      console.log(`Loaded ${sheetData.length} records for ${currentSheet}`);
+      console.log(`Loaded ${sheetData.length} records for ${currentSheet}`, sheetData.slice(0, 2));
       data = sheetData;
       filteredData = data;
       errorDisplay.textContent = "";
@@ -977,7 +978,7 @@
       const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
       const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
 
-      await runTransaction(db, async (transaction) => {
+      await db.runTransaction(async (transaction) => {
         const reactionSnap = await transaction.get(reactionRef);
         const userReactionSnap = await transaction.get(userReactionRef);
         const currentReaction = userReactionSnap.exists() ? userReactionSnap.data().reaction : null;
@@ -1004,7 +1005,7 @@
       await loadReactions(sheet, verseIndex);
     } catch (error) {
       console.error("Error toggling reaction:", error.message);
-      alert("Failed to update reaction. Please try again.");
+      alert("Failed to update reaction. Please try again later.");
     }
   }
 
@@ -1012,8 +1013,8 @@
     const likeCount = document.querySelector('#likeCount');
     const loveCount = document.querySelector('#loveCount');
     const angryCount = document.querySelector('#angryCount');
-    if (likeCount) likeCount.textContent = counts.like || 0;
-    if (loveCount) loveCount.textContent = counts.love || 0;
+    if (likeCount) likeCount.textContent = counts[like] || 0;
+    if (loveCount) loveCount.textContent = counts[love] || 0;
     if (angryCount) angryCount.textContent = counts.angry || 0;
   }
 
@@ -1024,26 +1025,26 @@
   function getBengaliCategory(category) {
     const map = {
       "universal or ethical verse": "সর্বজনীন বা নৈতিক শ্লোক",
-      "general intra-community verse": "সাধারণ অন্তঃসম্প্রদায়িক শ্লোক",
-      "controversial intra-community verse": "বিতর্কিত অন্তঃসম্প্রদায়িক শ্লোক",
+      "general intra-community verse": "সাধারণ অন্তঃস্মপ্রদায়িক শ্লোক",
+      "controversial intra-community verse": "বিতর্কিত অন্তঃসম্প্রদায়িক শ্লোক",
       "divisive or hateful inter-community verse": "বিভাজনমূলক বা বিদ্বেষমূলক আন্তঃসম্প্রদায়িক শ্লোক",
-      "violent or aggressive inter-community verse": "হিংস্র বা আক্রমণাত্মক আন্তঃসম্প্রদায়িক শ্লোক",
+      "violent or aggressive inter-community verse": "হিংস্র বা আক্রমণাত্মক আন্তঃস্মপ্রদায়িক শ্লোক",
       "historical or narrative verse": "ঐতিহাসিক বা কাহিনীমূলক শ্লোক",
       "metaphorical or symbolic verse": "রূপক বা প্রতীকীমূলক শ্লোক",
-      "discriminatory or prejudiced verse": "বৈষম্যপূর্ণ বা পক্ষপাতমূলক শ্লোক"
+      "discriminatory or prejudiced verse": "বৈষম্যপূর্ণ বা পক্ষপাতমূলক শ্লোক",
     };
-    return map[category.toLowerCase()] || category;
+    return map[category.toLowerCase()] || category || "";
   }
 
   function getCategoryClass(category) {
-    switch (category?.toLowerCase()?.trim()) {
+    switch (category?.toLowerCase()?.trim() || "") {
       case "universal or ethical verse": return "category-universal";
       case "general intra-community verse": return "category-general";
       case "controversial intra-community verse": return "category-controversial";
       case "divisive or hateful inter-community verse": return "category-divisive";
       case "violent or aggressive inter-community verse": return "category-violent";
       default: return "";
-    }
+    };
   }
 
   function displaySingleVerse(verse, index) {
@@ -1056,48 +1057,50 @@
     }
     const verseName = verse["Verse Name"] || verse["Verse"] || "Verse";
     const heading = `${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)} ${verseName}`;
+    console.log(`Rendering single verse: ${heading}`);
     let html = `<h3>${heading}</h3><div class="verse-details">`;
     const headers = Object.keys(verse).filter(h => h !== "sheet");
+    console.log("Headers for single verse:", headers);
     headers.forEach(header => {
       let content = verse[header] || "-";
-      if (content && typeof content === "object" && content.text && content.url) {
+      if (content && content && typeof content === "object" && content.text && content.url) {
         content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
       }
-      const className = header === "Verse Category" ? getCategoryClass(verse[header] || "") : "";
-      html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}${header === "Verse Category" || header === "Sub Category" ? ` / ${getBengaliCategory(verse[header] || "")}` : ""}</p>`;
+      const className = header === "Verse Category" ? getCategoryClass(content) : "";
+      html += `<p>${className ? ` class="${className}"` : ""}><strong>${header}:</strong> <span>${content}</span>${header === "Verse Category" || header === "Sub Category" ? ` / ${getBengaliCategory(verse[header] || "")}` : ""}</p>`;
     });
     html += `<div class="reaction-buttons">
       <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
-      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="love">0</span></button>
-      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCode">0</span></button>
+      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
+      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount">0</span></button>
     </div>`;
-    html += `</div><div class="share-buttons">${addShareButtons(verse, index)}</div>`;
+    html += `</div><div class="share-buttons">${addShareButton(verse, index)}</div>`;
     const prevDisabled = index <= 0 ? 'disabled' : '';
-    const nextDisabled = index >= data.length - 1 ? 'disabled' : '';
+    const nextDisabled = index >= data.length - 1 ? 'disabled' : '');
     const verseNamePrev = data[index - 1]?.["Verse Name"] || data[index - 1]?.["Verse"] || (index - 1).toString();
-    const verseNameNext = data[index + 1]?.["Verse Name"] || data[index + 1]?.["Verse"] || (index + 1).toString();
+    const verseNameNext = data[index + 1]?["Verse Name"] || data[index + 1]?.["Verse"] || (index + 1).toString();
     html += `<div class="navigation-buttons">
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNamePrev)}" class="prev ${prevDisabled}" ${prevDisabled ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}><</a>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNamePrev)}" class="prev ${prevDisabled}" ${prevDisabled ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>><</a>
       <a href="/verse-viewer/" target="_blank" onclick="loadHome(); return false;">Home</a>
       <a href="?sheet=${encodeURIComponent(currentSheet)}" onclick="loadSheetData('${currentSheet}'); return false;">Back to ${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)}</a>
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameNext)}" class="next ${nextDisabled}" ${nextDisabled ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>></a>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameNext)}" class="next ${nextDisabled}" ${nextDisabled ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>"></a>
     </div>`;
     singleVerseView.innerHTML = html;
     singleVerseView.style.display = "block";
   }
 
-  function addShareButtons(verse, index) {
+  function addShareButton(row, index) {
     const verseText = row["Verse"] || row["Text"] || "";
     const verseName = row["Verse Name"] || row["Verse"] || index.toString();
     const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`;
-    const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
-    console.log(`Generating shareable URL: ${shareUrl}`);
+    const escapedShareUrl = shareUrl.replace(/'/g, "\\'\'");
+    console.log(`Generating share URL: ${shareUrl}`);
     return `
       <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="Facebook" alt="Facebook"></a>
       <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
-      <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
-      <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share.png" alt="Share"></a>
+      <a href="#" onclick="copyToClipboard('https://${encodeURIComponent('https://escapedShareUrl}'); return false;"><img src="https://images/link_logo.png" alt="Copy Link"></a>
+      <a href="#" onclick="shareAnywhere('https://${encodeURIComponent('https://verseText.replace(/'/g, "\\'\'")}', '${escapedShareUrl}'); return false;"><img src="https://images/share_logo.png" alt="Share"></a>
     `;
   }
 
@@ -1109,57 +1112,69 @@
       verseContainer.innerHTML = `<p style="text-align: center;">No verses found</p>`;
       return;
     }
-    rows.forEach((row, filteredIndex) => {
-      const verseName = row["Verse Name"] || row["Verse"] || filteredIndex.toString();
+    rows.forEach((row =>, filteredIndex, index => {
+      console.log(`Rendering verse at filteredIndex ${filteredIndex}:`, row);
+      const verseName = row["Verse Name"] || row["Verse"] || ", filteredVerse, rowIndex.toString();
       const verseCategory = row["Verse Category"] || "";
       const subCategory = row["Sub Category"] || "";
-      const transliteration = row["Transliteration"] || "";
-      const bengaliTranslation = row["Bengali Translation"] || "";
-      const translation = row["Translation"] || "";
-      const dataIndex = data.findIndex(item => item["Verse Name"] === row["Verse Name"] && item["Verse"] === row["Verse"]);
-      let html = `<div class="verse-card" data-filtered-index="${filteredIndex}" data-data-index="${dataIndex}">
-        <div class="verse-name">${typeof verseName === "object" && verseName.text && verseName.url ? `<a href="${verseName.url}" target="_blank">${verseName.text}</a>` : verseName}</div>`;
+      const transliteration = row["Verse Transliteration"] || ["Transliteration"] || "";
+      const bengaliTranslation = row["Bengali Translation"] || ["bengali_translation"] || "";
+      const translation = row["Translation"] || ["English Translation"] || "";
+      const dataIndex = data.findIndex(item => item["Verse Name"] === row["Verse Name"] && item["Verse"].=== row["Verse"]);
+      console.log(`Mapped to dataIndex: ${dataIndex}`);
+      let html = `<div class="verse-card" data-filtered-index="${filteredIndex}" data-data-index="${dataIndex}">${`
+        <div class="${verse-}name">${typeof verseName === "object" && verseName && verseName.text && verseName.url ? `<a href="${verseName.text.url}" target="_blank">${verseName.text}</a>` : verseName}</div>`;
       const fields = [
-        { label: "Verse Category", value: verseCategory, className: getCategoryClass(verseCategory) },
-        { label: "Sub Category", value: subCategory },
-        { label: "Verse Transliteration", value: transliteration },
-        { label: "Bengali Translation", value: bengaliTranslation },
-        { label: "English Translation", value: translation }
-      ].filter(field => field.value).slice(0, 5); // Limit to 5 fields in preview
-      fields.forEach(field => {
-        html += `<p${field.className ? ` class="${field.className}"` : ""}><strong>${field.label}</strong>: ${field.value}${field.label === "Verse Category" || field.label === "Sub Category" ? ` / ${getBengaliCategory(field.value)}` : ""}</p>`;
+        { label: "Verse Category", value: verseCategory, className: getCategoryClass(verseCategory), key: "Verse Category" },
+        { label: "Sub Category", value: subCategory, key: "Sub Category" },
+        { label: "Verse Transliteration", value: transliteration, key: "Transliteration", },
+        { label: "Bengali Translation", value: bengaliTranslation, key: "Bengali Translation", },
+        { label: "English Translation", value: translation, key: "Translation", }
+      ].filter(([_, { value }]) => value).slice(0, 5); // Limit to 5 non-empty fields
+      console.log(`Fields for verse ${verseName}:`, fields);
+      fields.forEach((({label, value, className, key}) => {
+        html += `<p${className ? ` class="${className}"` : ""}"><strong>${label}:</strong> ${value}${key === "Verse Category" || key === "Sub Category" ? ` / ${getBengaliCategory(value)}` : ""}</p>`;
+      });
+      // Add any additional fields not in fields array
+      Object.keys(row).forEach(key => {
+        if (!fields.some(f => f.key === key) && key !== "Verse Name" && key !== "Verse" && row[key]) {
+          html += `<p><strong>p${key}:</strong>: ${row[key]}</p>`;
+          console.log(`Added additional field ${key}: ${row[key]}`);
+        });
       });
       html += `<button class="see-full" onclick="showFullVerse(${dataIndex})">See Full Verse</button></div>`;
       verseContainer.innerHTML += html;
     });
-    updateContentCount(rows.length);
   }
 
-  window.showFullVerse = function(dataIndex) {
+  window.showFullVerse = function showFullVerse(dataIndex) => {
     console.log(`showFullVerse: dataIndex=${dataIndex}`);
     const verse = data[dataIndex];
-    if (verse) {
+    if (verse !== null, verse) {
       console.log(`Displaying full verse for dataIndex=${dataIndex}, verse=`, verse);
-      displaySingleVerse(verse, dataIndex);
+      displaySingleVerse({verse, dataIndex);
     } else {
       console.error("Verse not found at dataIndex:", dataIndex);
       document.getElementById("errorDisplay").textContent = "Error displaying full verse.";
     }
-  };
+  });
 
   function filterTable() {
     console.log("Filtering table...");
-    const category = document.getElementById("categoryFilter").value;
-    const subCategory = document.getElementById("subCategoryFilter").value;
+    const category = document.getElementById("categoryFilter").value.toLowerCase().trim();
+    const subCategory = document.getElementById("subCategoryFilter").value.toLowerCase();
+    console.log(`Filter criteria: category=${category}, subCategory=${subCategory}`);
 
     if (currentSheet && data.length > 0) {
       sessionStorage.setItem(`filter_category_${currentSheet}`, category);
       sessionStorage.setItem(`filter_subCategory_${currentSheet}`, subCategory);
       filteredData = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category"] || "").trim().toLowerCase() === category.toLowerCase();
-        const subCategoryMatch = !subCategory || (row["Sub Category"] || "").trim().toLowerCase() === subCategory.toLowerCase();
+        const categoryMatch = !category || (row["Verse Category"]?.trim()?.toLowerCase() || "") === category;
+        const subCategoryMatch = !subCategory || (row["subCategory"]?.trim()?.toLowerCase() || "") === subCategory;
+        console.log(`Row:`, row, `Category Match: ${categoryMatch}, SubCategory Match: ${subCategoryMatch}`);
         return categoryMatch && subCategoryMatch;
       });
+      console.log(`Filtered ${filteredData.length} records`);
       isFiltered = category || subCategory;
       updateVerseCards(filteredData);
       searchTable();
@@ -1174,21 +1189,22 @@
     let searchFilteredRows = filteredData;
     if (searchTerm) {
       searchFilteredRows = filteredData.filter(row =>
-        Object.values(row).some(val =>
-          (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
-          (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm))
+        row => Object.values(row).some(val =>
+          (typeof val === "string" && val.toLowerCase().trim().includes(searchTerm)) ||
+          (typeof val === "object' && val && val.text && val.text.toLowerCase().includes(searchTerm))
         )
       );
       searchFilteredRows.forEach(row => {
         Object.values(row).forEach(val => {
           if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
-            matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+            matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g'))?.length || []) || 0).length;
           } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm)) {
-            matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+            matchCount += (val.text.toLowerCase().match(/new RegExp(searchTerm, 'g'))?.length || []) || 0).length;
           }
         });
       });
     }
+    console.log(`Search filtered: ${searchFilteredRows.length} rows, ${matchCount} matches`);
     updateVerseCards(searchFilteredRows);
     updateMatchCount(matchCount);
   }
@@ -1287,8 +1303,16 @@
     });
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
-    if (categoryFilter) categoryFilter.addEventListener("change", debounce(filterTable, 200));
-    if (subCategoryFilter) subCategoryFilter.addEventListener("change", debounce(filterTable, 200));
+    if (categoryFilter) {
+      categoryFilter.removeEventListener("change", filterTable);
+      categoryFilter.addEventListener("change", debounce(filterTable, 200));
+      console.log("Attached change listener to categoryFilter");
+    }
+    if (subCategoryFilter) {
+      subCategoryFilter.removeEventListener("change", filterTable);
+      subCategoryFilter.addEventListener("change", debounce(filterTable, 200));
+      console.log("Attached change listener to subCategoryFilter");
+    }
   };
 </script>
 </body>

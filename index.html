@@ -147,8 +147,8 @@
     .verse-details {
       display: flex;
       flex-grow: 1;
-      gap: 20px;
-      text-align: center;
+      gap: 10px;
+      text-align: left;
       flex-wrap: wrap;
     }
     .verse-detail {
@@ -260,49 +260,15 @@
       width: 200px; 
       height: auto; 
     }
-    .single-verse-view { 
-      text-align: center; 
-      margin: 20px auto; 
-      max-width: 80%; 
-      padding: 20px; 
-      background-color: #fff; 
-      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
-      position: relative; 
+    .share-buttons {
+      display: flex;
+      gap: 5px;
+      align-items: center;
     }
-    .single-verse-view h3 { 
-      color: #0066cc; 
-      margin-bottom: 10px; 
-    }
-    .verse-details { 
-      margin-bottom: 20px; 
-      text-align: left; 
-    }
-    .verse-details p { 
-      margin: 5px 0; 
-      font-size: 1em; 
-    }
-    .verse-details strong { 
-      display: inline-block; 
-      width: 150px; 
-      font-weight: bold; 
-    }
-    .share-buttons { 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      gap: 8px; 
-    }
-    .single-verse-share-buttons { 
-      display: flex; 
-      flex-direction: row; 
-      justify-content: center; 
-      gap: 12px; 
-      flex-wrap: wrap; 
-    }
-    .share-buttons img, .single-verse-share-buttons img { 
-      width: 24px; 
-      height: 24px; 
-      vertical-align: middle; 
+    .share-buttons img {
+      width: 24px;
+      height: 24px;
+      vertical-align: middle;
     }
     .navigation-arrows {
       position: absolute;
@@ -449,22 +415,9 @@
       .support-text { 
         font-size: 0.7em; 
       }
-      .single-verse-view { 
-        max-width: 90%; 
-        padding: 15px; 
-      }
-      .verse-details p { 
-        font-size: 0.9em; 
-      }
-      .verse-details strong { 
-        width: 120px; 
-      }
-      .share-buttons img, .single-verse-share-buttons img { 
-        width: 20px; 
-        height: 20px; 
-      }
-      .share-buttons a, .single-verse-share-buttons a { 
-        width: 30px; 
+      .share-buttons img {
+        width: 20px;
+        height: 20px;
       }
       .navigation-arrows img {
         width: 30px;
@@ -502,7 +455,6 @@
   <div class="mission-subtext">
     ⬇️ A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. ⬇️
   </div>
-  <div class="single-verse-view" id="singleVerseView" style="display: none;"></div>
   <div class="controls" id="controls">
     <label for="sheetSelector">Select Gita/Bible/Quran+:</label>
     <select id="sheetSelector" onchange="loadSheetData()">
@@ -762,122 +714,19 @@
   }
 
   async function loadSingleVerse() {
-    const params = new URLSearchParams(window.location.search);
-    const sheet = params.get("sheet");
-    const verseParam = params.get("verse");
-    let verseIndex = -1;
-
-    if (sheet && verseParam) {
-      currentSheet = sheet;
-      const urlsToTry = [`${sheet}.json`, `${sheet.toLowerCase()}.json`, `${sheet.charAt(0).toUpperCase() + sheet.slice(1).toLowerCase()}.json`];
-      let response, sheetData;
-      for (const url of urlsToTry) {
-        try {
-          response = await fetch(url, { cache: 'no-store' });
-          if (response.ok) {
-            sheetData = await response.json();
-            break;
-          }
-        } catch (err) {
-          console.warn(`Error fetching ${url}:`, err.message, "at", new Date().toISOString());
-        }
-      }
-      if (sheetData) {
-        data = sheetData;
-        const normalizedVerseParam = decodeURIComponent(verseParam).trim().toLowerCase();
-        verseIndex = data.findIndex(row => {
-          const verseName = (row["Verse Name"] || row["Verse"] || "").trim().toLowerCase();
-          return verseName.includes(normalizedVerseParam) || parseInt(verseParam) === data.indexOf(row);
-        });
-        if (verseIndex >= 0 && verseIndex < sheetData.length) {
-          currentVerseIndex = verseIndex;
-          const verse = sheetData[verseIndex];
-          displaySingleVerse(verse, verseIndex);
-          document.getElementById("controls").style.display = "none";
-          document.getElementById("verseCards").style.display = "none";
-          document.querySelector('.search-row').style.display = 'none';
-          await loadReactions(sheet, verseIndex);
-        } else {
-          console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`, "at", new Date().toISOString());
-          displaySingleVerse(null, -1);
-          document.getElementById("controls").style.display = "none";
-          document.getElementById("verseCards").style.display = "none";
-          document.querySelector('.search-row').style.display = 'none';
-        }
-      } else {
-        console.error(`Failed to load ${sheet}.json`, "at", new Date().toISOString());
-        displaySingleVerse(null, -1);
-        document.getElementById("controls").style.display = "none";
-        document.getElementById("verseCards").style.display = "none";
-        document.querySelector('.search-row').style.display = 'none';
-      }
-    } else {
-      document.getElementById("singleVerseView").style.display = "none";
-      document.querySelector('.search-row').style.display = 'flex';
-    }
+    // Removed single verse view functionality
   }
 
   async function loadReactions(sheet, verseIndex) {
-    try {
-      const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
-      const reactionSnap = await getDoc(reactionRef);
-      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
-      updateReactionButtons(reactionCounts);
-      const userId = localStorage.getItem('userId') || generateUserId();
-      localStorage.setItem('userId', userId);
-      const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
-      const userReactionSnap = await getDoc(userReactionRef);
-      if (userReactionSnap.exists()) {
-        const userReaction = userReactionSnap.data().reaction;
-        const button = document.querySelector(`.reaction-buttons button[data-reaction="${userReaction}"]`);
-        if (button) button.classList.add('active');
-      }
-    } catch (error) {
-      console.error("Error loading reactions:", error.message, "at", new Date().toISOString());
-    }
+    // Removed as single verse view is no longer used
   }
 
   async function toggleReaction(reaction, sheet, verseIndex) {
-    try {
-      let userId = localStorage.getItem('userId');
-      if (!userId) {
-        userId = generateUserId();
-        localStorage.setItem('userId', userId);
-      }
-      const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
-      const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
-      const userReactionSnap = await getDoc(userReactionRef);
-      const currentReaction = userReactionSnap.exists() ? userReactionSnap.data().reaction : null;
-
-      if (currentReaction === reaction) {
-        await updateDoc(reactionRef, { [reaction]: increment(-1) });
-        await setDoc(userReactionRef, { reaction: null }, { merge: true });
-        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.remove('active');
-      } else {
-        const updates = { [reaction]: increment(1) };
-        if (currentReaction) {
-          updates[currentReaction] = increment(-1);
-          document.querySelector(`.reaction-buttons button[data-reaction="${currentReaction}"]`)?.classList.remove('active');
-        }
-        await setDoc(reactionRef, { like: 0, love: 0, angry: 0 }, { merge: true });
-        await updateDoc(reactionRef, updates);
-        await setDoc(userReactionRef, { reaction: reaction }, { merge: true });
-        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.add('active');
-      }
-
-      const reactionSnap = await getDoc(reactionRef);
-      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
-      updateReactionButtons(reactionCounts);
-    } catch (error) {
-      console.error("Error toggling reaction:", error.message, "at", new Date().toISOString());
-      alert(`Failed to update reaction: ${error.message}. Please try again.`);
-    }
+    // Removed as single verse view is no longer used
   }
 
   function updateReactionButtons(counts) {
-    document.querySelector('#likeCount').textContent = counts.like || 0;
-    document.querySelector('#loveCount').textContent = counts.love || 0;
-    document.querySelector('#angryCount').textContent = counts.angry || 0;
+    // Removed as single verse view is no longer used
   }
 
   function generateUserId() {
@@ -885,51 +734,11 @@
   }
 
   function displaySingleVerse(verse, index) {
-    const singleVerseView = document.getElementById("singleVerseView");
-    if (!verse) {
-      singleVerseView.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
-      singleVerseView.style.display = "block";
-      return;
-    }
-    const verseName = verse["Verse Name"] || verse["Verse"] || "Verse";
-    const heading = `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} ${verseName}`;
-    let html = `<h3>${heading}</h3><div class="verse-details">`;
-    const headers = Object.keys(verse).filter(h => h !== "sheet");
-    headers.forEach(header => {
-      let content = verse[header] || "-";
-      if (typeof content === "object" && content.text && content.url) {
-        content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
-      }
-      const className = header === "Verse Category" && typeof verse[header] === "string" 
-        ? getCategoryClass(verse[header].trim().toLowerCase()) 
-        : "";
-      html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
-    });
-    html += `<div class="navigation-arrows">
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>
-        <img src="images/leftarrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';">
-      </a>
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="next ${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>
-        <img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';">
-      </a>
-    </div>`;
-    html += `<div class="reaction-buttons">
-      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
-      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
-      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount">0</span></button>
-    </div>`;
-    html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
-    singleVerseView.innerHTML = html;
-    singleVerseView.style.display = "block";
+    // Removed as single verse view is no longer used
   }
 
   function navigateVerse(newIndex) {
-    const verse = data[newIndex];
-    const verseName = verse["Verse Name"] || verse["Verse"] || newIndex;
-    history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`);
-    currentVerseIndex = newIndex;
-    displaySingleVerse(verse, newIndex);
-    loadReactions(currentSheet, newIndex);
+    // Removed as single verse view is no longer used
   }
 
   function updateTable(rows) {
@@ -945,7 +754,7 @@
       card.className = "verse-card";
       
       let detailsHtml = `<div class="verse-details">`;
-      const headers = ["Verse Name", "Verse Category", "Sub Category", "Bengali Translation", "English Translation", "Sanskrit Transliteration", "Reference Links and Files", "SGS Remarks", "Share"];
+      const headers = ["Verse Category", "Sub Category", "Verse Name", "Verse Transliteration (B/E)", "Bengali Translation", "English Translation", "Sanskrit Transliteration", "Reference Links and Files", "SGS Remarks"];
       headers.forEach(header => {
         let content = row[header] || "-";
         let displayContent;
@@ -971,9 +780,10 @@
           </div>`;
       });
       detailsHtml += `</div>`;
+      let shareHtml = addShareButton(row, index, true);
       let seeFullVerseHtml = `<a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(row["Verse Name"] || row["Verse"] || index.toString())}" class="see-full-verse">See Full Verse</a>`;
 
-      card.innerHTML = detailsHtml + seeFullVerseHtml;
+      card.innerHTML = detailsHtml + `<div class="share-buttons">${shareHtml}</div>` + seeFullVerseHtml;
       verseCardsContainer.appendChild(card);
     });
     updateContentCount(rows.length);
@@ -1002,7 +812,7 @@
     const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
     let html = '';
     if (isTableView) {
-      html += `<a href="${shareUrl}" target="_blank" class="view-link"><img src="images/click_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
+      html += `<a href="${shareUrl}" target="_blank"><img src="images/click_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
     }
     const copyLink = document.createElement("a");
     copyLink.href = "#";
@@ -1116,15 +926,12 @@
   window.loadSheetData = loadSheetData;
   window.filterTable = filterTable;
   window.searchTable = searchTable;
-  window.navigateVerse = navigateVerse;
-  window.toggleReaction = toggleReaction;
 
   window.onload = () => {
     console.log("Window loaded at", new Date().toISOString());
     initializeFirebase();
     updateLastUpdated();
     updateVisitorCount();
-    loadSingleVerse();
 
     const lastSheet = localStorage.getItem("lastSheet") || "gita";
     const sheetSelector = document.getElementById("sheetSelector");

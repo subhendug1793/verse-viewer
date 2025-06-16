@@ -553,7 +553,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc, runTransaction } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCou0LOLpeijDPxHlVN1pvpruvxdrLKVWk",
@@ -770,46 +770,48 @@
         if (verseIndex === -1) {
           verseIndex = parseInt(verseParam, 10);
         }
-        if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < sheetData.length) {
+        if (!isNaN && verseIndex >= 0 && verseIndex < data.length) {
           currentVerseIndex = verseIndex;
-          const verse = sheetData[verseIndex];
-          displaySingleVerse(verse, verseIndex);
+          const verse = data[verseIndex];
+          displaySingleVerse(verse, { index: verseIndex });
           document.getElementById("controls").style.display = "none";
           document.getElementById("verseTable").style.display = "none";
           document.querySelector('.search-row').style.display = 'none';
-          await loadReactions(sheet, verseIndex);
+          await fetchReactions(sheet, verseIndex);
         } else {
           console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
-          displaySingleVerse(null, -1);
+          displaySingleVerseData(null, null);
           document.getElementById("controls").style.display = "none";
           document.getElementById("verseTable").style.display = "none";
           document.querySelector('.search-row').style.display = 'none';
         }
       } else {
         console.error(`Failed to load ${sheet}.json`);
-        displaySingleVerse(null, -1);
+        displaySingleVerseData(null, null);
         document.getElementById("controls").style.display = "none";
         document.getElementById("verseTable").style.display = "none";
         document.querySelector('.search-row').style.display = 'none';
       }
     } else {
-      document.getElementById("singleVerseView").style.display = "none";
+      document.getElementById("singleVerseView").style.display = 'none';
       document.querySelector('.search-row').style.display = 'flex';
     }
   }
 
-  async function loadReactions(sheet, verseIndex) {
+  async function fetchReactions(sheet, verseIndex) {
     try {
-      const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
-      const reactionSnap = await getDoc(reactionRef);
-      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
-      updateReactionButtons(reactionCounts);
-      const userId = localStorage.getItem('userId') || generateUserId();
+      const reactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}`);
+      const reactionSnapshot = await getDoc(reactionRef);
+      const reactionCounts = reactionSnapshot.exists() ? reactionSnapshot.data() : { like: 0, love: 0, angry: 0 };
+      updateReactionCountsDisplay(reactionCounts);
+
+      const userId = localStorage.getItem('userId') || generateUniqueId();
       localStorage.setItem('userId', userId);
       const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
-      const userReactionSnap = await getDoc(userReactionRef);
-      if (userReactionSnap.exists()) {
-        const userReaction = userReactionSnap.data().reaction;
+      const userReactionSnapshot = await getDoc(userReactionRef);
+      
+      if (userReactionSnapshot.exists()) {
+        const userReaction = userReactionSnapshot.data().reaction;
         const button = document.querySelector(`.reaction-buttons button[data-reaction="${userReaction}"]`);
         if (button) button.classList.add('active');
       }
@@ -820,166 +822,180 @@
 
   async function toggleReaction(reaction, sheet, verseIndex) {
     try {
+      if (!db) throw new Error("Firestore not initialized");
       let userId = localStorage.getItem('userId');
       if (!userId) {
-        userId = generateUserId();
+        userId = generateUniqueId();
         localStorage.setItem('userId', userId);
       }
       const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
       const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
-      const userReactionSnap = await getDoc(userReactionRef);
-      const currentReaction = userReactionSnap.exists() ? userReactionSnap.data().reaction : null;
 
-      if (currentReaction === reaction) {
-        await updateDoc(reactionRef, { [reaction]: increment(-1) });
-        await setDoc(userReactionRef, { reaction: null }, { merge: true });
-        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.remove('active');
-      } else {
-        const updates = { [reaction]: increment(1) };
-        if (currentReaction) {
-          updates[currentReaction] = increment(-1);
-          document.querySelector(`.reaction-buttons button[data-reaction="${currentReaction}"]`)?.classList.remove('active');
+      await runTransaction(db, async (transaction) => {
+        const reactionDoc = await transaction.get(reactionRef);
+        const userReactionDoc = await transaction.get(userReactionRef);
+        
+        let reactionCounts = reactionDoc.exists() ? reactionDoc.data() : { like: 0, love: 0, angry: 0 };
+        const currentUserReaction = userReactionDoc.exists() ? userReactionDoc.data().reaction : null;
+
+        let updates = {};
+        if (currentUserReaction === reaction) {
+          updates[reaction] = (reactionCounts[reaction] || 0) - 1;
+          transaction.set(userReactionRef, { reaction: null }, { merge: true });
+          document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.remove('active');
+        } else {
+          updates[reaction] = (reactionCounts[reaction] || 0) + 1;
+          if (currentUserReaction) {
+            updates[currentUserReaction] = (reactionCounts[currentUserReaction] || 0) - 1;
+            document.querySelector(`.reaction-buttons button[data-reaction="${currentUserReaction}"]`)?.classList.remove('active');
+          }
+          transaction.set(userReactionRef, { reaction: reaction }, { merge: true });
+          document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.add('active');
         }
-        await setDoc(reactionRef, { like: 0, love: 0, angry: 0 }, { merge: true });
-        await updateDoc(reactionRef, updates);
-        await setDoc(userReactionRef, { reaction: reaction }, { merge: true });
-        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.add('active');
-      }
 
-      const reactionSnap = await getDoc(reactionRef);
-      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
-      updateReactionButtons(reactionCounts);
+        updates = {
+          like: updates.like ?? (reactionCounts.like || 0),
+          love: updates.love ?? (reactionCounts.love || 0),
+          angry: updates.angry ?? (reactionCounts.angry || 0)
+        };
+
+        transaction.set(reactionRef, updates, { merge: true });
+      });
+
+      const reactionSnapshot = await getDoc(reactionRef);
+      const reactionCounts = reactionSnapshot.exists() ? reactionSnapshot.data() : { like: 0, love: 0, angry: 0 };
+      updateReactionCountsDisplay(reactionCounts);
     } catch (error) {
-      console.error("Error toggling reaction:", error.code, error.message);
+      console.error("Error toggling reaction:", error.code, error.message, error.details);
       alert(`Failed to update reaction: ${error.message}. Please try again.`);
     }
   }
 
-  function updateReactionButtons(counts) {
-    document.querySelector('#likeCount').textContent = counts.like || 0;
-    document.querySelector('#loveCount').textContent = counts.love || 0;
-    document.querySelector('#angryCount').textContent = counts.angry || 0;
+  function updateReactionCountsDisplay(counts) {
+    document.querySelector('#likesCount').textContent = counts.like || 0;
+    document.querySelector('#lovesCount').textContent = counts.love || 0;
+    document.querySelector('#commentsCount').textContent = counts.angry || 0;
   }
 
-  function generateUserId() {
+  function generateUniqueId() {
     return 'user_' + Math.random().toString(36).substr(2, 9);
   }
 
-  function displaySingleVerse(verse, index) {
-    const singleVerseView = document.getElementById("singleVerseView");
+  function displaySingleVerseRow(verse, row) {
+    const singleVerseElement = document.getElementById("verse-view");
     if (!verse) {
-      singleVerseView.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
-      singleVerseView.style.display = "block";
+      singleVerseElement.innerHTML = `<h3>Error</h3><p>Row not found.</p>`;
+      singleVerseElement.style.display = "block";
       return;
     }
-    const verseName = verse["Verse Name"] || verse["Verse"] || "Verse";
-    const heading = `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} ${verseName}`;
-    let html = `<h3>${heading}</h3><div class="verse-details">`;
-    const headers = Object.keys(verse).filter(h => h !== "sheet");
-    headers.forEach(header => {
+    const verseRowName = verse["Row Name"] || verse["Row"] || "Row";
+    const headingElement = `${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)} ${verseRowName}`;
+    let htmlContent = `<h3>${headingElement}</h3><div class="row-details">`;
+    const headersList = Object.keys(verse).filter(h => h !== "sheet");
+    headersList.forEach(header => {
       let content = verse[header] || "-";
       if (typeof content === "object" && content.text && content.url) {
         content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
       }
-      const className = header === "Verse Category " && typeof verse[header] === "string" 
-        ? getCategoryClass(verse[header].trim().toLowerCase()) 
+      const className = header === "Row Category" && typeof verse[header] === "string" 
+        ? getCategoryClassName(verse[header].trim().toLowerCase()) 
         : "";
-      html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
+      htmlContent += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
     });
-    html += `<div class="navigation-arrows">
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>
+    htmlContent += `<div class="navigation-arrows">
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${row.index - 1}" class="prev ${row.index <= 0 ? 'disabled' : ''}" ${row.index <= 0 ? '' : `onclick="navigateVerse(${row.index - 1}); return false;"`}>
         <img src="images/leftarrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';">
       </a>
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="next ${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${row.index + 1}" class="next ${row.index >= data.length - 1 ? 'disabled' : ''}" ${row.index >= data.length - 1 ? '' : `onclick="navigateVerse(${row.index + 1}); return false;"`}>
         <img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';">
       </a>
     </div>`;
-    html += `<div class="reaction-buttons">
-      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
-      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
-      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount">0</span></button>
+    htmlContent += `<div class="reaction-buttons">
+      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${row.index})">👍 <span id="likesCount">0</span></button>
+      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${row.index})">❤️ <span id="lovesCount">0</span></button>
+      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${row.index})">😡 <span id="commentsCount">0</span></button>
     </div>`;
-    html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
-    singleVerseView.innerHTML = html;
-    singleVerseView.style.display = "block";
+    htmlContent += `</div><div class="single-row-share-buttons">${addShareButton(verse, row.index, false)}</div>`;
+    singleVerseElement.innerHTML = htmlContent;
+    singleVerseElement.style.display = "block";
   }
 
   function navigateVerse(newIndex) {
     const verse = data[newIndex];
-    const verseName = verse["Verse Name"] || verse["Verse"] || newIndex;
-    history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`);
+    const verseRowName = verse["Row Name"] || verse["Row"] || newIndex;
+    history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseRowName)}`);
     currentVerseIndex = newIndex;
-    displaySingleVerse(verse, newIndex);
-    loadReactions(currentSheet, newIndex);
+    displaySingleVerseRow(verse, { index: newIndex });
+    fetchReactions(currentSheet, newIndex);
   }
 
-  function updateHeaders(sheetName) {
-    const thead = document.getElementById("tableHeaders");
-    thead.innerHTML = "";
+  function updateTableHeaders(sheetName) {
+    const theadElement = document.getElementById("tableHeaders");
+    theadElement.innerHTML = "";
     if (data.length > 0) {
-      let tr = document.createElement("tr");
-      const headers = Object.keys(data[0]).filter(h => h !== "sheet");
-      headers.forEach(header => {
-        let th = document.createElement("th");
-        th.textContent = header;
-        th.classList.add(`${sheetName}-header`);
-        tr.appendChild(th);
+      let trElement = document.createElement("tr");
+      const headersList = Object.keys(data[0]).filter(h => h !== "sheet");
+      headersList.forEach(header => {
+        let thElement = document.createElement("th");
+        thElement.textContent = header;
+        thElement.classList.add(`${sheetName}-header`);
+        trElement.appendChild(thElement);
       });
-      let shareTh = document.createElement("th");
-      shareTh.textContent = "Share";
-      shareTh.style.width = "60px";
-      tr.appendChild(shareTh);
-      thead.appendChild(tr);
+      let shareThElement = document.createElement("th");
+      shareThElement.textContent = "Share";
+      shareThElement.style.width = "60px";
+      trElement.appendChild(shareThElement);
+      theadElement.appendChild(trElement);
     }
   }
 
-  function updateTable(rows) {
-    const tbody = document.getElementById("verseBody");
-    tbody.innerHTML = "";
+  function updateTableData(rows) {
+    const tbodyElement = document.getElementById("verseBody");
+    tbodyElement.innerHTML = "";
     if (rows.length === 0) {
-      let tr = document.createElement("tr");
-      let td = document.createElement("td");
-      td.textContent = "No data available or error loading data";
-      td.colSpan = Object.keys(data[0] || {}).length + 1 || 2;
-      td.style.textAlign = "center";
-      tr.appendChild(td);
-      tbody.appendChild(tr);
+      let trElement = document.createElement("tr");
+      let tdElement = document.createElement("td");
+      tdElement.textContent = "No data available or error loading data";
+      tdElement.colSpan = Object.keys(data[0] || {}).length + 1 || 2;
+      tdElement.style.textAlign = "center";
+      trElement.appendChild(tdElement);
+      tbodyElement.appendChild(trElement);
     } else {
       rows.forEach((row, index) => {
-        let tr = document.createElement("tr");
-        const headers = Object.keys(row).filter(h => h !== "sheet");
-        headers.forEach(header => {
-          let td = document.createElement("td");
+        let trElement = document.createElement("tr");
+        const headersList = Object.keys(row).filter(h => h !== "sheet");
+        headersList.forEach(header => {
+          let tdElement = document.createElement("td");
           let content = row[header] || "";
           if (typeof content === "string" || (typeof content === "object" && content && content.text)) {
             const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
             if (searchTerm && !document.getElementById("searchInput").disabled) {
               const textToSearch = typeof content === "object" ? content.text : content;
-              const highlighted = textToSearch.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
-              content = typeof content === "object" ? { text: highlighted, url: content.url } : highlighted;
+              const highlightedText = textToSearch.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
+              content = typeof content === "object" ? { text: highlightedText, url: content.url } : highlightedText;
             }
-            td.innerHTML = typeof content === "object" && content.url
+            tdElement.innerHTML = typeof content === "object" && content.url
               ? `<a href="${content.url}" target="_blank">${content.text}</a>`
               : content;
           } else {
-            td.textContent = content || "-";
+            tdElement.textContent = content || "-";
           }
-          if (header === "Verse Category " && typeof row[header] === "string") {
-            td.className = getCategoryClass(row[header].trim().toLowerCase());
+          if (header === "Row Category" && typeof row[header] === "string") {
+            tdElement.className = getCategoryClassName(row[header].trim().toLowerCase());
           }
-          tr.appendChild(td);
+          trElement.appendChild(tdElement);
         });
-        let shareTd = document.createElement("td");
-        shareTd.className = "share-buttons";
-        shareTd.innerHTML = addShareButton(row, index, true);
-        tr.appendChild(shareTd);
-        tbody.appendChild(tr);
+        let shareTdElement = document.createElement("td");
+        shareTdElement.className = "share-buttons";
+        shareTdElement.innerHTML = addShareButton(row, index, true);
+        trElement.appendChild(shareTdElement);
+        tbodyElement.appendChild(trElement);
       });
     }
-    updateContentCount(rows.length);
+    updateContentCountDisplay(rows.length);
   }
 
-  function getCategoryClass(category) {
+  function getCategoryClassName(category) {
     switch (category?.toLowerCase()) {
       case "universal or ethical verse": return "category-universal";
       case "general intra-community verse": return "category-general";
@@ -991,109 +1007,109 @@
   }
 
   function addShareButton(row, index, isTableView = true) {
-    const verseText = row["Verse"] || row["Text"] || "";
-    let verseName = row["Verse Name"] || row["Verse"] || index.toString();
-    if (typeof verseName !== "string") {
-      verseName = index.toString();
-      console.warn(`Invalid Verse Name for sheet=${currentSheet}, index=${index}:`, verseName);
+    const verseTextContent = row["Verse"] || row["Text"] || "";
+    let verseRowName = row["Row Name"] || row["Row"] || index.toString();
+    if (typeof verseRowName !== "string") {
+      verseRowName = index.toString();
+      console.warn(`Invalid Row Name for sheet=${currentSheet}, index=${index}:`, verseRowName);
     }
-    verseName = verseName.trim();
-    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`;
-    const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
-    let html = '';
+    verseRowName = verseRowName.trim();
+    const shareUrlLink = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseRowName)}`;
+    const escapedShareUrlLink = shareUrlLink.replace(/'/g, "\\'");
+    let htmlContent = '';
     if (isTableView) {
-      html += `<a href="${shareUrl}" target="_blank" class="view-link"><img src="images/click_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
+      htmlContent += `<a href="${shareUrlLink}" target="_blank" class="view-link"><img src="images/click_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
     }
-    html += `
-      <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
-      <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
-      <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
-      <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
+    htmlContent += `
+      <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseTextContent + ' ' + shareUrlLink)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrlLink)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
+      <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseTextContent)}&url=${encodeURIComponent(shareUrlLink)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
+      <a href="#" onclick="copyToClipboard('${escapedShareUrlLink}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
+      <a href="#" onclick="shareAnywhere('${verseTextContent.replace(/'/g, "\\'")}', '${escapedShareUrlLink}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
     `;
-    return html;
+    return htmlContent;
   }
 
-  function filterTable() {
-    const category = document.getElementById("categoryFilter").value;
-    const subCategory = document.getElementById("subCategoryFilter").value;
-    const sheetName = document.getElementById("sheetSelector").value;
-    const searchInput = document.getElementById("searchInput");
-    const searchTerm = searchInput.value.toLowerCase().trim();
+  function filterTableData() {
+    const categoryValue = document.getElementById("categoryFilter").value;
+    const subCategoryValue = document.getElementById("subCategoryFilter").value;
+    const sheetNameValue = document.getElementById("sheetSelector").value;
+    const searchInputElement = document.getElementById("searchInput");
+    const searchTermValue = searchInputElement.value.toLowerCase().trim();
 
-    if (sheetName && data.length > 0) {
-      let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
-        const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                                row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
-        return categoryMatch && subCategoryMatch;
+    if (sheetNameValue && data.length > 0) {
+      let filteredRowsData = data.filter(row => {
+        const categoryMatchResult = !categoryValue || (row["Row Category"] && typeof row["Row Category"] === "string" && 
+                                          row["Row Category"].trim().toLowerCase() === categoryValue.toLowerCase());
+        const subCategoryMatchResult = !subCategoryValue || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
+                                                row["Sub Category"].trim().toLowerCase() === subCategoryValue.toLowerCase());
+        return categoryMatchResult && subCategoryMatchResult;
       });
-      updateTable(filteredRows);
-      if (searchTerm) {
-        searchTable();
+      updateTableData(filteredRowsData);
+      if (searchTermValue) {
+        searchTableData();
       } else {
-        updateMatchCount(0);
+        updateMatchCountDisplay(0);
       }
     }
   }
 
-  function searchTable() {
-    const searchInput = document.getElementById("searchInput");
-    if (searchInput.disabled) return; 
-    const searchTerm = searchInput.value.toLowerCase().trim();
-    const category = document.getElementById("categoryFilter").value;
-    const subCategory = document.getElementById("subCategoryFilter").value;
-    const sheetName = document.getElementById("sheetSelector").value;
+  function searchTableData() {
+    const searchInputElement = document.getElementById("searchInput");
+    if (searchInputElement.disabled) return; 
+    const searchTermValue = searchInputElement.value.toLowerCase().trim();
+    const categoryValue = document.getElementById("categoryFilter").value;
+    const subCategoryValue = document.getElementById("subCategoryFilter").value;
+    const sheetNameValue = document.getElementById("sheetSelector").value;
 
-    if (sheetName && data.length > 0) {
-      let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
-        const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                                row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
-        return categoryMatch && subCategoryMatch;
+    if (sheetNameValue && data.length > 0) {
+      let filteredRowsData = data.filter(row => {
+        const categoryMatchResult = !categoryValue || (row["Row Category"] && typeof row["Row Category"] === "string" && 
+                                          row["Row Category"].trim().toLowerCase() === categoryValue.toLowerCase());
+        const subCategoryMatchResult = !subCategoryValue || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
+                                                row["Sub Category"].trim().toLowerCase() === subCategoryValue.toLowerCase());
+        return categoryMatchResult && subCategoryMatchResult;
       });
-      if (searchTerm) {
-        let searchFilteredRows = filteredRows.filter(row =>
+      if (searchTermValue) {
+        let searchFilteredRowsData = filteredRowsData.filter(row =>
           Object.values(row).some(val =>
-            (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
-            (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm))
+            (typeof val === "string" && val.toLowerCase().includes(searchTermValue)) ||
+            (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTermValue))
           )
         );
-        let matchCount = 0;
-        searchFilteredRows.forEach(row => {
+        let matchCountValue = 0;
+        searchFilteredRowsData.forEach(row => {
           Object.values(row).forEach(val => {
-            if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
-              matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
-            } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm)) {
-              matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+            if (typeof val === "string" && val.toLowerCase().includes(searchTermValue)) {
+              matchCountValue += (val.toLowerCase().match(new RegExp(searchTermValue, 'g')) || []).length;
+            } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTermValue)) {
+              matchCountValue += (val.text.toLowerCase().match(new RegExp(searchTermValue, 'g')) || []).length;
             }
           });
         });
-        updateTable(searchFilteredRows);
-        updateMatchCount(matchCount);
+        updateTableData(searchFilteredRowsData);
+        updateMatchCountDisplay(matchCountValue);
       } else {
-        updateTable(filteredRows);
-        updateMatchCount(0);
+        updateTableData(filteredRowsData);
+        updateMatchCountDisplay(0);
       }
     } else {
-      updateTable(data);
-      updateMatchCount(0);
+      updateTableData(data);
+      updateMatchCountDisplay(0);
     }
   }
 
-  function updateContentCount(count) {
+  function updateContentCountDisplay(count) {
     document.getElementById("contentCount").textContent = `Content Found: ${count}`;
   }
 
-  function updateMatchCount(count) {
+  function updateMatchCountDisplay(count) {
     document.getElementById("matchCount").textContent = `Matches found: ${count}`;
   }
 
   window.loadSheetData = loadSheetData;
-  window.filterTable = filterTable;
-  window.searchTable = searchTable;
+  window.filterTableData = filterTableData;
+  window.searchTableData = searchTableData;
   window.navigateVerse = navigateVerse;
   window.toggleReaction = toggleReaction;
 

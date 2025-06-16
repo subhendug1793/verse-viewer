@@ -123,11 +123,11 @@
       width: 200px; 
     }
     .verse-cards-container { 
-      width: 80%; 
+      width: 90%; /* Wider for desktop */
       margin: 0 auto 5px;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 20px;
       position: relative; 
       z-index: 1; 
     }
@@ -136,10 +136,12 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1); 
       border-radius: 10px;
       padding: 20px;
-      max-width: 700px; /* Landscape feel */
+      max-width: 1000px; /* Increased for landscape feel */
+      width: 100%;
       margin: 0 auto;
       text-align: center;
     }
+    /* Preserved for future use */
     .verse-name {
       font-size: 20px;
       font-weight: bold;
@@ -164,13 +166,17 @@
     .verse-detail strong {
       text-align: left;
       font-weight: bold;
-      min-width: 200px;
+      min-width: 220px; /* Increased for wider labels */
       font-size: 16px;
     }
     .verse-detail span {
       text-align: center;
       flex: 1;
       font-size: 16px;
+      white-space: nowrap; /* Keep content in single line */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 700px; /* Limit content width to prevent overflow */
     }
     .verse-detail a {
       color: #0066cc;
@@ -445,23 +451,21 @@
         max-width: 250px; 
       }
       .verse-cards-container { 
-        width: 100%; 
+        width: 95%; /* Wider for mobile */
         font-size: 0.9em; 
         margin-bottom: 5px;
       }
       .verse-card {
-        max-width: 90%;
+        max-width: 100%;
         padding: 15px;
       }
-      .verse-name {
-        font-size: 18px;
-      }
       .verse-detail strong {
-        min-width: 120px;
+        min-width: 140px; /* Adjusted for mobile */
         font-size: 14px;
       }
       .verse-detail span {
         font-size: 14px;
+        max-width: 200px; /* Tighter for mobile */
       }
       .footer { 
         max-width: 90%; 
@@ -967,7 +971,7 @@
         let card = document.createElement("div");
         card.className = "verse-card";
         
-        // Verse Name
+        /* Commented out Verse Name for future use
         let verseName = row["Verse Name"] || row["Verse"] || index.toString();
         if (typeof verseName !== "string") {
           verseName = index.toString();
@@ -980,10 +984,11 @@
           verseNameHtml += `${verseName}`;
         }
         verseNameHtml += `</div>`;
+        */
 
         // Verse Details
         let detailsHtml = `<div class="verse-details">`;
-        const headers = Object.keys(row).filter(h => h !== "sheet");
+        const headers = Object.keys(row).filter(h => h !== "sheet" && h !== "Verse Name"); // Exclude Verse Name
         headers.forEach(header => {
           let content = row[header] || "-";
           let displayContent;
@@ -1014,7 +1019,8 @@
         // Share Buttons
         let shareHtml = `<div class="share-buttons">${addShareButton(row, index, true)}</div>`;
 
-        card.innerHTML = verseNameHtml + detailsHtml + shareHtml;
+        // card.innerHTML = verseNameHtml + detailsHtml + shareHtml; // For future use with Verse Name
+        card.innerHTML = detailsHtml + shareHtml;
         verseCardsContainer.appendChild(card);
       });
     }

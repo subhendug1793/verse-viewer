@@ -253,7 +253,7 @@
       padding: 20px; 
       background-color: #fff; 
       box-shadow: 0 0 10px rgba(0,0,0,0.1); 
-      position: relative; /* For absolute positioning of arrows */
+      position: relative; 
     }
     .single-verse-view h3 { 
       color: #0066cc; 
@@ -295,7 +295,7 @@
       justify-content: center; 
       align-items: center; 
       width: 40px; 
-      position: relative; /* For emoji positioning */
+      position: relative; 
     }
     .share-buttons a.view-link::after { 
       content: '👆'; 
@@ -313,14 +313,15 @@
       pointer-events: none;
     }
     .navigation-arrows a {
-      font-size: 2.5em;
       text-decoration: none;
-      color: #0066cc;
-      padding: 10px;
       pointer-events: auto;
     }
-    .navigation-arrows a.disabled {
-      color: #ccc;
+    .navigation-arrows img {
+      width: 40px;
+      height: auto;
+    }
+    .navigation-arrows a.disabled img {
+      opacity: 0.3;
       cursor: not-allowed;
     }
     .navigation-arrows .prev {
@@ -344,10 +345,10 @@
       display: flex;
       align-items: center;
       gap: 5px;
+      font-size: 18px; /* Emoji size */
     }
-    .reaction-buttons img {
-      width: 20px;
-      height: 20px;
+    .reaction-buttons button.active {
+      font-weight: bold; /* Highlight active */
     }
     .reaction-buttons span {
       font-size: 0.9em;
@@ -460,9 +461,8 @@
       .share-buttons a, .single-verse-share-buttons a { 
         width: 30px; 
       }
-      .navigation-arrows a {
-        font-size: 2em;
-        padding: 5px;
+      .navigation-arrows img {
+        width: 30px;
       }
       .navigation-arrows .prev {
         left: -20px;
@@ -470,9 +470,8 @@
       .navigation-arrows .next {
         right: -20px;
       }
-      .reaction-buttons img {
-        width: 16px;
-        height: 16px;
+      .reaction-buttons button {
+        font-size: 16px; /* Smaller emojis on mobile */
       }
     }
   </style>
@@ -559,7 +558,7 @@
 <script type="module">
   // Import Firebase SDKs
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
   // Firebase configuration
   const firebaseConfig = {
@@ -773,7 +772,6 @@
       }
       if (sheetData) {
         data = sheetData;
-        // Normalize verseParam for comparison
         const normalizedVerseParam = decodeURIComponent(verseParam).trim();
         verseIndex = data.findIndex(row => {
           const verseName = (row["Verse Name"] || row["Verse"] || "").trim();
@@ -814,16 +812,16 @@
     try {
       const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
       const reactionSnap = await getDoc(reactionRef);
-      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, dislike: 0, love: 0, angry: 0 };
+      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 }; // Removed dislike
       updateReactionButtons(reactionCounts);
-      // Check if user has reacted
       const userId = localStorage.getItem('userId') || generateUserId();
       localStorage.setItem('userId', userId);
       const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
       const userReactionSnap = await getDoc(userReactionRef);
       if (userReactionSnap.exists()) {
         const userReaction = userReactionSnap.data().reaction;
-        document.querySelector(`.reaction-buttons button[data-reaction="${userReaction}"]`).classList.add('active');
+        const button = document.querySelector(`.reaction-buttons button[data-reaction="${userReaction}"]`);
+        if (button) button.classList.add('active');
       }
     } catch (error) {
       console.error("Error loading reactions:", error);
@@ -839,12 +837,10 @@
       const currentReaction = userReactionSnap.exists() ? userReactionSnap.data().reaction : null;
 
       if (currentReaction === reaction) {
-        // Remove reaction
         await updateDoc(reactionRef, { [reaction]: increment(-1) });
         await setDoc(userReactionRef, { reaction: null }, { merge: true });
         document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`).classList.remove('active');
       } else {
-        // Update or add reaction
         if (currentReaction) {
           await updateDoc(reactionRef, { [currentReaction]: increment(-1) });
           document.querySelector(`.reaction-buttons button[data-reaction="${currentReaction}"]`).classList.remove('active');
@@ -854,9 +850,8 @@
         document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`).classList.add('active');
       }
 
-      // Refresh reaction counts
       const reactionSnap = await getDoc(reactionRef);
-      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, dislike: 0, love: 0, angry: 0 };
+      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 }; // Removed dislike
       updateReactionButtons(reactionCounts);
     } catch (error) {
       console.error("Error toggling reaction:", error);
@@ -866,9 +861,8 @@
 
   function updateReactionButtons(counts) {
     document.querySelector('#likeCount').textContent = counts.like || 0;
-    document.querySelector('#dislikeCount').textContent = counts.dislike || 0;
     document.querySelector('#loveCount').textContent = counts.love || 0;
-    document.querySelector('#angryCount').textContent = counts.angry || 0;
+    document.querySelector('#angryCount').textContent = counts.angry || 0; // Removed dislike
   }
 
   function generateUserId() {
@@ -896,17 +890,19 @@
         : "";
       html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
     });
-    // Add navigation arrows
     html += `<div class="navigation-arrows">
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>←</a>
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="next ${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>→</a>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>
+        <img src="images/leftarrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';">
+      </a>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="next ${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>
+        <img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';">
+      </a>
     </div>`;
-    // Add reaction buttons
+    // Updated reaction buttons with emojis, removed dislike
     html += `<div class="reaction-buttons">
-      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})"><img src="images/like_logo.png" alt="Like" onerror="this.src='https://via.placeholder.com/20?text=👍';"><span id="likeCount">0</span></button>
-      <button data-reaction="dislike" onclick="toggleReaction('dislike', '${currentSheet}', ${index})"><img src="images/dislike_logo.png" alt="Dislike" onerror="this.src='https://via.placeholder.com/20?text=👎';"><span id="dislikeCount">0</span></button>
-      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})"><img src="images/love_logo.png" alt="Love" onerror="this.src='https://via.placeholder.com/20?text=❤️';"><span id="loveCount">0</span></button>
-      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})"><img src="images/angry_logo.png" alt="Angry" onerror="this.src='https://via.placeholder.com/20?text=😣';"><span id="angryCount">0</span></button>
+      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
+      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
+      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount">0</span></button>
     </div>`;
     html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
     singleVerseView.innerHTML = html;
@@ -1001,7 +997,6 @@
 
   function addShareButton(row, index, isTableView = true) {
     const verseText = row["Verse"] || row["Text"] || "";
-    // Sanitize verseName to avoid [object Object]
     let verseName = row["Verse Name"] || row["Verse"] || index.toString();
     if (typeof verseName !== "string") {
       verseName = index.toString();
@@ -1012,7 +1007,7 @@
     const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
     let html = '';
     if (isTableView) {
-      html += `<a href="${shareUrl}" target="_blank" class="view-link"><img src="images/eye_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
+      html += `<a href="${shareUrl}" target="_blank" class="view-link"><img src="images/click_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
     }
     html += `
       <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>

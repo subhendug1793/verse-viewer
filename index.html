@@ -168,6 +168,22 @@
       padding: 10px 0; /* CHANGED */
       border-bottom: 1px solid rgba(0,0,0,0.1); /* CHANGED */
     }
+    .verse-header.category-universal { /* CHANGED */
+      background-color: #00FF00; /* CHANGED */
+    }
+    .verse-header.category-general { /* CHANGED */
+      background-color: #00FFFF; /* CHANGED */
+    }
+    .verse-header.category-controversial { /* CHANGED */
+      background-color: #FFFF00; /* CHANGED */
+    }
+    .verse-header.category-divisive { /* CHANGED */
+      background-color: #FF0000; /* CHANGED */
+    }
+    .verse-header.category-violent { /* CHANGED */
+      background-color: #000000; /* CHANGED */
+      color: #FFFFFF; /* CHANGED */
+    }
     .verse-name { /* CHANGED */
       font-family: 'Merriweather', serif; /* CHANGED */
       font-weight: 700; /* CHANGED */
@@ -177,13 +193,18 @@
       flex: 1; /* CHANGED */
       padding-left: 10px; /* CHANGED */
     }
+    .verse-header.category-violent .verse-name { /* CHANGED */
+      color: #FFFFFF; /* CHANGED */
+    }
     .verse-category { /* CHANGED */
       font-family: 'Poppins', sans-serif; /* CHANGED */
       font-size: 0.95em; /* CHANGED */
-      text-align: center; /* CHANGED */
+      text-align: right; /* CHANGED */
       flex: 1; /* CHANGED */
-      padding: 5px 10px; /* CHANGED */
-      border-radius: 6px; /* CHANGED */
+      padding-right: 10px; /* CHANGED */
+    }
+    .verse-header.category-violent .verse-category { /* CHANGED */
+      color: #FFFFFF; /* CHANGED */
     }
     .verse-field { /* CHANGED */
       width: 100%; /* CHANGED */
@@ -193,28 +214,11 @@
       font-family: 'Poppins', sans-serif; /* CHANGED */
       font-size: 0.95em; /* CHANGED */
       color: #444; /* CHANGED */
-      font-style: italic; /* CHANGED */
     }
     .verse-field:last-child { /* CHANGED */
       border-bottom: none; /* CHANGED */
       padding-bottom: 12px; /* CHANGED */
       background: linear-gradient(to top, rgba(0,102,204,0.05), transparent); /* CHANGED */
-    }
-    .verse-field.category-universal { /* CHANGED */
-      background-color: #00FF00; /* CHANGED */
-    }
-    .verse-field.category-general { /* CHANGED */
-      background-color: #00FFFF; /* CHANGED */
-    }
-    .verse-field.category-controversial { /* CHANGED */
-      background-color: #FFFF00; /* CHANGED */
-    }
-    .verse-field.category-divisive { /* CHANGED */
-      background-color: #FF0000; /* CHANGED */
-    }
-    .verse-field.category-violent { /* CHANGED */
-      background-color: #000000; /* CHANGED */
-      color: #FFFFFF; /* CHANGED */
     }
     .view-full-verse { /* CHANGED */
       display: inline-block; /* CHANGED */
@@ -516,6 +520,7 @@
         text-align: left; /* CHANGED */
         margin-top: 5px; /* CHANGED */
         width: 100%; /* CHANGED */
+        padding-right: 0; /* CHANGED */
       }
       .verse-field { /* CHANGED */
         font-size: 0.9em; /* CHANGED */
@@ -1038,16 +1043,12 @@
         card.className = "verse-card"; /* CHANGED */
         const verseName = row["Verse Name"] || row["Verse"] || "-"; /* CHANGED */
         const verseCategory = row["Verse Category "] || "-"; /* CHANGED */
-        const verseSubCategory = row["Sub Category"] || ""; /* CHANGED */
         const bengaliTranslation = row["Bengali Translation"] || "-"; /* CHANGED */
         const englishTranslation = row["English Translation"] || "-"; /* CHANGED */
-        let html = `<div class="verse-header">`; /* CHANGED */
+        let html = `<div class="verse-header ${getCategoryClass(verseCategory.trim().toLowerCase())}">`; /* CHANGED */
         html += `<span class="verse-name">${verseName}</span>`; /* CHANGED */
-        html += `<span class="verse-category ${getCategoryClass(verseCategory.trim().toLowerCase())}">${verseCategory}</span>`; /* CHANGED */
+        html += `<span class="verse-category">${verseCategory}</span>`; /* CHANGED */
         html += `</div>`; /* CHANGED */
-        if (verseSubCategory.trim()) { /* CHANGED */
-          html += `<span class="verse-field">${verseSubCategory}</span>`; /* CHANGED */
-        } /* CHANGED */
         html += `<span class="verse-field">${bengaliTranslation}</span>`; /* CHANGED */
         html += `<span class="verse-field">${englishTranslation}</span>`; /* CHANGED */
         const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`; /* CHANGED */
@@ -1094,11 +1095,11 @@
       html += `<a href="${shareUrl}" target="_blank" class="view-link"><img src="images/click_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
     }
     html += `
-      <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp.png" alt="WhatsApp"></a>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook.png" alt="Facebook"></a>
-      <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x.png" alt="X"></a>
-      <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link.png" alt="Copy Link"></a>
-      <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share.svg" alt="Share"></a>
+      <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
+      <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
+      <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
+      <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
     `;
     return html;
   }
@@ -1138,7 +1139,7 @@
     if (sheetName && data.length > 0) {
       let filteredRows = data.filter(row => {
         const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+                                          row["Verse Category"].trim().toLowerCase() === category.toLowerCase());
         const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
                                                 row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
         return categoryMatch && subCategoryMatch;
@@ -1177,7 +1178,7 @@
   }
 
   function updateMatchCount(count) {
-    document.getElementById("matchCount").textContent = `Matches found: ${count}`;
+    document.getElementById("matchCount").textContent = `Matches: ${count}`;
   }
 
   window.loadSheetData = loadSheetData;

@@ -30,28 +30,28 @@
     }
     .header-info { 
       display: flex; 
-      justify-content: space-between; /* CHANGED */
-      align-items: center; /* CHANGED */
-      width: 100%; /* CHANGED */
-      position: absolute; /* CHANGED */
-      top: 20px; /* CHANGED */
-      left: 20px; /* CHANGED */
-      right: 20px; /* CHANGED */
+      justify-content: space-between; 
+      align-items: center; 
+      width: 100%; 
+      position: absolute; 
+      top: 20px; 
+      left: 20px; 
+      right: 20px; 
       font-size: 0.9em; 
       color: #666; 
       z-index: 10; 
     }
     .header-info .last-updated {
-      position: absolute; /* CHANGED */
-      right: 20px; /* CHANGED */
+      position: absolute; 
+      right: 20px; 
     }
     .header-info .last-updated a {
       color: #0066cc;
       text-decoration: none;
     }
     .header-info .visitor-count {
-      position: absolute; /* CHANGED */
-      left: 0; /* CHANGED */
+      position: absolute; 
+      left: 0; 
       font-weight: bold;
       color: #333;
       z-index: 10;
@@ -94,11 +94,11 @@
     .mission-subtext { 
       text-align: center; 
       margin: 0 auto 20px; 
-      max-width: 90%; /* CHANGED */
-      font-size: 0.75em; /* CHANGED */
+      max-width: 90%; 
+      font-size: 0.75em; 
       line-height: 1.2; 
       font-weight: normal; 
-      white-space: nowrap; /* CHANGED */
+      white-space: nowrap; 
     }
     .controls { 
       margin-bottom: 10px; 
@@ -137,106 +137,123 @@
     #searchInput { 
       width: 200px; 
     }
-    .verse-container { /* CHANGED */
-      width: 80%; /* CHANGED */
-      margin: 0 auto 20px; /* CHANGED */
-      display: flex; /* CHANGED */
-      flex-direction: column; /* CHANGED */
-      gap: 25px; /* CHANGED */
+    .verse-container { 
+      width: 80%; 
+      margin: 0 auto 20px; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 25px; 
     }
-    .verse-card { /* CHANGED */
-      background: linear-gradient(135deg, #ffffff, #f9f9f9); /* CHANGED */
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* CHANGED */
-      padding: 20px; /* CHANGED */
-      border-radius: 12px; /* CHANGED */
-      display: flex; /* CHANGED */
-      flex-direction: column; /* CHANGED */
-      align-items: center; /* CHANGED */
-      gap: 12px; /* CHANGED */
-      transition: transform 0.2s, box-shadow 0.2s; /* CHANGED */
-      border: 1px solid rgba(0,102,204,0.1); /* CHANGED */
+    .verse-card { 
+      background: linear-gradient(135deg, #ffffff, #f9f9f9); 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+      padding: 20px; 
+      border-radius: 12px; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 12px; 
+      transition: transform 0.2s, box-shadow 0.2s; 
+      border: 1px solid rgba(0,102,204,0.1); 
     }
-    .verse-card:hover { /* CHANGED */
-      transform: scale(1.02); /* CHANGED */
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15); /* CHANGED */
+    .verse-card:hover { 
+      transform: scale(1.02); 
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15); 
     }
-    .verse-header { /* CHANGED */
+    .verse-header { 
+      display: flex; 
+      width: 100%; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 10px 0; 
+      border-bottom: 1px solid rgba(0,0,0,0.1); 
+    }
+    .verse-header.category-universal { 
+      background-color: #00FF00; 
+    }
+    .verse-header.category-general { 
+      background-color: #00FFFF; 
+    }
+    .verse-header.category-controversial { 
+      background-color: #FFFF00; 
+    }
+    .verse-header.category-divisive { 
+      background-color: #FF0000; 
+    }
+    .verse-header.category-violent { 
+      background-color: #000000; 
+      color: #FFFFFF; 
+    }
+    .verse-name { 
+      font-family: 'Merriweather', serif; 
+      font-weight: 700; 
+      font-size: 1.1em; 
+      color: #333; 
+      text-align: left; 
+      flex: 1; 
+      padding-left: 10px; 
+    }
+    .verse-name a { /* CHANGED */
+      color: inherit; /* CHANGED */
+      text-decoration: underline; /* CHANGED */
+    }
+    .verse-header.category-violent .verse-name, 
+    .verse-header.category-violent .verse-name a { /* CHANGED */
+      color: #FFFFFF; /* CHANGED */
+    }
+    .verse-category { 
+      font-family: 'Poppins', sans-serif; 
+      font-size: 0.95em; 
+      text-align: right; 
+      flex: 1; 
+      padding-right: 10px; 
+    }
+    .verse-header.category-violent .verse-category { 
+      color: #FFFFFF; 
+    }
+    .verse-field { 
+      width: 100%; 
+      text-align: center; 
+      padding: 8px 0; 
+      border-bottom: 1px solid rgba(0,0,0,0.1); 
+      font-family: 'Poppins', sans-serif; 
+      font-size: 0.95em; 
+      color: #444; 
+    }
+    .verse-footer { /* CHANGED */
       display: flex; /* CHANGED */
       width: 100%; /* CHANGED */
       justify-content: space-between; /* CHANGED */
       align-items: center; /* CHANGED */
       padding: 10px 0; /* CHANGED */
-      border-bottom: 1px solid rgba(0,0,0,0.1); /* CHANGED */
     }
-    .verse-header.category-universal { /* CHANGED */
-      background-color: #00FF00; /* CHANGED */
-    }
-    .verse-header.category-general { /* CHANGED */
-      background-color: #00FFFF; /* CHANGED */
-    }
-    .verse-header.category-controversial { /* CHANGED */
-      background-color: #FFFF00; /* CHANGED */
-    }
-    .verse-header.category-divisive { /* CHANGED */
-      background-color: #FF0000; /* CHANGED */
-    }
-    .verse-header.category-violent { /* CHANGED */
-      background-color: #000000; /* CHANGED */
-      color: #FFFFFF; /* CHANGED */
-    }
-    .verse-name { /* CHANGED */
-      font-family: 'Merriweather', serif; /* CHANGED */
-      font-weight: 700; /* CHANGED */
-      font-size: 1.1em; /* CHANGED */
-      color: #333; /* CHANGED */
+    .verse-subcategory { /* CHANGED */
+      font-family: 'Poppins', sans-serif; /* CHANGED */
+      font-size: 0.95em; /* CHANGED */
       text-align: left; /* CHANGED */
       flex: 1; /* CHANGED */
       padding-left: 10px; /* CHANGED */
+      color: #444; /* CHANGED */
     }
-    .verse-header.category-violent .verse-name { /* CHANGED */
-      color: #FFFFFF; /* CHANGED */
-    }
-    .verse-category { /* CHANGED */
-      font-family: 'Poppins', sans-serif; /* CHANGED */
-      font-size: 0.95em; /* CHANGED */
+    .view-full-verse { 
+      display: inline-block; 
+      padding: 12px 24px; 
+      background: linear-gradient(135deg, #0066cc, #0052a3); 
+      color: #fff; 
+      text-decoration: none; 
+      border-radius: 8px; 
+      font-family: 'Poppins', sans-serif; 
+      font-size: 0.9em; 
+      box-shadow: 0 2px 8px rgba(0,102,204,0.3); 
+      transition: background 0.3s, transform 0.2s; 
       text-align: right; /* CHANGED */
       flex: 1; /* CHANGED */
       padding-right: 10px; /* CHANGED */
     }
-    .verse-header.category-violent .verse-category { /* CHANGED */
-      color: #FFFFFF; /* CHANGED */
-    }
-    .verse-field { /* CHANGED */
-      width: 100%; /* CHANGED */
-      text-align: center; /* CHANGED */
-      padding: 8px 0; /* CHANGED */
-      border-bottom: 1px solid rgba(0,0,0,0.1); /* CHANGED */
-      font-family: 'Poppins', sans-serif; /* CHANGED */
-      font-size: 0.95em; /* CHANGED */
-      color: #444; /* CHANGED */
-    }
-    .verse-field:last-child { /* CHANGED */
-      border-bottom: none; /* CHANGED */
-      padding-bottom: 12px; /* CHANGED */
-      background: linear-gradient(to top, rgba(0,102,204,0.05), transparent); /* CHANGED */
-    }
-    .view-full-verse { /* CHANGED */
-      display: inline-block; /* CHANGED */
-      padding: 12px 24px; /* CHANGED */
-      background: linear-gradient(135deg, #0066cc, #0052a3); /* CHANGED */
-      color: #fff; /* CHANGED */
-      text-decoration: none; /* CHANGED */
-      border-radius: 8px; /* CHANGED */
-      font-family: 'Poppins', sans-serif; /* CHANGED */
-      font-size: 0.9em; /* CHANGED */
-      margin-top: 12px; /* CHANGED */
-      box-shadow: 0 2px 8px rgba(0,102,204,0.3); /* CHANGED */
-      transition: background 0.3s, transform 0.2s; /* CHANGED */
-    }
-    .view-full-verse:hover { /* CHANGED */
-      background: linear-gradient(135deg, #0052a3, #003d7a); /* CHANGED */
-      transform: translateY(-2px); /* CHANGED */
-      box-shadow: 0 4px 12px rgba(0,102,204,0.4); /* CHANGED */
+    .view-full-verse:hover { 
+      background: linear-gradient(135deg, #0052a3, #003d7a); 
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 12px rgba(0,102,204,0.4); 
     }
     .footer { 
       position: relative; 
@@ -371,7 +388,7 @@
       position: relative; 
     }
     .share-buttons a.view-link::after { 
-      content: none; /* Removed 👆 emoji */
+      content: none;
     }
     .navigation-arrows {
       position: absolute;
@@ -427,23 +444,23 @@
     }
     @media (max-width: 600px) {
       .header-info { 
-        flex-direction: column; /* CHANGED */
-        align-items: center; /* CHANGED */
-        position: relative; /* CHANGED */
-        top: 0; /* CHANGED */
-        left: 0; /* CHANGED */
-        right: 0; /* CHANGED */
-        margin: 10px 0; /* CHANGED */
+        flex-direction: column; 
+        align-items: center; 
+        position: relative; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        margin: 10px 0; 
         font-size: 0.8em; 
       }
       .header-info .visitor-count {
-        position: relative; /* CHANGED */
-        left: 0; /* CHANGED */
-        margin-bottom: 5px; /* CHANGED */
+        position: relative; 
+        left: 0; 
+        margin-bottom: 5px; 
       }
       .header-info .last-updated {
-        position: relative; /* CHANGED */
-        right: 0; /* CHANGED */
+        position: relative; 
+        right: 0; 
       }
       .header-container { 
         flex-direction: column; 
@@ -465,9 +482,9 @@
         max-width: 90%; 
       }
       .mission-subtext { 
-        font-size: 0.65em; /* CHANGED */
-        max-width: 90%; /* CHANGED */
-        white-space: normal; /* CHANGED */
+        font-size: 0.65em; 
+        max-width: 90%; 
+        white-space: normal; 
       }
       select, input { 
         font-family: 'Poppins', sans-serif;
@@ -496,40 +513,53 @@
         width: 100%; 
         max-width: 250px; 
       }
-      .verse-container { /* CHANGED */
-        width: 90%; /* CHANGED */
-        margin-bottom: 10px; /* CHANGED */
-        gap: 20px; /* CHANGED */
+      .verse-container { 
+        width: 90%; 
+        margin-bottom: 10px; 
+        gap: 20px; 
       }
-      .verse-card { /* CHANGED */
-        padding: 15px; /* CHANGED */
-        border-radius: 10px; /* CHANGED */
+      .verse-card { 
+        padding: 15px; 
+        border-radius: 10px; 
       }
-      .verse-header { /* CHANGED */
+      .verse-header { 
+        flex-direction: column; 
+        align-items: flex-start; 
+        padding: 8px 0; 
+      }
+      .verse-footer { /* CHANGED */
         flex-direction: column; /* CHANGED */
         align-items: flex-start; /* CHANGED */
         padding: 8px 0; /* CHANGED */
       }
-      .verse-name { /* CHANGED */
-        font-size: 1em; /* CHANGED */
+      .verse-name { 
+        font-size: 1em; 
+        padding-left: 0; 
+        width: 100%; 
+      }
+      .verse-category { 
+        font-size: 0.9em; 
+        text-align: left; 
+        margin-top: 5px; 
+        width: 100%; 
+        padding-right: 0; 
+      }
+      .verse-subcategory { /* CHANGED */
+        font-size: 0.9em; /* CHANGED */
         padding-left: 0; /* CHANGED */
         width: 100%; /* CHANGED */
       }
-      .verse-category { /* CHANGED */
-        font-size: 0.9em; /* CHANGED */
-        text-align: left; /* CHANGED */
+      .view-full-verse { 
+        font-size: 0.8em; 
+        padding: 10px 20px; 
         margin-top: 5px; /* CHANGED */
         width: 100%; /* CHANGED */
+        text-align: left; /* CHANGED */
         padding-right: 0; /* CHANGED */
       }
-      .verse-field { /* CHANGED */
-        font-size: 0.9em; /* CHANGED */
-        padding: 6px 0; /* CHANGED */
-      }
-      .view-full-verse { /* CHANGED */
-        font-size: 0.8em; /* CHANGED */
-        padding: 10px 20px; /* CHANGED */
-        margin-top: 10px; /* CHANGED */
+      .verse-field { 
+        font-size: 0.9em; 
+        padding: 6px 0; 
       }
       .footer { 
         max-width: 90%; 
@@ -595,10 +625,10 @@
   </style>
 </head>
 <body>
-  <div class="header-info"> <!-- CHANGED -->
-    <span class="visitor-count" id="visitorCount">Visitors: Loading...</span> <!-- CHANGED -->
-    <span class="last-updated" id="lastUpdated">Last updated: loading...</span> <!-- CHANGED -->
-  </div> <!-- CHANGED -->
+  <div class="header-info">
+    <span class="visitor-count" id="visitorCount">Visitors: Loading...</span>
+    <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
+  </div>
   <div class="header-container">
     <img src="images/sastik_logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('SASTIK logo failed to load');">
     <h2><a href="https://www.facebook.com/sastikofficial/" target="_blank">SASTIK GBQ+</a></h2>
@@ -645,9 +675,9 @@
     </div>
     <div class="match-count" id="matchCount">Matches found: 0</div>
   </div>
-  <div class="verse-container" id="verseContainer"> <!-- CHANGED -->
+  <div class="verse-container" id="verseContainer">
     <!-- Verse cards will be populated here -->
-  </div> <!-- CHANGED -->
+  </div>
   <div class="footer">
     <div class="text-group">
       <div class="support-text">
@@ -721,6 +751,46 @@
   let data = [];
   let currentSheet = "";
   let currentVerseIndex = -1;
+
+  // Map column names for different sheets /* CHANGED */
+  const columnMappings = { /* CHANGED */
+    bible: { /* CHANGED */
+      verseName: ["Verse Name", "Verse"], /* CHANGED */
+      englishTranslation: ["Verse in English", "English Translation"] /* CHANGED */
+    }, /* CHANGED */
+    gita: { /* CHANGED */
+      verseName: ["Verse Name", "Verse"], /* CHANGED */
+      englishTranslation: ["English Translation"] /* CHANGED */
+    }, /* CHANGED */
+    quran: { /* CHANGED */
+      verseName: ["Verse Name", "Verse"], /* CHANGED */
+      englishTranslation: ["English Translation"] /* CHANGED */
+    }, /* CHANGED */
+    hadith: { /* CHANGED */
+      verseName: ["Verse Name", "Verse"], /* CHANGED */
+      englishTranslation: ["English Translation"] /* CHANGED */
+    }, /* CHANGED */
+    miscellaneous: { /* CHANGED */
+      verseName: ["Verse Name", "Verse"], /* CHANGED */
+      englishTranslation: ["English Translation"] /* CHANGED */
+    } /* CHANGED */
+  }; /* CHANGED */
+
+  function getColumnValue(row, field, sheet) { /* CHANGED */
+    const mapping = columnMappings[sheet.toLowerCase()] || columnMappings.miscellaneous; /* CHANGED */
+    const possibleColumns = mapping[field] || [field]; /* CHANGED */
+    for (const col of possibleColumns) { /* CHANGED */
+      if (row[col]) return row[col]; /* CHANGED */
+    } /* CHANGED */
+    return "-"; /* CHANGED */
+  } /* CHANGED */
+
+  function renderVerseName(value) { /* CHANGED */
+    if (typeof value === "object" && value.text && value.url) { /* CHANGED */
+      return `<a href="${value.url}" target="_blank">${value.text}</a>`; /* CHANGED */
+    } /* CHANGED */
+    return value || "-"; /* CHANGED */
+  } /* CHANGED */
 
   function updateLastUpdated() {
     try {
@@ -837,12 +907,12 @@
       }
       if (sheetData) {
         data = sheetData;
-        updateTable(data); /* CHANGED */
+        updateTable(data);
         updateContentCount(data.length);
         updateMatchCount(0);
       } else {
         errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if the file exists or contact support.`;
-        document.getElementById("verseContainer").innerHTML = `<div style="text-align: center;">Error loading ${currentSheet}.json: File not found or inaccessible</div>`; /* CHANGED */
+        document.getElementById("verseContainer").innerHTML = `<div style="text-align: center;">Error loading ${currentSheet}.json: File not found or inaccessible</div>`;
         updateContentCount(0);
         updateMatchCount(0);
       }
@@ -851,7 +921,7 @@
       subCategoryFilter.disabled = true;
       searchInput.disabled = true;
       errorDisplay.textContent = "";
-      document.getElementById("verseContainer").innerHTML = ""; /* CHANGED */
+      document.getElementById("verseContainer").innerHTML = "";
       document.querySelector('.search-row').style.display = 'flex';
       updateContentCount(0);
       updateMatchCount(0);
@@ -883,8 +953,9 @@
         data = sheetData;
         const normalizedVerseParam = decodeURIComponent(verseParam).trim();
         verseIndex = data.findIndex(row => {
-          const verseName = (row["Verse Name"] || row["Verse"] || "").trim();
-          return verseName === normalizedVerseParam;
+          const verseName = getColumnValue(row, "verseName", sheet); /* CHANGED */
+          const verseNameText = typeof verseName === "object" && verseName.text ? verseName.text.trim() : (verseName || "").trim(); /* CHANGED */
+          return verseNameText === normalizedVerseParam; /* CHANGED */
         });
         if (verseIndex === -1) {
           verseIndex = parseInt(verseParam, 10);
@@ -894,21 +965,21 @@
           const verse = sheetData[verseIndex];
           displaySingleVerse(verse, verseIndex);
           document.getElementById("controls").style.display = "none";
-          document.getElementById("verseContainer").style.display = "none"; /* CHANGED */
+          document.getElementById("verseContainer").style.display = "none";
           document.querySelector('.search-row').style.display = 'none';
           await loadReactions(sheet, verseIndex);
         } else {
           console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
           displaySingleVerse(null, -1);
           document.getElementById("controls").style.display = "none";
-          document.getElementById("verseContainer").style.display = "none"; /* CHANGED */
+          document.getElementById("verseContainer").style.display = "none";
           document.querySelector('.search-row').style.display = 'none';
         }
       } else {
         console.error(`Failed to load ${sheet}.json`);
         displaySingleVerse(null, -1);
         document.getElementById("controls").style.display = "none";
-        document.getElementById("verseContainer").style.display = "none"; /* CHANGED */
+        document.getElementById("verseContainer").style.display = "none";
         document.querySelector('.search-row').style.display = 'none';
       }
     } else {
@@ -991,8 +1062,9 @@
       singleVerseView.style.display = "block";
       return;
     }
-    const verseName = verse["Verse Name"] || verse["Verse"] || "Verse";
-    const heading = `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} ${verseName}`;
+    const verseName = getColumnValue(verse, "verseName", currentSheet); /* CHANGED */
+    const verseNameText = typeof verseName === "object" && verseName.text ? verseName.text : verseName; /* CHANGED */
+    const heading = `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} ${verseNameText}`; /* CHANGED */
     let html = `<h3>${heading}</h3><div class="verse-details">`;
     const headers = Object.keys(verse).filter(h => h !== "sheet");
     headers.forEach(header => {
@@ -1025,48 +1097,53 @@
 
   function navigateVerse(newIndex) {
     const verse = data[newIndex];
-    const verseName = verse["Verse Name"] || verse["Verse"] || newIndex;
-    history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`);
+    const verseName = getColumnValue(verse, "verseName", currentSheet); /* CHANGED */
+    const verseNameText = typeof verseName === "object" && verseName.text ? verseName.text : verseName || newIndex; /* CHANGED */
+    history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`); /* CHANGED */
     currentVerseIndex = newIndex;
     displaySingleVerse(verse, newIndex);
     loadReactions(currentSheet, newIndex);
   }
 
   function updateTable(rows) { /* CHANGED */
-    const container = document.getElementById("verseContainer"); /* CHANGED */
-    container.innerHTML = ""; /* CHANGED */
-    if (rows.length === 0) { /* CHANGED */
-      container.innerHTML = `<div style="text-align: center;">No data available or error loading data</div>`; /* CHANGED */
-    } else { /* CHANGED */
-      rows.forEach((row, index) => { /* CHANGED */
-        let card = document.createElement("div"); /* CHANGED */
-        card.className = "verse-card"; /* CHANGED */
-        const verseName = row["Verse Name"] || row["Verse"] || "-"; /* CHANGED */
-        const verseCategory = row["Verse Category "] || "-"; /* CHANGED */
-        const bengaliTranslation = row["Bengali Translation"] || "-"; /* CHANGED */
-        const englishTranslation = row["English Translation"] || "-"; /* CHANGED */
-        let html = `<div class="verse-header ${getCategoryClass(verseCategory.trim().toLowerCase())}">`; /* CHANGED */
-        html += `<span class="verse-name">${verseName}</span>`; /* CHANGED */
-        html += `<span class="verse-category">${verseCategory}</span>`; /* CHANGED */
-        html += `</div>`; /* CHANGED */
-        html += `<span class="verse-field">${bengaliTranslation}</span>`; /* CHANGED */
+    const container = document.getElementById("verseContainer"); 
+    container.innerHTML = ""; 
+    if (rows.length === 0) { 
+      container.innerHTML = `<div style="text-align: center;">No data available or error loading data</div>`; 
+    } else { 
+      rows.forEach((row, index) => { 
+        let card = document.createElement("div"); 
+        card.className = "verse-card"; 
+        const verseName = getColumnValue(row, "verseName", currentSheet); /* CHANGED */
+        const verseCategory = row["Verse Category "] || "-"; 
+        const bengaliTranslation = row["Bengali Translation"] || "-"; 
+        const englishTranslation = getColumnValue(row, "englishTranslation", currentSheet); /* CHANGED */
+        const subCategory = row["Sub Category"] || "-"; /* CHANGED */
+        let html = `<div class="verse-header ${getCategoryClass(verseCategory.trim().toLowerCase())}">`; 
+        html += `<span class="verse-name">${renderVerseName(verseName)}</span>`; /* CHANGED */
+        html += `<span class="verse-category">${verseCategory}</span>`; 
+        html += `</div>`; 
+        html += `<span class="verse-field">${bengaliTranslation}</span>`; 
         html += `<span class="verse-field">${englishTranslation}</span>`; /* CHANGED */
-        const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`; /* CHANGED */
-        html += `<a href="${shareUrl}" class="view-full-verse">Click to view full verse</a>`; /* CHANGED */
-        card.innerHTML = html; /* CHANGED */
-        const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim(); /* CHANGED */
-        if (searchTerm && !document.getElementById("searchInput").disabled) { /* CHANGED */
-          card.querySelectorAll('.verse-name, .verse-category, .verse-field').forEach(field => { /* CHANGED */
-            let text = field.textContent; /* CHANGED */
-            if (text.toLowerCase().includes(searchTerm)) { /* CHANGED */
-              field.innerHTML = text.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>'); /* CHANGED */
-            } /* CHANGED */
-          }); /* CHANGED */
-        } /* CHANGED */
-        container.appendChild(card); /* CHANGED */
-      }); /* CHANGED */
-    } /* CHANGED */
-    updateContentCount(rows.length); /* CHANGED */
+        html += `<div class="verse-footer">`; /* CHANGED */
+        html += `<span class="verse-subcategory">${subCategory}</span>`; /* CHANGED */
+        const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(typeof verseName === "object" && verseName.text ? verseName.text : verseName || index)}`; /* CHANGED */
+        html += `<a href="${shareUrl}" class="view-full-verse">See Verse Details>>></a>`; /* CHANGED */
+        html += `</div>`; /* CHANGED */
+        card.innerHTML = html; 
+        const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim(); 
+        if (searchTerm && !document.getElementById("searchInput").disabled) { 
+          card.querySelectorAll('.verse-name, .verse-category, .verse-field, .verse-subcategory').forEach(field => { /* CHANGED */
+            let text = field.textContent; 
+            if (text.toLowerCase().includes(searchTerm)) { 
+              field.innerHTML = text.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>'); 
+            } 
+          }); 
+        } 
+        container.appendChild(card); 
+      }); 
+    } 
+    updateContentCount(rows.length); 
   } /* CHANGED */
 
   function getCategoryClass(category) {
@@ -1082,7 +1159,8 @@
 
   function addShareButton(row, index, isTableView = true) {
     const verseText = row["Verse"] || row["Text"] || "";
-    let verseName = row["Verse Name"] || row["Verse"] || index.toString();
+    let verseName = getColumnValue(row, "verseName", currentSheet); /* CHANGED */
+    verseName = typeof verseName === "object" && verseName.text ? verseName.text : verseName || index.toString(); /* CHANGED */
     if (typeof verseName !== "string") {
       verseName = index.toString();
       console.warn(`Invalid Verse Name for sheet=${currentSheet}, index=${index}:`, verseName);
@@ -1119,7 +1197,7 @@
                                                 row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
         return categoryMatch && subCategoryMatch;
       });
-      updateTable(filteredRows); /* CHANGED */
+      updateTable(filteredRows);
       if (searchTerm) {
         searchTable();
       } else {
@@ -1146,29 +1224,33 @@
       });
       if (searchTerm) {
         let searchFilteredRows = filteredRows.filter(row =>
-          Object.values(row).some(val =>
-            (typeof val === "string" && val.toLowerCase().includes(searchTerm)) ||
-            (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm))
-          )
+          Object.values(row).some(val => {
+            if (typeof val === "string") {
+              return val.toLowerCase().includes(searchTerm);
+            } else if (typeof val === "object" && val && val.text) {
+              return val.text.toLowerCase().includes(searchTerm);
+            }
+            return false;
+          })
         );
         let matchCount = 0;
         searchFilteredRows.forEach(row => {
           Object.values(row).forEach(val => {
             if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
-              matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+              matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'gi')) || []).length;
             } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm)) {
-              matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'g')) || []).length;
+              matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'gi')) || []).length;
             }
           });
         });
-        updateTable(searchFilteredRows); /* CHANGED */
+        updateTable(searchFilteredRows);
         updateMatchCount(matchCount);
       } else {
-        updateTable(filteredRows); /* CHANGED */
+        updateTable(filteredRows);
         updateMatchCount(0);
       }
     } else {
-      updateTable(data); /* CHANGED */
+      updateTable(data);
       updateMatchCount(0);
     }
   }
@@ -1178,7 +1260,7 @@
   }
 
   function updateMatchCount(count) {
-    document.getElementById("matchCount").textContent = `Matches: ${count}`;
+    document.getElementById("matchCount").textContent = `Matches found: ${count}`;
   }
 
   window.loadSheetData = loadSheetData;

@@ -29,22 +29,29 @@
       margin-bottom: 20px; 
     }
     .header-info { 
-      position: absolute; 
-      top: 20px; 
-      right: 20px; 
+      display: flex; 
+      justify-content: space-between; /* CHANGED */
+      align-items: center; /* CHANGED */
+      width: 100%; /* CHANGED */
+      position: absolute; /* CHANGED */
+      top: 20px; /* CHANGED */
+      left: 20px; /* CHANGED */
+      right: 20px; /* CHANGED */
       font-size: 0.9em; 
       color: #666; 
       z-index: 10; 
+    }
+    .header-info .last-updated {
+      position: absolute; /* CHANGED */
+      right: 0; /* CHANGED */
     }
     .header-info .last-updated a {
       color: #0066cc;
       text-decoration: none;
     }
     .header-info .visitor-count {
-      margin-left: 20px;
-      vertical-align: middle;
-      display: inline-block;
-      min-height: 20px; 
+      position: absolute; /* CHANGED */
+      left: 0; /* CHANGED */
       font-weight: bold;
       color: #333;
       z-index: 10;
@@ -130,52 +137,62 @@
     #searchInput { 
       width: 200px; 
     }
-    table { 
-      border-collapse: collapse; 
-      width: 80%; 
-      margin: 0 auto 5px;
-      background-color: #fff; 
-      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
-      position: relative; 
-      z-index: 1; 
+    .verse-container { /* CHANGED */
+      width: 80%; /* CHANGED */
+      margin: 0 auto 20px; /* CHANGED */
+      display: flex; /* CHANGED */
+      flex-direction: column; /* CHANGED */
+      gap: 20px; /* CHANGED */
     }
-    th, td { 
-      font-family: 'Poppins', sans-serif;
-      border: 1px solid #ddd; 
-      padding: 10px; 
-      text-align: center; 
+    .verse-card { /* CHANGED */
+      background-color: #fff; /* CHANGED */
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); /* CHANGED */
+      padding: 15px; /* CHANGED */
+      border-radius: 8px; /* CHANGED */
+      display: flex; /* CHANGED */
+      flex-direction: column; /* CHANGED */
+      align-items: center; /* CHANGED */
+      gap: 10px; /* CHANGED */
     }
-    td a { 
-      color: #0066cc; 
-      text-decoration: none; 
+    .verse-field { /* CHANGED */
+      width: 100%; /* CHANGED */
+      text-align: center; /* CHANGED */
+      padding: 8px 0; /* CHANGED */
+      border-bottom: 1px solid #ddd; /* CHANGED */
+      font-family: 'Poppins', sans-serif; /* CHANGED */
     }
-    td a:hover { 
-      text-decoration: underline; 
+    .verse-field:last-child { /* CHANGED */
+      border-bottom: none; /* CHANGED */
     }
-    td.category-universal { 
-      background-color: #00FF00; 
+    .verse-field.category-universal { /* CHANGED */
+      background-color: #00FF00; /* CHANGED */
     }
-    td.category-general { 
-      background-color: #00FFFF; 
+    .verse-field.category-general { /* CHANGED */
+      background-color: #00FFFF; /* CHANGED */
     }
-    td.category-controversial { 
-      background-color: #FFFF00; 
+    .verse-field.category-controversial { /* CHANGED */
+      background-color: #FFFF00; /* CHANGED */
     }
-    td.category-divisive { 
-      background-color: #FF0000; 
+    .verse-field.category-divisive { /* CHANGED */
+      background-color: #FF0000; /* CHANGED */
     }
-    td.category-violent { 
-      background-color: #000000; 
-      color: #FFFFFF; 
+    .verse-field.category-violent { /* CHANGED */
+      background-color: #000000; /* CHANGED */
+      color: #FFFFFF; /* CHANGED */
     }
-    th.gita-header, th.bible-header, th.quran-header, th.hadith-header, th.miscellaneous-header { 
-      font-family: 'Merriweather', serif;
-      background-color: white; 
-      color: black; 
+    .view-full-verse { /* CHANGED */
+      display: inline-block; /* CHANGED */
+      padding: 10px 20px; /* CHANGED */
+      background-color: #0066cc; /* CHANGED */
+      color: #fff; /* CHANGED */
+      text-decoration: none; /* CHANGED */
+      border-radius: 5px; /* CHANGED */
+      font-family: 'Poppins', sans-serif; /* CHANGED */
+      font-size: 0.9em; /* CHANGED */
+      margin-top: 10px; /* CHANGED */
     }
-    mark { 
-      background-color: yellow; 
-      font-weight: bold; 
+    .view-full-verse:hover { /* CHANGED */
+      background-color: #004d99; /* CHANGED */
     }
     .footer { 
       position: relative; 
@@ -335,7 +352,7 @@
     }
     .navigation-arrows .prev {
       position: absolute;
-      left: -40px; /* Moved left to avoid text overlap */
+      left: -40px;
     }
     .navigation-arrows .next {
       position: absolute;
@@ -366,12 +383,23 @@
     }
     @media (max-width: 600px) {
       .header-info { 
-        position: relative; 
-        top: 0; 
-        right: 0; 
-        text-align: center; 
-        margin: 10px 0; 
+        flex-direction: column; /* CHANGED */
+        align-items: center; /* CHANGED */
+        position: relative; /* CHANGED */
+        top: 0; /* CHANGED */
+        left: 0; /* CHANGED */
+        right: 0; /* CHANGED */
+        margin: 10px 0; /* CHANGED */
         font-size: 0.8em; 
+      }
+      .header-info .visitor-count {
+        position: relative; /* CHANGED */
+        left: 0; /* CHANGED */
+        margin-bottom: 5px; /* CHANGED */
+      }
+      .header-info .last-updated {
+        position: relative; /* CHANGED */
+        right: 0; /* CHANGED */
       }
       .header-container { 
         flex-direction: column; 
@@ -424,17 +452,20 @@
         width: 100%; 
         max-width: 250px; 
       }
-      table { 
-        width: 100%; 
-        font-size: 0.9em; 
-        margin-bottom: 5px;
+      .verse-container { /* CHANGED */
+        width: 90%; /* CHANGED */
+        margin-bottom: 10px; /* CHANGED */
       }
-      th, td { 
-        font-family: 'Poppins', sans-serif;
-        padding: 6px; 
+      .verse-card { /* CHANGED */
+        padding: 10px; /* CHANGED */
       }
-      th.gita-header, th.bible-header, th.quran-header, th.hadith-header, th.miscellaneous-header { 
-        font-family: 'Merriweather', serif;
+      .verse-field { /* CHANGED */
+        font-size: 0.9em; /* CHANGED */
+        padding: 6px 0; /* CHANGED */
+      }
+      .view-full-verse { /* CHANGED */
+        font-size: 0.8em; /* CHANGED */
+        padding: 8px 16px; /* CHANGED */
       }
       .footer { 
         max-width: 90%; 
@@ -487,7 +518,7 @@
         width: 30px;
       }
       .navigation-arrows .prev {
-        left: -30px; /* Adjusted for mobile */
+        left: -30px;
       }
       .navigation-arrows .next {
         right: -20px;
@@ -500,10 +531,10 @@
   </style>
 </head>
 <body>
-  <div class="header-info">
-    <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
-    <span class="visitor-count" id="visitorCount">Visitors: Loading...</span>
-  </div>
+  <div class="header-info"> <!-- CHANGED -->
+    <span class="visitor-count" id="visitorCount">Visitors: Loading...</span> <!-- CHANGED -->
+    <span class="last-updated" id="lastUpdated">Last updated: loading...</span> <!-- CHANGED -->
+  </div> <!-- CHANGED -->
   <div class="header-container">
     <img src="images/sastik_logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('SASTIK logo failed to load');">
     <h2><a href="https://www.facebook.com/sastikofficial/" target="_blank">SASTIK GBQ+</a></h2>
@@ -550,10 +581,9 @@
     </div>
     <div class="match-count" id="matchCount">Matches found: 0</div>
   </div>
-  <table id="verseTable">
-    <thead id="tableHeaders"></thead>
-    <tbody id="verseBody"></tbody>
-  </table>
+  <div class="verse-container" id="verseContainer"> <!-- CHANGED -->
+    <!-- Verse cards will be populated here -->
+  </div> <!-- CHANGED -->
   <div class="footer">
     <div class="text-group">
       <div class="support-text">
@@ -743,13 +773,12 @@
       }
       if (sheetData) {
         data = sheetData;
-        updateHeaders(currentSheet);
-        updateTable(data);
+        updateTable(data); /* CHANGED */
         updateContentCount(data.length);
         updateMatchCount(0);
       } else {
         errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if the file exists or contact support.`;
-        document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${currentSheet}.json: File not found or inaccessible</td></tr>`;
+        document.getElementById("verseContainer").innerHTML = `<div style="text-align: center;">Error loading ${currentSheet}.json: File not found or inaccessible</div>`; /* CHANGED */
         updateContentCount(0);
         updateMatchCount(0);
       }
@@ -758,8 +787,7 @@
       subCategoryFilter.disabled = true;
       searchInput.disabled = true;
       errorDisplay.textContent = "";
-      document.getElementById("verseBody").innerHTML = "";
-      document.getElementById("tableHeaders").innerHTML = "";
+      document.getElementById("verseContainer").innerHTML = ""; /* CHANGED */
       document.querySelector('.search-row').style.display = 'flex';
       updateContentCount(0);
       updateMatchCount(0);
@@ -802,21 +830,21 @@
           const verse = sheetData[verseIndex];
           displaySingleVerse(verse, verseIndex);
           document.getElementById("controls").style.display = "none";
-          document.getElementById("verseTable").style.display = "none";
+          document.getElementById("verseContainer").style.display = "none"; /* CHANGED */
           document.querySelector('.search-row').style.display = 'none';
           await loadReactions(sheet, verseIndex);
         } else {
           console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
           displaySingleVerse(null, -1);
           document.getElementById("controls").style.display = "none";
-          document.getElementById("verseTable").style.display = "none";
+          document.getElementById("verseContainer").style.display = "none"; /* CHANGED */
           document.querySelector('.search-row').style.display = 'none';
         }
       } else {
         console.error(`Failed to load ${sheet}.json`);
         displaySingleVerse(null, -1);
         document.getElementById("controls").style.display = "none";
-        document.getElementById("verseTable").style.display = "none";
+        document.getElementById("verseContainer").style.display = "none"; /* CHANGED */
         document.querySelector('.search-row').style.display = 'none';
       }
     } else {
@@ -940,71 +968,45 @@
     loadReactions(currentSheet, newIndex);
   }
 
-  function updateHeaders(sheetName) {
-    const thead = document.getElementById("tableHeaders");
-    thead.innerHTML = "";
-    if (data.length > 0) {
-      let tr = document.createElement("tr");
-      const headers = Object.keys(data[0]).filter(h => h !== "sheet");
-      headers.forEach(header => {
-        let th = document.createElement("th");
-        th.textContent = header;
-        th.classList.add(`${sheetName}-header`);
-        tr.appendChild(th);
-      });
-      let shareTh = document.createElement("th");
-      shareTh.textContent = "Share";
-      shareTh.style.width = "60px";
-      tr.appendChild(shareTh);
-      thead.appendChild(tr);
-    }
-  }
-
-  function updateTable(rows) {
-    const tbody = document.getElementById("verseBody");
-    tbody.innerHTML = "";
-    if (rows.length === 0) {
-      let tr = document.createElement("tr");
-      let td = document.createElement("td");
-      td.textContent = "No data available or error loading data";
-      td.colSpan = Object.keys(data[0] || {}).length + 1 || 2;
-      td.style.textAlign = "center";
-      tr.appendChild(td);
-      tbody.appendChild(tr);
-    } else {
-      rows.forEach((row, index) => {
-        let tr = document.createElement("tr");
-        const headers = Object.keys(row).filter(h => h !== "sheet");
-        headers.forEach(header => {
-          let td = document.createElement("td");
-          let content = row[header] || "";
-          if (typeof content === "string" || (typeof content === "object" && content.text)) {
-            const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
-            if (searchTerm && !document.getElementById("searchInput").disabled) {
-              const textToSearch = typeof content === "object" ? content.text : content;
-              const highlighted = textToSearch.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
-              content = typeof content === "object" ? { text: highlighted, url: content.url } : highlighted;
-            }
-            td.innerHTML = typeof content === "object" && content.url
-              ? `<a href="${content.url}" target="_blank">${content.text}</a>`
-              : content;
-          } else {
-            td.textContent = content || "-";
-          }
-          if (header === "Verse Category " && typeof row[header] === "string") {
-            td.className = getCategoryClass(row[header].trim().toLowerCase());
-          }
-          tr.appendChild(td);
-        });
-        let shareTd = document.createElement("td");
-        shareTd.className = "share-buttons";
-        shareTd.innerHTML = addShareButton(row, index, true);
-        tr.appendChild(shareTd);
-        tbody.appendChild(tr);
-      });
-    }
-    updateContentCount(rows.length);
-  }
+  function updateTable(rows) { /* CHANGED */
+    const container = document.getElementById("verseContainer"); /* CHANGED */
+    container.innerHTML = ""; /* CHANGED */
+    if (rows.length === 0) { /* CHANGED */
+      container.innerHTML = `<div style="text-align: center;">No data available or error loading data</div>`; /* CHANGED */
+    } else { /* CHANGED */
+      rows.forEach((row, index) => { /* CHANGED */
+        let card = document.createElement("div"); /* CHANGED */
+        card.className = "verse-card"; /* CHANGED */
+        const verseName = row["Verse Name"] || row["Verse"] || "-"; /* CHANGED */
+        const verseCategory = row["Verse Category "] || "-"; /* CHANGED */
+        const verseSubCategory = row["Sub Category"] || ""; /* CHANGED */
+        const bengaliTranslation = row["Bengali Translation"] || "-"; /* CHANGED */
+        const englishTranslation = row["English Translation"] || "-"; /* CHANGED */
+        let html = ''; /* CHANGED */
+        html += `<div class="verse-field">${verseName}</div>`; /* CHANGED */
+        html += `<div class="verse-field ${getCategoryClass(verseCategory.trim().toLowerCase())}">${verseCategory}</div>`; /* CHANGED */
+        if (verseSubCategory.trim()) { /* CHANGED */
+          html += `<div class="verse-field">${verseSubCategory}</div>`; /* CHANGED */
+        }
+        html += `<div class="verse-field">${bengaliTranslation}</div>`; /* CHANGED */
+        html += `<div class="verse-field">${englishTranslation}</div>`; /* CHANGED */
+        const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`; /* CHANGED */
+        html += `<a href="${shareUrl}" class="view-full-verse">Click to view full verse</a>`; /* CHANGED */
+        card.innerHTML = html; /* CHANGED */
+        const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim(); /* CHANGED */
+        if (searchTerm && !document.getElementById("searchInput").disabled) { /* CHANGED */
+          card.querySelectorAll('.verse-field').forEach(field => { /* CHANGED */
+            let text = field.textContent; /* CHANGED */
+            if (text.toLowerCase().includes(searchTerm)) { /* CHANGED */
+              field.innerHTML = text.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>'); /* CHANGED */
+            } /* CHANGED */
+          }); /* CHANGED */
+        } /* CHANGED */
+        container.appendChild(card); /* CHANGED */
+      }); /* CHANGED */
+    } /* CHANGED */
+    updateContentCount(rows.length); /* CHANGED */
+  } /* CHANGED */
 
   function getCategoryClass(category) {
     switch (category?.toLowerCase()) {
@@ -1056,7 +1058,7 @@
                                                 row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
         return categoryMatch && subCategoryMatch;
       });
-      updateTable(filteredRows);
+      updateTable(filteredRows); /* CHANGED */
       if (searchTerm) {
         searchTable();
       } else {
@@ -1098,14 +1100,14 @@
             }
           });
         });
-        updateTable(searchFilteredRows);
+        updateTable(searchFilteredRows); /* CHANGED */
         updateMatchCount(matchCount);
       } else {
-        updateTable(filteredRows);
+        updateTable(filteredRows); /* CHANGED */
         updateMatchCount(0);
       }
     } else {
-      updateTable(data);
+      updateTable(data); /* CHANGED */
       updateMatchCount(0);
     }
   }

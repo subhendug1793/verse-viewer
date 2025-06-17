@@ -87,11 +87,11 @@
     .mission-subtext { 
       text-align: center; 
       margin: 0 auto 20px; 
-      max-width: 90%; 
-      font-size: 0.75em;
+      max-width: 90%; /* CHANGED */
+      font-size: 0.75em; /* CHANGED */
       line-height: 1.2; 
       font-weight: normal; 
-      white-space: nowrap; /* Ensure single line */
+      white-space: nowrap; /* CHANGED */
     }
     .controls { 
       margin-bottom: 10px; 
@@ -393,9 +393,9 @@
         max-width: 90%; 
       }
       .mission-subtext { 
-        font-size: 0.65em; 
-        max-width: 90%; 
-        white-space: nowrap; /* Ensure single line on mobile */
+        font-size: 0.65em; /* CHANGED */
+        max-width: 90%; /* CHANGED */
+        white-space: normal; /* CHANGED */
       }
       select, input { 
         font-family: 'Poppins', sans-serif;
@@ -978,7 +978,7 @@
         headers.forEach(header => {
           let td = document.createElement("td");
           let content = row[header] || "";
-          if (typeof content === "string" || (typeof content === "object" && content && content.text)) {
+          if (typeof content === "string" || (typeof content === "object" && content.text)) {
             const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
             if (searchTerm && !document.getElementById("searchInput").disabled) {
               const textToSearch = typeof content === "object" ? content.text : content;

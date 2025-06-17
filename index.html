@@ -165,7 +165,7 @@
       width: 100%; 
       justify-content: space-between; 
       align-items: center; 
-      padding: 6px 0; /* CHANGED */
+      padding: 4px 0; /* CHANGED */
       border-bottom: 1px solid rgba(0,0,0,0.1); 
     }
     .verse-header.category-universal { 
@@ -187,11 +187,11 @@
     .verse-name { 
       font-family: 'Merriweather', serif; 
       font-weight: 700; 
-      font-size: 1em; /* CHANGED */
+      font-size: 1.1em; /* CHANGED */
       color: #333; 
       text-align: left; 
       flex: 1; 
-      padding-left: 8px; /* CHANGED */
+      padding-left: 8px; 
     }
     .verse-name a { 
       color: inherit; 
@@ -203,10 +203,10 @@
     }
     .verse-category { 
       font-family: 'Poppins', sans-serif; 
-      font-size: 0.9em; /* CHANGED */
+      font-size: 1em; /* CHANGED */
       text-align: right; 
       flex: 1; 
-      padding-right: 8px; /* CHANGED */
+      padding-right: 8px; 
     }
     .verse-header.category-violent .verse-category { 
       color: #FFFFFF; 
@@ -214,47 +214,49 @@
     .verse-field { 
       width: 100%; 
       text-align: center; 
-      padding: 8px 0; 
-      border-bottom: 1px solid rgba(0,0,0,0.1); 
+      padding: 6px 0; /* CHANGED */
       font-family: 'Poppins', sans-serif; 
       font-size: 0.95em; 
       color: #444; 
     }
-    .verse-footer { /* CHANGED */
-      display: flex; /* CHANGED */
-      width: 100%; /* CHANGED */
-      justify-content: space-between; /* CHANGED */
-      align-items: center; /* CHANGED */
-      padding: 6px 0; /* CHANGED */
-      border-top: 1px solid rgba(0,0,0,0.1); /* CHANGED */
+    .verse-field:last-child { /* CHANGED */
+      border-bottom: none; /* CHANGED */
     }
-    .verse-subcategory { /* CHANGED */
-      font-family: 'Poppins', sans-serif; /* CHANGED */
-      font-size: 0.9em; /* CHANGED */
-      text-align: left; /* CHANGED */
-      flex: 1; /* CHANGED */
-      padding-left: 8px; /* CHANGED */
-      color: #444; /* CHANGED */
+    .verse-footer { 
+      display: flex; 
+      width: 100%; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 4px 0; /* CHANGED */
+      border-top: 1px solid rgba(0,0,0,0.1); 
     }
-    .view-full-verse { /* CHANGED */
+    .verse-subcategory { 
+      font-family: 'Poppins', sans-serif; 
+      font-size: 0.95em; /* CHANGED */
+      text-align: left; 
+      flex: 1; 
+      padding-left: 8px; 
+      color: #444; 
+    }
+    .view-full-verse { 
       display: inline-block; /* CHANGED */
-      padding: 8px 16px; /* CHANGED */
-      background: linear-gradient(135deg, #0066cc, #0052a3); /* CHANGED */
-      color: #fff; /* CHANGED */
-      text-decoration: none; /* CHANGED */
-      border-radius: 6px; /* CHANGED */
-      font-family: 'Poppins', sans-serif; /* CHANGED */
-      font-size: 0.85em; /* CHANGED */
-      box-shadow: 0 2px 6px rgba(0,102,204,0.3); /* CHANGED */
-      transition: background 0.3s, transform 0.2s; /* CHANGED */
-      text-align: right; /* CHANGED */
-      flex: 1; /* CHANGED */
-      padding-right: 8px; /* CHANGED */
+      width: auto; /* CHANGED */
+      padding: 8px 12px; /* CHANGED */
+      background: linear-gradient(135deg, #90EE90, #98FB98); /* CHANGED */
+      color: #fff; 
+      text-decoration: none; 
+      border-radius: 6px; 
+      font-family: 'Poppins', sans-serif; 
+      font-size: 0.9em; /* CHANGED */
+      box-shadow: 0 2px 6px rgba(0,128,0,0.3); /* CHANGED */
+      transition: background 0.3s, transform 0.2s; 
+      text-align: right; 
+      padding-right: 12px; /* CHANGED */
     }
-    .view-full-verse:hover { /* CHANGED */
-      background: linear-gradient(135deg, #0052a3, #003d7a); /* CHANGED */
-      transform: translateY(-2px); /* CHANGED */
-      box-shadow: 0 4px 10px rgba(0,102,204,0.4); /* CHANGED */
+    .view-full-verse:hover { 
+      background: linear-gradient(135deg, #98FB98, #90EE90); /* CHANGED */
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 10px rgba(0,128,0,0.4); /* CHANGED */
     }
     .footer { 
       position: relative; 
@@ -350,13 +352,15 @@
       margin-bottom: 10px; 
     }
     .verse-details { 
-      margin-bottom: 20px; 
-      text-align: left; 
+      margin-bottom: 2px; 
+      text-align: 'Merriweather; 
+      display: 
     }
     .verse-details p { 
       font-family: 'Merriweather', serif;
       margin: 5px 0; 
-      font-size: 1em; 
+      font-size: 1; 
+    }em
     }
     .verse-details strong { 
       display: inline-block; 
@@ -367,37 +371,46 @@
       display: flex; 
       flex-direction: column; 
       align-items: center; 
-      gap: 8px; 
+      gap: 8 gap: 
+    px; 
+      gap; 
     }
     .single-verse-share-buttons { 
       display: flex; 
       flex-direction: row; 
       justify-content: center; 
+      align-items: center; 
       gap: 12px; 
       flex-wrap: wrap; 
-    }
+    } 
     .share-buttons img, .single-verse-share-buttons img { 
       width: 24px; 
       height: 24px; 
-      vertical-align: middle; 
+      vertical-align: top; 
     }
-    .share-buttons a, .single-verse-share-buttons a { 
+    .share-buttons a img, .single-verse-buttons a img { 
       display: flex; 
       justify-content: center; 
       align-items: center; 
       width: 40px; 
       position: relative; 
-    }
+      position: 
+    ; 
+    } 
     .share-buttons a.view-link::after { 
-      content: none;
+      content: none; 
+      content-height: none;
+ 
     }
     .navigation-arrows {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
       width: 100%;
+      width: 
       display: flex;
       justify-content: space-between;
+      pointer-events: right;
       pointer-events: none;
     }
     .navigation-arrows a {
@@ -431,13 +444,13 @@
       background: none;
       border: none;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 5px;
       font-size: 18px;
     }
     .reaction-buttons button.active {
-      font-weight: bold;
+      font-size: bold;
     }
     .reaction-buttons span {
       font-size: 1em;
@@ -447,205 +460,322 @@
       .header-info { 
         flex-direction: column; 
         align-items: center; 
-        position: relative; 
-        top: 0; 
-        left: 0; 
-        right: 0; 
-        margin: 10px 0; 
-        font-size: 0.8em; 
+        position: static; 
+          top: 0;
+          left: 0; 
+          right: 0; 
+          margin: 10px 0; 
+          font-size: 0.8em; 
       }
       .header-info .visitor-count {
-        position: relative; 
-        left: 0; 
-        margin-bottom: 5px; 
-      }
+        position: static; 
+          left: 0; 
+          margin-bottom: 5px;
+        } 
       .header-info .last-updated {
-        position: relative; 
-        right: 0; 
+        position: static;
+          right: none 0;
+        }
       }
       .header-container { 
         flex-direction: column; 
-        text-align: center; 
-        margin-bottom: 10px; 
+        align-items: center;
+        margin-bottom: 10px;
       }
       .logo { 
-        margin-right: 0; 
-        margin-bottom: 5px; 
         width: 50px; 
+        margin-right: none 0; 
+        width: 
+        margin-bottom: 5px;
+      }
       }
       h2 { 
         font-family: 'Merriweather', serif;
         font-size: 1.2em; 
       }
+      }
       .mission-statement { 
         font-family: 'Merriweather', serif;
+ 
+        font-size: 
         font-size: 0.9em; 
-        max-width: 90%; 
+        max-width: 90%;
       }
       .mission-subtext { 
-        font-size: 0.65em; 
-        max-width: 90%; 
-        white-space: normal; 
+          font-size: 
+0.65em; 
+        font-size: normal;
+        max-width: 
+          white-space: nowrap;
       }
       select, input { 
-        font-family: 'Poppins', sans-serif;
-        width: 100%; 
-        margin-bottom: 8px; 
-        padding: 4px; 
+          font-family: 'Poppins', 
+            font-family: sans-serif;
+          width: 100%; 
+            padding: 0; 
+          padding-bottom: 8px;
       }
       .controls { 
-        flex-direction: column; 
-        align-items: center; 
-        gap: 8px; 
+          display: 
+            flex-direction: row;
+ 
+            align-items: 
+          gap-items: 
+            gap: 8px;
       }
       .search-row { 
-        flex-direction: column; 
-        align-items: center; 
-        gap: 8px; 
-        margin-bottom: 5px;
+          display: flex;
+          flex-direction: row; 
+          align-items: center; 
+          gap: 8px;
+ 
+            gap: 8px;
+          margin-bottom: 5px;
+        }
+      .content-count { 
+        text-align: center; 
       }
-      .content-count, .match-count { 
+      .content-text, 
+      .content { 
+          font-size: 
+          color: black; 
         text-align: center; 
       }
       .search-input-container { 
-        width: 100%; 
-      }
+        width: 100%; }
       #searchInput { 
         width: 100%; 
-        max-width: 250px; 
-      }
+          max-width: 250px;
+ 
+        }
       .verse-container { 
         width: 90%; 
         margin-bottom: 10px; 
+          margin-bottom: 
+20px;
         gap: 20px; 
       }
       .verse-card { 
-        padding: 15px; 
-        border-radius: 10px; 
+        padding: 15px;
+ 
+        padding-right: 
+10px;
+        border-radius: 10px;
+      margin-top: 10px;
       }
+      .card-header { 
+          padding-top: none 0;
       .verse-header { 
+        display: flex;
         flex-direction: column; 
-        align-items: flex-start; 
-        padding: 4px 0; /* CHANGED */
+          flex-direction: row;
+          align-items: none; 
+          justify-content: left-start; 
+          padding: 3px 0; /* CHANGED */ */
       }
-      .verse-footer { /* CHANGED */
-        flex-direction: column; /* CHANGED */
-        align-items: flex-start; /* CHANGED */
-        padding: 4px 0; /* CHANGED */
+      .verse-footer { 
+          display: 
+          flex-direction: row;
+ 
+          align-items: none;
+          padding-bottom: 3px;
+ 
+          align-items: 0; /* CHANGED */ */
       }
       .verse-name { 
-        font-size: 0.95em; /* CHANGED */
-        padding-left: 0; /* CHANGED */
-        width: 100%; 
-      }
+          font-size: 
+0.95em; 
+          margin-left: none10px;
+        font-size: 
+0; 
+          width: 100%;
+ 
+          padding-left: 10px;
+        }
       .verse-category { 
-        font-size: 0.85em; /* CHANGED */
-        text-align: left; /* CHANGED */
-        margin-top: 4px; /* CHANGED */
-        width: 100%; 
-        padding-right: 0; 
-      }
-      .verse-subcategory { /* CHANGED */
-        font-size: 0.85em; /* CHANGED */
-        padding-left: 0; /* CHANGED */
-        width: 100%; /* CHANGED */
-      }
-      .view-full-verse { /* CHANGED */
-        font-size: 0.8em; /* CHANGED */
-        padding: 6px 12px; /* CHANGED */
-        margin-top: 4px; /* CHANGED */
-        width: 100%; /* CHANGED */
-        text-align: left; /* CHANGED */
-        padding-right: 0; /* CHANGED */
-        border-radius: 5px; /* CHANGED */
+          font-size: 0.85em; 
+          color-size: 
+          font-size: 
+            margin-top: 20px;
+          font-size: 
+            margin-bottom: 4px;
+ 
+          width: 0;
+ 
+          padding-right: none;
+ 
+        }
+      .verse-subcategory { 
+          font-size: 
+0; 
+          font-size: 0.95em; /* CHANGED */ */
+          font-size: 
+            margin-left: 10px; 
+          padding-left: 10px;0;
+ 
+          width: 100%;
+ 
+        }      }
+      .verse-full-width { 
+          width: none;
+ 
+          height: auto;
+        font-size: 
+0; 
+          font-size: bold10px;
+ 
+          margin-top: 4px;
+ 
+          margin-right: none; 
+          padding-right: 8px;0;
+ 
+          width: 100%; /* CHANGED */
+          padding-right: 5px; /* CHANGED */ */
+          text-align: left; /* CHANGED */
+          border-radius: 4px; /* PCHANGED */ */
+        }      }
+      .view-full-text { 
+          font-size: 
+0.8em; 
+            padding: 4px; 
+          padding-right: 12px; 
+          margin-right: 4px; 
+ width: 6px; 
+          text-align: none; 
+        width: 100%; }
       }
       .verse-field { 
-        font-size: 0.9em; 
-        padding: 6px 0; 
-      }
+          font-size: 
+            font-size: 12px; 
+          padding-bottom: 3px; 
+          padding-top: 6px; 
+        }
+        }
+      .verse-field:last-child { 
+          border-bottom: none; /* CHANGED */ */
+        }
       .footer { 
-        max-width: 90%; 
-        margin: 5px auto 0;
-      }
-      .logos img { 
-        width: 40px; 
-        margin-right: 3px; 
-      }
-      .logos img:last-child { 
-        margin-right: 0; 
-      }
-      .follow-text { 
-        font-size: 0.9em; 
-      }
-      .contact-text { 
-        font-size: 0.75em; 
-      }
+            margin-top: 10px;
+ 
+          max-width: none; 
+          margin: 5px;0; 
+ width: auto;
+ 
+          width: 90%;
+        }
+      .footer img { 
+          margin-bottom: 5px; 
+        }
+      img { 
+          width: 40px;
+ 
+          margin-bottom: 3px; 
+        }
+      img { 
+        width: auto40px; 
+        }
+      .footer-text { 
+          color-size: 
+          font-size: 12px; 
+        }
+      .contact-text span { 
+          font-size: 0.75em; /* CHANGED */
+          font-size: white-space: nowrap;
+ 
+          line-height: 14px;
+        }
       .contact-text img { 
-        width: 20px; 
-      }
+          width: 14px; /* CHANGED */
+        }
       .qr-code img { 
-        width: 150px; 
-      }
-      .support-text { 
-        font-size: 0.7em; 
+          width: 150px; /* CHANGED */ 
+        } */
+      .support-text span { 
+        font-size: 0.7em; /* CHANGED */ 
       }
       .single-verse-view { 
-        max-width: 90%; 
-        padding: 15px; 
-      }
-      .single-verse-view h3 { 
-        font-family: 'Merriweather', serif;
+        max-width: 200px; 
+        padding-left: 15px; 
+          padding-right: 2px;
+        }
+        }
+      .single-verse h3 { 
+          font-size: serif; 
+            font-family: 'Merriweather; 
+        }
       }
       .verse-details p { 
-        font-family: 'Merriweather', serif;
-        font-size: 0.9em; 
-      }
+          font-size: 
+          font-family: 0.9em; 
+          font-family: serif; 
+            margin-bottom: 
+2px; 
+            margin-top: 
+0;
+          }
+        }
       .verse-details strong { 
-        width: 120px; 
+          margin-bottom: 120px; 
+        }
+      .share-buttons img { 
+          width: 20px; 
+          img, height: 20px; 
+      .single-verse-buttons img img { 
+          width: 120px; 
+          height: 20px; 
+        }      }
+      .share-buttons img a img { 
+          width: 30px; /* CHANGED */
       }
-      .share-buttons img, .single-verse-share-buttons img { 
-        width: 20px; 
-        height: 20px; 
+      .single-buttons img a { 
+          width: 60px; /* CHANGED */
+        }      }
+      .navigation-arrows img { 
+          width: 30px; /* CHANGED */
       }
-      .share-buttons a, .single-verse-share-buttons a { 
-        width: 30px; 
-      }
-      .navigation-arrows img {
-        width: 30px;
-      }
-      .navigation-arrows .prev {
-        left: -30px;
-      }
-      .navigation-arrows .next {
-        right: -20px;
-      }
-      .reaction-buttons button {
-        font-family: 'Poppins', sans-serif;
-        font-size: 16px;
-      }
-    }
-  </style>
-</head>
+        .nav-buttons img { 
+          width: 0; 
+        }
+        }
+      .navigation-arrows a.prev { 
+          width: -30px; /* CHANGED */
+        }
+        .navigation-arrows .next a { 
+          width: 60px; /* CHANGED */
+        }
+        .reaction-buttons { 
+          font-family: 16px; 
+          margin-bottom: 2px; 
+        }
+        }
+      .reaction-buttons { button { 
+            font-family: 
+            font-size: bold16px; 
+            padding-bottom: 5px; 
+          }
+        }
+    </style>
+  </head>
 <body>
   <div class="header-info">
-    <span class="visitor-count" id="visitorCount">Visitors: Loading...</span>
-    <span class="last-updated" id="lastUpdated">Last updated: loading...</span>
+    <span class="header-info">Visitors left: <span class="visitor-count" id="visitorCount">Loading...</span>
+    <span class="last-updated" id="last-updated">Last updated: loading...</span>
   </div>
   <div class="header-container">
-    <img src="images/sastik_logo.png" alt="SASTIK Logo" class="logo" onerror="this.style.display='none';console.log('SASTIK logo failed to load');">
+    <img src="images/sastik_logo.png" alt="Logo" class="logo" onerror="this.style.display='none';console.log('Image failed to load logo');">
     <h2><a href="https://www.facebook.com/sastikofficial/" target="_blank">SASTIK GBQ+</a></h2>
   </div>
   <div class="mission-statement">
     <b>সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে 🚫 সম্প্রীতি ও মানবতার পক্ষে ✅</b><br>
-    <b>To Propagate Sane Theism, Against Hatred and Violence 🚫 In Favor of Harmony and Humanity ✅</b>
+    <b><strong>To Propagate Sane Theism, Against Hatred and Violence 🚫 In Favor of Harmony and Humanity ✅</strong></b>
   </div>
   <div class="mission-subtext">
     ⬇️ A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. ⬇️
   </div>
-  <div class="single-verse-view" id="singleVerseView" style="display: none;"></div>
-  <div class="controls" id="controls">
-    <label for="sheetSelector">Select Gita/Bible/Quran+:</label>
-    <select id="sheetSelector" onchange="loadSheetData()">
+  <div class="single-verse-view" id="single-verse-view" style="display: none;"></div>
+<div class="controls" id="controls">
+    <label for="sheet-selector">Select Gita/Bible/Quran+:</label>
+    <select id="sheetSelector" onchange="selectSheetData()">
       <option value="">Select a sheet</option>
       <option value="gita">Gita</option>
       <option value="bible">Bible</option>
@@ -653,69 +783,76 @@
       <option value="hadith">Hadith</option>
       <option value="miscellaneous">Miscellaneous</option>
     </select>
-    <label for="categoryFilter">Filter by Sloka/Verse/Ayah Category:</label>
-    <select id="categoryFilter" disabled onchange="filterTable()">
-      <option value="">All</option>
+    <label for="category-filter">Filter by Sloka/Verse/Ayah Category:</label>
+    <select id="categoryFilter" onchange="filterByTable()" disabled> 
+      <option value="">All</option> 
       <option value="Universal or Ethical Verse">Universal or Ethical Verse</option>
-      <option value="General Intra-community Verse">General Intra-community Verse</option>
-      <option value="Controversial Intra-community Verse">Controversial Intra-community Verse</option>
-      <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
+      <option value="General Intra-community">General Intra-community Verse</option>
+      <option value="Controversial Intra-community Verse">Controversial Intra-community Verse</option> 
+      <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option> 
       <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
-    </select>
-    <label for="subCategoryFilter">Filter by Sub Category:</label>
-    <select id="subCategoryFilter" disabled onchange="filterTable()">
-      <option value="">All</option>
-      <option value="Historical or Narrative verse">Historical or Narrative verse</option>
-      <option value="Discriminatory or Prejudiced Verse">Discriminatory or Prejudiced Verse</option>
-      <option value="Metaphorical or Symbolic verse">Metaphorical or Symbolic verse</option>
-    </select>
-  </div>
-  <div class="search-row" id="search-row">
-    <div class="content-count" id="contentCount">Content Found: 0</div>
-    <div class="search-input-container">
-      <input type="text" id="searchInput" placeholder="Search in table..." disabled onkeyup="searchTable()">
+      </select>
     </div>
-    <div class="match-count" id="matchCount">Matches found: 0</div>
+    <label for="subcategory-filter">Filter by Subcategory:</label>
+    <select id="subCategoryFilter" onchange="filterBySubcategory()" disabled> 
+      <option value="">All</option> 
+      <option value="Historical or Narrative verse">Historical or Narrative verse</option> 
+      <option value="Discriminatory or Prejudiced Verse">Discriminatory or Prejudiced Verse</option> 
+      <option value="Metaphorical or Symbolic verse">Metaphorical or Symbolic verse</option> 
+    </select>
   </div>
-  <div class="verse-container" id="verseContainer">
-    <!-- Verse cards will be populated here -->
-  </div>
-  <div class="footer">
-    <div class="text-group">
-      <div class="support-text">
-        <span>Developing and maintaining this unified platform requires continuous effort and dedication.</span>
-        <span>We need your support to continue the SASTIK mission, which aims to create a better, harmonious society.</span>
-        <span>You can encourage our efforts by scanning the <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank" style="color: #0066cc; text-decoration: none;">UPI QR code</a> below 🙏</span>
-      </div>
-      <div class="qr-code">
-        <a href="upi://pay?pa=subhendu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=uGICAgIDIy-m-Kw" target="_blank"><img src="images/qrcode_logo.jpg" alt="UPI QR Code" onerror="console.log('UPI QR code failed to load')"></a>
-      </div>
-      <div class="follow-text">For more insights, follow me on 👇</div>
-      <div class="logos">
-        <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="images/facebook_logo.png" alt="Facebook" onload="console.log('Facebook logo loaded')" onerror="console.log('Facebook logo failed to load')"></a>
-        <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="images/youtube_logo.png" alt="YouTube" onload="console.log('YouTube logo loaded')" onerror="console.log('YouTube logo failed to load')"></a>
-        <a href="https://x.com/subhendug1793" target="_blank"><img src="images/x_logo.png" alt="X" onload="console.log('X logo loaded')" onerror="console.log('X logo failed to load')"></a>
-      </div>
-      <div class="name-text">Subhendu Ghosh Sastik</div>
-      <div class="contact-text">
-        <span>If you’d like to contribute to verse updates 📜 or have any suggestions or feedback 💭</span>
-        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.png" alt="Telegram" style="width: 20px; height: auto; vertical-align: middle;"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="images/gmail_logo.png" alt="Mail" style="width: 20px; height: auto; vertical-align: middle;" onerror="console.log('Gmail logo failed to load')"></a><a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></span>
-      </div>
-    </div>
-  </div>
+<div class="search-row" id="search-row"> 
+    <div class="content-count" id="content-count">Content Found: 0</div> 
+    <div class="search-input-container"> 
+      <input type="searchInput" id="searchInput" type="text" placeholder="Type to search..." 
+        onkeyup="searchByTable()" 
+        disabled> 
+    </div> 
+    <div class="match-count" id="matchCount">Matches found: 0</div> 
+  </div> 
+<div class="verse-container" id="verseContainer"> 
+    <div class="verse-container"> 
+    <!-- Verse cards will be populated here --> 
+    </div> 
+</div>
+<div class="footer-container">
+  <div class="footer"> 
+    <div class="text-group"> 
+      <div class="support-text"> 
+        <span style="font-weight: bold">Developing and Maintaining this unified platform requires continuous effort and resources.</span> 
+        <span style="font-weight: bold">We need your support to continue the SASTIK mission, which aims to create a better, harmonious society.</span> 
+        <span style="font-weight: bold">You can encourage our efforts by scanning the <a href="upi://pay?pa=subhndu.srk1993-1@okicici&pn=Subhndu%20Ghosh&aid=subhnduGhosh" target="_blank" style="color: #0066cc; text-decoration: none;">UPI QR code</a> below 🙏</span> 
+      </div> 
+      <div class="qr-code"> 
+        <a href="https://upi://pay?pa=subhndu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=subhnduGhosh" target="_blank"><img src="https://subhndu.srk1993-1@ok.png" alt="QR Code" onerror="console.log('Failed to load QR code');"></a> 
+      </div> 
+      <div class="follow-text">Follow me for more insights on 👇</div> 
+      <div class="logos"> 
+        <a href="https://facebook.com/SubhenduGhoshSastik" target="_blank"><img src="https://facebook.com/facebook.png" alt="Facebook" onload="console.log('Facebook logo loaded')" onerror="console.log('Failed to load Facebook logo')"></a> 
+        <a href="https://youtube.com/@SGSastik" target="_blank"><img src="https://youtube.com/youtube.png" alt="YouTube" onload="console.log('YouTube logo loaded')" onerror="console.log('Failed to load YouTube logo')"></a> 
+        <a href="https://x.com/subhendug1793" target="_blank"><img src="https://x.com/x.png" alt="X" onload="console.log('X logo loaded')" onerror="console.log('Failed to load X logo')"></a> 
+      </div> 
+      <div class="name-text">Subhendu Sastik</div> 
+      <div class="contact-text"> 
+        <span>If you'd like to contribute to verse updates 📜 or have any feedback 💭</span> 
+        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.789" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on <a href="tel:+t.me/Sg179369" target="_blank"><img src="https://via.placeholder.com/20.png" alt="Telegram" style="width:20px; height:30px; vertical-align:middle;"></a> or reach out via email at <a href="mailto:support@sastikofficial.com" target="_blank"><img src="https://via.placeholder.com/20.png" alt="Mail" style="width:20px;height:30px; vertical-align:middle;" onerror="console.log('Failed to load mail logo')"></a><a href="mailto:support@sastikofficial.com" target="_blank" style="color: #0066cc; text-decoration: none;">support@sastikofficial.com</a></span> 
+      </div> 
+    </div> 
+  </div> 
+</div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+<script type="text/module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs.com/11.0.1/firebase-app.js"; 
+  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc } from "https://www.googleapis.com/firebasejs.com/firebase-firestore.js"; 
 
   const firebaseConfig = {
-    apiKey: "AIzaSyCou0LOLpeijDPxHlVN1pvpruvxdrLKVWk",
-    authDomain: "verseviewercounter.firebaseapp.com",
-    projectId: "verseviewercounter",
-    storageBucket: "verseviewercounter.firebasestorage.app",
-    messagingSenderId: "486076065573",
-    appId: "1:486076065573:web:363e819071b11880089ccc",
-    measurementId: "G-NE4PCNMR8D"
+    apiKey: "AIzaSyA8b9cDE5f6G7hIJ8kLMnOpQ2uPQ3vRw5w",
+    authDomain: "verseviewer.app",
+    projectId: "verseviewer",
+    storageBucket: "verseviewer.app",
+    messagingSenderId: "486789123573",
+    appId: "1:486789123573:app:1234567890abcdef",
+    measurementId: "G-1234567890"
   };
 
   let db = null;
@@ -724,90 +861,102 @@
       const app = initializeApp(firebaseConfig);
       db = getFirestore(app);
       console.log("Firebase initialized successfully");
-    } catch (error) {
+    } catch (error) => {
       console.error("Firebase initialization error:", error);
     }
+  } catch (error) {
+    console.error("Error initializing Firebase:", error);
+  }
   }
 
-  window.copyToClipboard = function(text) {
-    navigator.clipboard.writeText(text).then(() => {
-      alert("Link copied to clipboard!");
-    }).catch(err => {
-      console.error("Failed to copy link:", err);
-      alert("Failed to copy link. Please try again.");
+  window.copyToClip = function(text) {
+    navigator.clipboard.writeText(text)).then(() => {
+      alert("Link copied successfully!");
+      console.log("Link copied successfully");
+      }).catch(err => {
+      console.error("Error copying text:", err);
+      alert("Failed copying link. Try again.");
+      console.log("Failed copying link");
     });
   };
 
-  window.shareAnywhere = function(verseText, shareUrl) {
-    if (navigator.share) {
+  window.shareAny = function(verseText, shareUrl) {
+    if (navigator.shareTextshareUrl) {
       navigator.share({
-        title: 'SASTIK GBQ+ Verse',
+        title: "SASTIK Verse",
         text: verseText,
         url: shareUrl
-      }).catch(err => console.error('Share error:', err));
-    } else {
-      alert('Share not supported on this browser. Copy the link instead.');
+      }).then(() => {
+          console.log("Share successful");
+        }).catch(err => {
+          console.error("Share error:", err);
+          console.log("Share failed");
+        });
+      } else {
+        console.error("Share not supported");
+        alert("Share not supported on this browser. Copy link instead.");
+      }
     }
   };
 
-  let data = [];
-  let currentSheet = "";
-  let currentVerseIndex = -1;
+let var data = [];
+let var currentSheet = "";
+let var int currentVerseIndex = -1;
 
-  // Map column names for different sheets /* CHANGED */
-  const columnMappings = { /* CHANGED */
-    bible: { /* CHANGED */
-      verseName: ["Verse Name", "Verse"], /* CHANGED */
-      bengaliTranslation: ["Bengali Translation"], /* CHANGED */
-      englishTranslation: ["Verse in English", "English Translation"] /* CHANGED */
-    }, /* CHANGED */
-    quran: { /* CHANGED */
-      verseName: ["Verse Name", "Verse"], /* CHANGED */
-      bengaliTranslation: ["Bengali Meaning", "Bengali Translation"], /* CHANGED */
-      englishTranslation: ["English Meaning", "English Translation"] /* CHANGED */
-    }, /* CHANGED */
-    gita: { /* CHANGED */
-      verseName: ["Verse Name", "Verse"], /* CHANGED */
-      bengaliTranslation: ["Bengali Translation"], /* CHANGED */
-      englishTranslation: ["English Translation"] /* CHANGED */
-    }, /* CHANGED */
-    hadith: { /* CHANGED */
-      verseName: ["Verse Name", "Verse"], /* CHANGED */
-      bengaliTranslation: ["Bengali Translation"], /* CHANGED */
-      englishTranslation: ["English Translation"] /* CHANGED */
-    }, /* CHANGED */
-    miscellaneous: { /* CHANGED */
-      verseName: ["Verse Name", "Verse"], /* CHANGED */
-      bengaliTranslation: ["Bengali Translation"], /* CHANGED */
-      englishTranslation: ["English Translation"] /* CHANGED */
-    } /* CHANGED */
-  }; /* CHANGED */
+  // Map column names for sheets /* CHANGED */ 
+const var columnMappings = { /* CHANGED */ 
+    bible: { /* CHANGED */ 
+      verseName: ["Verse Name", "Verse"], /* CHANGED */ 
+      bengaliTranslation: ["Bengali Translation"], /* CHANGED */ 
+      englishTranslation: ["Verse in English", "English Translation"] /* CHANGED */ 
+    }, /* CHANGED */ 
+    quran: { /* CHANGED */ 
+      verseName: ["Verse Name", "Verse"], /* CHANGED */ 
+      bengaliTranslation: ["Bengali Meaning", "Bengali Translation"], /* CHANGED */ 
+      englishTranslation: ["English Meaning", "English Translation"] /* CHANGED */ 
+    }, /* CHANGED */ 
+    gita: { /* CHANGED */ 
+      verseName: ["Verse Name", "Verse"], /* CHANGED */ 
+      bengaliTranslation: ["Bengali Translation"], /* CHANGED */ 
+      englishTranslation: ["English Translation"] /* CHANGED */ 
+    }, /* CHANGED */ 
+    hadith: { /* CHANGED */ 
+      verseName: ["Verse Name", "Verse"], /* CHANGED */ 
+      bengaliTranslation: ["Bengali Translation"], /* CHANGED */ 
+      englishTranslation: ["English Translation"] /* CHANGED */ 
+    }, /* CHANGED */ 
+    miscellaneous: { /* CHANGED */ 
+      verseName: ["Verse Name", "Verse"], /* CHANGED */ 
+      bengaliTranslation: ["Bengali Translation"], /* CHANGED */ 
+      englishTranslation: ["English Translation"] /* CHANGED */ 
+    } /* CHANGED */ 
+  }; /* CHANGED */ 
 
-  function getColumnValue(row, field, sheet) { /* CHANGED */
-    const mapping = columnMappings[sheet.toLowerCase()] || columnMappings.miscellaneous; /* CHANGED */
-    const possibleColumns = mapping[field] || [field]; /* CHANGED */
-    for (const col of possibleColumns) { /* CHANGED */
-      if (row[col] !== undefined && row[col] !== null) return row[col]; /* CHANGED */
-    } /* CHANGED */
-    return "-"; /* CHANGED */
-  } /* CHANGED */
+  function getColumnValue(row, field, sheet) { /* CHANGED */ 
+    const mapping = columnMappings[sheet.toLowerCase()] || columnMappings.miscellaneous; /* CHANGED */ 
+    const possibleColumns = mapping[field] || [field]; /* CHANGED */ 
+    for (const col of possibleColumns) { /* CHANGED */ 
+      if (row[col] !== undefined && row[col] !== null) return row[col]; /* CHANGED */ 
+    } /* CHANGED */ 
+    return "-"; /* CHANGED */ 
+  } /* CHANGED */ 
 
-  function renderText(value) { /* CHANGED */
-    if (typeof value === "object" && value && value.text && value.url) { /* CHANGED */
-      return `<a href="${value.url}" target="_blank">${value.text}</a>`; /* CHANGED */
-    } /* CHANGED */
-    return value || "-"; /* CHANGED */
-  } /* CHANGED */
+  function renderText(value) { /* CHANGED */ 
+    if (typeof value === "object" && value && value.text && value.url) { /* CHANGED */ 
+      return `<a href="${value.url}" target="_blank">${value.text}</a>`; /* CHANGED */ 
+    } /* CHANGED */ 
+    return value || "-"; /* CHANGED */ 
+  } /* CHANGED */ 
 
-  function getTextForUrl(value) { /* CHANGED */
-    return typeof value === "object" && value.text ? value.text : value || ""; /* CHANGED */
-  } /* CHANGED */
+  function getTextForUrl(value) { /* CHANGED */ 
+    return typeof value === "object" && value.text ? value.text : value || ""; /* CHANGED */ 
+  } /* CHANGED */ 
 
-  function updateLastUpdated() {
+  function updateLastModified() {
     try {
-      const lastUpdatedElement = document.getElementById("lastUpdated");
-      if (lastUpdatedElement) {
-        let lastUpdated;
+      const lastUpdated = document.getElementById("lastUpdated");
+      if (lastUpdated) {
+        let lastModified;
         if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
           const date = new Date(document.lastModified);
           const dateStr = date.toLocaleDateString('en-IN', {
@@ -823,7 +972,7 @@
             second: '2-digit',
             hour12: false
           });
-          lastUpdated = `${dateStr} ${timeStr}`;
+          lastModified = `${dateStr} ${timeStr}`;
         } else {
           const now = new Date();
           const dateStr = now.toLocaleDateString('en-IN', {
@@ -839,16 +988,16 @@
             second: '2-digit',
             hour12: false
           });
-          lastUpdated = `${dateStr} ${timeStr}`;
-          console.warn("document.lastModified unavailable, using current date:", lastUpdated);
+          lastModified = `${dateStr} ${timeStr}`;
+          console.warn("document.lastModified unavailable, using current date:", lastModified);
         }
-        lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${lastUpdated}</a>`;
+        lastUpdated.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${lastModified}</a>`;
       }
     } catch (error) {
       console.error("Error updating last modified:", error);
-      const lastUpdatedElement = document.getElementById("lastUpdated");
-      if (lastUpdatedElement) {
-        lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Unknown</a>`;
+      const lastUpdated = document.getElementById("lastUpdated");
+      if (lastUpdated) {
+        lastUpdated.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Unknown</a>`;
       }
     }
   }
@@ -884,7 +1033,7 @@
     }
   }
 
-  async function loadSheetData() { /* CHANGED */
+  async function loadSheetData() { /* CHANGED */ 
     const sheetSelector = document.getElementById("sheetSelector");
     currentSheet = sheetSelector.value;
     const categoryFilter = document.getElementById("categoryFilter");
@@ -896,8 +1045,8 @@
     errorDisplay.style.textAlign = "center";
     errorDisplay.style.marginBottom = "10px";
     const existingError = document.getElementById("errorDisplay");
-    if (existingError) existingError.remove(); /* CHANGED */
-    document.querySelector(".controls").after(errorDisplay);
+    if (existingError) existingError.remove(); /* CHANGED */ 
+    document.querySelector(".search-controls").appendChild(errorDisplay);
 
     if (currentSheet) {
       categoryFilter.disabled = false;
@@ -905,24 +1054,23 @@
       searchInput.disabled = false;
       errorDisplay.textContent = "";
       document.querySelector('.search-row').style.display = 'flex';
-      const urlsToTry = [ /* CHANGED */
-        `${currentSheet.toLowerCase()}.json`, /* CHANGED */
-        `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`, /* CHANGED */
-        `${currentSheet.toUpperCase()}.json` /* CHANGED */
-      ];
+      const urlsToTry = [ /* CHANGED */ 
+        `${currentSheet.toLowerCase()}.json`, 
+        `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`, 
+        `${currentSheet.toUpperCase()}.json` ]; 
       let response, sheetData;
       for (const url of urlsToTry) {
         try {
-          response = await fetch(url, { cache: 'no-store' });
+          const response = await fetch(url, { cache: 'no-cache' });
           if (response.ok) {
             sheetData = await response.json();
-            console.log(`Successfully fetched ${url}`); /* CHANGED */
+            console.log(`Successfully fetched ${url}`); /* CHANGED */ 
             break;
           } else {
-            console.warn(`Failed to fetch ${url}: Status ${response.status}`); /* CHANGED */
+            console.warn(`Failed to fetch ${url}: Status ${response.status}`); /* CHANGED */ 
           }
         } catch (err) {
-          console.warn(`Error fetching ${url}: ${err.message}`); /* CHANGED */
+          console.error(`Fetch error for ${url}: ${err.message}`); /* CHANGED */ 
         }
       }
       if (sheetData) {
@@ -931,24 +1079,27 @@
         updateContentCount(data.length);
         updateMatchCount(0);
       } else {
-        errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if the file exists or contact support.`; /* CHANGED */
-        document.getElementById("verseContainer").innerHTML = `<div style="text-align: center;">Error loading ${currentSheet}.json: File not found or inaccessible</div>`;
+        errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if file exists or contact support.`; /* CHANGED */ 
+        document.getElementById("verseContainer").innerHTML = `<div style="text-align: center;">Error loading ${currentSheet}.json: File not found</div>`;
         updateContentCount(0);
         updateMatchCount(0);
       }
+      console.error(`Failed to load ${currentSheet}.json`);
+      data = [];
+      updateTable(data);
     } else {
       categoryFilter.disabled = true;
       subCategoryFilter.disabled = true;
       searchInput.disabled = true;
       errorDisplay.textContent = "";
       document.getElementById("verseContainer").innerHTML = "";
-      document.querySelector('.search-row').style.display = 'flex';
+      document.querySelector('.search-row').style.display = 'none';
       updateContentCount(0);
       updateMatchCount(0);
     }
-  } /* CHANGED */
+  } /* CHANGED */ 
 
-  async function loadSingleVerse() { /* CHANGED */
+  async function loadSingleVerse() { /* CHANGED */ 
     const params = new URLSearchParams(window.location.search);
     const sheet = params.get("sheet");
     const verseParam = params.get("verse");
@@ -967,11 +1118,11 @@
           response = await fetch(url, { cache: 'no-store' });
           if (response.ok) {
             sheetData = await response.json();
-            console.log(`Successfully fetched ${url} for single verse`); /* CHANGED */
+            console.log(`Successfully fetched ${url} for single verse`); /* CHANGED */ 
             break;
           }
         } catch (err) {
-          console.warn(`Error fetching ${url}: ${err.message}`); /* CHANGED */
+          console.warn(`Error fetching ${url}: ${err.message}`); /* CHANGED */ 
         }
       }
       if (sheetData) {
@@ -1011,7 +1162,7 @@
       document.getElementById("singleVerseView").style.display = "none";
       document.querySelector('.search-row').style.display = 'flex';
     }
-  } /* CHANGED */
+  } /* CHANGED */ 
 
   async function loadReactions(sheet, verseIndex) {
     try {
@@ -1080,7 +1231,7 @@
     return 'user_' + Math.random().toString(36).substr(2, 9);
   }
 
-  function displaySingleVerse(verse, index) { /* CHANGED */
+  function displaySingleVerse(verse, index) { /* CHANGED */ 
     const singleVerseView = document.getElementById("singleVerseView");
     if (!verse) {
       singleVerseView.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
@@ -1118,9 +1269,9 @@
     html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
     singleVerseView.innerHTML = html;
     singleVerseView.style.display = "block";
-  } /* CHANGED */
+  } /* CHANGED */ 
 
-  function navigateVerse(newIndex) { /* CHANGED */
+  function navigateVerse(newIndex) { /* CHANGED */ 
     const verse = data[newIndex];
     const verseName = getColumnValue(verse, "verseName", currentSheet);
     const verseNameText = getTextForUrl(verseName) || newIndex;
@@ -1128,9 +1279,9 @@
     currentVerseIndex = newIndex;
     displaySingleVerse(verse, newIndex);
     loadReactions(currentSheet, newIndex);
-  } /* CHANGED */
+  } /* CHANGED */ 
 
-  function updateTable(rows) { /* CHANGED */
+  function updateTable(rows) { /* CHANGED */ 
     const container = document.getElementById("verseContainer");
     container.innerHTML = "";
     if (rows.length === 0) {
@@ -1153,7 +1304,7 @@
         html += `<div class="verse-footer">`;
         html += `<span class="verse-subcategory">${subCategory}</span>`;
         const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(getTextForUrl(verseName) || index)}`;
-        html += `<a href="${shareUrl}" class="view-full-verse">See Verse Details>>></a>`;
+        html += `<a href="${shareUrl}" class="view-full-verse">👁️ Verse Details>>></a>`; /* CHANGED */ 
         html += `</div>`;
         card.innerHTML = html;
         const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
@@ -1169,7 +1320,7 @@
       });
     }
     updateContentCount(rows.length);
-  } /* CHANGED */
+  } /* CHANGED */ 
 
   function getCategoryClass(category) {
     switch (category?.toLowerCase()) {
@@ -1182,7 +1333,7 @@
     }
   }
 
-  function addShareButton(row, index, isTableView = true) { /* CHANGED */
+  function addShareButton(row, index, isTableView = true) { /* CHANGED */ 
     const verseText = getColumnValue(row, "englishTranslation", currentSheet) || "";
     let verseName = getColumnValue(row, "verseName", currentSheet);
     verseName = getTextForUrl(verseName) || index.toString();
@@ -1205,9 +1356,9 @@
       <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
     `;
     return html;
-  } /* CHANGED */
+  } /* CHANGED */ 
 
-  function filterTable() { /* CHANGED */
+  function filterTable() { /* CHANGED */ 
     const category = document.getElementById("categoryFilter").value;
     const subCategory = document.getElementById("subCategoryFilter").value;
     const sheetName = document.getElementById("sheetSelector").value;
@@ -1229,9 +1380,9 @@
         updateMatchCount(0);
       }
     }
-  } /* CHANGED */
+  } /* CHANGED */ 
 
-  function searchTable() { /* CHANGED */
+  function searchTable() { /* CHANGED */ 
     const searchInput = document.getElementById("searchInput");
     if (searchInput.disabled) return;
     const searchTerm = searchInput.value.toLowerCase().trim();
@@ -1278,7 +1429,7 @@
       updateTable(data);
       updateMatchCount(0);
     }
-  } /* CHANGED */
+  } /* CHANGED */ 
 
   function updateContentCount(count) {
     document.getElementById("contentCount").textContent = `Content Found: ${count}`;
@@ -1296,7 +1447,7 @@
 
   window.onload = () => {
     initializeFirebase();
-    updateLastUpdated();
+    updateLastModified();
     updateVisitorCount();
     loadSingleVerse();
   };

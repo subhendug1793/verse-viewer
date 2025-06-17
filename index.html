@@ -87,10 +87,11 @@
     .mission-subtext { 
       text-align: center; 
       margin: 0 auto 20px; 
-      max-width: 80%; 
-      font-size: 0.8em;
+      max-width: 90%; 
+      font-size: 0.75em;
       line-height: 1.2; 
       font-weight: normal; 
+      white-space: nowrap; /* Ensure single line */
     }
     .controls { 
       margin-bottom: 10px; 
@@ -392,8 +393,9 @@
         max-width: 90%; 
       }
       .mission-subtext { 
-        font-size: 0.7em; 
+        font-size: 0.65em; 
         max-width: 90%; 
+        white-space: nowrap; /* Ensure single line on mobile */
       }
       select, input { 
         font-family: 'Poppins', sans-serif;
@@ -577,7 +579,6 @@
   </div>
 
 <script type="module">
-  // JavaScript remains unchanged
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
   import { getFirestore, doc, setDoc, getDoc, increment, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 

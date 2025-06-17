@@ -43,7 +43,7 @@
     }
     .header-info .last-updated {
       position: absolute; /* CHANGED */
-      right: 0; /* CHANGED */
+      right: 20px; /* CHANGED */
     }
     .header-info .last-updated a {
       color: #0066cc;
@@ -142,27 +142,63 @@
       margin: 0 auto 20px; /* CHANGED */
       display: flex; /* CHANGED */
       flex-direction: column; /* CHANGED */
-      gap: 20px; /* CHANGED */
+      gap: 25px; /* CHANGED */
     }
     .verse-card { /* CHANGED */
-      background-color: #fff; /* CHANGED */
-      box-shadow: 0 0 10px rgba(0,0,0,0.1); /* CHANGED */
-      padding: 15px; /* CHANGED */
-      border-radius: 8px; /* CHANGED */
+      background: linear-gradient(135deg, #ffffff, #f9f9f9); /* CHANGED */
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* CHANGED */
+      padding: 20px; /* CHANGED */
+      border-radius: 12px; /* CHANGED */
       display: flex; /* CHANGED */
       flex-direction: column; /* CHANGED */
       align-items: center; /* CHANGED */
-      gap: 10px; /* CHANGED */
+      gap: 12px; /* CHANGED */
+      transition: transform 0.2s, box-shadow 0.2s; /* CHANGED */
+      border: 1px solid rgba(0,102,204,0.1); /* CHANGED */
+    }
+    .verse-card:hover { /* CHANGED */
+      transform: scale(1.02); /* CHANGED */
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15); /* CHANGED */
+    }
+    .verse-header { /* CHANGED */
+      display: flex; /* CHANGED */
+      width: 100%; /* CHANGED */
+      justify-content: space-between; /* CHANGED */
+      align-items: center; /* CHANGED */
+      padding: 10px 0; /* CHANGED */
+      border-bottom: 1px solid rgba(0,0,0,0.1); /* CHANGED */
+    }
+    .verse-name { /* CHANGED */
+      font-family: 'Merriweather', serif; /* CHANGED */
+      font-weight: 700; /* CHANGED */
+      font-size: 1.1em; /* CHANGED */
+      color: #333; /* CHANGED */
+      text-align: left; /* CHANGED */
+      flex: 1; /* CHANGED */
+      padding-left: 10px; /* CHANGED */
+    }
+    .verse-category { /* CHANGED */
+      font-family: 'Poppins', sans-serif; /* CHANGED */
+      font-size: 0.95em; /* CHANGED */
+      text-align: center; /* CHANGED */
+      flex: 1; /* CHANGED */
+      padding: 5px 10px; /* CHANGED */
+      border-radius: 6px; /* CHANGED */
     }
     .verse-field { /* CHANGED */
       width: 100%; /* CHANGED */
       text-align: center; /* CHANGED */
       padding: 8px 0; /* CHANGED */
-      border-bottom: 1px solid #ddd; /* CHANGED */
+      border-bottom: 1px solid rgba(0,0,0,0.1); /* CHANGED */
       font-family: 'Poppins', sans-serif; /* CHANGED */
+      font-size: 0.95em; /* CHANGED */
+      color: #444; /* CHANGED */
+      font-style: italic; /* CHANGED */
     }
     .verse-field:last-child { /* CHANGED */
       border-bottom: none; /* CHANGED */
+      padding-bottom: 12px; /* CHANGED */
+      background: linear-gradient(to top, rgba(0,102,204,0.05), transparent); /* CHANGED */
     }
     .verse-field.category-universal { /* CHANGED */
       background-color: #00FF00; /* CHANGED */
@@ -182,17 +218,21 @@
     }
     .view-full-verse { /* CHANGED */
       display: inline-block; /* CHANGED */
-      padding: 10px 20px; /* CHANGED */
-      background-color: #0066cc; /* CHANGED */
+      padding: 12px 24px; /* CHANGED */
+      background: linear-gradient(135deg, #0066cc, #0052a3); /* CHANGED */
       color: #fff; /* CHANGED */
       text-decoration: none; /* CHANGED */
-      border-radius: 5px; /* CHANGED */
+      border-radius: 8px; /* CHANGED */
       font-family: 'Poppins', sans-serif; /* CHANGED */
       font-size: 0.9em; /* CHANGED */
-      margin-top: 10px; /* CHANGED */
+      margin-top: 12px; /* CHANGED */
+      box-shadow: 0 2px 8px rgba(0,102,204,0.3); /* CHANGED */
+      transition: background 0.3s, transform 0.2s; /* CHANGED */
     }
     .view-full-verse:hover { /* CHANGED */
-      background-color: #004d99; /* CHANGED */
+      background: linear-gradient(135deg, #0052a3, #003d7a); /* CHANGED */
+      transform: translateY(-2px); /* CHANGED */
+      box-shadow: 0 4px 12px rgba(0,102,204,0.4); /* CHANGED */
     }
     .footer { 
       position: relative; 
@@ -378,7 +418,7 @@
       font-weight: bold;
     }
     .reaction-buttons span {
-      font-size: 0.9em;
+      font-size: 1em;
       color: #333;
     }
     @media (max-width: 600px) {
@@ -455,9 +495,27 @@
       .verse-container { /* CHANGED */
         width: 90%; /* CHANGED */
         margin-bottom: 10px; /* CHANGED */
+        gap: 20px; /* CHANGED */
       }
       .verse-card { /* CHANGED */
-        padding: 10px; /* CHANGED */
+        padding: 15px; /* CHANGED */
+        border-radius: 10px; /* CHANGED */
+      }
+      .verse-header { /* CHANGED */
+        flex-direction: column; /* CHANGED */
+        align-items: flex-start; /* CHANGED */
+        padding: 8px 0; /* CHANGED */
+      }
+      .verse-name { /* CHANGED */
+        font-size: 1em; /* CHANGED */
+        padding-left: 0; /* CHANGED */
+        width: 100%; /* CHANGED */
+      }
+      .verse-category { /* CHANGED */
+        font-size: 0.9em; /* CHANGED */
+        text-align: left; /* CHANGED */
+        margin-top: 5px; /* CHANGED */
+        width: 100%; /* CHANGED */
       }
       .verse-field { /* CHANGED */
         font-size: 0.9em; /* CHANGED */
@@ -465,7 +523,8 @@
       }
       .view-full-verse { /* CHANGED */
         font-size: 0.8em; /* CHANGED */
-        padding: 8px 16px; /* CHANGED */
+        padding: 10px 20px; /* CHANGED */
+        margin-top: 10px; /* CHANGED */
       }
       .footer { 
         max-width: 90%; 
@@ -982,20 +1041,21 @@
         const verseSubCategory = row["Sub Category"] || ""; /* CHANGED */
         const bengaliTranslation = row["Bengali Translation"] || "-"; /* CHANGED */
         const englishTranslation = row["English Translation"] || "-"; /* CHANGED */
-        let html = ''; /* CHANGED */
-        html += `<div class="verse-field">${verseName}</div>`; /* CHANGED */
-        html += `<div class="verse-field ${getCategoryClass(verseCategory.trim().toLowerCase())}">${verseCategory}</div>`; /* CHANGED */
+        let html = `<div class="verse-header">`; /* CHANGED */
+        html += `<span class="verse-name">${verseName}</span>`; /* CHANGED */
+        html += `<span class="verse-category ${getCategoryClass(verseCategory.trim().toLowerCase())}">${verseCategory}</span>`; /* CHANGED */
+        html += `</div>`; /* CHANGED */
         if (verseSubCategory.trim()) { /* CHANGED */
-          html += `<div class="verse-field">${verseSubCategory}</div>`; /* CHANGED */
-        }
-        html += `<div class="verse-field">${bengaliTranslation}</div>`; /* CHANGED */
-        html += `<div class="verse-field">${englishTranslation}</div>`; /* CHANGED */
+          html += `<span class="verse-field">${verseSubCategory}</span>`; /* CHANGED */
+        } /* CHANGED */
+        html += `<span class="verse-field">${bengaliTranslation}</span>`; /* CHANGED */
+        html += `<span class="verse-field">${englishTranslation}</span>`; /* CHANGED */
         const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`; /* CHANGED */
         html += `<a href="${shareUrl}" class="view-full-verse">Click to view full verse</a>`; /* CHANGED */
         card.innerHTML = html; /* CHANGED */
         const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim(); /* CHANGED */
         if (searchTerm && !document.getElementById("searchInput").disabled) { /* CHANGED */
-          card.querySelectorAll('.verse-field').forEach(field => { /* CHANGED */
+          card.querySelectorAll('.verse-name, .verse-category, .verse-field').forEach(field => { /* CHANGED */
             let text = field.textContent; /* CHANGED */
             if (text.toLowerCase().includes(searchTerm)) { /* CHANGED */
               field.innerHTML = text.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>'); /* CHANGED */
@@ -1034,11 +1094,11 @@
       html += `<a href="${shareUrl}" target="_blank" class="view-link"><img src="images/click_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
     }
     html += `
-      <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
-      <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
-      <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
-      <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
+      <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp.png" alt="WhatsApp"></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook.png" alt="Facebook"></a>
+      <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x.png" alt="X"></a>
+      <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link.png" alt="Copy Link"></a>
+      <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share.svg" alt="Share"></a>
     `;
     return html;
   }

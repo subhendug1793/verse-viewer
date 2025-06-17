@@ -239,22 +239,22 @@
     .view-full-verse { /* CHANGED */
       display: inline-block; /* CHANGED */
       padding: 8px 16px; /* CHANGED */
-      background: linear-gradient(135deg, #0066cc, #0052a3); /* CHANGED */
+      background: linear-gradient(135deg, #00cc00, #009900); /* CHANGED */
       color: #fff; /* CHANGED */
       text-decoration: none; /* CHANGED */
       border-radius: 6px; /* CHANGED */
       font-family: 'Poppins', sans-serif; /* CHANGED */
       font-size: 0.85em; /* CHANGED */
-      box-shadow: 0 2px 6px rgba(0,102,204,0.3); /* CHANGED */
+      box-shadow: 0 2px 6px rgba(0,153,0,0.3); /* CHANGED */
       transition: background 0.3s, transform 0.2s; /* CHANGED */
       text-align: right; /* CHANGED */
       flex: 1; /* CHANGED */
       padding-right: 8px; /* CHANGED */
     }
     .view-full-verse:hover { /* CHANGED */
-      background: linear-gradient(135deg, #0052a3, #003d7a); /* CHANGED */
+      background: linear-gradient(135deg, #009900, #006600); /* CHANGED */
       transform: translateY(-2px); /* CHANGED */
-      box-shadow: 0 4px 10px rgba(0,102,204,0.4); /* CHANGED */
+      box-shadow: 0 4px 10px rgba(0,153,0,0.4); /* CHANGED */
     }
     .footer { 
       position: relative; 
@@ -699,22 +699,22 @@
       <div class="name-text">Subhendu Ghosh Sastik</div>
       <div class="contact-text">
         <span>If you’d like to contribute to verse updates 📜 or have any suggestions or feedback 💭</span>
-        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.png" alt="Telegram" style="width: 20px; height: auto; vertical-align: middle;"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="images/gmail_logo.png" alt="Mail" style="width: 20px; height: auto; vertical-align: middle;" onerror="console.log('Gmail logo failed to load')"></a><a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></span>
+        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.png" alt="Telegram" style="width: 20px; height: auto; vertical-align: middle;"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="images/gmail_logo.png" alt="Mail" style="width: 20px; height: auto; vertical-align: middle;" onerror="this.src='images/Gmail_logo.png'; this.onerror=null; this.src='https://via.placeholder.com/20?text=@';" onload="console.log('Gmail logo loaded')"></a> sastikofficial@gmail.com</span> <!-- CHANGED -->
       </div>
     </div>
   </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, getDoc, increment } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
-    apiKey: "AIzaSyCou0LOLpeijDPxHlVN1pvpruvxdrLKVWk",
+    apiKey: "AIzaSyCouSyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt",
     authDomain: "verseviewercounter.firebaseapp.com",
     projectId: "verseviewercounter",
     storageBucket: "verseviewercounter.firebasestorage.app",
     messagingSenderId: "486076065573",
-    appId: "1:486076065573:web:363e819071b11880089ccc",
+    appId: "1:486076065573:web:363e819071b118ee089ccc",
     measurementId: "G-NE4PCNMR8D"
   };
 
@@ -754,54 +754,51 @@
   let currentSheet = "";
   let currentVerseIndex = -1;
 
-  // Map column names for different sheets /* CHANGED */
-  const columnMappings = { /* CHANGED */
-    bible: { /* CHANGED */
-      verseName: ["Verse Name", "Verse"], /* CHANGED */
-      bengaliTranslation: ["Bengali Translation"], /* CHANGED */
-      englishTranslation: ["Verse in English", "English Translation"] /* CHANGED */
-    }, /* CHANGED */
-    quran: { /* CHANGED */
-      verseName: ["Verse Name", "Verse"], /* CHANGED */
-      bengaliTranslation: ["Bengali Meaning", "Bengali Translation"], /* CHANGED */
-      englishTranslation: ["English Meaning", "English Translation"] /* CHANGED */
-    }, /* CHANGED */
-    gita: { /* CHANGED */
-      verseName: ["Verse Name", "Verse"], /* CHANGED */
-      bengaliTranslation: ["Bengali Translation"], /* CHANGED */
-      englishTranslation: ["English Translation"] /* CHANGED */
-    }, /* CHANGED */
-    hadith: { /* CHANGED */
-      verseName: ["Verse Name", "Verse"], /* CHANGED */
-      bengaliTranslation: ["Bengali Translation"], /* CHANGED */
-      englishTranslation: ["English Translation"] /* CHANGED */
-    }, /* CHANGED */
-    miscellaneous: { /* CHANGED */
-      verseName: ["Verse Name", "Verse"], /* CHANGED */
-      bengaliTranslation: ["Bengali Translation"], /* CHANGED */
-      englishTranslation: ["English Translation"] /* CHANGED */
-    } /* CHANGED */
-  }; /* CHANGED */
+  // Map column names for different sheets
+  const columnMappings = {
+    bible: {
+      verseName: ["Verse Name", "Verse"],
+      bengaliTranslation: ["Bengali Translation"],
+      englishTranslation: ["Verse in English", "English Translation"]
+    },
+    quran: {
+      verseName: ["Verse Name", "Verse"],
+      bengaliTranslation: ["Bengali Meaning", "Bengali Translation"],
+      englishTranslation: ["English Meaning", "English Translation"]
+    },
+    gita: {
+      verseName: ["Verse Name", "Verse"],
+      bengaliTranslation: ["Bengali Translation"],
+      englishTranslation: ["English Translation"]
+    },
+    hadith: {
+      verseName: ["Verse Name", "Verse"],
+      bengaliTranslation: ["Bengali Translation"],
+      englishTranslation: ["English Translation"]
+    },
+    miscellaneous: {
+      verseName: ["Verse Name", "Verse"],
+      bengaliTranslation: ["Bengali Translation"],
+      englishTranslation: ["English Translation"]
+    }
+  };
 
-  function getColumnValue(row, field, sheet) { /* CHANGED */
-    const mapping = columnMappings[sheet.toLowerCase()] || columnMappings.miscellaneous; /* CHANGED */
-    const possibleColumns = mapping[field] || [field]; /* CHANGED */
-    for (const col of possibleColumns) { /* CHANGED */
-      if (row[col] !== undefined && row[col] !== null) return row[col]; /* CHANGED */
-    } /* CHANGED */
-    return "-"; /* CHANGED */
-  } /* CHANGED */
+  function getColumnValue(row, field, sheet) {
+    const mapping = columnMappings[sheet.toLowerCase()] || [];
+    const possibleColumns = mapping[field] || [field];
+    for (const col of possibleColumns) {
+      if (row[col] !== undefined && row[col] !== null) return row[col];
+    }
+    return "-";
+  }
 
-  function renderText(value) { /* CHANGED */
-    if (typeof value === "object" && value && value.text && value.url) { /* CHANGED */
-      return `<a href="${value.url}" target="_blank">${value.text}</a>`; /* CHANGED */
-    } /* CHANGED */
-    return value || "-"; /* CHANGED */
-  } /* CHANGED */
+  function renderText(value) {
+    return value && typeof value === "object" && value.text && value.url ? `<a href="${value.url}" target="_blank">${value.text}</a>` : value || "-";
+  }
 
-  function getTextForUrl(value) { /* CHANGED */
-    return typeof value === "object" && value.text ? value.text : value || ""; /* CHANGED */
-  } /* CHANGED */
+  function getTextForUrl(value) {
+    return typeof value === "object" && value.text ? value.text : value || "";
+  }
 
   function updateLastUpdated() {
     try {
@@ -854,10 +851,10 @@
   }
 
   async function updateVisitorCount() {
-    const visitorCount = document.getElementById("visitorCount");
-    if (!visitorCount) return;
-    visitorCount.innerHTML = "Visitors: Loading...";
     try {
+      const visitorCount = document.getElementById("visitorCount");
+      if (!visitorCount) return;
+      visitorCount.innerHTML = "Visitors: Loading...";
       if (!db) throw new Error("Firestore not initialized");
       const counterRef = doc(db, "counters", "viewerCount");
       await setDoc(counterRef, { count: increment(1) }, { merge: true });
@@ -878,154 +875,177 @@
         visitorCount.innerHTML = `Visitors: ${data.visitors}`;
       } catch (jsonError) {
         console.error("Local counter fetch error:", jsonError);
-        visitorCount.innerHTML = "Visitors: 1";
+        visitorCount.innerHTML = "Visitors: Unavailable";
         visitorCount.classList.add("error");
       }
     }
   }
 
-  async function loadSheetData() { /* CHANGED */
-    const sheetSelector = document.getElementById("sheetSelector");
-    currentSheet = sheetSelector.value;
-    const categoryFilter = document.getElementById("categoryFilter");
-    const subCategoryFilter = document.getElementById("subCategoryFilter");
-    const searchInput = document.getElementById("searchInput");
-    const errorDisplay = document.createElement("div");
-    errorDisplay.id = "errorDisplay";
-    errorDisplay.style.color = "red";
-    errorDisplay.style.textAlign = "center";
-    errorDisplay.style.marginBottom = "10px";
-    const existingError = document.getElementById("errorDisplay");
-    if (existingError) existingError.remove(); /* CHANGED */
-    document.querySelector(".controls").after(errorDisplay);
+  async function loadSheetData() {
+    try {
+      const sheetSelector = document.getElementById("sheetSelector");
+      currentSheet = sheetSelector.value;
+      const categoryFilter = document.getElementById("categoryFilter");
+      const subCategoryFilter = document.getElementById("subCategoryFilter");
+      const searchInput = document.getElementById("searchInput");
+      const errorDisplay = document.createElement("div");
+      errorDisplay.id = "errorDisplay";
+      errorDisplay.style.color = "red";
+      errorDisplay.style.textAlign = "center";
+      errorDisplay.style.marginBottom = "10px";
+      const existingError = document.getElementById("errorDisplay");
+      if (existingError) existingError.remove();
+      document.querySelector(".controls").after(errorDisplay);
 
-    if (currentSheet) {
-      categoryFilter.disabled = false;
-      subCategoryFilter.disabled = false;
-      searchInput.disabled = false;
-      errorDisplay.textContent = "";
-      document.querySelector('.search-row').style.display = 'flex';
-      const urlsToTry = [ /* CHANGED */
-        `${currentSheet.toLowerCase()}.json`, /* CHANGED */
-        `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`, /* CHANGED */
-        `${currentSheet.toUpperCase()}.json` /* CHANGED */
-      ];
-      let response, sheetData;
-      for (const url of urlsToTry) {
-        try {
-          response = await fetch(url, { cache: 'no-store' });
-          if (response.ok) {
-            sheetData = await response.json();
-            console.log(`Successfully fetched ${url}`); /* CHANGED */
-            break;
-          } else {
-            console.warn(`Failed to fetch ${url}: Status ${response.status}`); /* CHANGED */
+      if (currentSheet) {
+        categoryFilter.disabled = false;
+        subCategoryFilter.disabled = false;
+        searchInput.disabled = false;
+        errorDisplay.textContent = "";
+        document.querySelector('.search-row').style.display = 'flex';
+        const urlsToTry = [
+          `${currentSheet.toLowerCase()}.json`,
+          `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`,
+          `${currentSheet.toUpperCase()}.json`
+        ];
+        let response, sheetData;
+        for (const url of urlsToTry) {
+          try {
+            response = await fetch(url, { cache: 'no-store' });
+            if (response.ok) {
+              sheetData = await response.json();
+              console.log(`Successfully fetched ${url}`);
+              break;
+            } else {
+              console.warn(`Failed to fetch ${url}: Status ${response.status}`);
+            }
+          } catch (err) {
+            console.warn(`Error fetching ${url}: ${err.message}`);
           }
-        } catch (err) {
-          console.warn(`Error fetching ${url}: ${err.message}`); /* CHANGED */
         }
-      }
-      if (sheetData) {
-        data = sheetData;
-        updateTable(data);
-        updateContentCount(data.length);
-        updateMatchCount(0);
+        if (sheetData) {
+          data = sheetData;
+          updateTable(data);
+          updateContentCount(data.length);
+          updateMatchCount(0);
+        } else {
+          errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if the file exists or contact support.`;
+          document.getElementById("verseContainer").innerHTML = `<div style="text-align: center;">Error loading ${currentSheet}.json: File not found or inaccessible</div>`;
+          updateContentCount(0);
+          updateMatchCount(0);
+        }
       } else {
-        errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if the file exists or contact support.`; /* CHANGED */
-        document.getElementById("verseContainer").innerHTML = `<div style="text-align: center;">Error loading ${currentSheet}.json: File not found or inaccessible</div>`;
+        categoryFilter.disabled = true;
+        subCategoryFilter.disabled = true;
+        searchInput.disabled = true;
+        errorDisplay.textContent = "";
+        document.getElementById("verseContainer").innerHTML = "";
+        document.querySelector('.search-row').style.display = 'flex';
         updateContentCount(0);
         updateMatchCount(0);
       }
-    } else {
-      categoryFilter.disabled = true;
-      subCategoryFilter.disabled = true;
-      searchInput.disabled = true;
-      errorDisplay.textContent = "";
-      document.getElementById("verseContainer").innerHTML = "";
-      document.querySelector('.search-row').style.display = 'flex';
+    } catch (e) {
+      console.error("Unexpected error in loadSheetData:", e);
+      const errorDisplay = document.getElementById("errorDisplay");
+      if (errorDisplay) {
+        errorDisplay.textContent = "An unexpected error occurred while loading the data. Please try again or contact support.";
+        document.getElementById("verseContainer").innerHTML = `<div style="text-align: center;">An unexpected load error occurred. Please reload the page.</div>`;
+      }
       updateContentCount(0);
       updateMatchCount(0);
     }
-  } /* CHANGED */
+  }
 
-  async function loadSingleVerse() { /* CHANGED */
-    const params = new URLSearchParams(window.location.search);
-    const sheet = params.get("sheet");
-    const verseParam = params.get("verse");
-    let verseIndex = -1;
+  async function loadSingleVerse() {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const sheet = urlParams.get("sheet");
+      const verse = urlParams.get("verse");
+      let verseIndex = -1;
 
-    if (sheet && verseParam) {
-      currentSheet = sheet;
-      const urlsToTry = [
-        `${sheet.toLowerCase()}.json`,
-        `${sheet.charAt(0).toUpperCase() + sheet.slice(1).toLowerCase()}.json`,
-        `${sheet.toUpperCase()}.json`
-      ];
-      let response, sheetData;
-      for (const url of urlsToTry) {
-        try {
-          response = await fetch(url, { cache: 'no-store' });
-          if (response.ok) {
-            sheetData = await response.json();
-            console.log(`Successfully fetched ${url} for single verse`); /* CHANGED */
-            break;
+      if (sheet && verse) {
+        currentSheet = sheet;
+        const urlsToTry = [
+          `${sheet.toLowerCase()}.json`,
+          `${sheet.charAt(0).toUpperCase() + sheet.slice(1).toLowerCase()}.json`,
+          `${sheet.toUpperCase()}.json`
+        ];
+        let response, sheetData;
+        for (const url of urlsToTry) {
+          try {
+            response = await fetch(url, { cache: 'no-store' });
+            if (response.ok) {
+              sheetData = await response.json();
+              console.log(`Successfully fetched ${url} for single verse`);
+              break;
+            } else {
+              console.warn(`Failed to fetch ${url}: Status ${response.status}`);
+            }
+          } catch (err) {
+            console.warn(`Error fetching ${url}: ${err.message}`);
           }
-        } catch (err) {
-          console.warn(`Error fetching ${url}: ${err.message}`); /* CHANGED */
         }
-      }
-      if (sheetData) {
-        data = sheetData;
-        const normalizedVerseParam = decodeURIComponent(verseParam).trim();
-        verseIndex = data.findIndex(row => {
-          const verseName = getColumnValue(row, "verseName", sheet);
-          const verseNameText = getTextForUrl(verseName).trim();
-          return verseNameText === normalizedVerseParam;
-        });
-        if (verseIndex === -1) {
-          verseIndex = parseInt(verseParam, 10);
-        }
-        if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < sheetData.length) {
-          currentVerseIndex = verseIndex;
-          const verse = sheetData[verseIndex];
-          displaySingleVerse(verse, verseIndex);
-          document.getElementById("controls").style.display = "none";
-          document.getElementById("verseContainer").style.display = "none";
-          document.querySelector('.search-row').style.display = 'none';
-          await loadReactions(sheet, verseIndex);
+        if (sheetData) {
+          data = sheetData;
+          const normalizedVerse = decodeURIComponent(verse).trim().toLowerCase();
+          verseIndex = data.findIndex(row => {
+            const verseName = getColumnValue(row, "verseName", sheet);
+            const verseText = getTextForUrl(verseName).trim().toLowerCase();
+            return verseText === normalizedVerse;
+          });
+          if (verseIndex === -1) {
+            verseIndex = parseInt(verse, 10);
+          }
+          if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < data.length) {
+            currentVerseIndex = verseIndex;
+            const verseData = data[verseIndex];
+            displaySingleVerse(verseData, verseIndex);
+            document.getElementById("controls").style.display = "none";
+            document.getElementById("verseContainer").style.display = "none";
+            document.getElementById("singleVerseView").style.display = "block";
+            await loadReactions(sheet, verseIndex);
+            document.querySelector('.search-row').style.display = 'none';
+          } else {
+            console.error(`Verse not found: sheet=${sheet}, verse=${verse}, index=${verseIndex}`);
+            displaySingleVerse(null, -1);
+            document.getElementById("controls").style.display = "none";
+            document.getElementById("verseContainer").style.display = "none";
+            document.querySelector('.search-row').style.display = 'none';
+          }
         } else {
-          console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
+          console.error(`Failed to load ${sheet}.json`);
           displaySingleVerse(null, -1);
           document.getElementById("controls").style.display = "none";
           document.getElementById("verseContainer").style.display = "none";
           document.querySelector('.search-row').style.display = 'none';
         }
       } else {
-        console.error(`Failed to load ${sheet}.json`);
-        displaySingleVerse(null, -1);
-        document.getElementById("controls").style.display = "none";
-        document.getElementById("verseContainer").style.display = "none";
-        document.querySelector('.search-row').style.display = 'none';
+        document.getElementById("singleVerseView").style.display = "none";
+        document.querySelector('.search-row').style.display = 'flex';
       }
-    } else {
-      document.getElementById("singleVerseView").style.display = "none";
-      document.querySelector('.search-row').style.display = 'flex';
+    } catch (e) {
+      console.error("Unexpected error in loadSingleVerse:", e);
+      document.getElementById("singleVerseView").style.display = "block";
+      document.getElementById("singleVerseView").innerHTML = `<h3>Error Loading</h3><p>An unexpected error occurred while loading the verse. Please try again.</p>`;
+      document.getElementById("controls").style.display = "none";
+      document.getElementById("verseContainer").style.display = "none";
+      document.querySelector('.search-row').style.display = 'none';
     }
-  } /* CHANGED */
+  }
 
   async function loadReactions(sheet, verseIndex) {
     try {
       const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
       const reactionSnap = await getDoc(reactionRef);
       const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
-      updateReactionButtons(reactionCounts);
+      updateReactionCounts(reactionCounts);
       const userId = localStorage.getItem('userId') || generateUserId();
       localStorage.setItem('userId', userId);
       const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
       const userReactionSnap = await getDoc(userReactionRef);
       if (userReactionSnap.exists()) {
-        const userReaction = userReactionSnap.data().reaction;
-        const button = document.querySelector(`.reaction-buttons button[data-reaction="${userReaction}"]`);
+        const reaction = userReactionSnap.data().reaction;
+        const button = document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`);
         if (button) button.classList.add('active');
       }
     } catch (error) {
@@ -1046,101 +1066,101 @@
       const currentReaction = userReactionSnap.exists() ? userReactionSnap.data().reaction : null;
 
       if (currentReaction === reaction) {
-        await updateDoc(reactionRef, { [reaction]: increment(-1) });
+        await setDoc(reactionRef, { [reaction]: increment(-1) }, { merge: true });
         await setDoc(userReactionRef, { reaction: null }, { merge: true });
-        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.remove('active');
+        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`).classList.remove('active');
       } else {
         const updates = { [reaction]: increment(1) };
         if (currentReaction) {
           updates[currentReaction] = increment(-1);
-          document.querySelector(`.reaction-buttons button[data-reaction="${currentReaction}"]`)?.classList.remove('active');
+          document.querySelector(`.reaction-buttons button[data-reaction="${currentReaction}"]`).classList.remove('active');
         }
         await setDoc(reactionRef, { like: 0, love: 0, angry: 0 }, { merge: true });
-        await updateDoc(reactionRef, updates);
+        await setDoc(reactionRef, updates, { merge: true });
         await setDoc(userReactionRef, { reaction: reaction }, { merge: true });
-        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.add('active');
+        document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`).classList.add('active');
       }
 
       const reactionSnap = await getDoc(reactionRef);
       const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
-      updateReactionButtons(reactionCounts);
+      updateReactionCounts(reactionCounts);
     } catch (error) {
-      console.error("Error toggling reaction:", error.code, error.message);
-      alert(`Failed to update reaction: ${error.message}. Please try again.`);
+      console.error("Error toggling reaction:", error);
+      alert(`Failed to update reaction: ${reaction}. Please try again.`);
     }
   }
 
-  function updateReactionButtons(counts) {
-    document.querySelector('#likeCount').textContent = counts.like || 0;
-    document.querySelector('#loveCount').textContent = counts.love || 0;
-    document.querySelector('#angryCount').textContent = counts.angry || 0;
+  function updateReactionCounts(counts) {
+    document.getElementById('likeCount').textContent = counts.like || 0;
+    document.getElementById('loveCount').textContent = counts.love || 0;
+    document.getElementById('angryCount').textContent = counts.angry || 0;
   }
 
   function generateUserId() {
     return 'user_' + Math.random().toString(36).substr(2, 9);
   }
 
-  function displaySingleVerse(verse, index) { /* CHANGED */
+  function displaySingleVerse(row, verseIndex) {
     const singleVerseView = document.getElementById("singleVerseView");
-    if (!verse) {
+    if (!row) {
       singleVerseView.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
       singleVerseView.style.display = "block";
       return;
     }
-    const verseName = getColumnValue(verse, "verseName", currentSheet);
-    const verseNameText = getTextForUrl(verseName);
-    const heading = `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} ${verseNameText}`;
-    let html = `<h3>${heading}</h3><div class="verse-details">`;
-    const headers = Object.keys(verse).filter(h => h !== "sheet");
-    headers.forEach(header => {
-      let content = verse[header] || "-";
-      if (typeof content === "object" && content.text && content.url) {
+    const verseName = getColumnValue(row, "verseName", currentSheet);
+    const verseText = getTextForUrl(verseName);
+    const heading = `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1)} ${verseText}`;
+    let html = `<h3>${heading}</h3>`;
+    html += `<div class="verse-details">`;
+    const headers = Object.keys(row).filter(h => h !== "sheet");
+    headers.forEach(h => {
+      let content = row[h];
+      if (content && typeof content === "object" && content.text && content.url) {
         content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
       }
-      const className = header === "Verse Category " && typeof verse[header] === "string" 
-        ? getCategoryClass(verse[header].trim().toLowerCase()) 
-        : "";
-      html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
+      const className = h === "Verse Category" && typeof row[h] === 'string' ?
+        getCategoryClass(row[h].trim().toLowerCase()) : "";
+      html += `<p${className ? ` class="${className}"` : ""}><strong>${h}:</strong> ${content || "-"}</p>`;
     });
-    html += `<div class="navigation-arrows">
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>
-        <img src="images/leftarrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';">
-      </a>
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="next ${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>
-        <img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';">
-      </a>
-    </div>`;
-    html += `<div class="reaction-buttons">
-      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
-      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
-      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount">0</span></button>
-    </div>`;
-    html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
+    html += `</div>`;
+    html += `<div class="navigation-arrows">`;
+    html += `<a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseIndex - 1)}" class="prev ${verseIndex <= 0 ? 'disabled' : ''}" ${verseIndex <= 0 ? '' : `onclick="navigateVerse(${verseIndex - 1}); return false;"`}><img src="images/left-arrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';"></a>`;
+    html += `<a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseIndex + 1)}" class="next ${verseIndex >= data.length - 1 ? 'disabled' : ''}" ${verseIndex >= data.length - 1 ? '' : `onclick="navigateVerse(${verseIndex + 1}); return false;"`}><img src="images/right-arrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';"></a>`;
+    html += `</div>`;
+    html += `<div class="reaction-buttons">`;
+    html += `<button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${verseIndex})">👍 <span id="likeCount">0</span></button>`;
+    html += `<button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${verseIndex})">❤️ <span id="loveCount">0</span></button>`;
+    html += `<button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${verseIndex})">😡 <span id="angryCount">0</span></button>`;
+    html += `</div>`;
+    html += `<div class="single-verse-share-buttons">${addShareButtons(row, verseIndex, false)}</div>`;
     singleVerseView.innerHTML = html;
     singleVerseView.style.display = "block";
-  } /* CHANGED */
+  }
 
-  function navigateVerse(newIndex) { /* CHANGED */
-    const verse = data[newIndex];
-    const verseName = getColumnValue(verse, "verseName", currentSheet);
-    const verseNameText = getTextForUrl(verseName) || newIndex;
-    history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`);
+  function navigateVerse(newIndex) {
+    const verseRow = data[newIndex];
+    const verseName = getColumnValue(verseRow, "verseName", currentSheet);
+    const newVerseText = getTextForUrl(verseName) || newIndex.toString();
+    history.pushState(null, null, `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(newVerseText)}`);
     currentVerseIndex = newIndex;
-    displaySingleVerse(verse, newIndex);
+    displaySingleVerse(data[newIndex], newIndex);
+    document.getElementById("controls").style.display = "none";
+    document.getElementById("verseContainer").style.display = "none";
+    document.getElementById("singleVerseView").style.display = "block";
     loadReactions(currentSheet, newIndex);
-  } /* CHANGED */
+  }
 
-  function updateTable(rows) { /* CHANGED */
+  function updateTable(rows) {
     const container = document.getElementById("verseContainer");
     container.innerHTML = "";
     if (rows.length === 0) {
-      container.innerHTML = `<div style="text-align: center;">No data available or error loading data</div>`;
+      container.innerHTML = `<div style="text-align: center;">No content found or error loading data</div>`;
     } else {
       rows.forEach((row, index) => {
         let card = document.createElement("div");
         card.className = "verse-card";
         const verseName = getColumnValue(row, "verseName", currentSheet);
-        const verseCategory = row["Verse Category "] || "-";
+        const verseCategory = row["Verse Category"] || "-";
         const bengaliTranslation = getColumnValue(row, "bengaliTranslation", currentSheet);
         const englishTranslation = getColumnValue(row, "englishTranslation", currentSheet);
         const subCategory = row["Sub Category"] || "-";
@@ -1153,12 +1173,12 @@
         html += `<div class="verse-footer">`;
         html += `<span class="verse-subcategory">${subCategory}</span>`;
         const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(getTextForUrl(verseName) || index)}`;
-        html += `<a href="${shareUrl}" class="view-full-verse">See Verse Details>>></a>`;
+        html += `<a href="${shareUrl}" class="view-full-verse" onclick="navigateVerse(${index}); return false;">👁️ Verse Details</a>`; // CHANGED
         html += `</div>`;
         card.innerHTML = html;
         const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
         if (searchTerm && !document.getElementById("searchInput").disabled) {
-          card.querySelectorAll('.verse-name, .verse-category, .verse-field, .verse-subcategory').forEach(field => {
+          card.querySelectorAll('.verse-name, .verse-field, .verse-category, .verse-subcategory').forEach(field => {
             let text = field.textContent;
             if (text.toLowerCase().includes(searchTerm)) {
               field.innerHTML = text.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
@@ -1169,106 +1189,104 @@
       });
     }
     updateContentCount(rows.length);
-  } /* CHANGED */
+  }
 
   function getCategoryClass(category) {
-    switch (category?.toLowerCase()) {
+    switch (category?.trim().toLowerCase()) {
       case "universal or ethical verse": return "category-universal";
       case "general intra-community verse": return "category-general";
       case "controversial intra-community verse": return "category-controversial";
       case "divisive or hateful inter-community verse": return "category-divisive";
-      case "violent or aggressive inter-community verse": return "category-violent";
+      case "violent or aggressive inter-community verse": return "category-discussion";
       default: return "";
     }
   }
 
-  function addShareButton(row, index, isTableView = true) { /* CHANGED */
+  function addShareButtons(row, rowIndex, isTableView = true) {
     const verseText = getColumnValue(row, "englishTranslation", currentSheet) || "";
     let verseName = getColumnValue(row, "verseName", currentSheet);
-    verseName = getTextForUrl(verseName) || index.toString();
-    if (typeof verseName !== "string") {
-      verseName = index.toString();
-      console.warn(`Invalid Verse Name for sheet=${currentSheet}, index=${index}:`, verseName);
+    let nameText = getTextForUrl(verseName) || rowIndex.toString();
+    if (typeof nameText !== "string") {
+      nameText = rowIndex.toString();
+      console.warn(`Invalid verse name for sheet=${currentSheet}, index=${rowIndex}`, verseName);
     }
-    verseName = verseName.trim();
-    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`;
-    const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
+    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(nameText)}`;
+    const escapedUrl = shareUrl.replace(/'/g, '/');
     let html = '';
     if (isTableView) {
-      html += `<a href="${shareUrl}" target="_blank" class="view-link"><img src="images/click_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁';"></a>`;
+      html += `<a href="${shareUrl}" target="_blank" class="view-link"><img src="images/click_logo.png" alt="View" onerror="this.src='https://via.placeholder.com/24?text=👁️';"></a>`;
     }
     html += `
       <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>
       <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
-      <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
-      <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
-      <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
+      <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&amp;url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
+      <a href="#" onclick="copyToClipboard('${escapedUrl}'); return false;"><img src="images/link_logo.png" alt="Link"></a>
+      <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, '/\'')}', '${escapedUrl}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
     `;
     return html;
-  } /* CHANGED */
+  }
 
-  function filterTable() { /* CHANGED */
-    const category = document.getElementById("categoryFilter").value;
-    const subCategory = document.getElementById("subCategoryFilter").value;
-    const sheetName = document.getElementById("sheetSelector").value;
-    const searchInput = document.getElementById("searchInput");
-    const searchTerm = searchInput.value.toLowerCase().trim();
+  function filterTable() {
+    const category = document.getElementById("categoryFilter").value.toLowerCase();
+    const subCategory = document.getElementById("subCategoryFilter").value.toLowerCase();
+    const sheet = document.getElementById("sheetSelector").value.toLowerCase();
 
-    if (sheetName && data.length > 0) {
+    if (sheet && data.length > 0) {
       let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+        const categoryMatch = !category || (row["Verse Category"] && typeof row["Verse Category"] === "string" && 
+          row["Verse Category"].trim().toLowerCase() === category);
         const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                                row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+                                  row["Sub Category"].trim().toLowerCase() === subCategory);
         return categoryMatch && subCategoryMatch;
       });
       updateTable(filteredRows);
+      const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
       if (searchTerm) {
-        searchTable();
+        searchTable(searchTerm);
       } else {
         updateMatchCount(0);
       }
     }
-  } /* CHANGED */
+  }
 
-  function searchTable() { /* CHANGED */
+  function searchTable() {
     const searchInput = document.getElementById("searchInput");
     if (searchInput.disabled) return;
     const searchTerm = searchInput.value.toLowerCase().trim();
-    const category = document.getElementById("categoryFilter").value;
-    const subCategory = document.getElementById("subCategoryFilter").value;
-    const sheetName = document.getElementById("sheetSelector").value;
+    const category = document.getElementById("categoryFilter").value.toLowerCase();
+    const subCategory = document.getElementById("subCategoryFilter").value.toLowerCase();
+    const sheet = document.getElementById("sheetSelector").value.toLowerCase();
 
-    if (sheetName && data.length > 0) {
+    if (sheet && data.length > 0) {
       let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+        const categoryMatch = !category || (row["Verse Category"] && typeof row["Verse Category"] === "string" && 
+                                    row["Verse Category"].trim().toLowerCase() === category);
         const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                                row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+                                  row["Sub Category"].trim().toLowerCase() === subCategory);
         return categoryMatch && subCategoryMatch;
       });
       if (searchTerm) {
-        let searchFilteredRows = filteredRows.filter(row =>
-          Object.values(row).some(val => {
+        let searchFiltered = filteredRows.filter(row => {
+          return Object.values(row).some(val => {
             if (typeof val === "string") {
               return val.toLowerCase().includes(searchTerm);
             } else if (typeof val === "object" && val && val.text) {
               return val.text.toLowerCase().includes(searchTerm);
             }
             return false;
-          })
-        );
+          });
+        });
         let matchCount = 0;
-        searchFilteredRows.forEach(row => {
+        searchFiltered.forEach(row => {
           Object.values(row).forEach(val => {
             if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
               matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'gi')) || []).length;
-            } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm)) {
+            } else if (typeof val === "object" && val.text && val.text.toLowerCase().includes(searchTerm)) {
               matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'gi')) || []).length;
             }
           });
         });
-        updateTable(searchFilteredRows);
+        updateTable(searchFiltered);
         updateMatchCount(matchCount);
       } else {
         updateTable(filteredRows);
@@ -1278,7 +1296,7 @@
       updateTable(data);
       updateMatchCount(0);
     }
-  } /* CHANGED */
+  }
 
   function updateContentCount(count) {
     document.getElementById("contentCount").textContent = `Content Found: ${count}`;
@@ -1295,10 +1313,18 @@
   window.toggleReaction = toggleReaction;
 
   window.onload = () => {
-    initializeFirebase();
-    updateLastUpdated();
-    updateVisitorCount();
-    loadSingleVerse();
+    try {
+      initializeFirebase();
+      updateLastUpdated();
+      updateVisitorCount();
+      loadSingleVerse();
+    } catch (error) {
+      console.error("Unexpected error in window.onload:", error);
+      const errorDisplay = document.getElementById("errorDisplay");
+      if (errorDisplay) {
+        errorDisplay.textContent = "An unexpected error occurred during initialization. Please reload the page.";
+      }
+    }
   };
 </script>
 </body>

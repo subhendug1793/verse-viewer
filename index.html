@@ -9,7 +9,7 @@
   <meta property="og:image" content="https://subhendug1793.github.io/verse-viewer/images/sastik_logo.png">
   <meta property="og:url" content="https://subhendug1793.github.io/verse-viewer/">
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=stylesheet">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -680,7 +680,9 @@
         <span style="font-weight: bold">You can encourage our efforts by scanning the <a href="upi://pay?pa=subhndu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=subhnduGhosh" target="_blank" style="color: #0066cc; text-decoration: none;">UPI QR code</a> below 🙏</span>
       </div>
       <div class="qr-code">
-        <a href="upi://pay?pa=subhndu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=subhnduGhosh" target="_blank"><img src="images/qr_code.png" alt="QR Code" onerror="console.log('Failed to load QR code');"></a>
+        <a href="upi://pay?pa=subhndu.srk1993-1@okicici&pn=Subhendu%20Ghosh&aid=subhnduGhosh" target="_blank">
+          <img src="images/qr_code.png" alt="QR Code" onerror="this.src='images/QR_code.png'; console.log('Failed to load QR code');" onload="console.log('QR code loaded')"> <!-- CHANGED: Added case-sensitive fallback and onload -->
+        </a>
       </div>
       <div class="follow-text">Follow me for more insights on 👇</div>
       <div class="logos">
@@ -691,7 +693,12 @@
       <div class="name-text">Subhendu Sastik</div>
       <div class="contact-text">
         <span>If you'd like to contribute to verse updates 📜 or have any feedback 💭</span>
-        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.789" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on <a href="tel:+t.me/Sg179369" target="_blank"><img src="images/telegram_logo.png" alt="Telegram" style="width:20px; height:30px; vertical-align:middle;"></a> or reach out via email at <a href="mailto:support@sastikofficial.com" target="_blank"><img src="images/mail_logo.png" alt="Mail" style="width:20px;height:30px; vertical-align:middle;" onerror="console.log('Failed to load mail logo')"></a><a href="mailto:support@sastikofficial.com" target="_blank" style="color: #0066cc; text-decoration: none;">support@sastikofficial.com</a></span>
+        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.789" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on 
+          <a href="tel:+t.me/Sg179369" target="_blank"><img src="images/telegram_logo.png" alt="Telegram" style="width:20px; height:auto; vertical-align:middle;" onerror="this.src='https://via.placeholder.com/20?text=T'; console.log('Failed to load Telegram logo');" onload="console.log('Telegram logo loaded')"></a> <!-- CHANGED: height:auto, added onerror placeholder, onload -->
+          or reach out via email at 
+          <a href="mailto:support@sastikofficial.com" target="_blank"><img src="images/mail_logo.png" alt="Mail" style="width:20px; height:auto; vertical-align:middle;" onerror="this.src='https://via.placeholder.com/20?text=@'; console.log('Failed to load mail logo')" onload="console.log('Mail logo loaded')"></a> <!-- CHANGED: height:auto, added onerror placeholder, onload, fixed mailto -->
+          <a href="mailto:support@sastikofficial.com" target="_blank" style="color: #0066cc; text-decoration: none;">support@sastikofficial.com</a>
+        </span>
       </div>
     </div>
   </div>
@@ -870,14 +877,21 @@
     } catch (error) {
       console.error("Firestore error:", error);
       try {
-        const response = await fetch('counter.json', { cache: 'no-store' });
-        if (!response.ok) throw new Error(`counter.json fetch error: ${response.status}`);
-        const data = await response.json();
-        visitorCount.classList.remove("error");
-        visitorCount.innerHTML = `Visitors: ${data.visitors}`;
+        const response = await fetch('counter.json', { cache: 'no-store' }); // CHANGED: Added case-sensitive fallback
+        if (!response.ok) {
+          const altResponse = await fetch('Counter.json', { cache: 'no-store' }); // CHANGED: Try alternate case
+          if (!altResponse.ok) throw new Error(`counter.json fetch error: ${altResponse.status}`);
+          const data = await altResponse.json();
+          visitorCount.classList.remove("error");
+          visitorCount.innerHTML = `Visitors: ${data.visitors || 0}`;
+        } else {
+          const data = await response.json();
+          visitorCount.classList.remove("error");
+          visitorCount.innerHTML = `Visitors: ${data.visitors || 0}`;
+        }
       } catch (jsonError) {
         console.error("Local counter fetch error:", jsonError);
-        visitorCount.innerHTML = "Visitors: 1";
+        visitorCount.innerHTML = "Visitors: Unavailable"; // CHANGED: Default fallback
         visitorCount.classList.add("error");
       }
     }

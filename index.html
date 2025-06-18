@@ -1,814 +1,270 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SASTIK GBQ+ Verse Filter</title>
-  <meta property="og:title" content="SASTIK GBQ+ Verse">
-  <meta property="og:description" content="Explore categorized theological verses from the Gita, Bible, Quran, and more.">
-  <meta property="og:image" content="https://subhendug1793.github.io/verse-viewer/images/sastik_logo.png">
-  <meta property="og:url" content="https://subhendug1793.github.io/verse-viewer/">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    body { 
-      font-family: 'Poppins', sans-serif; 
-      margin: 20px; 
-      background: #f9f9f9; 
-      min-height: 100vh; 
-      display: flex;
-      flex-direction: column;
-    }
-    .header-container { 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      margin-bottom: 20px; 
-    }
-    .header-info { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      width: 100%; 
-      position: absolute; 
-      top: 20px; 
-      left: 20px; 
-      right: 20px; 
-      font-size: 0.9em; 
-      color: #666; 
-      z-index: 10; 
-    }
-    .header-info .last-updated {
-      position: absolute; 
-      right: 20px; 
-    }
-    .header-info .last-updated a {
-      color: #0066cc;
-      text-decoration: none;
-    }
-    .header-info .visitor-count {
-      position: absolute; 
-      left: 20px; 
-      font-weight: bold;
-      color: #333;
-    }
-    .header-info .visitor-count.error {
-      font-weight: normal;
-      color: #999;
-    }
-    .logo { 
-      width: 80px; 
-      height: auto; 
-      margin-right: 10px; 
-    }
-    h2 { 
-      font-family: 'Merriweather', serif;
-      color: #0066cc;
-      text-align: center; 
-      margin: 0; 
-      font-size: 1.8em;
-      font-weight: bold; 
-      white-space: nowrap; 
-    }
-    h2 a { 
-      color: #0066cc; 
-      text-decoration: none; 
-    }
-    h2 a:hover { 
-      text-decoration: underline; 
-    }
-    .mission-statement { 
-      font-family: 'Merriweather', serif;
-      text-align: center; 
-      margin: 0 auto 10px;
-      max-width: 80%; 
-      font-size: 1.1em; 
-      line-height: 1.5; 
-      font-weight: bold; 
-    }
-    .mission-subtext { 
-      text-align: center; 
-      margin: 0 auto 20px; 
-      max-width: 90%; 
-      font-size: 0.75em; 
-      line-height: 1.2; 
-      font-weight: normal; 
-      white-space: nowrap; 
-    }
-    .controls { 
-      margin-bottom: 10px; 
-      text-align: center; 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      gap: 10px; 
-      flex-wrap: wrap; 
-    }
-    .search-row { 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      gap: 10px; 
-      margin-bottom: 10px;
-    }
-    .content-count, .match-count { 
-      font-size: 1em; 
-      color: #333; 
-      text-align: left; 
-    }
-    .search-input-container {
-      flex-grow: 0;
-      text-align: center;
-    }
-    select, input { 
-      font-family: 'Poppins', sans-serif;
-      padding: 8px; 
-      margin-right: 10px; 
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-    select:disabled, input:disabled {
-      background-color: #e0e0e0;
-      cursor: not-allowed;
-    }
-    #searchInput { 
-      width: 200px; 
-    }
-    .verse-container { 
-      width: 80%; 
-      margin: 0 auto 20px; 
-      display: flex; 
-      flex-direction: column; 
-      gap: 20px; 
-    }
-    .verse-card { 
-      background: #fff; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-      padding: 15px; 
-      border-radius: 10px; 
-      display: flex; 
-      flex-direction: column; 
-      gap: 10px; 
-      transition: transform 0.2s; 
-    }
-    .verse-card:hover { 
-      transform: scale(1.02); 
-    }
-    .verse-header { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      padding-bottom: 8px; 
-      border-bottom: 1px dashed #ccc; 
-    }
-    .verse-header.category-universal { background-color: #00FF00; }
-    .verse-header.category-general { background-color: #00FFFF; }
-    .verse-header.category-controversial { background-color: #FFFF00; }
-    .verse-header.category-divisive { background-color: #FF0000; }
-    .verse-header.category-violent { background-color: #000000; color: #FFF; }
-    .verse-name { 
-      font-family: 'Merriweather', serif; 
-      font-weight: bold; 
-      font-size: 1.1em; 
-      flex: 1; 
-    }
-    .verse-name a { 
-      color: inherit; 
-      text-decoration: none; 
-    }
-    .verse-header.category-violent .verse-name, .verse-header.category-violent .verse-name a { color: #FFF; }
-    .verse-category { 
-      font-size: 0.9em; 
-      text-align: right; 
-      flex: 1; 
-    }
-    .verse-header.category-violent .verse-category { color: #FFF; }
-    .verse-field { 
-      text-align: center; 
-      font-size: 0.95em; 
-      color: #444; 
-      padding: 8px 0; 
-    }
-    .verse-footer { 
-      display: flex; 
-      flex-wrap: wrap; 
-      justify-content: space-between; 
-      align-items: center; 
-      padding-top: 8px; 
-      border-top: 1px dashed #ccc; 
-      gap: 10px; 
-    }
-    .verse-subcategory { 
-      font-size: 0.9em; 
-      color: #444; 
-      flex: 1; 
-    }
-    .buttons-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      flex: 2;
-      justify-content: center;
-    }
-    .reaction-buttons { 
-      display: flex; 
-      gap: 8px; 
-    }
-    .reaction-buttons button { 
-      background: none; 
-      border: none; 
-      cursor: pointer; 
-      font-size: 16px; 
-      display: flex; 
-      align-items: center; 
-      gap: 4px; 
-    }
-    .reaction-buttons button.active { font-weight: bold; }
-    .share-buttons { 
-      display: flex; 
-      gap: 8px; 
-      align-items: center; 
-    }
-    .share-buttons a img { 
-      width: 24px; 
-      height: 24px; 
-    }
-    .view-full-verse { 
-      background: #90EE90; 
-      color: #fff; 
-      padding: 6px 12px; 
-      border-radius: 6px; 
-      text-decoration: none; 
-      font-size: 0.9em; 
-      display: inline-block; 
-    }
-    .view-full-verse:hover { 
-      background: #78DA78; 
-    }
-    .footer { 
-      margin-top: auto; 
-      text-align: center; 
-      padding: 20px 0; 
-      max-width: 80%; 
-      margin: 0 auto; 
-    }
-    .footer img { 
-      vertical-align: middle; 
-    }
-    .logos img { 
-      width: 40px; 
-      margin: 0 5px; 
-    }
-    .support-text, .follow-text, .contact-text { 
-      margin: 10px 0; 
-      font-size: 0.9em; 
-    }
-    .name-text { 
-      font-family: 'Merriweather', serif; 
-      font-size: 1.5em; 
-    }
-    .qr-code img { 
-      width: 150px; 
-    }
-    .single-verse-view {
-      text-align: center;
-      margin: 20px auto;
-      width: 90%;
-      max-width: 800px;
-      padding: 20px;
-      background: #fff;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      border-radius: 10px;
-      height: auto;
-      min-height: 300px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-    .single-verse-view h3 { 
-      font-family: 'Merriweather', serif; 
-      color: #0066cc; 
-      margin: 0; 
-    }
-    .verse-details { 
-      text-align: left; 
-      flex-grow: 1; 
-    }
-    .verse-details p { 
-      margin: 8px 0; 
-      font-size: 1em; 
-      color: #333; 
-    }
-    .verse-details strong { 
-      display: inline-block; 
-      width: 120px; 
-      font-weight: bold; 
-    }
-    .single-verse-footer {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      padding-top: 15px;
-      border-top: 1px dashed #ccc;
-    }
-    .single-verse-share-buttons { 
-      display: flex; 
-      gap: 12px; 
-      justify-content: center; 
-      flex-wrap: wrap; 
-    }
-    .single-verse-share-buttons img { 
-      width: 24px; 
-      height: 24px; 
-    }
-    .navigation-arrows {
-      position: absolute;
-      top: 50%;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      transform: translateY(-50%);
-    }
-    .navigation-arrows a img {
-      width: 30px;
-    }
-    .navigation-arrows .prev { left: -40px; }
-    .navigation-arrows .next { right: -40px; }
-    .navigation-arrows a.disabled img { opacity: 0.5; }
-    @media (max-width: 600px) {
-      .header-info { 
-        flex-direction: column; 
-        position: static; 
-        margin-bottom: 10px; 
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f9f9f9;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
       }
-      .header-info .visitor-count, .header-info .last-updated { 
-        position: static; 
-        margin: 5px 0; 
+      h2 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 2.5em;
+        font-weight: bold;
       }
-      .header-container { 
-        flex-direction: column; 
+      .mission-statement {
+        text-align: center;
+        margin: 0 auto 20px auto;
+        max-width: 80%;
+        font-size: 1.1em;
+        line-height: 1.5;
+        font-weight: bold;
       }
-      .logo { 
-        width: 60px; 
-        margin-bottom: 5px; 
+      .mission-statement b {
+        color: #ff0000; /* Red for 🚫 */
       }
-      h2 { font-size: 1.4em; }
-      .mission-statement { font-size: 0.9em; max-width: 90%; }
-      .mission-subtext { font-size: 0.65em; white-space: normal; }
-      .controls { flex-direction: column; gap: 8px; }
-      select, input { width: 100%; margin-right: 0; }
-      #searchInput { width: 100%; }
-      .search-row { flex-direction: column; }
-      .verse-container { width: 95%; }
-      .verse-card { padding: 12px; }
-      .verse-header { flex-direction: column; align-items: flex-start; }
-      .verse-name, .verse-category { width: 100%; text-align: left; }
-      .verse-footer { flex-direction: column; align-items: center; }
-      .buttons-container { flex-direction: row; flex-wrap: wrap; width: 100%; }
-      .reaction-buttons, .share-buttons { width: 100%; justify-content: center; }
-      .view-full-verse { width: 100%; text-align: center; }
-      .single-verse-view {
-        width: 95%;
-        padding: 15px;
-        min-height: 250px;
+      .mission-statement em {
+        color: #00ff00; /* Green for ✅ */
       }
-      .verse-details p { font-size: 0.9em; }
-      .verse-details strong { width: 100px; }
-      .navigation-arrows .prev { left: -20px; }
-      .navigation-arrows .next { right: -20px; }
-      .navigation-arrows a img { width: 25px; }
-    }
-  </style>
-</head>
-<body>
-  <div class="header-info">
-    <span class="visitor-count" id="visitorCount">Visitors: Loading...</span>
-    <span class="last-updated" id="lastUpdated">Last updated: Loading...</span>
-  </div>
-  <div class="header-container">
-    <img src="images/sastik_logo.png" alt="SASTIK Logo" class="logo">
-    <h2><a href="https://www.facebook.com/sastikofficial/" target="_blank">SASTIK GBQ+</a></h2>
-  </div>
-  <div class="mission-statement">
-    <b>সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে 🚫 সম্প্রীতি ও মানবতার পক্ষে ✅</b><br>
-    <b>To Propagate Sane Theism, Against Hatred and Violence 🚫 In Favor of Harmony and Humanity ✅</b>
-  </div>
-  <div class="mission-subtext">
-    ⬇️ A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. ⬇️
-  </div>
-  <div class="single-verse-view" id="singleVerseView" style="display: none;"></div>
-  <div class="controls">
-    <label for="sheetSelector">Select Gita/Bible/Quran+:</label>
-    <select id="sheetSelector" onchange="loadSheetData()">
-      <option value="">Select a sheet</option>
-      <option value="gita">Gita</option>
-      <option value="bible">Bible</option>
-      <option value="quran">Quran</option>
-      <option value="hadith">Hadith</option>
-      <option value="miscellaneous">Miscellaneous</option>
-    </select>
-    <label for="categoryFilter">Filter Category:</label>
-    <select id="categoryFilter" disabled onchange="filterTable()">
-      <option value="">All</option>
-      <option value="Universal or Ethical Verse">Universal or Ethical</option>
-      <option value="General Intra-community Verse">General Community</option>
-      <option value="Controversial Intra-community Verse">Controversial</option>
-      <option value="Divisive or Hateful Inter-community Verse">Divisive</option>
-      <option value="Violent or Aggressive Inter-community Verse">Violent</option>
-    </select>
+      .controls {
+        margin-bottom: 20px;
+        text-align: center;
+        position: relative;
+      }
+      .content-count {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 1em;
+        color: #333;
+      }
+      select, input {
+        padding: 5px;
+        margin-right: 10px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 0 auto;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        flex-grow: 1;
+      }
+      th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+      }
+      td a {
+        color: #0066cc;
+        text-decoration: none;
+      }
+      td a:hover {
+        text-decoration: underline;
+      }
+      /* Color Verse Category items */
+      td.category-universal { background-color: #00FF00; } /* Green */
+      td.category-general { background-color: #00FFFF; } /* Cyan */
+      td.category-controversial { background-color: #FFFF00; } /* Yellow */
+      td.category-divisive { background-color: #FF0000; } /* Red */
+      td.category-violent { background-color: #000000; color: #FFFFFF; } /* Black with white text */
+      /* Responsive Design */
+      @media (max-width: 600px) {
+        table { width: 100%; }
+        .mission-statement { font-size: 0.9em; max-width: 90%; }
+        h2 { font-size: 2em; }
+        select, input { width: 100%; margin-bottom: 10px; }
+        .controls { flex-direction: column; align-items: center; }
+        .content-count { position: static; text-align: center; margin-top: 10px; }
+      }
+    </style>
+  </head>
+  <body>
+    <h2>SASTIK GBQ+</h2>
+    <div class="mission-statement">
+      সুস্থ আস্তিকতা প্রচারের উদ্দেশ্যে, হিংসা ও বিদ্বেষের বিরুদ্ধে <b>🚫</b> সম্প্রীতি ও মানবতার পক্ষে <em>✅</em><br>
+      To propagate sane theism, against hatred and violence <b>🚫</b> in favor of harmony and humanity <em>✅</em>
+    </div>
     <div class="controls">
-    <label for="subCategoryFilter">Sub Category:</label>
-    <select id="subCategoryFilter" disabled onchange="filterTable()">
-      <option value="">All</option>
-      <option value="Historical or Narrative verse">Historical</option>
-      <option value="Discriminatory or Prejudiced Verse">Purge</option>
-      <option value="Metaphorical or Symbolic verse">Metaphorical</option>
-    </select>
-  </div>
-  <div class="search-row">
-    <div class="content-count" id="contentCount">Content Found: 0</div>
-    <div class="search-input-container">
-      <input type="text" id="searchInput" placeholder="Search..." disabled onkeyup="searchTable()">
+      <label for="sheetSelector">Select Sheet:</label>
+      <select id="sheetSelector" onchange="loadSheetData()">
+        <option value="">Select a sheet</option>
+      </select>
+      <label for="categoryFilter">Filter by Category:</label>
+      <select id="categoryFilter" onchange="filterTable()" disabled>
+        <option value="">All</option>
+        <option value="Universal or Ethical Verse">Universal or Ethical Verse</option>
+        <option value="General Intra-community Verse">General Intra-community Verse</option>
+        <option value="Controversial Intra-community Verse">Controversial Intra-community Verse</option>
+        <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
+        <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
+      </select>
+      <input type="text" id="searchInput" placeholder="Search in table..." onkeyup="searchTable()" disabled>
+      <div class="content-count" id="contentCount">Contents: 0</div>
     </div>
-    <div class="match-count" id="matchCount">Matches found: 0</div>
-  </div>
-  <div class="verse-container" id="verseContainer"></div>
-  <div class="footer">
-    <div class="support-text">
-      Developing and maintaining this unified platform requires continuous effort and dedication.<br>
-      Support our mission with UPI QR code below 🙏.
-    </div>
-    <div class="qr-code">
-      <a href="upi://pay?pa=subhendu.srk1993-1@okicici" target="_blank"><img src="images/qrcode_logo.jpg" alt="UPI QR Code"></a>
-    </div>
-    <div class="follow-text">Follow on:</div>
-    <div class="logos">
-      <a href="https://www.facebook.com/SubhenduGhoshSastik/" target="_blank"><img src="images/facebook.jpg" alt="Facebook"></a>
-      <a href="https://www.youtube.com/@SGSastik" target="_blank"><img src="images/youtube_logo.jpg" alt="YouTube"></a>
-      <a href="https://x.com/subhendug1793" target="_blank"><img src="images/x_logo.png" alt="X"></a>
-    </div>
-    <div class="name-text">Subhendu Ghosh Sastik</div>
-    <div class="contact-text">
-      Contribute verse updates or feedback:<br>
-      <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.jpg" alt="Telegram"></a>
-      <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="images/gmail_logo.jpg" alt="Mail"></a> <a href="mailto:sastikofficial@gmail.com">sastikofficial@gmail.com</a>
-    </div>
-  </div>
+    <table id="verseTable">
+      <thead id="tableHeaders"></thead>
+      <tbody id="verseBody"></tbody>
+    </table>
+    <script>
+      let data = [];
+      let hyperlinks = [];
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDoc, increment } from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js';
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyCouLOLpeijDpxHlVN1pvpruvxdrLKVk",
-    authDomain: "verseviewercounter.firebaseapp.com",
-    projectId: "verseviewercounter",
-    storageBucket: "verseviewercounter.firebasestorage.app",
-    messagingSenderId: "4860810190573",
-    appId: "1:4860810190573:web:363e819071b11880089ccc",
-    measurementId: "G-NE4PCNMR8D"
-  };
-
-  let db = null;
-  function initializeFirebase() {
-    try {
-      const app = initializeApp(firebaseConfig);
-      db = getFirestore(app);
-    } catch (error) {
-      console.error("Firebase init error:", error);
-      db = null;
-    }
-  }
-
-  window.copyToClipboard = function(text) {
-    navigator.clipboard.writeText).then(() => alert("Link copied!")).catch(err => console.error("Copy failed:", err));
-  };
-
-  window.shareAnywhere = function(verseText, shareUrl) {
-    if (navigator.share) {
-      navigator.share({
-        title: 'SASTIK GBQ+ Verse',
-        text: verseText,
-        url: shareUrl
-      }).catch(err => console.error('Share error:', err));
-    } else {
-      alert('Share not supported. Copy the link.');
-    }
-  };
-
-  let data = [];
-  let currentSheet = "";
-  let currentVerseIndex = -1;
-
-  const columnMappings = {
-    gita: {
-      verseName: ["Verse Name"],
-      bengaliTranslation: ["Bengali Translation"],
-      englishTranslation: ["English Translation"]
-    },
-    bible: {
-      verseName: ["Verse"],
-      bengaliTranslation: ["Bengali Translation"],
-      englishTranslation: ["English Translation"]
-    },
-    quran: {
-      verseName: ["Verse"],
-      bengaliTranslation: ["Bengali Meaning"],
-      englishTranslation: ["English Meaning"]
-    },
-    hadith: {
-      verseName: ["Verse"],
-      bengaliTranslation: ["Bengali Translation"],
-      englishTranslation: ["English Translation"]
-    },
-    miscellaneous: {
-      verseName: ["Verse Name"],
-      bengaliTranslation: ["Bengali Translation"],
-      englishTranslation: ["English Translation"]
-    }
-  };
-
-  function getColumnValue(row, field, sheet) {
-    const mapping = columnMappings[sheet.toLowerCase()] || columnMappings.miscellaneous];
-    const columns = mapping[field] || [field];
-    for (const col of columns) {
-      if (row[col] !== undefined && row[col] !== null) {
-        return row[col].text || row[col];
+      function loadSheetData() {
+        const sheetName = document.getElementById("sheetSelector").value;
+        if (sheetName) {
+          document.getElementById("categoryFilter").disabled = false;
+          document.getElementById("searchInput").disabled = false;
+          google.script.run.withSuccessHandler(function(dataObj) {
+            data = dataObj.rows;
+            hyperlinks = dataObj.hyperlinks;
+            updateHeaders(dataObj.headers, dataObj.headerColors);
+            updateTable(data, hyperlinks, dataObj.totalRows);
+            updateContentCount(data.length);
+          }).getSheetData(sheetName, "");
+        } else {
+          document.getElementById("categoryFilter").disabled = true;
+          document.getElementById("searchInput").disabled = true;
+          document.getElementById("verseBody").innerHTML = "";
+          document.getElementById("tableHeaders").innerHTML = "";
+          updateContentCount(0);
+        }
       }
-    }
-    return "-";
-  }
 
-  function renderText(value) {
-    if (!value) return "-";
-    return value.text ? (value.url ? `<a href="${value.url}" target="_blank">${value.text}</a>` : value.text) : value.toString();
-  }
-
-  function getTextForUrl(value) {
-    return value ? (value.text || value.toString()) : "";
-  }
-
-  function updateLastUpdated() {
-    const element = document.getElementById("lastUpdated");
-    if (!element) return;
-    try {
-      const date = new Date(document.lastModified || Date.now());
-      const dateStr = date.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit', year: 'numeric' });
-      const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-      element.textContent = `Last updated: ${dateStr} ${timeStr}`;
-    } catch (e) {
-      element.textContent = "Last updated: Unknown";
-      console.error("Last update error:", e);
-    }
-  }
-
-  async function updateVisitorCount() {
-    const element = document.getElementById("visitorCount");
-    if (!element) return;
-    element.textContent = "Visitors: Loading...";
-    const cacheKey = "visitorCount";
-    const cached = JSON.parse(localStorage.getItem(cacheKey));
-    if (cached && Date.now() - cached.timestamp < 3600000) {
-      element.textContent = `Visitors: ${cached.count}`;
-      return;
-    }
-
-    try {
-      if (db) {
-        const counterRef = doc(db, "counters", "viewerCount");
-        await setDoc(counterRef, { count: increment(1) }, { merge: true });
-        const snap = await getDoc(counterRef);
-        const count = snap.exists() ? snap.data().count : 0;
-        element.textContent = `Visitors: ${count}`;
-        localStorage.setItem(cacheKey, JSON.stringify({ count, timestamp: Date.now() }));
-        return;
+      function updateHeaders(headers, headerColors) {
+        const thead = document.getElementById("tableHeaders");
+        thead.innerHTML = "";
+        let tr = document.createElement("tr");
+        headers.forEach((header, index) => {
+          if (header && header.trim()) {
+            let th = document.createElement("th");
+            th.textContent = header.trim();
+            th.style.backgroundColor = headerColors[index] || "#4CAF50";
+            th.style.color = getTextColor(headerColors[index]);
+            tr.appendChild(th);
+          }
+        });
+        thead.appendChild(tr);
       }
-    } catch (e) {
-      console.warn("Firebase error:", e);
-    }
 
-    try {
-      const response = await fetch("https://subhendug1793.github.io/verse-viewer/counter.json", { cache: "no-store" });
-      const data = await response.json();
-      const count = data.visitors || 0;
-      element.textContent = `Visitors: ${count}`;
-      localStorage.setItem(cacheKey, JSON.stringify({ count, timestamp: Date.now() }));
-    } catch (e) {
-      console.error("Counter fetch error:", e);
-      element.textContent = cached ? `Visitors: ${cached.count}` : "Visitors: Unknown";
-    }
-  }
-
-  async function loadSheetData() {
-    const selector = document.getElementById("sheetSelector");
-    const container = document.getElementById("verseContainer");
-    const categoryFilter = document.getElementById("categoryFilter");
-    const subCategoryFilter = document.getElementById("subCategoryFilter");
-    const searchInput = document.getElementById("searchInput");
-    if (!selector || !container || !categoryFilter || !subCategoryFilter || !searchInput) return;
-
-    currentSheet = selector.value;
-    if (!currentSheet) {
-      container.textContent = "";
-      categoryFilter.disabled = true;
-      subCategoryFilter.disabled = true;
-      searchInput.disabled = true;
-      updateContentCount(0);
-      return;
-    }
-
-    categoryFilter.disabled = false;
-    subCategoryFilter.disabled = false;
-    searchInput.disabled = false;
-    container.textContent = "Loading...";
-
-    try {
-      const response = await fetch(`https://subhendug1793.github.io/verse-viewer/${currentSheet.toLowerCase()}.json`, { cache: "no-store" });
-      if (!response.ok) throw new Error("Fetch failed");
-      data = await response.json();
-      if (!Array.isArray(data)) throw new Error("Invalid data");
-      updateTable(data);
-      updateContentCount(data.length);
-    } catch (e) {
-      console.error("Load sheet error:", e);
-      container.textContent = `Error loading ${currentSheet} data.`;
-      updateContentCount(0);
-    }
-  }
-
-  async function loadSingleVerse() {
-    const params = new URLSearchParams(window.location.search);
-    const sheet = params.get("sheet");
-    const verse = params.get("verse");
-    if (!sheet || !verse) return;
-
-    currentSheet = sheet;
-    const singleVerseView = document.getElementById("singleVerseView");
-    const controls = document.getElementById("controls");
-    const container = document.getElementById("verseContainer");
-    if (!singleVerseView || !controls || !container) return;
-
-    try {
-      const response = await fetch(`https://subhendug1793.github.io/verse-viewer/${sheet.toLowerCase()}.json`, { cache: "no-store" });
-      data = await response.json();
-      const index = data.findIndex(row => getTextForUrl(getColumnValue(row, "verseName", sheet)) === decodeURIComponent(verse));
-      if (index === -1) throw new Error("Verse not found");
-      currentVerseIndex = index;
-      displaySingleVerse(data[index], index);
-      singleVerseView.style.display = "block";
-      controls.style.display = "none";
-      container.style.display = "none";
-      document.querySelector(".search-row").style.display = "none";
-    } catch (e) {
-      console.error("Single verse error:", e);
-      singleVerseView.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
-      singleVerseView.style.display = "block";
-    }
-  }
-
-  function displaySingleVerse(verse, index) {
-    const view = document.getElementById("singleVerseView");
-    if (!view) return;
-
-    const verseName = getColumnValue(verse, "verseName", currentSheet);
-    let html = `<h3>${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)} ${verseName}</h3><div class="verse-details">`;
-    for (const [key, value] of Object.entries(verse)) {
-      if (key !== "sheet") {
-        html += `<p><strong>${key}:</strong> ${renderText(value)}</p>`;
+      function getTextColor(backgroundColor) {
+        if (!backgroundColor) return "#000000";
+        const rgb = hexToRgb(backgroundColor);
+        if (rgb) {
+          const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+          return brightness > 128 ? "#000000" : "#FFFFFF";
+        }
+        return "#000000";
       }
-    }
-    html += `</div><div class="single-verse-footer">
-      <div class="navigation-arrows">
-        <a href="?sheet=${currentSheet}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}><img src="images/leftarrow_logo.png" alt="Prev"></a>
-        <a href="?sheet=${currentSheet}&verse=${index + 1}" class="next ${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}><img src="images/rightarrow_logo.png" alt="Next"></a>
-      </div>
-      <div class="reaction-buttons">
-        <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
-        <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
-        <button data-reaction="dislike" onclick="toggleReaction('dislike', '${currentSheet}', ${index})">👎 <span id="dislikeCount">0</span></button>
-      </div>
-      <div class="single-verse-share-buttons">
-        <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(getTextForUrl(verse.englishTranslation) + ' https://subhendug1793.github.io/verse-viewer/?sheet=' + encodeURIComponent(currentSheet) + '&verse=' + encodeURIComponent(getTextForUrl(verseName)))}" target="_blank"><img src="images/blankwhatsapp_logo.png" alt="WhatsApp"></a>
-        <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fsubhendug1793.github.io%2Fverse-viewer%2F%3Fsheet%3D${encodeURIComponent(currentSheet)}%26verse%3D${encodeURIComponent(getTextForUrl(verseName))}" target="_blank"><img src="images/facebook.jpg" alt="Facebook"></a>
-        <a href="https://x.com/intent/tweet?text=${encodeURIComponent(getTextForUrl(verse.englishTranslation))}&url=https%3A%2F%2Fsubhendug1793.github.io%2Fverse-viewer%2F%3Fsheet%3D${encodeURIComponent(currentSheet)}%26verse%3D${encodeURIComponent(getTextForUrl(verseName))}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
-        <a href="#" onclick="copyToClipboard('https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(getTextForUrl(verseName))}'); return false;"><img src="images/link_logo.png" alt="Copy"></a>
-        <a href="#" onclick="shareAnywhere('${encodeURIComponent(getTextForUrl(verse.englishTranslation))}', 'https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(getTextForUrl(verseName))}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
-      </div>
-    </div>`;
-    view.innerHTML = html;
-  }
 
-  function navigateVerse(index) {
-    if (!data[index]) return;
-    currentVerseIndex = index;
-    const verseName = getTextForUrl(data[index]["Verse Name"] || index);
-    history.pushState(null, null, `?sheet=${currentSheet}&verse=${encodeURIComponent(verseName)}`);
-    displaySingleVerse(data[index], index);
-  }
+      function hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : null;
+      }
 
-  function updateTable(data) {
-    const container = document.getElementById("verseContainer");
-    if (!container) return;
-    container.innerHTML = "";
-    if (!data.length) {
-      container.textContent = "No data available.";
-      return;
-    }
-    data.forEach((row, index) => {
-      const card = document.createElement("div");
-      card.className = "verse-card";
-      const verseName = getColumnValue(row, "verseName", currentSheet);
-      const category = getColumnValue(row, "Verse Category", currentSheet);
-      const bengali = getColumnValue(row, "bengaliTranslation", currentSheet);
-      const english = getColumnValue(row, "englishTranslation", currentSheet);
-      const subCategory = getColumnValue(row, "Sub Category", currentSheet);
-      card.innerHTML = `
-        <div class="verse-header ${getCategoryClass(category)}">
-          <span class="verse-name">${renderText(verseName)}</span>
-          <span class="verse-category">${category}</span>
-        </div>
-        <div class="verse-field">${renderText(bengali)}</div>
-        <div class="verse-field">${renderText(english)}</div>
-        <div class="verse-footer">
-          <span class="verse-subcategory">${subCategory}</span>
-          <div class="buttons-container">
-            <div class="reaction-buttons">
-              <button data-reaction="like">👍 <span id="likeCount_${index}">0</span></button>
-              <button data-reaction="love">❤️ <span id="loveCount_${index}">0</span></button>
-              <button data-reaction="dislike">👎 <span id="dislikeCount_${index}">0</span></button>
-            </div>
-            <div class="share-buttons">
-              <a href="#" onclick="copyToClipboard('https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(getTextForUrl(verseName))}'); return false;"><img src="images/link_logo.png" alt="Copy"></a>
-              <a href="#" onclick="shareAnywhere('${encodeURIComponent(getTextForUrl(english))}', 'https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(getTextForUrl(verseName))}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
-            </div>
-          </div>
-          <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(getTextForUrl(verseName))}" class="view-full-verse">👁️ Verse Details>>></a>
-        </div>`;
-      container.appendChild(card);
-    });
-    updateContentCount(data.length);
-  }
+      function updateTable(rows, hyperlinks, totalRows) {
+        const tbody = document.getElementById("verseBody");
+        tbody.innerHTML = "";
+        rows.forEach((row, rowIndex) => {
+          let tr = document.createElement("tr");
+          row.forEach((cell, colIndex) => {
+            let td = document.createElement("td");
+            // Apply color coding to Verse Category (index 0)
+            if (colIndex === 0 && typeof cell === "string") {
+              td.className = getCategoryClass(cell.trim().toLowerCase());
+            }
+            // Apply hyperlink to Verse Name (index 3) using Reference Links and Files (index 4)
+            if (colIndex === 3 && hyperlinks[rowIndex] && hyperlinks[rowIndex][0]) {
+              let linkUrl = hyperlinks[rowIndex][0];
+              if (linkUrl && linkUrl.trim().length > 0) {
+                let displayText = cell || hyperlinks[rowIndex][1] || "Link";
+                let a = document.createElement("a");
+                a.href = linkUrl;
+                a.textContent = displayText;
+                a.target = "_blank";
+                td.appendChild(a);
+              } else {
+                td.textContent = cell || "";
+              }
+            } else {
+              td.textContent = cell || "";
+            }
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+        updateContentCount(rows.length);
+      }
 
-  function getCategoryClass(category) {
-    const map = {
-      "universal or ethical verse": "category-universal",
-      "general intra-community verse": "category-general",
-      "controversial intra-community verse": "category-controversial",
-      "divisive or hateful inter-community verse": "category-divisive",
-      "violent or aggressive inter-community verse": "category-violent"
-    };
-    return map[category.toLowerCase()] || "";
-  }
+      function getCategoryClass(category) {
+        switch (category.toLowerCase()) {
+          case "universal or ethical verse": return "category-universal";
+          case "general intra-community verse": return "category-general";
+          case "controversial intra-community verse": return "category-controversial";
+          case "divisive or hateful inter-community verse": return "category-divisive";
+          case "violent or aggressive inter-community verse": return "category-violent";
+          default: return "";
+        }
+      }
 
-  function filterTable() {
-    const category = document.getElementById("categoryFilter").value;
-    const subCategory = document.getElementById("subCategoryFilter").value;
-    const filtered = data.filter(row => {
-      const categoryMatch = !category || getColumnValue(row, "Verse Category", currentSheet).toLowerCase() === category.toLowerCase();
-      const subCategoryMatch = !subCategory || getColumnValue(row, "Sub Category", currentSheet).toLowerCase() === subCategory.toLowerCase();
-      return categoryMatch && subCategoryMatch;
-    });
-    updateTable(filtered);
-  }
+      function filterTable() {
+        const sheetName = document.getElementById("sheetSelector").value;
+        const category = document.getElementById("categoryFilter").value;
+        if (sheetName) {
+          google.script.run.withSuccessHandler(function(dataObj) {
+            data = dataObj.rows;
+            hyperlinks = dataObj.hyperlinks;
+            updateHeaders(dataObj.headers, dataObj.headerColors);
+            let filteredRows = category === "" ? data : data.filter(row => row[0] && row[0].toString().trim().toLowerCase() === category.toLowerCase());
+            let filteredHyperlinks = category === "" ? hyperlinks : hyperlinks ? hyperlinks.filter((_, i) => data[i][0] && data[i][0].toString().trim().toLowerCase() === category.toLowerCase()) : null;
+            updateTable(filteredRows, filteredHyperlinks, dataObj.totalRows);
+          }).getSheetData(sheetName, category);
+        }
+      }
 
-  function searchTable() {
-    const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
-    if (!searchTerm) {
-      filterTable();
-      return;
-    }
-    const filtered = data.filter(row => Object.values(row).some(val => 
-      (val.text || val.toString()).toLowerCase().includes(searchTerm)
-    ));
-    updateTable(filtered);
-    updateMatchCount(filtered.reduce((sum, row) => 
-      sum + Object.values(row).reduce((s, val) => 
-        s + ((val.text || val.toString()).toLowerCase().match(new RegExp(searchTerm, 'gi')) || []).length, 0
-      ), 0));
-  }
+      function searchTable() {
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let rows = document.getElementById("verseBody").getElementsByTagName("tr");
+        let visibleCount = 0;
+        for (let i = 0; i < rows.length; i++) {
+          let cells = rows[i].getElementsByTagName("td");
+          let found = false;
+          for (let j = 0; j < cells.length; j++) {
+            let text = cells[j].textContent.toLowerCase();
+            if (text.includes(input)) {
+              found = true;
+              break;
+            }
+          }
+          rows[i].style.display = found ? "" : "none";
+          if (found) visibleCount++;
+        }
+        updateContentCount(visibleCount);
+      }
 
-  function updateContentCount(count) {
-    document.getElementById("contentCount").textContent = `Content Found: ${count}`;
-  }
+      function updateContentCount(count) {
+        document.getElementById("contentCount").textContent = `Contents: ${count}`;
+      }
 
-  function updateMatchCount(count) {
-    document.getElementById("matchCount").textContent = `Matches found: ${count}`;
-  }
-
-  window.loadSheetData = loadSheetData;
-  window.filterTable = filterTable;
-  window.searchTable = searchTable;
-  window.navigateVerse = navigateVerse;
-
-  window.onload = () => {
-    initializeFirebase();
-    updateLastUpdated();
-    updateVisitorCount();
-    loadSingleVerse();
-    loadSheetData();
-  };
-</script>
-</body>
+      // Load sheet names on page load
+      google.script.run.withSuccessHandler(function(sheets) {
+        const select = document.getElementById("sheetSelector");
+        sheets.forEach(sheet => {
+          let option = document.createElement("option");
+          option.value = sheet;
+          option.textContent = sheet;
+          select.appendChild(option);
+        });
+      }).getSheetNames();
+    </script>
+  </body>
 </html>

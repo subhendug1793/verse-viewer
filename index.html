@@ -738,8 +738,8 @@
   </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, doc, setDoc, getDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCou0LOLpeijDPxHlVN1pvpruvxdrLKVWk",
@@ -815,26 +815,23 @@
     }
   };
 
-  function getColumnValue(row, field, sheet) { /* CHANGED: Handle object values */
+  function getColumnValue(row, field, sheet) {
     const mapping = columnMappings[sheet.toLowerCase()] || columnMappings.miscellaneous;
     const possibleColumns = mapping[field] || [field];
     for (const col of possibleColumns) {
-      if (row[col] !== undefined && row[col] !== null) {
-        const value = row[col];
-        return typeof value === 'object' && value.text ? value.text : value;
-      }
+      if (row[col]) return row[col];
     }
     return "-";
   }
 
-  function renderText(value) { /* CHANGED: Handle object values consistently */
+  function renderText(value) {
     if (typeof value === "object" && value && value.text && value.url) {
       return `<a href="${value.url}" target="_blank">${value.text}</a>`;
     }
     return value || "-";
   }
 
-  function getTextForUrl(value) { /* CHANGED: Handle object values */
+  function getTextForUrl(value) {
     if (typeof value === "object" && value && value.text) {
       return value.text;
     }
@@ -842,52 +839,21 @@
   }
 
   function updateLastUpdated() {
+    const lastUpdatedElement = document.getElementById("lastUpdated");
+    if (!lastUpdatedElement) return;
     try {
-      const lastUpdatedElement = document.getElementById("lastUpdated");
-      if (lastUpdatedElement) {
-        let lastUpdated;
-        if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
-          const date = new Date(document.lastModified);
-          const dateStr = date.toLocaleDateString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
-          const timeStr = date.toLocaleTimeString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-          });
-          lastUpdated = `${dateStr} ${timeStr}`;
-        } else {
-          const now = new Date();
-          const dateStr = now.toLocaleDateString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
-          const timeStr = now.toLocaleTimeString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-          });
-          lastUpdated = `${dateStr} ${timeStr}`;
-          console.warn("document.lastModified unavailable, using current date:", lastUpdated);
-        }
-        lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${lastUpdated}</a>`;
+      let lastUpdated;
+      if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
+        const date = new Date(document.lastModified);
+        lastUpdated = date.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+      } else {
+        lastUpdated = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+        console.warn("document.lastModified unavailable, using current time");
       }
+      lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${lastUpdated}</a>`;
     } catch (error) {
       console.error("Error updating last modified:", error);
-      const lastUpdatedElement = document.getElementById("lastUpdated");
-      if (lastUpdatedElement) {
-        lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">Unknown</a>`;
-      }
+      lastUpdatedElement.innerHTML = `Last updated: Unknown`;
     }
   }
 
@@ -895,18 +861,6 @@
     const visitorCount = document.getElementById("visitorCount");
     if (!visitorCount) return;
     visitorCount.innerHTML = "Visitors: Loading...";
-
-    const cacheKey = 'visitorCount';
-    const cacheTTL = 3600000; // 1 hour in ms
-    const cachedData = JSON.parse(localStorage.getItem(cacheKey));
-    const now = Date.now();
-
-    if (cachedData && now - cachedData.timestamp < cacheTTL) {
-      visitorCount.classList.remove("error");
-      visitorCount.innerHTML = `Visitors: ${cachedData.count}`;
-      return;
-    }
-
     try {
       if (!db) throw new Error("Firestore not initialized");
       const counterRef = doc(db, "counters", "viewerCount");
@@ -916,7 +870,6 @@
         const count = counterSnap.data().count || 0;
         visitorCount.classList.remove("error");
         visitorCount.innerHTML = `Visitors: ${count}`;
-        localStorage.setItem(cacheKey, JSON.stringify({ count, timestamp: now }));
       } else {
         throw new Error("Counter document does not exist");
       }
@@ -924,11 +877,10 @@
       console.error("Firestore error:", error);
       try {
         const response = await fetch('counter.json', { cache: 'no-store' });
-        if (!response.ok) throw new Error(`counter.json fetch error: ${response.status}`);
+        if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
         const data = await response.json();
         visitorCount.classList.remove("error");
         visitorCount.innerHTML = `Visitors: ${data.visitors}`;
-        localStorage.setItem(cacheKey, JSON.stringify({ count: data.visitors, timestamp: now }));
       } catch (jsonError) {
         console.error("Local counter fetch error:", jsonError);
         visitorCount.innerHTML = "Visitors: Error";
@@ -971,11 +923,9 @@
             sheetData = await response.json();
             console.log(`Successfully fetched ${url}`);
             break;
-          } else {
-            console.warn(`Failed to fetch ${url}: Status ${response.status}`);
           }
         } catch (err) {
-          console.warn(`Error fetching ${url}: ${err.message}`);
+          console.warn(`Error fetching ${url}:`, err);
         }
       }
       if (sheetData) {
@@ -985,7 +935,7 @@
         updateMatchCount(0);
       } else {
         errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if the file exists or contact support.`;
-        document.getElementById("verseContainer").innerHTML = `<div style="text-align: center;">Error loading ${currentSheet}.json: File not found or inaccessible</div>`;
+        document.getElementById("verseContainer").innerHTML = `<div style="text-align: center;">Error loading ${currentSheet}.json</div>`;
         updateContentCount(0);
         updateMatchCount(0);
       }
@@ -1024,7 +974,7 @@
             break;
           }
         } catch (err) {
-          console.warn(`Error fetching ${url}: ${err.message}`);
+          console.warn(`Error fetching ${url}:`, err);
         }
       }
       if (sheetData) {
@@ -1116,7 +1066,7 @@
       const currentReaction = userReactionSnap.exists() ? userReactionSnap.data().reaction : null;
 
       if (currentReaction === reaction) {
-        await updateDoc(reactionRef, { [reaction]: increment(-1) });
+        await setDoc(reactionRef, { [reaction]: increment(-1) }, { merge: true });
         await setDoc(userReactionRef, { reaction: null }, { merge: true });
         const button = rowIndex !== null 
           ? document.querySelector(`#verseContainer .verse-card:nth-child(${rowIndex + 1}) .reaction-buttons button[data-reaction="${reaction}"]`)
@@ -1131,8 +1081,7 @@
             : document.querySelector(`.reaction-buttons button[data-reaction="${currentReaction}"]`);
           if (currentButton) currentButton.classList.remove('active');
         }
-        await setDoc(reactionRef, { like: 0, love: 0, dislike: 0 }, { merge: true });
-        await updateDoc(reactionRef, updates);
+        await setDoc(reactionRef, updates, { merge: true });
         await setDoc(userReactionRef, { reaction: reaction }, { merge: true });
         const button = rowIndex !== null 
           ? document.querySelector(`#verseContainer .verse-card:nth-child(${rowIndex + 1}) .reaction-buttons button[data-reaction="${reaction}"]`)
@@ -1152,8 +1101,7 @@
         document.querySelector('#dislikeCount').textContent = reactionCounts.dislike || 0;
       }
     } catch (error) {
-      console.error("Error toggling reaction:", error.code, error.message);
-      alert(`Failed to update reaction: ${error.message}. Please try again.`);
+      console.error("Error toggling reaction:", error);
     }
   }
 
@@ -1175,14 +1123,12 @@
     const headers = Object.keys(verse).filter(h => h !== "sheet");
     headers.forEach(header => {
       let content = verse[header] || "-";
-      if (typeof content === "object" && content.text && content.url) {
+      if (typeof content === "object" && content && content.text && content.url) {
         content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
-      } else if (typeof content === "object" && content.text) {
+      } else if (typeof content === "object" && content && content.text) {
         content = content.text;
       }
-      const className = header === "Verse Category " && typeof verse[header] === "string" 
-        ? getCategoryClass(verse[header].trim().toLowerCase()) 
-        : "";
+      const className = header === "Verse Category " ? getCategoryClass(verse[header]) : "";
       html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
     });
     html += `<div class="navigation-arrows">
@@ -1227,12 +1173,12 @@
         const bengaliTranslation = getColumnValue(row, "bengaliTranslation", currentSheet);
         const englishTranslation = getColumnValue(row, "englishTranslation", currentSheet);
         const subCategory = row["Sub Category"] || "-";
-        let html = `<div class="verse-header ${getCategoryClass(verseCategory.trim().toLowerCase())}">`;
-        html += `<span class="verse-name">${renderText(row["Verse Name"])}</span>`; /* CHANGED: Direct access for consistency */
+        let html = `<div class="verse-header ${getCategoryClass(verseCategory)}">`;
+        html += `<span class="verse-name">${renderText(verseName)}</span>`;
         html += `<span class="verse-category">${verseCategory}</span>`;
         html += `</div>`;
-        html += `<span class="verse-field">${renderText(row["Bengali Translation"])}</span>`; /* CHANGED: Direct access */
-        html += `<span class="verse-field">${renderText(row["Verse in English"])}</span>`; /* CHANGED: Direct access */
+        html += `<span class="verse-field">${renderText(bengaliTranslation)}</span>`;
+        html += `<span class="verse-field">${renderText(englishTranslation)}</span>`;
         html += `<div class="verse-footer">`;
         html += `<span class="verse-subcategory">${subCategory}</span>`;
         html += `<div class="buttons-container">`; /* CHANGED: New container */
@@ -1278,11 +1224,6 @@
     const verseText = getColumnValue(row, "englishTranslation", currentSheet) || "";
     let verseName = getColumnValue(row, "verseName", currentSheet);
     verseName = getTextForUrl(verseName) || index.toString();
-    if (typeof verseName !== "string") {
-      verseName = index.toString();
-      console.warn(`Invalid Verse Name for sheet=${currentSheet}, index=${index}:`, verseName);
-    }
-    verseName = verseName.trim();
     const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`;
     const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
     let html = '';
@@ -1312,10 +1253,8 @@
 
     if (sheetName && data.length > 0) {
       let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          row["Verse Category"].trim().toLowerCase() === category.toLowerCase());
-        const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                            row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+        const categoryMatch = !category || (row["Verse Category "] && row["Verse Category "].toLowerCase() === category.toLowerCase());
+        const subCategoryMatch = !subCategory || (row["Sub Category"] && row["Sub Category"].toLowerCase() === subCategory.toLowerCase());
         return categoryMatch && subCategoryMatch;
       });
       updateTable(filteredRows);
@@ -1340,19 +1279,17 @@
 
     if (sheetName && data.length > 0) {
       let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          row["Verse Category"].trim().toLowerCase() === category.toLowerCase());
-        const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                  row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+        const categoryMatch = !category || (row["Verse Category "] && row["Verse Category "].toLowerCase() === category.toLowerCase());
+        const subCategoryMatch = !subCategory || (row["Sub Category"] && row["Sub Category"].toLowerCase() === subCategory.toLowerCase());
         return categoryMatch && subCategoryMatch;
       });
 
       if (term) {
         let searchFilteredRows = filteredRows.filter(row =>
           Object.values(row).some(val => {
-            if (typeof val === "string') {
+            if (typeof val === "string") {
               return val.toLowerCase().includes(term);
-            } else if (typeof val === 'object' && val && val.text) {
+            } else if (typeof val === "object" && val && val.text) {
               return val.text.toLowerCase().includes(term);
             }
             return false;
@@ -1361,9 +1298,9 @@
         let matchCount = 0;
         searchFilteredRows.forEach(row => {
           Object.values(row).forEach(val => {
-            if (typeof val === 'string' && val.toLowerCase().includes(term)) {
+            if (typeof val === "string" && val.toLowerCase().includes(term)) {
               matchCount += (val.toLowerCase().match(new RegExp(term, 'gi')) || []).length;
-            } else if (typeof val === 'object' && val && val.text && val.text.toLowerCase().includes(term)) {
+            } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(term)) {
               matchCount += (val.text.toLowerCase().match(new RegExp(term, 'gi')) || []).length;
             }
           });

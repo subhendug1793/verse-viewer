@@ -9,7 +9,7 @@
   <meta property="og:image" content="https://subhendug1793.github.io/verse-viewer/images/sastik_logo.png">
   <meta property="og:url" alt="https://subhendug1793.github.io/verse-viewer/">
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=stylesheet">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -242,6 +242,7 @@
       justify-content: center; 
       gap: 8px; 
       flex-direction: row; 
+      align-items: center; /* CHANGED: Align items for consistency */
     }
     .reaction-buttons button { 
       font-family: 'Poppins', sans-serif; 
@@ -266,12 +267,13 @@
       gap: 8px; 
       flex-direction: row; 
       align-items: center; 
+      margin-top: 2px; /* CHANGED: Slight vertical offset */
     }
     .share-buttons a img { 
       width: 24px; 
       height: 24px; 
     }
-    .buttons-container { /* CHANGED: New container for reactions and share buttons */
+    .buttons-container { /* CHANGED: Container for reactions and share buttons */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -386,6 +388,27 @@
       background-color: #fff; 
       box-shadow: 0 0 10px rgba(0,0,0,0.1); 
       position: relative; 
+      background-image: url('images/sastik_logo.png'); /* CHANGED: Watermark */
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 50%;
+      background-opacity: 0.1;
+      opacity: 1; /* Ensure content is fully opaque */
+    }
+    .single-verse-view::before { /* CHANGED: Semi-transparent overlay for watermark */
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: inherit;
+      opacity: 0.1;
+      z-index: 0;
+    }
+    .single-verse-view > * { /* CHANGED: Ensure content is above watermark */
+      position: relative;
+      z-index: 1;
     }
     .single-verse-view h3 { 
       font-family: 'Merriweather', serif;
@@ -566,7 +589,7 @@
         width: 100%; 
         text-align: center; 
       }
-      .buttons-container { /* CHANGED: Ensure horizontal alignment */
+      .buttons-container { /* CHANGED: Horizontal alignment */
         justify-content: center; 
         width: 100%; 
         flex-direction: row; 
@@ -577,12 +600,14 @@
         justify-content: center; 
         flex-direction: row; 
         gap: 6px; 
+        align-items: center; 
       }
       .share-buttons { 
         justify-content: center; 
         flex-direction: row; 
         gap: 6px; 
         align-items: center; 
+        margin-top: 2px; /* CHANGED: Slight vertical offset */
       }
       .share-buttons a img { 
         width: 20px; 
@@ -625,6 +650,7 @@
       .single-verse-view { 
         max-width: 90%; 
         padding: 15px; 
+        background-size: 60%; /* CHANGED: Adjust watermark size */
       }
       .single-verse-view h3 { 
         font-family: 'Merriweather', serif;
@@ -815,23 +841,28 @@
     }
   };
 
-  function getColumnValue(row, field, sheet) {
+  function getColumnValue(row, field, sheet) { /* CHANGED: Handle object and string values */
     const mapping = columnMappings[sheet.toLowerCase()] || columnMappings.miscellaneous;
     const possibleColumns = mapping[field] || [field];
     for (const col of possibleColumns) {
-      if (row[col]) return row[col];
+      if (row[col] !== undefined && row[col] !== null) {
+        const value = row[col];
+        return typeof value === 'object' && value.text ? value.text : value;
+      }
     }
     return "-";
   }
 
-  function renderText(value) {
+  function renderText(value) { /* CHANGED: Handle object and string values */
     if (typeof value === "object" && value && value.text && value.url) {
       return `<a href="${value.url}" target="_blank">${value.text}</a>`;
+    } else if (typeof value === "object" && value && value.text) {
+      return value.text;
     }
     return value || "-";
   }
 
-  function getTextForUrl(value) {
+  function getTextForUrl(value) { /* CHANGED: Handle object values */
     if (typeof value === "object" && value && value.text) {
       return value.text;
     }
@@ -857,10 +888,22 @@
     }
   }
 
-  async function updateVisitorCount() {
+  async function updateVisitorCount() { /* CHANGED: Optimize with cache-first approach */
     const visitorCount = document.getElementById("visitorCount");
     if (!visitorCount) return;
-    visitorCount.innerHTML = "Visitors: Loading...";
+    const cacheKey = 'visitorCount';
+    const cacheTTL = 3600000; // 1 hour
+    const cachedData = JSON.parse(localStorage.getItem(cacheKey));
+    const now = Date.now();
+
+    // Display cached count immediately if available
+    if (cachedData && now - cachedData.timestamp < cacheTTL) {
+      visitorCount.classList.remove("error");
+      visitorCount.innerHTML = `Visitors: ${cachedData.count}`;
+    } else {
+      visitorCount.innerHTML = "Visitors: Loading...";
+    }
+
     try {
       if (!db) throw new Error("Firestore not initialized");
       const counterRef = doc(db, "counters", "viewerCount");
@@ -870,6 +913,7 @@
         const count = counterSnap.data().count || 0;
         visitorCount.classList.remove("error");
         visitorCount.innerHTML = `Visitors: ${count}`;
+        localStorage.setItem(cacheKey, JSON.stringify({ count, timestamp: now }));
       } else {
         throw new Error("Counter document does not exist");
       }
@@ -881,6 +925,7 @@
         const data = await response.json();
         visitorCount.classList.remove("error");
         visitorCount.innerHTML = `Visitors: ${data.visitors}`;
+        localStorage.setItem(cacheKey, JSON.stringify({ count: data.visitors, timestamp: now }));
       } catch (jsonError) {
         console.error("Local counter fetch error:", jsonError);
         visitorCount.innerHTML = "Visitors: Error";
@@ -1125,28 +1170,26 @@
       let content = verse[header] || "-";
       if (typeof content === "object" && content && content.text && content.url) {
         content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
-      } else if (typeof content === "object" && content && content.text) {
+      } else if (typeof content === "object' && content && content.text) {
         content = content.text;
       }
-      const className = header === "Verse Category " ? getCategoryClass(verse[header]) : "";
+      const className = header === "Verse Category" ? getCategoryClass(verseHeader) : "";
       html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
+      html += `<div class="navigation-arrows">`;
+      html += `<a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>`;
+      html += `<img src="images/leftarrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';"></a>`;
+      html += `<a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="next ${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>`;
+      html += `<img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';"></a>`;
+      html += `</div>`;
+      html += `<div class="reaction-buttons">`;
+      html += `<button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>`;
+      html += `<button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">💖 <span id="loveCount">0</span></button>`;
+      html += `<button data-reaction="dislike" onclick="toggleReaction('dislike', '${currentSheet}', ${index})">👎 <span id="dislikeCount">0</span></button>`;
+      html += `</div>`;
+      html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
+      singleVerseView.innerHTML = html;
+      singleVerseView.style.display = "block";
     });
-    html += `<div class="navigation-arrows">
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>
-        <img src="images/leftarrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';">
-      </a>
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="next ${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>
-        <img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';">
-      </a>
-    </div>`;
-    html += `<div class="reaction-buttons">
-      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
-      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
-      <button data-reaction="dislike" onclick="toggleReaction('dislike', '${currentSheet}', ${index})">👎 <span id="dislikeCount">0</span></button>
-    </div>`;
-    html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
-    singleVerseView.innerHTML = html;
-    singleVerseView.style.display = "block";
   }
 
   function navigateVerse(newIndex) {
@@ -1159,10 +1202,10 @@
     loadReactions(currentSheet, newIndex);
   }
 
-  function updateTable(rows) { /* CHANGED: Combine reaction and share buttons in one row */
+  function updateTable(rows) { /* CHANGED: Ensure correct rendering and button layout */
     const container = document.getElementById("verseContainer");
     container.innerHTML = "";
-    if (rows.length === 0) {
+    if (!rows.length) {
       container.innerHTML = `<div style="text-align: center;">No data available or error loading data</div>`;
     } else {
       rows.forEach((row, index) => {
@@ -1181,10 +1224,10 @@
         html += `<span class="verse-field">${renderText(englishTranslation)}</span>`;
         html += `<div class="verse-footer">`;
         html += `<span class="verse-subcategory">${subCategory}</span>`;
-        html += `<div class="buttons-container">`; /* CHANGED: New container */
+        html += `<div class="buttons-container">`;
         html += `<div class="reaction-buttons">`;
         html += `<button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index}, ${index})">👍 <span id="likeCount_${index}">0</span></button>`;
-        html += `<button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index}, ${index})">❤️ <span id="loveCount_${index}">0</span></button>`;
+        html += `<button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index}, ${index})">💖💖 <span id="loveCount_${index}">0</span></button>`;
         html += `<button data-reaction="dislike" onclick="toggleReaction('dislike', '${currentSheet}', ${index}, ${index})">👎 <span id="dislikeCount_${index}">0</span></button>`;
         html += `</div>`;
         html += `<div class="share-buttons">${addShareButton(row, index, true)}</div>`;
@@ -1230,7 +1273,7 @@
     if (isTableView) {
       html += `
         <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
-        <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
+        <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_buttons.png" alt="Share"></a>
       `;
     } else {
       html += `
@@ -1238,7 +1281,7 @@
         <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
         <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
         <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
-        <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
+        <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_buttons.png" alt="Share"></a>
       `;
     }
     return html;
@@ -1289,7 +1332,7 @@
           Object.values(row).some(val => {
             if (typeof val === "string") {
               return val.toLowerCase().includes(term);
-            } else if (typeof val === "object" && val && val.text) {
+            } else if (val && val.text) {
               return val.text.toLowerCase().includes(term);
             }
             return false;
@@ -1300,7 +1343,7 @@
           Object.values(row).forEach(val => {
             if (typeof val === "string" && val.toLowerCase().includes(term)) {
               matchCount += (val.toLowerCase().match(new RegExp(term, 'gi')) || []).length;
-            } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(term)) {
+            } else if (val && val.text && val.text.toLowerCase().includes(term)) {
               matchCount += (val.text.toLowerCase().match(new RegExp(term, 'gi')) || []).length;
             }
           });

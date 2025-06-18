@@ -8,7 +8,7 @@
   <meta property="og:description" content="Explore categorized theological verses from the Gita, Bible, Quran, and more.">
   <meta property="og:image" content="https://subhendug1793.github.io/verse-viewer/images/sastik_logo.png">
   <meta property="og:url" content="https://subhendug1793.github.io/verse-viewer/">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=stylesheet" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body { 
@@ -78,8 +78,6 @@
     .view-full-verse { display: inline-block; padding: 6px 12px; background: #800080; color: #fff; text-decoration: none; border-radius: 6px; font-family: 'Poppins', sans-serif; font-size: 0.85em; box-shadow: 0 2px 6px rgba(0,102,204,0.3); transition: background 0.3s, transform 0.2s; text-align: right; flex: none; }
     .view-full-verse:hover { background: #4B0082; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,102,204,0.4); }
     .footer { position: relative; margin-top: auto; display: flex; flex-direction: column; align-items: center; max-width: 80%; margin: 5px auto 0; padding: 10px 0; pointer-events: auto; }
-    /* NEW: Hide footer in single-verse view */
-    #singleVerseView:not([style*="display: none"]) ~ .footer { display: none; }
     .footer a { text-decoration: none; cursor: pointer; pointer-events: auto; }
     .footer img { vertical-align: middle; pointer-events: auto; }
     .logos { display: flex; align-items: center; margin-bottom: 5px; }
@@ -95,8 +93,8 @@
     .contact-text img { width: 20px; height: auto; vertical-align: middle; }
     .qr-code { margin: 10px 0; }
     .qr-code img { width: 200px; height: auto; }
-    .single-verse-view { text-align: center; margin: 20px auto; width: 80%; max-width: 800px; height: auto; aspect-ratio: 2 / 1; padding: 20px 40px; background-color: rgba(255, 255, 255, 0.8); box-shadow: 0 0 10px rgba(0,0,0,0.1); position: relative; background-image: url('images/sastik_logo.png'); background-repeat: no-repeat; background-position: center; background-size: contain; max-width: 600px; }
-    .single-verse-view::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: inherit; opacity: 0.15; /* NEW: Opacity set to 0.15 */ filter: blur(2px); z-index: 0; }
+    .single-verse-view { text-align: center; margin: 20px auto; width: 90%; max-width: 1000px; /* NEW: Wider max-width */ height: auto; aspect-ratio: 3 / 1; /* NEW: Landscape aspect ratio */ padding: 20px 40px; background-color: rgba(255, 255, 255, 0.8); box-shadow: 0 0 10px rgba(0,0,0,0.1); position: relative; background-image: url('images/sastik_logo.png'); background-repeat: no-repeat; background-position: center; background-size: contain; }
+    .single-verse-view::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: inherit; opacity: 0.1; /* NEW: Opacity set to 10% */ filter: blur(2px); z-index: 0; }
     .single-verse-view > * { position: relative; z-index: 1; }
     .single-verse-view h3 { font-family: 'Merriweather', serif; color: #0066cc; margin-bottom: 10px; }
     .verse-details { margin-bottom: 20px; text-align: left; }
@@ -146,7 +144,7 @@
       .contact-text { font-size: 0.75em; }
       .contact-text img { width: 20px; }
       .qr-code img { width: 150px; }
-      .single-verse-view { width: 90%; max-width: 400px; aspect-ratio: 3 / 2; padding: 15px 20px; background-size: contain; max-width: 300px; }
+      .single-verse-view { width: 95%; max-width: 500px; aspect-ratio: 2 / 1; /* NEW: Mobile landscape */ padding: 15px 20px; background-size: contain; }
       .single-verse-view h3 { font-family: 'Merriweather', serif; }
       .verse-details p { font-family: 'Merriweather', serif; font-size: 0.9em; }
       .verse-details strong { width: 120px; }

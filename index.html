@@ -104,35 +104,10 @@
       margin-bottom: 10px; 
       text-align: center; 
       display: flex; 
-      flex-direction: column; /* CHANGED */
       justify-content: center; 
       align-items: center; 
-      gap: 10px; /* CHANGED */
+      gap: 2px; 
       flex-wrap: wrap; 
-    }
-    .filter-group { /* CHANGED */
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      margin: 5px 0; 
-    }
-    .filter-group label { /* CHANGED */
-      font-family: 'Poppins', sans-serif; 
-      font-size: 0.95em; /* CHANGED */
-      margin-bottom: 5px; 
-    }
-    .checkbox-container { /* CHANGED */
-      display: flex; 
-      flex-wrap: wrap; 
-      justify-content: center; 
-      gap: 10px; 
-    }
-    .checkbox-container input[type="checkbox"] { /* CHANGED */
-      margin-right: 5px; 
-    }
-    .checkbox-container label { /* CHANGED */
-      font-size: 0.85em; /* CHANGED */
-      color: #444; 
     }
     .search-row { 
       display: flex; 
@@ -161,6 +136,38 @@
     }
     #searchInput { 
       width: 200px; 
+    }
+    /* CHANGED: Dropdown Checkbox Styles */
+    .dropdown-container { 
+      position: relative; 
+      display: inline-block; 
+    }
+    .dropdown-checkbox { 
+      display: none; 
+      position: absolute; 
+      background: #fff; 
+      border: 1px solid #ccc; 
+      border-radius: 4px; 
+      padding: 10px; 
+      z-index: 100; 
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
+      max-height: 200px; 
+      overflow-y: auto; 
+      width: 250px; 
+    }
+    .dropdown-checkbox label { 
+      display: flex; 
+      align-items: center; 
+      font-size: 0.85em; /* CHANGED */
+      margin: 5px 0; 
+      color: #444; 
+    }
+    .dropdown-checkbox input[type="checkbox"] { 
+      margin-right: 8px; 
+    }
+    select:hover + .dropdown-checkbox, 
+    .dropdown-checkbox:hover { 
+      display: block; 
     }
     .verse-container { 
       width: 80%; 
@@ -238,9 +245,9 @@
       color: #FFFFFF; 
     }
     .verse-header-divider { /* CHANGED */
-      border-left: 2px dashed #666; /* CHANGED */
-      height: 20px; /* CHANGED */
-      margin: 0 10px; /* CHANGED */
+      border-left: 2px dashed #666; 
+      height: 20px; 
+      margin: 0 10px; 
     }
     .verse-field { 
       width: 100%; 
@@ -476,6 +483,7 @@
     .reaction-buttons {
       display: flex;
       justify-content: center;
+; 
       gap: 10px;
       margin-bottom: 10px;
     }
@@ -551,12 +559,12 @@
         align-items: center; 
         gap: 8px; 
       }
-      .filter-group { /* CHANGED */
+      .dropdown-container { /* CHANGED */
         width: 100%; 
       }
-      .checkbox-container { /* CHANGED */
-        flex-direction: column; 
-        align-items: flex-start; 
+      .dropdown-checkbox { /* CHANGED */
+        width: 100%; 
+        max-height: 150px; 
       }
       .search-row { 
         flex-direction: column; 
@@ -581,118 +589,117 @@
       }
       .verse-card { 
         padding: 15px; 
-        border-radius: 10px; 
-      }
-      .verse-header { 
-        flex-direction: column; 
-        align-items: flex-start; 
-        padding: 2px 0; /* CHANGED */
-      }
-      .verse-header-divider { /* CHANGED */
-        border-left: none; 
-        border-top: 2px dashed #666; 
-        width: 100%; 
-        height: 0; 
-        margin: 4px 0; 
-      }
-      .verse-footer { 
-        flex-direction: column; 
-        align-items: flex-start; 
-        padding: 2px 0; /* CHANGED */
-      }
-      .verse-name { 
-        font-size: 0.95em; 
-        padding-left: 0; 
-        width: 100%; 
-      }
-      .verse-category { 
-        font-size: 0.85em; 
-        text-align: left; 
-        margin-top: 4px; 
-        width: 100%; 
-        padding-right: 0; 
-      }
-      .verse-subcategory { 
-        font-size: 0.85em; 
-        padding-left: 0; 
-        width: 100%; 
-      }
-      .reaction-buttons-footer { /* CHANGED */
-        width: 100%; 
-        margin: 4px 0; 
-      }
-      .view-full-verse { 
-        font-size: 0.8em; 
-        padding: 4px 8px; /* CHANGED */
-        margin-top: 4px; 
-        width: 100%; 
-        text-align: left; 
-        border-radius: 5px; 
-      }
-      .verse-field { 
-        font-size: 0.9em; 
-        padding: 6px 0; 
-      }
-      .footer { 
-        max-width: 90%; 
-        margin: 5px auto 0;
-      }
-      .logos img { 
-        width: 40px; 
-        margin-right: 3px; 
-      }
-      .logos img:last-child { 
-        margin-right: 0; 
-      }
-      .follow-text { 
-        font-size: 0.9em; 
-      }
-      .contact-text { 
-        font-size: 0.75em; 
-      }
-      .contact-text img { 
-        width: 20px; 
-      }
-      .qr-code img { 
-        width: 150px; 
-      }
-      .support-text { 
-        font-size: 0.7em; 
-      }
-      .single-verse-view { 
-        max-width: 90%; 
-        padding: 15px; 
-      }
-      .single-verse-view h3 { 
-        font-family: 'Merriweather', serif;
-      }
-      .verse-details p { 
-        font-family: 'Merriweather', serif;
-        font-size: 0.9em; 
-      }
-      .verse-details strong { 
-        width: 120px; 
-      }
-      .share-buttons img, .single-verse-share-buttons img { 
-        width: 20px; 
-        height: 20px; 
-      }
-      .share-buttons a, .single-verse-share-buttons a { 
-        width: 30px; 
-      }
-      .navigation-arrows img {
-        width: 30px;
-      }
-      .navigation-arrows .prev {
-        left: -30px;
-      }
-      .navigation-arrows .next {
-        right: -20px;
-      }
-      .reaction-buttons button {
-        font-family: 'Poppins', sans-serif;
-        font-size: 16px;
-      }
+        border-radius: 10px;`() {
+        .verse-header { 
+          flex-direction: column; 
+          align-items: flex-start; 
+          padding: 2px 0; /* CHANGED */
+        }
+        .verse-header-divider { /* CHANGED */
+          border-left: none; 
+          border-top: 2px dashed #666; 
+          width: 100%; 
+          height: 0; 
+          margin: 4px 0; 
+        }
+        .verse-footer { 
+          flex-direction: column; 
+          align-items: flex-start; 
+          padding: 2px 0; /* CHANGED */
+        }
+        .verse-name { 
+          font-size: 0.95em; 
+          padding-left: 0; 
+          width: 100%; 
+        }
+        .verse-category { 
+          font-size: 0.85em; 
+          text-align: left; 
+          margin-top: 4px; 
+          width: 100%; 
+          padding-right: 0; 
+        }
+        .verse-subcategory { 
+          font-size: 0.85em; 
+          padding-left: 0; 
+          width: 100%; 
+        }
+        .reaction-buttons-footer { /* CHANGED */
+          width: 100%; 
+          margin: 4px 0; 
+        }
+        .view-full-verse { 
+          font-size: 0.8em; 
+          padding: 4px 8px; /* CHANGED */
+          margin-top: 4px; 
+          width: 100%; 
+          text-align: left; 
+          border-radius: 5px; 
+        }
+        .verse-field { 
+          font-size: 0.9em; 
+          padding: 6px 0; 
+        }
+        .footer { 
+          max-width: 90%; 
+          margin: 5px auto 0;
+        }
+        .logos img { 
+          width: 40px; 
+          margin-right: 3px; 
+        }
+        .logos img:last-child { 
+          margin-right: 0; 
+        }
+        .follow-text { 
+          font-size: 0.9em; 
+        }
+        .contact-text { 
+          font-size: 0.75em; 
+        }
+        .contact-text img { 
+          width: 20px; 
+        }
+        .qr-code img { 
+          width: 150px; 
+        }
+        .support-text { 
+          font-size: 0.7em; 
+        }
+        .single-verse-view { 
+          max-width: 90%; 
+          padding: 15px; 
+        }
+        .single-verse-view h3 { 
+          font-family: 'Merriweather', serif;
+        }
+        .verse-details p { 
+          font-family: 'Merriweather', serif;
+          font-size: 0.9em; 
+        }
+        .verse-details strong { 
+          width: 120px; 
+        }
+        .share-buttons img, .single-verse-share-buttons img { 
+          width: 20px; 
+          height: 20px; 
+        }
+        .share-buttons a, .single-verse-share-buttons a { 
+          width: 30px; 
+        }
+        .navigation-arrows img {
+          width: 30px;
+        }
+        .navigation-arrows .prev {
+          left: -30px;
+        }
+        .navigation-arrows .next {
+          right: -20px;
+        }
+        .reaction-buttons button {
+          font-family: 'Poppins', sans-serif;
+          font-size: 16px;
+        }
     }
   </style>
 </head>
@@ -723,22 +730,38 @@
       <option value="hadith">Hadith</option>
       <option value="miscellaneous">Miscellaneous</option>
     </select>
-    <div class="filter-group">
-      <label>Filter by Sloka/Verse/Ayah Category:</label>
-      <div class="checkbox-container" id="categoryFilter">
-        <label><input type="checkbox" value="Universal or Ethical Verse" onchange="filterTable()"> Universal or Ethical Verse</label>
-        <label><input type="checkbox" value="General Intra-community Verse" onchange="filterTable()"> General Intra-community Verse</label>
-        <label><input type="checkbox" value="Controversial Intra-community Verse" onchange="filterTable()"> Controversial Intra-community Verse</label>
-        <label><input type="checkbox" value="Divisive or Hateful Inter-community Verse" onchange="filterTable()"> Divisive or Hateful Inter-community Verse</label>
-        <label><input type="checkbox" value="Violent or Aggressive Inter-community Verse" onchange="filterTable()"> Violent or Aggressive Inter-community Verse</label>
+    <div class="dropdown-container">
+      <label for="categoryFilter">Filter by Sloka/Verse/Ayah Category:</label>
+      <select id="categoryFilter" disabled onchange="filterTable()" multiple style="display: none;">
+        <option value="All">All</option> <!-- CHANGED -->
+        <option value="Universal or Ethical Verse">Universal or Ethical Verse</option>
+        <option value="General Intra-community Verse">General Intra-community Verse</option>
+        <option value="Controversial Intra-community Verse">Controversial Intra-community Verse</option>
+        <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
+        <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
+      </select>
+      <div class="dropdown-checkbox" id="categoryCheckbox">
+        <label><input type="checkbox" value="All" onchange="toggleCategory(this)"> All</label> <!-- CHANGED -->
+        <label><input type="checkbox" value="Universal or Ethical Verse" onchange="toggleCategory(this)"> Universal or Ethical Verse</label>
+        <label><input type="checkbox" value="General Intra-community Verse" onchange="toggleCategory(this)"> General Intra-community Verse</label>
+        <label><input type="checkbox" value="Controversial Intra-community Verse" onchange="toggleCategory(this)"> Controversial Intra-community Verse</label>
+        <label><input type="checkbox" value="Divisive or Hateful Inter-community Verse" onchange="toggleCategory(this)"> Divisive or Hateful Inter-community Verse</label>
+        <label><input type="checkbox" value="Violent or Aggressive Inter-community Verse" onchange="toggleCategory(this)"> Violent or Aggressive Inter-community Verse</label>
       </div>
     </div>
-    <div class="filter-group">
-      <label>Filter by Sub Category:</label>
-      <div class="checkbox-container" id="subCategoryFilter">
-        <label><input type="checkbox" value="Historical or Narrative verse" onchange="filterTable()"> Historical or Narrative verse</label>
-        <label><input type="checkbox" value="Discriminatory or Prejudiced Verse" onchange="filterTable()"> Discriminatory or Prejudiced Verse</label>
-        <label><input type="checkbox" value="Metaphorical or Symbolic verse" onchange="filterTable()"> Metaphorical or Symbolic verse</label>
+    <div class="dropdown-container">
+      <label for="subCategoryFilter">Filter by Sub Category:</label>
+      <select id="subCategoryFilter" disabled onchange="filterTable()" multiple style="display: none;">
+        <option value="All">All</option> <!-- CHANGED -->
+        <option value="Historical or Narrative verse">Historical or Narrative verse</option>
+        <option value="Discriminatory or Prejudiced Verse">Discriminatory or Prejudiced Verse</option>
+        <option value="Metaphorical or Symbolic verse">Metaphorical or Symbolic verse</option>
+      </select>
+      <div class="dropdown-checkbox" id="subCategoryCheckbox">
+        <label><input type="checkbox" value="All" onchange="toggleSubCategory(this)"> All</label> <!-- CHANGED -->
+        <label><input type="checkbox" value="Historical or Narrative verse" onchange="toggleSubCategory(this)"> Historical or Narrative verse</label>
+        <label><input type="checkbox" value="Discriminatory or Prejudiced Verse" onchange="toggleSubCategory(this)"> Discriminatory or Prejudiced Verse</label>
+        <label><input type="checkbox" value="Metaphorical or Symbolic verse" onchange="toggleSubCategory(this)"> Metaphorical or Symbolic verse</label>
       </div>
     </div>
   </div>
@@ -958,8 +981,8 @@
   async function loadSheetData() {
     const sheetSelector = document.getElementById("sheetSelector");
     currentSheet = sheetSelector.value;
-    const categoryCheckboxes = document.querySelectorAll('#categoryFilter input[type="checkbox"]');
-    const subCategoryCheckboxes = document.querySelectorAll('#subCategoryFilter input[type="checkbox"]');
+    const categoryFilter = document.getElementById("categoryFilter");
+    const subCategoryFilter = document.getElementById("subCategoryFilter");
     const searchInput = document.getElementById("searchInput");
     const errorDisplay = document.createElement("div");
     errorDisplay.id = "errorDisplay";
@@ -971,8 +994,8 @@
     document.querySelector(".controls").after(errorDisplay);
 
     if (currentSheet) {
-      categoryCheckboxes.forEach(cb => cb.disabled = false);
-      subCategoryCheckboxes.forEach(cb => cb.disabled = false);
+      categoryFilter.disabled = false;
+      subCategoryFilter.disabled = false;
       searchInput.disabled = false;
       errorDisplay.textContent = "";
       document.querySelector('.search-row').style.display = 'flex';
@@ -1008,8 +1031,8 @@
         updateMatchCount(0);
       }
     } else {
-      categoryCheckboxes.forEach(cb => cb.disabled = true);
-      subCategoryCheckboxes.forEach(cb => cb.disabled = true);
+      categoryFilter.disabled = true;
+      subCategoryFilter.disabled = true;
       searchInput.disabled = true;
       errorDisplay.textContent = "";
       document.getElementById("verseContainer").innerHTML = "";
@@ -1295,21 +1318,69 @@
     return html;
   }
 
+  function toggleCategory(checkbox) { /* CHANGED */
+    const categoryFilter = document.getElementById("categoryFilter");
+    const checkboxes = document.querySelectorAll('#categoryCheckbox input[type="checkbox"]');
+    if (checkbox.value === "All" && checkbox.checked) {
+      checkboxes.forEach(cb => {
+        if (cb.value !== "All") cb.checked = false;
+      });
+      Array.from(categoryFilter.options).forEach(option => {
+        option.selected = option.value === "All";
+      });
+    } else if (checkbox.value !== "All" && checkbox.checked) {
+      document.querySelector('#categoryCheckbox input[value="All"]').checked = false;
+      Array.from(categoryFilter.options).forEach(option => {
+        option.selected = option.value !== "All" && document.querySelector(`#categoryCheckbox input[value="${option.value}"]`).checked;
+      });
+    } else {
+      Array.from(categoryFilter.options).forEach(option => {
+        option.selected = document.querySelector(`#categoryCheckbox input[value="${option.value}"]`).checked;
+      });
+    }
+    filterTable();
+  }
+
+  function toggleSubCategory(checkbox) { /* CHANGED */
+    const subCategoryFilter = document.getElementById("subCategoryFilter");
+    const checkboxes = document.querySelectorAll('#subCategoryCheckbox input[type="checkbox"]');
+    if (checkbox.value === "All" && checkbox.checked) {
+      checkboxes.forEach(cb => {
+        if (cb.value !== "All") cb.checked = false;
+      });
+      Array.from(subCategoryFilter.options).forEach(option => {
+        option.selected = option.value === "All";
+      });
+    } else if (checkbox.value !== "All" && checkbox.checked) {
+      document.querySelector('#subCategoryCheckbox input[value="All"]').checked = false;
+      Array.from(subCategoryFilter.options).forEach(option => {
+        option.selected = option.value !== "All" && document.querySelector(`#subCategoryCheckbox input[value="${option.value}"]`).checked;
+      });
+    } else {
+      Array.from(subCategoryFilter.options).forEach(option => {
+        option.selected = document.querySelector(`#subCategoryCheckbox input[value="${option.value}"]`).checked;
+      });
+    }
+    filterTable();
+  }
+
   function filterTable() {
-    const categoryCheckboxes = document.querySelectorAll('#categoryFilter input[type="checkbox"]:checked');
-    const subCategoryCheckboxes = document.querySelectorAll('#subCategoryFilter input[type="checkbox"]:checked');
+    const categoryFilter = document.getElementById("categoryFilter");
+    const subCategoryFilter = document.getElementById("subCategoryFilter");
     const sheetName = document.getElementById("sheetSelector").value;
     const searchInput = document.getElementById("searchInput");
     const searchTerm = searchInput.value.toLowerCase().trim();
 
     if (sheetName && data.length > 0) {
       let filteredRows = data.filter(row => {
-        const categories = Array.from(categoryCheckboxes).map(cb => cb.value.toLowerCase());
-        const subCategories = Array.from(subCategoryCheckboxes).map(cb => cb.value.toLowerCase());
-        const categoryMatch = categories.length === 0 || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          categories.includes(row["Verse Category "].trim().toLowerCase()));
-        const subCategoryMatch = subCategories.length === 0 || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                                subCategories.includes(row["Sub Category"].trim().toLowerCase()));
+        const selectedCategories = Array.from(categoryFilter.selectedOptions).map(option => option.value.toLowerCase());
+        const selectedSubCategories = Array.from(subCategoryFilter.selectedOptions).map(option => option.value.toLowerCase());
+        const categoryMatch = selectedCategories.includes("all") || !selectedCategories.length || 
+                             (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
+                              selectedCategories.includes(row["Verse Category "].trim().toLowerCase()));
+        const subCategoryMatch = selectedSubCategories.includes("all") || !selectedSubCategories.length || 
+                                (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
+                                 selectedSubCategories.includes(row["Sub Category"].trim().toLowerCase()));
         return categoryMatch && subCategoryMatch;
       });
       updateTable(filteredRows);
@@ -1325,18 +1396,20 @@
     const searchInput = document.getElementById("searchInput");
     if (searchInput.disabled) return;
     const searchTerm = searchInput.value.toLowerCase().trim();
-    const categoryCheckboxes = document.querySelectorAll('#categoryFilter input[type="checkbox"]:checked');
-    const subCategoryCheckboxes = document.querySelectorAll('#subCategoryFilter input[type="checkbox"]:checked');
+    const categoryFilter = document.getElementById("categoryFilter");
+    const subCategoryFilter = document.getElementById("subCategoryFilter");
     const sheetName = document.getElementById("sheetSelector").value;
 
     if (sheetName && data.length > 0) {
       let filteredRows = data.filter(row => {
-        const categories = Array.from(categoryCheckboxes).map(cb => cb.value.toLowerCase());
-        const subCategories = Array.from(subCategoryCheckboxes).map(cb => cb.value.toLowerCase());
-        const categoryMatch = categories.length === 0 || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          categories.includes(row["Verse Category "].trim().toLowerCase()));
-        const subCategoryMatch = subCategories.length === 0 || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                                subCategories.includes(row["Sub Category"].trim().toLowerCase()));
+        const selectedCategories = Array.from(categoryFilter.selectedOptions).map(option => option.value.toLowerCase());
+        const selectedSubCategories = Array.from(subCategoryFilter.selectedOptions).map(option => option.value.toLowerCase());
+        const categoryMatch = selectedCategories.includes("all") || !selectedCategories.length || 
+                             (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
+                              selectedCategories.includes(row["Verse Category "].trim().toLowerCase()));
+        const subCategoryMatch = selectedSubCategories.includes("all") || !selectedSubCategories.length || 
+                                (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
+                                 selectedSubCategories.includes(row["Sub Category"].trim().toLowerCase()));
         return categoryMatch && subCategoryMatch;
       });
       if (searchTerm) {
@@ -1385,6 +1458,8 @@
   window.searchTable = searchTable;
   window.navigateVerse = navigateVerse;
   window.toggleReaction = toggleReaction;
+  window.toggleCategory = toggleCategory; /* CHANGED */
+  window.toggleSubCategory = toggleSubCategory; /* CHANGED */
 
   window.onload = () => {
     initializeFirebase();

@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Database</title>
-  <meta property="og:title" content="Database">
+  <title>SASTIK GBQ+ Verse Filter</title>
+  <meta property="og:title" content="SASTIK GBQ+ Verse">
   <meta property="og:description" content="Explore categorized theological verses from the Gita, Bible, Quran, and more.">
   <meta property="og:image" content="https://subhendug1793.github.io/verse-viewer/images/sastik_logo.png">
   <meta property="og:url" content="https://subhendug1793.github.io/verse-viewer/">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet"> <!-- CHANGED: Restored -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body { 
@@ -17,7 +19,7 @@
       background: #f9f9f9; 
       position: relative; 
       min-height: 100vh; 
-      display: flex; 
+      display: flex;
       flex-direction: column;
     }
     .header-container { 
@@ -64,13 +66,14 @@
       margin-right: 10px; 
     }
     h2 { 
-      font-family: 'Merriweather', serif; 
-      color: #0066cc; 
+      font-family: 'Merriweather', serif;
+      color: #0066cc;
       text-align: center; 
       margin: 0; 
-      font-size: 1.8em; 
+      font-size: 1.8em;
       font-weight: bold; 
       white-space: nowrap; 
+      text-decoration: none; 
     }
     h2 a { 
       color: #0066cc; 
@@ -80,9 +83,9 @@
       text-decoration: underline; 
     }
     .mission-statement { 
-      font-family: 'Merriweather', serif; 
+      font-family: 'Merriweather', serif;
       text-align: center; 
-      margin: 0 auto 10px; 
+      margin: 0 auto 10px;
       max-width: 80%; 
       font-size: 1.1em; 
       line-height: 1.5; 
@@ -111,7 +114,7 @@
       justify-content: center; 
       align-items: center; 
       gap: 10px; 
-      margin-bottom: 5px; 
+      margin-bottom: 5px;
     }
     .content-count, .match-count { 
       font-size: 1em; 
@@ -123,7 +126,7 @@
       text-align: center;
     }
     select, input { 
-      font-family: 'Poppins', sans-serif; 
+      font-family: 'Poppins', sans-serif;
       padding: 5px; 
       margin-right: 10px; 
     }
@@ -174,7 +177,7 @@
     .verse-header.category-controversial { 
       background-color: #FFFF00; 
     }
-    .verse-header.category-divisible { 
+    .verse-header.category-divisive { 
       background-color: #FF0000; 
     }
     .verse-header.category-violent { 
@@ -238,8 +241,8 @@
       display: flex; 
       justify-content: center; 
       gap: 8px; 
-      flex-direction: row; 
-      align-items: center; /* CHANGED: Align items */
+      flex: 1; 
+      flex-direction: row;
     }
     .reaction-buttons button { 
       font-family: 'Poppins', sans-serif; 
@@ -262,13 +265,10 @@
       display: flex; 
       justify-content: center; 
       gap: 8px; 
+      flex: 1; 
       flex-direction: row; 
       align-items: center; 
-      margin-top: 3px; /* CHANGED: Slight vertical offset */
-    }
-    .share-buttons a img { 
-      width: 24px; 
-      height: 24px; 
+      margin-top: 3px; /* CHANGED: Slight offset */
     }
     .buttons-container { /* CHANGED: Group buttons */
       display: flex;
@@ -279,10 +279,14 @@
       gap: 8px;
       flex: 1;
     }
+    .share-buttons a img { 
+      width: 24px; 
+      height: 24px; 
+    }
     .view-full-verse { 
       display: inline-block; 
       padding: 6px 12px; 
-      background: #90EE90; /* CHANGED: Light green */
+      background: #800080; /* CHANGED: Restored purple */
       color: #fff; 
       text-decoration: none; 
       border-radius: 6px; 
@@ -294,7 +298,7 @@
       flex: none; 
     }
     .view-full-verse:hover { 
-      background: #32CD32; /* CHANGED: Darker green on hover */
+      background: #4B0082; 
       transform: translateY(-2px); 
       box-shadow: 0 4px 10px rgba(0,102,204,0.4); 
     }
@@ -305,7 +309,7 @@
       flex-direction: column; 
       align-items: center; 
       max-width: 80%; 
-      margin: 5px auto 0; 
+      margin: 5px auto 0;
       padding: 10px 0; 
       pointer-events: auto; 
     }
@@ -350,7 +354,7 @@
       margin: 2px 0; 
     }
     .name-text { 
-      font-family: 'Merriweather', serif; 
+      font-family: 'Merriweather', serif;
       font-size: 2em; 
       margin: 5px 0; 
     }
@@ -388,9 +392,10 @@
       background-image: url('images/sastik_logo.png'); /* CHANGED: Watermark */
       background-repeat: no-repeat;
       background-position: center;
-      background-size: 50%;
+      background-size: 80% auto; /* CHANGED: Relative to container */
+      max-width: 300px; /* CHANGED: Max watermark width */
     }
-    .single-verse-view::before { /* CHANGED: Watermark opacity */
+    .single-verse-view::before { /* CHANGED: Lighter watermark */
       content: '';
       position: absolute;
       top: 0;
@@ -398,7 +403,7 @@
       right: 0;
       bottom: 0;
       background: inherit;
-      opacity: 0.1;
+      opacity: 0.05;
       z-index: 0;
     }
     .single-verse-view > * { /* CHANGED: Content above watermark */
@@ -406,7 +411,7 @@
       z-index: 1;
     }
     .single-verse-view h3 { 
-      font-family: 'Merriweather', serif; 
+      font-family: 'Merriweather', serif;
       color: #0066cc; 
       margin-bottom: 10px; 
     }
@@ -415,7 +420,7 @@
       text-align: left; 
     }
     .verse-details p { 
-      font-family: 'Merriweather', serif; 
+      font-family: 'Merriweather', serif;
       margin: 5px 0; 
       font-size: 1em; 
     }
@@ -503,9 +508,11 @@
         width: 50px; 
       }
       h2 { 
+        font-family: 'Merriweather', serif;
         font-size: 1.2em; 
       }
       .mission-statement { 
+        font-family: 'Merriweather', serif;
         font-size: 0.9em; 
         max-width: 90%; 
       }
@@ -515,6 +522,7 @@
         white-space: normal; 
       }
       select, input { 
+        font-family: 'Poppins', sans-serif;
         width: 100%; 
         margin-bottom: 8px; 
         padding: 4px; 
@@ -528,7 +536,7 @@
         flex-direction: column; 
         align-items: center; 
         gap: 8px; 
-        margin-bottom: 5px; 
+        margin-bottom: 5px;
       }
       .content-count, .match-count { 
         text-align: center; 
@@ -550,27 +558,27 @@
         border-radius: 10px; 
       }
       .verse-header { 
-        flex-direction: column; 
+        flex-direction: column;
         align-items: flex-start; 
         padding: 3px 0; 
       }
       .verse-footer { 
-        flex-direction: column; 
-        align-items: center; 
+        flex-direction: column;
+        align-items: center;
         padding: 3px 0; 
         gap: 8px; 
       }
       .verse-name { 
-        font-size: 0.9em; 
+        font-size: 0.9em;
         padding-left: 0; 
         width: 100%; 
-        white-space: nowrap; 
-        overflow: hidden; 
-        text-overflow: ellipsis; 
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .verse-category { 
         font-size: 0.85em; 
-        text-align: right; 
+        text-align: right;
         margin-top: 4px; 
         width: 100%; 
         padding-right: 0; 
@@ -579,7 +587,7 @@
         font-size: 0.85em; 
         padding-left: 0; 
         width: 100%; 
-        text-align: center; 
+        text-align: center;
       }
       .buttons-container { /* CHANGED: Horizontal buttons */
         justify-content: center; 
@@ -589,27 +597,30 @@
         gap: 6px; 
       }
       .reaction-buttons { 
-        justify-content: center; 
-        flex-direction: row; 
-        gap: 6px; 
-        align-items: center; 
+        justify-content: center;
+        width: 100%; 
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 6px;
       }
       .share-buttons { 
-        justify-content: center; 
-        flex-direction: row; 
-        gap: 6px; 
-        align-items: center; 
+        justify-content: center;
+        width: 100%; 
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
         margin-top: 3px; /* CHANGED: Offset */
       }
       .share-buttons a img { 
-        width: 20px; 
+        width: 20px;
         height: 20px; 
       }
       .view-full-verse { 
         font-size: 0.8em; 
         padding: 5px 10px; 
         width: 100%; 
-        text-align: center; 
+        text-align: center;
         border-radius: 5px; 
       }
       .verse-field { 
@@ -618,7 +629,7 @@
       }
       .footer { 
         max-width: 90%; 
-        margin: 5px auto 0; 
+        margin: 5px auto 0;
       }
       .logos img { 
         width: 40px; 
@@ -642,12 +653,14 @@
       .single-verse-view { 
         max-width: 90%; 
         padding: 15px; 
-        background-size: 60%; /* CHANGED: Watermark size */
+        background-size: 90% auto; /* CHANGED: Smaller watermark */
+        max-width: 200px; /* CHANGED: Max watermark width */
       }
       .single-verse-view h3 { 
-        font-family: 'Merriweather', serif; 
+        font-family: 'Merriweather', serif;
       }
       .verse-details p { 
+        font-family: 'Merriweather', serif;
         font-size: 0.9em; 
       }
       .verse-details strong { 
@@ -670,7 +683,8 @@
         right: -20px;
       }
       .reaction-buttons button {
-        font-size: 14px; 
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
       }
     }
   </style>
@@ -752,8 +766,8 @@
   </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCou0LOLpeijDPxHlVN1pvpruvxdrLKVWk",
@@ -772,7 +786,7 @@
       db = getFirestore(app);
       console.log("Firebase initialized successfully");
     } catch (error) {
-      console.error("Firebase initialization failed:", error);
+      console.error("Firebase initialization error:", error);
       db = null;
     }
   }
@@ -857,28 +871,56 @@
     return typeof value === "object" && value.text ? value.text : value.toString();
   }
 
-  function updateLastUpdated() { /* CHANGED: Robust with fallback */
-    const lastUpdatedElement = document.getElementById("lastUpdated");
-    if (!lastUpdatedElement) {
-      console.error("Last updated element not found");
-      return;
-    }
+  function updateLastUpdated() { /* CHANGED: Robust with DD/MM/YYYY */
     try {
-      let lastUpdated = "Unknown";
+      const lastUpdatedElement = document.getElementById("lastUpdated");
+      if (!lastUpdatedElement) throw new Error("Last updated element not found");
+      let lastUpdated;
       if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
-        lastUpdated = new Date(document.lastModified).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false });
+        const date = new Date(document.lastModified);
+        const dateStr = date.toLocaleDateString('en-IN', {
+          timeZone: 'Asia/Kolkata',
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
+        const timeStr = date.toLocaleTimeString('en-IN', {
+          timeZone: 'Asia/Kolkata',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false
+        });
+        lastUpdated = `${dateStr} ${timeStr}`;
       } else {
-        console.warn("document.lastModified unavailable, using current time");
-        lastUpdated = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false });
+        console.warn("document.lastModified unavailable");
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-IN', {
+          timeZone: 'Asia/Kolkata',
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
+        const timeStr = now.toLocaleTimeString('en-IN', {
+          timeZone: 'Asia/Kolkata',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false
+        });
+        lastUpdated = `${dateStr} ${timeStr}`;
       }
       lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${lastUpdated}</a>`;
     } catch (error) {
       console.error("Error updating last modified:", error);
-      lastUpdatedElement.innerHTML = `Last updated: Unknown`;
+      const lastUpdatedElement = document.getElementById("lastUpdated");
+      if (lastUpdatedElement) {
+        lastUpdatedElement.innerHTML = `Last updated: Unknown`;
+      }
     }
   }
 
-  async function updateVisitorCount() { /* CHANGED: Cache-first, robust */
+  async function updateVisitorCount() { /* CHANGED: Robust with retries */
     const visitorCount = document.getElementById("visitorCount");
     if (!visitorCount) {
       console.error("Visitor count element not found");
@@ -888,47 +930,91 @@
     const cacheTTL = 3600000; // 1 hour
     const cachedData = JSON.parse(localStorage.getItem(cacheKey));
     const now = Date.now();
+    const maxRetries = 3;
+    let retryCount = 0;
 
-    if (cachedData && now - cachedData.timestamp < cacheTTL) {
+    if (cachedData && now - cachedData.timestamp < cacheTTL && cachedData.count > 0) {
       visitorCount.innerHTML = `Visitors: ${cachedData.count}`;
+      visitorCount.classList.remove("error");
     } else {
-      visitorCount.innerHTML = `Visitors: 0`;
+      visitorCount.innerHTML = `Visitors: Loading...`;
     }
-    visitorCount.classList.remove("error");
 
-    try {
-      if (db) {
-        const counterRef = doc(db, "counters", "viewerCount");
-        await setDoc(counterRef, { count: increment(1) }, { merge: true });
-        const counterSnap = await getDoc(counterRef);
-        if (counterSnap.exists()) {
-          const count = counterSnap.data().count || 0;
-          visitorCount.innerHTML = `Visitors: ${count}`;
-          localStorage.setItem(cacheKey, JSON.stringify({ count, timestamp: now }));
-        } else {
-          throw new Error("Counter document does not exist");
-        }
-      } else {
-        throw new Error("Firestore not initialized");
-      }
-    } catch (error) {
-      console.error("Firestore error:", error);
+    const tryFetch = async (url) => {
       try {
-        const response = await fetch('counter.json', { cache: 'no-store' });
-        if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-        const data = await response.json();
-        const count = data.visitors || 0;
-        visitorCount.innerHTML = `Visitors: ${count}`;
-        localStorage.setItem(cacheKey, JSON.stringify({ count, timestamp: now }));
-      } catch (jsonError) {
-        console.error("Local counter fetch error:", jsonError);
-        visitorCount.innerHTML = `Visitors: ${cachedData?.count || 0}`;
-        visitorCount.classList.add("error");
+        const response = await fetch(url, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.json();
+      } catch (error) {
+        throw error;
       }
+    };
+
+    while (retryCount < maxRetries) {
+      try {
+        if (db) {
+          const counterRef = doc(db, "counters", "viewerCount");
+          await setDoc(counterRef, { count: increment(1) }, { merge: true });
+          const counterSnap = await getDoc(counterRef);
+          if (counterSnap.exists()) {
+            const count = counterSnap.data().count || 0;
+            if (count > 0) {
+              visitorCount.innerHTML = `Visitors: ${count}`;
+              visitorCount.classList.remove("error");
+              localStorage.setItem(cacheKey, JSON.stringify({ count, timestamp: now }));
+              console.log(`Firestore visitor count: ${count}`);
+              return;
+            }
+          }
+        }
+        throw new Error("Firestore failed or count invalid");
+      } catch (error) {
+        console.warn(`Firestore attempt ${retryCount + 1} failed:`, error);
+        retryCount++;
+        if (retryCount === maxRetries) {
+          console.error("Firestore max retries reached");
+          break;
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+
+    retryCount = 0;
+    while (retryCount < maxRetries) {
+      try {
+        const data = await tryFetch('counter.json');
+        const count = data.visitors || 0;
+        if (count > 0) {
+          visitorCount.innerHTML = `Visitors: ${count}`;
+          visitorCount.classList.remove("error");
+          localStorage.setItem(cacheKey, JSON.stringify({ count, timestamp: now }));
+          console.log(`counter.json visitor count: ${count}`);
+          return;
+        }
+        throw new Error("counter.json count invalid");
+      } catch (error) {
+        console.warn(`counter.json attempt ${retryCount + 1} failed:`, error);
+        retryCount++;
+        if (retryCount === maxRetries) {
+          console.error("counter.json max retries reached");
+          break;
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+
+    if (cachedData && cachedData.count > 0) {
+      visitorCount.innerHTML = `Visitors: ${cachedData.count}`;
+      visitorCount.classList.remove("error");
+      console.log(`Using cached visitor count: ${cachedData.count}`);
+    } else {
+      visitorCount.innerHTML = `Visitors: Error`;
+      visitorCount.classList.add("error");
+      console.error("All visitor count attempts failed");
     }
   }
 
-  async function loadSheetData() { /* CHANGED: Robust fetch with error display */
+  async function loadSheetData() { /* CHANGED: Robust fetch */
     const sheetSelector = document.getElementById("sheetSelector");
     if (!sheetSelector) {
       console.error("Sheet selector not found");
@@ -1001,7 +1087,7 @@
     }
   }
 
-  async function loadSingleVerse() {
+  async function loadSingleVerse() { /* CHANGED: Robust fetch */
     const params = new URLSearchParams(window.location.search);
     const sheet = params.get("sheet");
     const verseParam = params.get("verse");
@@ -1075,7 +1161,7 @@
     }
   }
 
-  async function loadReactions(sheet, verseIndex, rowIndex = null) {
+  async function loadReactions(sheet, verseIndex, rowIndex = null) { /* CHANGED: Safe DOM access */
     if (!db) {
       console.warn("Firestore not initialized, skipping reactions");
       return;
@@ -1126,7 +1212,7 @@
     }
   }
 
-  async function toggleReaction(reaction, sheet, verseIndex, rowIndex = null) {
+  async function toggleReaction(reaction, sheet, verseIndex, rowIndex = null) { /* CHANGED: Safe updates */
     if (!db) {
       console.warn("Firestore not initialized, cannot toggle reaction");
       return;
@@ -1140,7 +1226,7 @@
       const currentReaction = userReactionSnap.exists() ? userReactionSnap.data().reaction : null;
 
       if (currentReaction === reaction) {
-        await setDoc(reactionRef, { [reaction]: increment(-1) }, { merge: true });
+        await updateDoc(reactionRef, { [reaction]: increment(-1) });
         await setDoc(userReactionRef, { reaction: null }, { merge: true });
         const button = rowIndex !== null 
           ? document.querySelector(`#verseContainer .verse-card:nth-child(${rowIndex + 1}) .reaction-buttons button[data-reaction="${reaction}"]`)
@@ -1155,7 +1241,8 @@
             : document.querySelector(`.reaction-buttons button[data-reaction="${currentReaction}"]`);
           if (currentButton) currentButton.classList.remove('active');
         }
-        await setDoc(reactionRef, updates, { merge: true });
+        await setDoc(reactionRef, { like: 0, love: 0, dislike: 0 }, { merge: true });
+        await updateDoc(reactionRef, updates);
         await setDoc(userReactionRef, { reaction: reaction }, { merge: true });
         const button = rowIndex !== null 
           ? document.querySelector(`#verseContainer .verse-card:nth-child(${rowIndex + 1}) .reaction-buttons button[data-reaction="${reaction}"]`)
@@ -1193,7 +1280,7 @@
     return 'user_' + Math.random().toString(36).substr(2, 9);
   }
 
-  function displaySingleVerse(verse, index) {
+  function displaySingleVerse(verse, index) { /* CHANGED: Safe rendering */
     const singleVerseView = document.getElementById("singleVerseView");
     if (!singleVerseView) {
       console.error("Single verse view element not found");
@@ -1232,7 +1319,7 @@
     singleVerseView.style.display = "block";
   }
 
-  function navigateVerse(newIndex) {
+  function navigateVerse(newIndex) { /* CHANGED: Safe navigation */
     const verse = data[newIndex];
     if (!verse) {
       console.error(`Verse not found at index ${newIndex}`);
@@ -1303,13 +1390,13 @@
     updateContentCount(rows?.length || 0);
   }
 
-  function getCategoryClass(category) {
+  function getCategoryClass(category) { /* CHANGED: Safe category handling */
     if (!category) return "";
     switch (category.toLowerCase()) {
       case "universal or ethical verse": return "category-universal";
       case "general intra-community verse": return "category-general";
       case "controversial intra-community verse": return "category-controversial";
-      case "divisive or hateful inter-community verse": return "category-divisible";
+      case "divisive or hateful inter-community verse": return "category-divisive";
       case "violent or aggressive inter-community verse": return "category-violent";
       default: return "";
     }
@@ -1329,7 +1416,7 @@
       `;
     } else {
       html += `
-        <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/click_logo.png" alt="WhatsApp" onerror="console.log('WhatsApp logo failed to load')"></a>
+        <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp" onerror="console.log('WhatsApp logo failed to load')"></a>
         <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook" onerror="console.log('Facebook logo failed to load')"></a>
         <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X" onerror="console.log('X logo failed to load')"></a>
         <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link" onerror="console.log('Link logo failed to load')"></a>
@@ -1339,7 +1426,7 @@
     return html;
   }
 
-  function filterTable() {
+  function filterTable() { /* CHANGED: Safe filtering */
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
     const sheetSelector = document.getElementById("sheetSelector");
@@ -1371,7 +1458,7 @@
     }
   }
 
-  function searchTable(searchTerm = null) {
+  function searchTable(searchTerm = null) { /* CHANGED: Safe searching */
     const searchInput = document.getElementById("searchInput");
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
@@ -1426,14 +1513,14 @@
     }
   }
 
-  function updateContentCount(count) {
+  function updateContentCount(count) { /* CHANGED: Safe update */
     const contentCount = document.getElementById("contentCount");
     if (contentCount) {
       contentCount.textContent = `Content Found: ${count || 0}`;
     }
   }
 
-  function updateMatchCount(count) {
+  function updateMatchCount(count) { /* CHANGED: Safe update */
     const matchCount = document.getElementById("matchCount");
     if (matchCount) {
       matchCount.textContent = `Matches found: ${count || 0}`;

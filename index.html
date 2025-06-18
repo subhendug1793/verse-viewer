@@ -122,50 +122,103 @@
     #searchInput { 
       width: 200px; 
     }
-    table { 
-      border-collapse: collapse; 
-      width: 80%; 
+    .verse-cards-container { 
+      width: 90%; /* Wider for desktop */
       margin: 0 auto 5px;
-      background-color: #fff; 
-      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
       position: relative; 
       z-index: 1; 
     }
-    th, td { 
-      border: 1px solid #ddd; 
-      padding: 10px; 
-      text-align: center; 
+    .verse-card { 
+      background-color: #fff; 
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 1000px; /* Increased for landscape feel */
+      width: 100%;
+      margin: 0 auto;
+      text-align: center;
     }
-    td a { 
-      color: #0066cc; 
-      text-decoration: none; 
+    /* Preserved for future use */
+    .verse-name {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #000;
+      text-align: center;
     }
-    td a:hover { 
-      text-decoration: underline; 
+    .verse-name a {
+      color: #0066cc;
+      text-decoration: underline;
     }
-    td.category-universal { 
-      background-color: #00FF00; 
+    .verse-details {
+      width: 100%;
+      margin-bottom: 20px;
     }
-    td.category-general { 
-      background-color: #00FFFF; 
+    .verse-detail {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      margin: 8px 0;
     }
-    td.category-controversial { 
-      background-color: #FFFF00; 
+    .verse-detail strong {
+      text-align: left;
+      font-weight: bold;
+      min-width: 220px; /* Increased for wider labels */
+      font-size: 16px;
     }
-    td.category-divisive { 
-      background-color: #FF0000; 
+    .verse-detail span {
+      text-align: center;
+      flex: 1;
+      font-size: 16px;
+      white-space: nowrap; /* Keep content in single line */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 700px; /* Limit content width to prevent overflow */
     }
-    td.category-violent { 
-      background-color: #000000; 
-      color: #FFFFFF; 
+    .verse-detail a {
+      color: #0066cc;
+      text-decoration: underline;
     }
-    th.gita-header, th.bible-header, th.quran-header, th.hadith-header, th.miscellaneous-header { 
-      background-color: white; 
-      color: black; 
+    .verse-detail.category-universal {
+      background-color: #00FF00;
     }
-    mark { 
-      background-color: yellow; 
-      font-weight: bold; 
+    .verse-detail.category-general {
+      background-color: #00FFFF;
+    }
+    .verse-detail.category-controversial {
+      background-color: #FFFF00;
+    }
+    .verse-detail.category-divisive {
+      background-color: #FF0000;
+    }
+    .verse-detail.category-violent {
+      background-color: #000000;
+      color: #FFFFFF;
+    }
+    .share-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+    .share-buttons img {
+      width: 24px;
+      height: 24px;
+      vertical-align: middle;
+    }
+    .share-buttons a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      position: relative;
+    }
+    .share-buttons a.view-link::after {
+      content: none;
     }
     .footer { 
       position: relative; 
@@ -271,12 +324,6 @@
       width: 150px; 
       font-weight: bold; 
     }
-    .share-buttons { 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      gap: 8px; 
-    }
     .single-verse-share-buttons { 
       display: flex; 
       flex-direction: row; 
@@ -284,20 +331,17 @@
       gap: 12px; 
       flex-wrap: wrap; 
     }
-    .share-buttons img, .single-verse-share-buttons img { 
+    .single-verse-share-buttons img { 
       width: 24px; 
       height: 24px; 
       vertical-align: middle; 
     }
-    .share-buttons a, .single-verse-share-buttons a { 
+    .single-verse-share-buttons a { 
       display: flex; 
       justify-content: center; 
       align-items: center; 
       width: 40px; 
       position: relative; 
-    }
-    .share-buttons a.view-link::after { 
-      content: none; /* Removed 👆 emoji */
     }
     .navigation-arrows {
       position: absolute;
@@ -322,7 +366,7 @@
     }
     .navigation-arrows .prev {
       position: absolute;
-      left: -40px; /* Moved left to avoid text overlap */
+      left: -40px;
     }
     .navigation-arrows .next {
       position: absolute;
@@ -406,13 +450,22 @@
         width: 100%; 
         max-width: 250px; 
       }
-      table { 
-        width: 100%; 
+      .verse-cards-container { 
+        width: 95%; /* Wider for mobile */
         font-size: 0.9em; 
         margin-bottom: 5px;
       }
-      th, td { 
-        padding: 6px; 
+      .verse-card {
+        max-width: 100%;
+        padding: 15px;
+      }
+      .verse-detail strong {
+        min-width: 140px; /* Adjusted for mobile */
+        font-size: 14px;
+      }
+      .verse-detail span {
+        font-size: 14px;
+        max-width: 200px; /* Tighter for mobile */
       }
       .footer { 
         max-width: 90%; 
@@ -461,7 +514,7 @@
         width: 30px;
       }
       .navigation-arrows .prev {
-        left: -30px; /* Adjusted for mobile */
+        left: -20px;
       }
       .navigation-arrows .next {
         right: -20px;
@@ -523,10 +576,7 @@
     </div>
     <div class="match-count" id="matchCount">Matches found: 0</div>
   </div>
-  <table id="verseTable">
-    <thead id="tableHeaders"></thead>
-    <tbody id="verseBody"></tbody>
-  </table>
+  <div class="verse-cards-container" id="verseCards"></div>
   <div class="footer">
     <div class="text-group">
       <div class="support-text">
@@ -716,13 +766,12 @@
       }
       if (sheetData) {
         data = sheetData;
-        updateHeaders(currentSheet);
         updateTable(data);
         updateContentCount(data.length);
         updateMatchCount(0);
       } else {
         errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if the file exists or contact support.`;
-        document.getElementById("verseBody").innerHTML = `<tr><td colspan="${Object.keys(data[0] || {}).length || 1}" style="text-align: center;">Error loading ${currentSheet}.json: File not found or inaccessible</td></tr>`;
+        document.getElementById("verseCards").innerHTML = `<div style="text-align: center; color: red;">Error loading ${currentSheet}.json: File not found or inaccessible</div>`;
         updateContentCount(0);
         updateMatchCount(0);
       }
@@ -731,8 +780,7 @@
       subCategoryFilter.disabled = true;
       searchInput.disabled = true;
       errorDisplay.textContent = "";
-      document.getElementById("verseBody").innerHTML = "";
-      document.getElementById("tableHeaders").innerHTML = "";
+      document.getElementById("verseCards").innerHTML = "";
       document.querySelector('.search-row').style.display = 'flex';
       updateContentCount(0);
       updateMatchCount(0);
@@ -775,21 +823,21 @@
           const verse = sheetData[verseIndex];
           displaySingleVerse(verse, verseIndex);
           document.getElementById("controls").style.display = "none";
-          document.getElementById("verseTable").style.display = "none";
+          document.getElementById("verseCards").style.display = "none";
           document.querySelector('.search-row').style.display = 'none';
           await loadReactions(sheet, verseIndex);
         } else {
           console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
           displaySingleVerse(null, -1);
           document.getElementById("controls").style.display = "none";
-          document.getElementById("verseTable").style.display = "none";
+          document.getElementById("verseCards").style.display = "none";
           document.querySelector('.search-row').style.display = 'none';
         }
       } else {
         console.error(`Failed to load ${sheet}.json`);
         displaySingleVerse(null, -1);
         document.getElementById("controls").style.display = "none";
-        document.getElementById("verseTable").style.display = "none";
+        document.getElementById("verseCards").style.display = "none";
         document.querySelector('.search-row').style.display = 'none';
       }
     } else {
@@ -913,67 +961,67 @@
     loadReactions(currentSheet, newIndex);
   }
 
-  function updateHeaders(sheetName) {
-    const thead = document.getElementById("tableHeaders");
-    thead.innerHTML = "";
-    if (data.length > 0) {
-      let tr = document.createElement("tr");
-      const headers = Object.keys(data[0]).filter(h => h !== "sheet");
-      headers.forEach(header => {
-        let th = document.createElement("th");
-        th.textContent = header;
-        th.classList.add(`${sheetName}-header`);
-        tr.appendChild(th);
-      });
-      let shareTh = document.createElement("th");
-      shareTh.textContent = "Share";
-      shareTh.style.width = "60px";
-      tr.appendChild(shareTh);
-      thead.appendChild(tr);
-    }
-  }
-
   function updateTable(rows) {
-    const tbody = document.getElementById("verseBody");
-    tbody.innerHTML = "";
+    const verseCardsContainer = document.getElementById("verseCards");
+    verseCardsContainer.innerHTML = "";
     if (rows.length === 0) {
-      let tr = document.createElement("tr");
-      let td = document.createElement("td");
-      td.textContent = "No data available or error loading data";
-      td.colSpan = Object.keys(data[0] || {}).length + 1 || 2;
-      td.style.textAlign = "center";
-      tr.appendChild(td);
-      tbody.appendChild(tr);
+      verseCardsContainer.innerHTML = `<div style="text-align: center; color: red;">No data available or error loading data</div>`;
     } else {
       rows.forEach((row, index) => {
-        let tr = document.createElement("tr");
-        const headers = Object.keys(row).filter(h => h !== "sheet");
+        let card = document.createElement("div");
+        card.className = "verse-card";
+        
+        /* Commented out Verse Name for future use
+        let verseName = row["Verse Name"] || row["Verse"] || index.toString();
+        if (typeof verseName !== "string") {
+          verseName = index.toString();
+          console.warn(`Invalid Verse Name for sheet=${currentSheet}, index=${index}:`, verseName);
+        }
+        let verseNameHtml = `<div class="verse-name">`;
+        if (typeof row["Verse Name"] === "object" && row["Verse Name"].url) {
+          verseNameHtml += `<a href="${row["Verse Name"].url}" target="_blank">${row["Verse Name"].text}</a>`;
+        } else {
+          verseNameHtml += `${verseName}`;
+        }
+        verseNameHtml += `</div>`;
+        */
+
+        // Verse Details
+        let detailsHtml = `<div class="verse-details">`;
+        const headers = Object.keys(row).filter(h => h !== "sheet" && h !== "Verse Name"); // Exclude Verse Name
         headers.forEach(header => {
-          let td = document.createElement("td");
-          let content = row[header] || "";
+          let content = row[header] || "-";
+          let displayContent;
+          const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
           if (typeof content === "string" || (typeof content === "object" && content && content.text)) {
-            const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+            const textToSearch = typeof content === "object" ? content.text : content;
             if (searchTerm && !document.getElementById("searchInput").disabled) {
-              const textToSearch = typeof content === "object" ? content.text : content;
               const highlighted = textToSearch.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
               content = typeof content === "object" ? { text: highlighted, url: content.url } : highlighted;
             }
-            td.innerHTML = typeof content === "object" && content.url
+            displayContent = typeof content === "object" && content.url
               ? `<a href="${content.url}" target="_blank">${content.text}</a>`
               : content;
           } else {
-            td.textContent = content || "-";
+            displayContent = content.toString();
           }
-          if (header === "Verse Category " && typeof row[header] === "string") {
-            td.className = getCategoryClass(row[header].trim().toLowerCase());
-          }
-          tr.appendChild(td);
+          const className = header === "Verse Category " && typeof row[header] === "string"
+            ? getCategoryClass(row[header].trim().toLowerCase())
+            : "";
+          detailsHtml += `
+            <div class="verse-detail ${className}">
+              <strong>${header}:</strong>
+              <span>${displayContent}</span>
+            </div>`;
         });
-        let shareTd = document.createElement("td");
-        shareTd.className = "share-buttons";
-        shareTd.innerHTML = addShareButton(row, index, true);
-        tr.appendChild(shareTd);
-        tbody.appendChild(tr);
+        detailsHtml += `</div>`;
+
+        // Share Buttons
+        let shareHtml = `<div class="share-buttons">${addShareButton(row, index, true)}</div>`;
+
+        // card.innerHTML = verseNameHtml + detailsHtml + shareHtml; // For future use with Verse Name
+        card.innerHTML = detailsHtml + shareHtml;
+        verseCardsContainer.appendChild(card);
       });
     }
     updateContentCount(rows.length);

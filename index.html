@@ -381,24 +381,23 @@
       width: 200px; 
       height: auto; 
     }
-    .single-verse-view { 
-      text-align: center; 
-      margin: 20px auto; 
-      width: 80%; /* CHANGED: Wider for landscape */
-      max-width: 800px; /* CHANGED: Max width */
-      height: auto; /* CHANGED: Auto height */
-      aspect-ratio: 2 / 1; /* CHANGED: Landscape ratio */
-      padding: 20px 40px; /* CHANGED: Wider padding */
-      background-color: rgba(255, 255, 255, 0.8); /* CHANGED: Semi-transparent for contrast */
-      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
-      position: relative; 
-      background-image: url('images/sastik_logo.png'); /* CHANGED: Watermark */
+    .single-verse-view {
+      text-align: center;
+      margin: 20px auto;
+      width: 90%; /* Wider width */
+      max-width: 1000px; /* Increased max-width for larger screens */
+      height: auto;
+      aspect-ratio: 3 / 1; /* Landscape orientation */
+      padding: 30px 50px; /* Wider padding for content */
+      background-color: rgba(255, 255, 255, 0.2); /* Lighter background for subtle watermark */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      background-image: url('images/sastik_logo.png'); /* Watermark image */
       background-repeat: no-repeat;
-      background-position: center;
-      background-size: contain; /* CHANGED: Fit landscape */
-      max-width: 600px; /* CHANGED: Watermark max width */
+      background-position: center; /* Centered watermark */
+      background-size: contain; /* Ensure full image fits */
     }
-    .single-verse-view::before { /* CHANGED: Lighter, blurred watermark */
+    .single-verse-view::before {
       content: '';
       position: absolute;
       top: 0;
@@ -406,11 +405,11 @@
       right: 0;
       bottom: 0;
       background: inherit;
-      opacity: 0.03; /* CHANGED: Subtler */
-      filter: blur(2px); /* CHANGED: Soften edges */
+      opacity: 0.02; /* Subtle watermark */
+      filter: blur(3px); /* Softer effect */
       z-index: 0;
     }
-    .single-verse-view > * { 
+    .single-verse-view > * {
       position: relative;
       z-index: 1;
     }
@@ -654,13 +653,13 @@
       .qr-code img { 
         width: 150px; 
       }
-      .single-verse-view { 
-        width: 90%; /* CHANGED: Mobile width */
-        max-width: 400px; /* CHANGED: Smaller max */
-        aspect-ratio: 3 / 2; /* CHANGED: Adjusted ratio */
-        padding: 15px 20px; /* CHANGED: Smaller padding */
-        background-size: contain; /* CHANGED: Fit mobile */
-        max-width: 300px; /* CHANGED: Watermark max */
+      .single-verse-view {
+        width: 95%; /* Slightly wider for mobile */
+        max-width: 500px; /* Adjusted max-width for mobile */
+        aspect-ratio: 2 / 1; /* Slightly adjusted landscape ratio for mobile */
+        padding: 20px 30px; /* Adjusted padding for mobile */
+        background-color: rgba(255, 255, 255, 0.2); /* Lighter background for mobile */
+        background-size: contain; /* Ensure watermark fits */
       }
       .single-verse-view h3 { 
         font-family: 'Merriweather', serif;

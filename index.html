@@ -104,10 +104,35 @@
       margin-bottom: 10px; 
       text-align: center; 
       display: flex; 
+      flex-direction: column; /* CHANGED */
       justify-content: center; 
       align-items: center; 
-      gap: 2px; 
+      gap: 10px; /* CHANGED */
       flex-wrap: wrap; 
+    }
+    .filter-group { /* CHANGED */
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      margin: 5px 0; 
+    }
+    .filter-group label { /* CHANGED */
+      font-family: 'Poppins', sans-serif; 
+      font-size: 0.95em; /* CHANGED */
+      margin-bottom: 5px; 
+    }
+    .checkbox-container { /* CHANGED */
+      display: flex; 
+      flex-wrap: wrap; 
+      justify-content: center; 
+      gap: 10px; 
+    }
+    .checkbox-container input[type="checkbox"] { /* CHANGED */
+      margin-right: 5px; 
+    }
+    .checkbox-container label { /* CHANGED */
+      font-size: 0.85em; /* CHANGED */
+      color: #444; 
     }
     .search-row { 
       display: flex; 
@@ -165,8 +190,9 @@
       width: 100%; 
       justify-content: space-between; 
       align-items: center; 
-      padding: 6px 0; /* CHANGED */
+      padding: 4px 0; /* CHANGED */
       border-bottom: 1px solid rgba(0,0,0,0.1); 
+      position: relative; /* CHANGED */
     }
     .verse-header.category-universal { 
       background-color: #00FF00; 
@@ -187,11 +213,11 @@
     .verse-name { 
       font-family: 'Merriweather', serif; 
       font-weight: 700; 
-      font-size: 1em; /* CHANGED */
+      font-size: 1em; 
       color: #333; 
       text-align: left; 
-      flex: 1; 
-      padding-left: 8px; /* CHANGED */
+      flex: 2; /* CHANGED */
+      padding-left: 8px; 
     }
     .verse-name a { 
       color: inherit; 
@@ -203,13 +229,18 @@
     }
     .verse-category { 
       font-family: 'Poppins', sans-serif; 
-      font-size: 0.9em; /* CHANGED */
+      font-size: 0.9em; 
       text-align: right; 
       flex: 1; 
-      padding-right: 8px; /* CHANGED */
+      padding-right: 8px; 
     }
     .verse-header.category-violent .verse-category { 
       color: #FFFFFF; 
+    }
+    .verse-header-divider { /* CHANGED */
+      border-left: 2px dashed #666; /* CHANGED */
+      height: 20px; /* CHANGED */
+      margin: 0 10px; /* CHANGED */
     }
     .verse-field { 
       width: 100%; 
@@ -220,41 +251,63 @@
       font-size: 0.95em; 
       color: #444; 
     }
-    .verse-footer { /* CHANGED */
-      display: flex; /* CHANGED */
-      width: 100%; /* CHANGED */
-      justify-content: space-between; /* CHANGED */
-      align-items: center; /* CHANGED */
-      padding: 6px 0; /* CHANGED */
-      border-top: 1px solid rgba(0,0,0,0.1); /* CHANGED */
+    .verse-footer { 
+      display: flex; 
+      width: 100%; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 4px 0; /* CHANGED */
+      border-top: 1px solid rgba(0,0,0,0.1); 
     }
-    .verse-subcategory { /* CHANGED */
-      font-family: 'Poppins', sans-serif; /* CHANGED */
-      font-size: 0.9em; /* CHANGED */
-      text-align: left; /* CHANGED */
-      flex: 1; /* CHANGED */
-      padding-left: 8px; /* CHANGED */
-      color: #444; /* CHANGED */
+    .verse-subcategory { 
+      font-family: 'Poppins', sans-serif; 
+      font-size: 0.9em; 
+      text-align: left; 
+      flex: 1; 
+      padding-left: 8px; 
+      color: #444; 
     }
-    .view-full-verse { /* CHANGED */
-      display: inline-block; /* CHANGED */
-      padding: 8px 16px; /* CHANGED */
-      background: linear-gradient(135deg, #0066cc, #0052a3); /* CHANGED */
+    .reaction-buttons-footer { /* CHANGED */
+      display: flex; 
+      justify-content: center; 
+      gap: 10px; 
+      flex: 1; 
+    }
+    .reaction-buttons-footer button { /* CHANGED */
+      font-family: 'Poppins', sans-serif; 
+      background: none; 
+      border: none; 
+      cursor: pointer; 
+      display: flex; 
+      align-items: center; 
+      gap: 5px; 
+      font-size: 18px; 
+    }
+    .reaction-buttons-footer button.active { /* CHANGED */
+      font-weight: bold; 
+    }
+    .reaction-buttons-footer span { /* CHANGED */
+      font-size: 1em; 
+      color: #333; 
+    }
+    .view-full-verse { 
+      display: inline-block; 
+      padding: 6px 12px; /* CHANGED */
+      background: #90EE90; /* CHANGED */
       color: #fff; /* CHANGED */
-      text-decoration: none; /* CHANGED */
-      border-radius: 6px; /* CHANGED */
-      font-family: 'Poppins', sans-serif; /* CHANGED */
-      font-size: 0.85em; /* CHANGED */
-      box-shadow: 0 2px 6px rgba(0,102,204,0.3); /* CHANGED */
-      transition: background 0.3s, transform 0.2s; /* CHANGED */
-      text-align: right; /* CHANGED */
-      flex: 1; /* CHANGED */
-      padding-right: 8px; /* CHANGED */
+      text-decoration: none; 
+      border-radius: 6px; 
+      font-family: 'Poppins', sans-serif; 
+      font-size: 0.85em; 
+      box-shadow: 0 2px 6px rgba(0,102,204,0.3); 
+      transition: background 0.3s, transform 0.2s; 
+      text-align: right; 
+      flex: none; /* CHANGED */
     }
-    .view-full-verse:hover { /* CHANGED */
-      background: linear-gradient(135deg, #0052a3, #003d7a); /* CHANGED */
-      transform: translateY(-2px); /* CHANGED */
-      box-shadow: 0 4px 10px rgba(0,102,204,0.4); /* CHANGED */
+    .view-full-verse:hover { 
+      background: #78DA78; /* CHANGED */
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 10px rgba(0,102,204,0.4); 
     }
     .footer { 
       position: relative; 
@@ -498,6 +551,13 @@
         align-items: center; 
         gap: 8px; 
       }
+      .filter-group { /* CHANGED */
+        width: 100%; 
+      }
+      .checkbox-container { /* CHANGED */
+        flex-direction: column; 
+        align-items: flex-start; 
+      }
       .search-row { 
         flex-direction: column; 
         align-items: center; 
@@ -526,38 +586,48 @@
       .verse-header { 
         flex-direction: column; 
         align-items: flex-start; 
-        padding: 4px 0; /* CHANGED */
+        padding: 2px 0; /* CHANGED */
       }
-      .verse-footer { /* CHANGED */
-        flex-direction: column; /* CHANGED */
-        align-items: flex-start; /* CHANGED */
-        padding: 4px 0; /* CHANGED */
+      .verse-header-divider { /* CHANGED */
+        border-left: none; 
+        border-top: 2px dashed #666; 
+        width: 100%; 
+        height: 0; 
+        margin: 4px 0; 
+      }
+      .verse-footer { 
+        flex-direction: column; 
+        align-items: flex-start; 
+        padding: 2px 0; /* CHANGED */
       }
       .verse-name { 
-        font-size: 0.95em; /* CHANGED */
-        padding-left: 0; /* CHANGED */
+        font-size: 0.95em; 
+        padding-left: 0; 
         width: 100%; 
       }
       .verse-category { 
-        font-size: 0.85em; /* CHANGED */
-        text-align: left; /* CHANGED */
-        margin-top: 4px; /* CHANGED */
+        font-size: 0.85em; 
+        text-align: left; 
+        margin-top: 4px; 
         width: 100%; 
         padding-right: 0; 
       }
-      .verse-subcategory { /* CHANGED */
-        font-size: 0.85em; /* CHANGED */
-        padding-left: 0; /* CHANGED */
-        width: 100%; /* CHANGED */
+      .verse-subcategory { 
+        font-size: 0.85em; 
+        padding-left: 0; 
+        width: 100%; 
       }
-      .view-full-verse { /* CHANGED */
-        font-size: 0.8em; /* CHANGED */
-        padding: 6px 12px; /* CHANGED */
-        margin-top: 4px; /* CHANGED */
-        width: 100%; /* CHANGED */
-        text-align: left; /* CHANGED */
-        padding-right: 0; /* CHANGED */
-        border-radius: 5px; /* CHANGED */
+      .reaction-buttons-footer { /* CHANGED */
+        width: 100%; 
+        margin: 4px 0; 
+      }
+      .view-full-verse { 
+        font-size: 0.8em; 
+        padding: 4px 8px; /* CHANGED */
+        margin-top: 4px; 
+        width: 100%; 
+        text-align: left; 
+        border-radius: 5px; 
       }
       .verse-field { 
         font-size: 0.9em; 
@@ -653,22 +723,24 @@
       <option value="hadith">Hadith</option>
       <option value="miscellaneous">Miscellaneous</option>
     </select>
-    <label for="categoryFilter">Filter by Sloka/Verse/Ayah Category:</label>
-    <select id="categoryFilter" disabled onchange="filterTable()">
-      <option value="">All</option>
-      <option value="Universal or Ethical Verse">Universal or Ethical Verse</option>
-      <option value="General Intra-community Verse">General Intra-community Verse</option>
-      <option value="Controversial Intra-community Verse">Controversial Intra-community Verse</option>
-      <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
-      <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
-    </select>
-    <label for="subCategoryFilter">Filter by Sub Category:</label>
-    <select id="subCategoryFilter" disabled onchange="filterTable()">
-      <option value="">All</option>
-      <option value="Historical or Narrative verse">Historical or Narrative verse</option>
-      <option value="Discriminatory or Prejudiced Verse">Discriminatory or Prejudiced Verse</option>
-      <option value="Metaphorical or Symbolic verse">Metaphorical or Symbolic verse</option>
-    </select>
+    <div class="filter-group">
+      <label>Filter by Sloka/Verse/Ayah Category:</label>
+      <div class="checkbox-container" id="categoryFilter">
+        <label><input type="checkbox" value="Universal or Ethical Verse" onchange="filterTable()"> Universal or Ethical Verse</label>
+        <label><input type="checkbox" value="General Intra-community Verse" onchange="filterTable()"> General Intra-community Verse</label>
+        <label><input type="checkbox" value="Controversial Intra-community Verse" onchange="filterTable()"> Controversial Intra-community Verse</label>
+        <label><input type="checkbox" value="Divisive or Hateful Inter-community Verse" onchange="filterTable()"> Divisive or Hateful Inter-community Verse</label>
+        <label><input type="checkbox" value="Violent or Aggressive Inter-community Verse" onchange="filterTable()"> Violent or Aggressive Inter-community Verse</label>
+      </div>
+    </div>
+    <div class="filter-group">
+      <label>Filter by Sub Category:</label>
+      <div class="checkbox-container" id="subCategoryFilter">
+        <label><input type="checkbox" value="Historical or Narrative verse" onchange="filterTable()"> Historical or Narrative verse</label>
+        <label><input type="checkbox" value="Discriminatory or Prejudiced Verse" onchange="filterTable()"> Discriminatory or Prejudiced Verse</label>
+        <label><input type="checkbox" value="Metaphorical or Symbolic verse" onchange="filterTable()"> Metaphorical or Symbolic verse</label>
+      </div>
+    </div>
   </div>
   <div class="search-row" id="search-row">
     <div class="content-count" id="contentCount">Content Found: 0</div>
@@ -754,54 +826,53 @@
   let currentSheet = "";
   let currentVerseIndex = -1;
 
-  // Map column names for different sheets /* CHANGED */
-  const columnMappings = { /* CHANGED */
-    bible: { /* CHANGED */
-      verseName: ["Verse Name", "Verse"], /* CHANGED */
-      bengaliTranslation: ["Bengali Translation"], /* CHANGED */
-      englishTranslation: ["Verse in English", "English Translation"] /* CHANGED */
-    }, /* CHANGED */
-    quran: { /* CHANGED */
-      verseName: ["Verse Name", "Verse"], /* CHANGED */
-      bengaliTranslation: ["Bengali Meaning", "Bengali Translation"], /* CHANGED */
-      englishTranslation: ["English Meaning", "English Translation"] /* CHANGED */
-    }, /* CHANGED */
-    gita: { /* CHANGED */
-      verseName: ["Verse Name", "Verse"], /* CHANGED */
-      bengaliTranslation: ["Bengali Translation"], /* CHANGED */
-      englishTranslation: ["English Translation"] /* CHANGED */
-    }, /* CHANGED */
-    hadith: { /* CHANGED */
-      verseName: ["Verse Name", "Verse"], /* CHANGED */
-      bengaliTranslation: ["Bengali Translation"], /* CHANGED */
-      englishTranslation: ["English Translation"] /* CHANGED */
-    }, /* CHANGED */
-    miscellaneous: { /* CHANGED */
-      verseName: ["Verse Name", "Verse"], /* CHANGED */
-      bengaliTranslation: ["Bengali Translation"], /* CHANGED */
-      englishTranslation: ["English Translation"] /* CHANGED */
-    } /* CHANGED */
-  }; /* CHANGED */
+  const columnMappings = {
+    bible: {
+      verseName: ["Verse Name", "Verse"],
+      bengaliTranslation: ["Bengali Translation"],
+      englishTranslation: ["Verse in English", "English Translation"]
+    },
+    quran: {
+      verseName: ["Verse Name", "Verse"],
+      bengaliTranslation: ["Bengali Meaning", "Bengali Translation"],
+      englishTranslation: ["English Meaning", "English Translation"]
+    },
+    gita: {
+      verseName: ["Verse Name", "Verse"],
+      bengaliTranslation: ["Bengali Translation"],
+      englishTranslation: ["English Translation"]
+    },
+    hadith: {
+      verseName: ["Verse Name", "Verse"],
+      bengaliTranslation: ["Bengali Translation"],
+      englishTranslation: ["English Translation"]
+    },
+    miscellaneous: {
+      verseName: ["Verse Name", "Verse"],
+      bengaliTranslation: ["Bengali Translation"],
+      englishTranslation: ["English Translation"]
+    }
+  };
 
-  function getColumnValue(row, field, sheet) { /* CHANGED */
-    const mapping = columnMappings[sheet.toLowerCase()] || columnMappings.miscellaneous; /* CHANGED */
-    const possibleColumns = mapping[field] || [field]; /* CHANGED */
-    for (const col of possibleColumns) { /* CHANGED */
-      if (row[col] !== undefined && row[col] !== null) return row[col]; /* CHANGED */
-    } /* CHANGED */
-    return "-"; /* CHANGED */
-  } /* CHANGED */
+  function getColumnValue(row, field, sheet) {
+    const mapping = columnMappings[sheet.toLowerCase()] || columnMappings.miscellaneous;
+    const possibleColumns = mapping[field] || [field];
+    for (const col of possibleColumns) {
+      if (row[col] !== undefined && row[col] !== null) return row[col];
+    }
+    return "-";
+  }
 
-  function renderText(value) { /* CHANGED */
-    if (typeof value === "object" && value && value.text && value.url) { /* CHANGED */
-      return `<a href="${value.url}" target="_blank">${value.text}</a>`; /* CHANGED */
-    } /* CHANGED */
-    return value || "-"; /* CHANGED */
-  } /* CHANGED */
+  function renderText(value) {
+    if (typeof value === "object" && value && value.text && value.url) {
+      return `<a href="${value.url}" target="_blank">${value.text}</a>`;
+    }
+    return value || "-";
+  }
 
-  function getTextForUrl(value) { /* CHANGED */
-    return typeof value === "object" && value.text ? value.text : value || ""; /* CHANGED */
-  } /* CHANGED */
+  function getTextForUrl(value) {
+    return typeof value === "object" && value.text ? value.text : value || "";
+  }
 
   function updateLastUpdated() {
     try {
@@ -884,11 +955,11 @@
     }
   }
 
-  async function loadSheetData() { /* CHANGED */
+  async function loadSheetData() {
     const sheetSelector = document.getElementById("sheetSelector");
     currentSheet = sheetSelector.value;
-    const categoryFilter = document.getElementById("categoryFilter");
-    const subCategoryFilter = document.getElementById("subCategoryFilter");
+    const categoryCheckboxes = document.querySelectorAll('#categoryFilter input[type="checkbox"]');
+    const subCategoryCheckboxes = document.querySelectorAll('#subCategoryFilter input[type="checkbox"]');
     const searchInput = document.getElementById("searchInput");
     const errorDisplay = document.createElement("div");
     errorDisplay.id = "errorDisplay";
@@ -896,19 +967,19 @@
     errorDisplay.style.textAlign = "center";
     errorDisplay.style.marginBottom = "10px";
     const existingError = document.getElementById("errorDisplay");
-    if (existingError) existingError.remove(); /* CHANGED */
+    if (existingError) existingError.remove();
     document.querySelector(".controls").after(errorDisplay);
 
     if (currentSheet) {
-      categoryFilter.disabled = false;
-      subCategoryFilter.disabled = false;
+      categoryCheckboxes.forEach(cb => cb.disabled = false);
+      subCategoryCheckboxes.forEach(cb => cb.disabled = false);
       searchInput.disabled = false;
       errorDisplay.textContent = "";
       document.querySelector('.search-row').style.display = 'flex';
-      const urlsToTry = [ /* CHANGED */
-        `${currentSheet.toLowerCase()}.json`, /* CHANGED */
-        `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`, /* CHANGED */
-        `${currentSheet.toUpperCase()}.json` /* CHANGED */
+      const urlsToTry = [
+        `${currentSheet.toLowerCase()}.json`,
+        `${currentSheet.charAt(0).toUpperCase() + currentSheet.slice(1).toLowerCase()}.json`,
+        `${currentSheet.toUpperCase()}.json`
       ];
       let response, sheetData;
       for (const url of urlsToTry) {
@@ -916,13 +987,13 @@
           response = await fetch(url, { cache: 'no-store' });
           if (response.ok) {
             sheetData = await response.json();
-            console.log(`Successfully fetched ${url}`); /* CHANGED */
+            console.log(`Successfully fetched ${url}`);
             break;
           } else {
-            console.warn(`Failed to fetch ${url}: Status ${response.status}`); /* CHANGED */
+            console.warn(`Failed to fetch ${url}: Status ${response.status}`);
           }
         } catch (err) {
-          console.warn(`Error fetching ${url}: ${err.message}`); /* CHANGED */
+          console.warn(`Error fetching ${url}: ${err.message}`);
         }
       }
       if (sheetData) {
@@ -931,14 +1002,14 @@
         updateContentCount(data.length);
         updateMatchCount(0);
       } else {
-        errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if the file exists or contact support.`; /* CHANGED */
+        errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if the file exists or contact support.`;
         document.getElementById("verseContainer").innerHTML = `<div style="text-align: center;">Error loading ${currentSheet}.json: File not found or inaccessible</div>`;
         updateContentCount(0);
         updateMatchCount(0);
       }
     } else {
-      categoryFilter.disabled = true;
-      subCategoryFilter.disabled = true;
+      categoryCheckboxes.forEach(cb => cb.disabled = true);
+      subCategoryCheckboxes.forEach(cb => cb.disabled = true);
       searchInput.disabled = true;
       errorDisplay.textContent = "";
       document.getElementById("verseContainer").innerHTML = "";
@@ -946,9 +1017,9 @@
       updateContentCount(0);
       updateMatchCount(0);
     }
-  } /* CHANGED */
+  }
 
-  async function loadSingleVerse() { /* CHANGED */
+  async function loadSingleVerse() {
     const params = new URLSearchParams(window.location.search);
     const sheet = params.get("sheet");
     const verseParam = params.get("verse");
@@ -967,11 +1038,11 @@
           response = await fetch(url, { cache: 'no-store' });
           if (response.ok) {
             sheetData = await response.json();
-            console.log(`Successfully fetched ${url} for single verse`); /* CHANGED */
+            console.log(`Successfully fetched ${url} for single verse`);
             break;
           }
         } catch (err) {
-          console.warn(`Error fetching ${url}: ${err.message}`); /* CHANGED */
+          console.warn(`Error fetching ${url}: ${err.message}`);
         }
       }
       if (sheetData) {
@@ -1011,14 +1082,15 @@
       document.getElementById("singleVerseView").style.display = "none";
       document.querySelector('.search-row').style.display = 'flex';
     }
-  } /* CHANGED */
+  }
 
   async function loadReactions(sheet, verseIndex) {
     try {
       const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
       const reactionSnap = await getDoc(reactionRef);
       const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
-      updateReactionButtons(reactionCounts);
+      updateReactionButtons(reactionCounts, '.reaction-buttons');
+      updateReactionButtons(reactionCounts, '.reaction-buttons-footer'); /* CHANGED */
       const userId = localStorage.getItem('userId') || generateUserId();
       localStorage.setItem('userId', userId);
       const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
@@ -1026,7 +1098,9 @@
       if (userReactionSnap.exists()) {
         const userReaction = userReactionSnap.data().reaction;
         const button = document.querySelector(`.reaction-buttons button[data-reaction="${userReaction}"]`);
+        const footerButton = document.querySelector(`.reaction-buttons-footer button[data-reaction="${userReaction}"]`); /* CHANGED */
         if (button) button.classList.add('active');
+        if (footerButton) footerButton.classList.add('active'); /* CHANGED */
       }
     } catch (error) {
       console.error("Error loading reactions:", error);
@@ -1049,38 +1123,45 @@
         await updateDoc(reactionRef, { [reaction]: increment(-1) });
         await setDoc(userReactionRef, { reaction: null }, { merge: true });
         document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.remove('active');
+        document.querySelector(`.reaction-buttons-footer button[data-reaction="${reaction}"]`)?.classList.remove('active'); /* CHANGED */
       } else {
         const updates = { [reaction]: increment(1) };
         if (currentReaction) {
           updates[currentReaction] = increment(-1);
           document.querySelector(`.reaction-buttons button[data-reaction="${currentReaction}"]`)?.classList.remove('active');
+          document.querySelector(`.reaction-buttons-footer button[data-reaction="${currentReaction}"]`)?.classList.remove('active'); /* CHANGED */
         }
         await setDoc(reactionRef, { like: 0, love: 0, angry: 0 }, { merge: true });
         await updateDoc(reactionRef, updates);
         await setDoc(userReactionRef, { reaction: reaction }, { merge: true });
         document.querySelector(`.reaction-buttons button[data-reaction="${reaction}"]`)?.classList.add('active');
+        document.querySelector(`.reaction-buttons-footer button[data-reaction="${reaction}"]`)?.classList.add('active'); /* CHANGED */
       }
 
       const reactionSnap = await getDoc(reactionRef);
       const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, angry: 0 };
-      updateReactionButtons(reactionCounts);
+      updateReactionButtons(reactionCounts, '.reaction-buttons');
+      updateReactionButtons(reactionCounts, '.reaction-buttons-footer'); /* CHANGED */
     } catch (error) {
       console.error("Error toggling reaction:", error.code, error.message);
       alert(`Failed to update reaction: ${error.message}. Please try again.`);
     }
   }
 
-  function updateReactionButtons(counts) {
-    document.querySelector('#likeCount').textContent = counts.like || 0;
-    document.querySelector('#loveCount').textContent = counts.love || 0;
-    document.querySelector('#angryCount').textContent = counts.angry || 0;
+  function updateReactionButtons(counts, selector) { /* CHANGED */
+    document.querySelector(`${selector} #likeCount`)?.setAttribute('data-count', counts.like || 0); /* CHANGED */
+    document.querySelector(`${selector} #loveCount`)?.setAttribute('data-count', counts.love || 0); /* CHANGED */
+    document.querySelector(`${selector} #angryCount`)?.setAttribute('data-count', counts.angry || 0); /* CHANGED */
+    document.querySelector(`${selector} #likeCount`)?.textContent = counts.like || 0; /* CHANGED */
+    document.querySelector(`${selector} #loveCount`)?.textContent = counts.love || 0; /* CHANGED */
+    document.querySelector(`${selector} #angryCount`)?.textContent = counts.angry || 0; /* CHANGED */
   }
 
   function generateUserId() {
     return 'user_' + Math.random().toString(36).substr(2, 9);
   }
 
-  function displaySingleVerse(verse, index) { /* CHANGED */
+  function displaySingleVerse(verse, index) {
     const singleVerseView = document.getElementById("singleVerseView");
     if (!verse) {
       singleVerseView.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
@@ -1111,16 +1192,16 @@
       </a>
     </div>`;
     html += `<div class="reaction-buttons">
-      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
-      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
-      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount">0</span></button>
+      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount" data-count="0">0</span></button>
+      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount" data-count="0">0</span></button>
+      <button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount" data-count="0">0</span></button>
     </div>`;
     html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
     singleVerseView.innerHTML = html;
     singleVerseView.style.display = "block";
-  } /* CHANGED */
+  }
 
-  function navigateVerse(newIndex) { /* CHANGED */
+  function navigateVerse(newIndex) {
     const verse = data[newIndex];
     const verseName = getColumnValue(verse, "verseName", currentSheet);
     const verseNameText = getTextForUrl(verseName) || newIndex;
@@ -1128,9 +1209,9 @@
     currentVerseIndex = newIndex;
     displaySingleVerse(verse, newIndex);
     loadReactions(currentSheet, newIndex);
-  } /* CHANGED */
+  }
 
-  function updateTable(rows) { /* CHANGED */
+  function updateTable(rows) {
     const container = document.getElementById("verseContainer");
     container.innerHTML = "";
     if (rows.length === 0) {
@@ -1146,14 +1227,20 @@
         const subCategory = row["Sub Category"] || "-";
         let html = `<div class="verse-header ${getCategoryClass(verseCategory.trim().toLowerCase())}">`;
         html += `<span class="verse-name">${renderText(verseName)}</span>`;
+        html += `<span class="verse-header-divider"></span>`; /* CHANGED */
         html += `<span class="verse-category">${verseCategory}</span>`;
         html += `</div>`;
         html += `<span class="verse-field">${renderText(bengaliTranslation)}</span>`;
         html += `<span class="verse-field">${renderText(englishTranslation)}</span>`;
         html += `<div class="verse-footer">`;
         html += `<span class="verse-subcategory">${subCategory}</span>`;
+        html += `<div class="reaction-buttons-footer">`; /* CHANGED */
+        html += `<button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount" data-count="0">0</span></button>`;
+        html += `<button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount" data-count="0">0</span></button>`;
+        html += `<button data-reaction="angry" onclick="toggleReaction('angry', '${currentSheet}', ${index})">😡 <span id="angryCount" data-count="0">0</span></button>`;
+        html += `</div>`; /* CHANGED */
         const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(getTextForUrl(verseName) || index)}`;
-        html += `<a href="${shareUrl}" class="view-full-verse">See Verse Details>>></a>`;
+        html += `<a href="${shareUrl}" class="view-full-verse">👁️ Verse Details>>></a>`; /* CHANGED */
         html += `</div>`;
         card.innerHTML = html;
         const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
@@ -1166,10 +1253,11 @@
           });
         }
         container.appendChild(card);
+        loadReactions(currentSheet, index); /* CHANGED */
       });
     }
     updateContentCount(rows.length);
-  } /* CHANGED */
+  }
 
   function getCategoryClass(category) {
     switch (category?.toLowerCase()) {
@@ -1182,7 +1270,7 @@
     }
   }
 
-  function addShareButton(row, index, isTableView = true) { /* CHANGED */
+  function addShareButton(row, index, isTableView = true) {
     const verseText = getColumnValue(row, "englishTranslation", currentSheet) || "";
     let verseName = getColumnValue(row, "verseName", currentSheet);
     verseName = getTextForUrl(verseName) || index.toString();
@@ -1205,21 +1293,23 @@
       <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share"></a>
     `;
     return html;
-  } /* CHANGED */
+  }
 
-  function filterTable() { /* CHANGED */
-    const category = document.getElementById("categoryFilter").value;
-    const subCategory = document.getElementById("subCategoryFilter").value;
+  function filterTable() {
+    const categoryCheckboxes = document.querySelectorAll('#categoryFilter input[type="checkbox"]:checked');
+    const subCategoryCheckboxes = document.querySelectorAll('#subCategoryFilter input[type="checkbox"]:checked');
     const sheetName = document.getElementById("sheetSelector").value;
     const searchInput = document.getElementById("searchInput");
     const searchTerm = searchInput.value.toLowerCase().trim();
 
     if (sheetName && data.length > 0) {
       let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
-        const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                                row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+        const categories = Array.from(categoryCheckboxes).map(cb => cb.value.toLowerCase());
+        const subCategories = Array.from(subCategoryCheckboxes).map(cb => cb.value.toLowerCase());
+        const categoryMatch = categories.length === 0 || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
+                                          categories.includes(row["Verse Category "].trim().toLowerCase()));
+        const subCategoryMatch = subCategories.length === 0 || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
+                                                subCategories.includes(row["Sub Category"].trim().toLowerCase()));
         return categoryMatch && subCategoryMatch;
       });
       updateTable(filteredRows);
@@ -1229,22 +1319,24 @@
         updateMatchCount(0);
       }
     }
-  } /* CHANGED */
+  }
 
-  function searchTable() { /* CHANGED */
+  function searchTable() {
     const searchInput = document.getElementById("searchInput");
     if (searchInput.disabled) return;
     const searchTerm = searchInput.value.toLowerCase().trim();
-    const category = document.getElementById("categoryFilter").value;
-    const subCategory = document.getElementById("subCategoryFilter").value;
+    const categoryCheckboxes = document.querySelectorAll('#categoryFilter input[type="checkbox"]:checked');
+    const subCategoryCheckboxes = document.querySelectorAll('#subCategoryFilter input[type="checkbox"]:checked');
     const sheetName = document.getElementById("sheetSelector").value;
 
     if (sheetName && data.length > 0) {
       let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
-        const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                                row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+        const categories = Array.from(categoryCheckboxes).map(cb => cb.value.toLowerCase());
+        const subCategories = Array.from(subCategoryCheckboxes).map(cb => cb.value.toLowerCase());
+        const categoryMatch = categories.length === 0 || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
+                                          categories.includes(row["Verse Category "].trim().toLowerCase()));
+        const subCategoryMatch = subCategories.length === 0 || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
+                                                subCategories.includes(row["Sub Category"].trim().toLowerCase()));
         return categoryMatch && subCategoryMatch;
       });
       if (searchTerm) {
@@ -1278,7 +1370,7 @@
       updateTable(data);
       updateMatchCount(0);
     }
-  } /* CHANGED */
+  }
 
   function updateContentCount(count) {
     document.getElementById("contentCount").textContent = `Content Found: ${count}`;

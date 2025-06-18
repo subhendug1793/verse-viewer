@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SASTIK GBQ+ Verse Filter</title>
-  <meta property="og:title" content="SASTIK GBQ+ Verse">
+  <title>Database</title>
+  <meta property="og:title" content="Database">
   <meta property="og:description" content="Explore categorized theological verses from the Gita, Bible, Quran, and more.">
   <meta property="og:image" content="https://subhendug1793.github.io/verse-viewer/images/sastik_logo.png">
-  <meta property="og:url" content="https://subhendug1793.github.io/verse-viewer/">
+  <meta property="og:url" alt="https://subhendug1793.github.io/verse-viewer/">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
   <!-- Font Awesome -->
@@ -177,7 +177,7 @@
     .verse-header.category-controversial { 
       background-color: #FFFF00; 
     }
-    .verse-header.category-divisive { 
+    .verse-header.category-divisible { 
       background-color: #FF0000; 
     }
     .verse-header.category-violent { 
@@ -241,8 +241,7 @@
       display: flex; 
       justify-content: center; 
       gap: 8px; 
-      flex: 1; 
-      flex-direction: row; /* CHANGED: Explicitly horizontal */
+      flex-direction: row; 
     }
     .reaction-buttons button { 
       font-family: 'Poppins', sans-serif; 
@@ -265,13 +264,21 @@
       display: flex; 
       justify-content: center; 
       gap: 8px; 
-      flex: 1; 
-      flex-direction: row; /* CHANGED: Horizontal alignment */
-      align-items: center; /* CHANGED: Center vertically */
+      flex-direction: row; 
+      align-items: center; 
     }
-    .share-buttons a img { /* CHANGED: Consistent icon size */
+    .share-buttons a img { 
       width: 24px; 
       height: 24px; 
+    }
+    .buttons-container { /* CHANGED: New container for reactions and share buttons */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 8px;
+      flex: 1;
     }
     .view-full-verse { 
       display: inline-block; 
@@ -528,27 +535,27 @@
         border-radius: 10px; 
       }
       .verse-header { 
-        flex-direction: column; /* CHANGED: Stack for mobile */
+        flex-direction: column; 
         align-items: flex-start; 
         padding: 3px 0; 
       }
       .verse-footer { 
-        flex-direction: column; /* CHANGED: Stack vertically */
-        align-items: center; /* CHANGED: Center elements */
+        flex-direction: column; 
+        align-items: center; 
         padding: 3px 0; 
         gap: 8px; 
       }
       .verse-name { 
-        font-size: 0.9em; /* CHANGED: Smaller to prevent wrapping */
+        font-size: 0.9em; 
         padding-left: 0; 
         width: 100%; 
-        white-space: nowrap; /* CHANGED: Prevent wrapping */
-        overflow: hidden; /* CHANGED */
-        text-overflow: ellipsis; /* CHANGED */
+        white-space: nowrap; 
+        overflow: hidden; 
+        text-overflow: ellipsis; 
       }
       .verse-category { 
         font-size: 0.85em; 
-        text-align: right; /* CHANGED: Right-align */
+        text-align: right; 
         margin-top: 4px; 
         width: 100%; 
         padding-right: 0; 
@@ -557,32 +564,35 @@
         font-size: 0.85em; 
         padding-left: 0; 
         width: 100%; 
-        text-align: center; /* CHANGED: Center-align */
+        text-align: center; 
+      }
+      .buttons-container { /* CHANGED: Ensure horizontal alignment */
+        justify-content: center; 
+        width: 100%; 
+        flex-direction: row; 
+        flex-wrap: wrap; 
+        gap: 6px; 
       }
       .reaction-buttons { 
-        justify-content: center; /* CHANGED: Center-align */
-        width: 100%; 
-        flex-direction: row; /* CHANGED: Horizontal */
-        flex-wrap: wrap; /* CHANGED: Allow wrapping */
-        gap: 6px; /* CHANGED: Smaller gap */
+        justify-content: center; 
+        flex-direction: row; 
+        gap: 6px; 
       }
       .share-buttons { 
-        justify-content: center; /* CHANGED: Center-align */
-        width: 100%; 
-        flex-direction: row; /* CHANGED: Horizontal */
-        flex-wrap: wrap; /* CHANGED */
-        gap: 6px; /* CHANGED */
-        align-items: center; /* CHANGED */
+        justify-content: center; 
+        flex-direction: row; 
+        gap: 6px; 
+        align-items: center; 
       }
       .share-buttons a img { 
-        width: 20px; /* CHANGED: Smaller for mobile */
+        width: 20px; 
         height: 20px; 
       }
       .view-full-verse { 
         font-size: 0.8em; 
         padding: 5px 10px; 
         width: 100%; 
-        text-align: center; /* CHANGED: Centered */
+        text-align: center; 
         border-radius: 5px; 
       }
       .verse-field { 
@@ -644,7 +654,7 @@
       }
       .reaction-buttons button {
         font-family: 'Poppins', sans-serif;
-        font-size: 14px; /* CHANGED: Smaller for mobile */
+        font-size: 14px; 
       }
     }
   </style>
@@ -805,24 +815,30 @@
     }
   };
 
-  function getColumnValue(row, field, sheet) {
+  function getColumnValue(row, field, sheet) { /* CHANGED: Handle object values */
     const mapping = columnMappings[sheet.toLowerCase()] || columnMappings.miscellaneous;
     const possibleColumns = mapping[field] || [field];
     for (const col of possibleColumns) {
-      if (row[col] !== undefined && row[col] !== null) return row[col];
+      if (row[col] !== undefined && row[col] !== null) {
+        const value = row[col];
+        return typeof value === 'object' && value.text ? value.text : value;
+      }
     }
     return "-";
   }
 
-  function renderText(value) {
+  function renderText(value) { /* CHANGED: Handle object values consistently */
     if (typeof value === "object" && value && value.text && value.url) {
       return `<a href="${value.url}" target="_blank">${value.text}</a>`;
     }
     return value || "-";
   }
 
-  function getTextForUrl(value) {
-    return typeof value === "object" && value.text ? value.text : value || "";
+  function getTextForUrl(value) { /* CHANGED: Handle object values */
+    if (typeof value === "object" && value && value.text) {
+      return value.text;
+    }
+    return value || "";
   }
 
   function updateLastUpdated() {
@@ -1161,6 +1177,8 @@
       let content = verse[header] || "-";
       if (typeof content === "object" && content.text && content.url) {
         content = `<a href="${content.url}" target="_blank">${content.text}</a>`;
+      } else if (typeof content === "object" && content.text) {
+        content = content.text;
       }
       const className = header === "Verse Category " && typeof verse[header] === "string" 
         ? getCategoryClass(verse[header].trim().toLowerCase()) 
@@ -1195,7 +1213,7 @@
     loadReactions(currentSheet, newIndex);
   }
 
-  function updateTable(rows) { /* CHANGED: Updated footer layout for Share/Copy buttons */
+  function updateTable(rows) { /* CHANGED: Combine reaction and share buttons in one row */
     const container = document.getElementById("verseContainer");
     container.innerHTML = "";
     if (rows.length === 0) {
@@ -1210,19 +1228,21 @@
         const englishTranslation = getColumnValue(row, "englishTranslation", currentSheet);
         const subCategory = row["Sub Category"] || "-";
         let html = `<div class="verse-header ${getCategoryClass(verseCategory.trim().toLowerCase())}">`;
-        html += `<span class="verse-name">${renderText(verseName)}</span>`;
+        html += `<span class="verse-name">${renderText(row["Verse Name"])}</span>`; /* CHANGED: Direct access for consistency */
         html += `<span class="verse-category">${verseCategory}</span>`;
         html += `</div>`;
-        html += `<span class="verse-field">${renderText(bengaliTranslation)}</span>`;
-        html += `<span class="verse-field">${renderText(englishTranslation)}</span>`;
+        html += `<span class="verse-field">${renderText(row["Bengali Translation"])}</span>`; /* CHANGED: Direct access */
+        html += `<span class="verse-field">${renderText(row["Verse in English"])}</span>`; /* CHANGED: Direct access */
         html += `<div class="verse-footer">`;
         html += `<span class="verse-subcategory">${subCategory}</span>`;
+        html += `<div class="buttons-container">`; /* CHANGED: New container */
         html += `<div class="reaction-buttons">`;
         html += `<button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index}, ${index})">👍 <span id="likeCount_${index}">0</span></button>`;
         html += `<button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index}, ${index})">❤️ <span id="loveCount_${index}">0</span></button>`;
         html += `<button data-reaction="dislike" onclick="toggleReaction('dislike', '${currentSheet}', ${index}, ${index})">👎 <span id="dislikeCount_${index}">0</span></button>`;
         html += `</div>`;
-        html += `<div class="share-buttons">${addShareButton(row, index, true)}</div>`; /* CHANGED: Kept separate for layout */
+        html += `<div class="share-buttons">${addShareButton(row, index, true)}</div>`;
+        html += `</div>`;
         const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(getTextForUrl(verseName) || index)}`;
         html += `<a href="${shareUrl}" class="view-full-verse">👁️ Verse Details>>></a>`;
         html += `</div>`;
@@ -1248,7 +1268,7 @@
       case "universal or ethical verse": return "category-universal";
       case "general intra-community verse": return "category-general";
       case "controversial intra-community verse": return "category-controversial";
-      case "divisive or hateful inter-community verse": return "category-divisive";
+      case "divisive or hateful inter-community verse": return "category-divisible";
       case "violent or aggressive inter-community verse": return "category-violent";
       default: return "";
     }
@@ -1273,7 +1293,7 @@
       `;
     } else {
       html += `
-        <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp"></a>
+        <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/click_logo.png" alt="WhatsApp"></a>
         <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook"></a>
         <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X"></a>
         <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link"></a>
@@ -1293,24 +1313,27 @@
     if (sheetName && data.length > 0) {
       let filteredRows = data.filter(row => {
         const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+                                          row["Verse Category"].trim().toLowerCase() === category.toLowerCase());
         const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                                row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+                                            row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
         return categoryMatch && subCategoryMatch;
       });
       updateTable(filteredRows);
       if (searchTerm) {
-        searchTable();
+        searchTable(searchTerm);
       } else {
         updateMatchCount(0);
       }
+    } else {
+      updateTable([]);
+      updateMatchCount(0);
     }
   }
 
-  function searchTable() {
+  function searchTable(searchTerm = null) {
     const searchInput = document.getElementById("searchInput");
-    if (searchInput.disabled) return;
-    const searchTerm = searchInput.value.toLowerCase().trim();
+    if (searchInput.disabled && !searchTerm) return;
+    const term = searchTerm || searchInput.value.toLowerCase().trim();
     const category = document.getElementById("categoryFilter").value;
     const subCategory = document.getElementById("subCategoryFilter").value;
     const sheetName = document.getElementById("sheetSelector").value;
@@ -1318,18 +1341,19 @@
     if (sheetName && data.length > 0) {
       let filteredRows = data.filter(row => {
         const categoryMatch = !category || (row["Verse Category "] && typeof row["Verse Category "] === "string" && 
-                                          row["Verse Category "].trim().toLowerCase() === category.toLowerCase());
+                                          row["Verse Category"].trim().toLowerCase() === category.toLowerCase());
         const subCategoryMatch = !subCategory || (row["Sub Category"] && typeof row["Sub Category"] === "string" && 
-                                                row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
+                                  row["Sub Category"].trim().toLowerCase() === subCategory.toLowerCase());
         return categoryMatch && subCategoryMatch;
       });
-      if (searchTerm) {
+
+      if (term) {
         let searchFilteredRows = filteredRows.filter(row =>
           Object.values(row).some(val => {
-            if (typeof val === "string") {
-              return val.toLowerCase().includes(searchTerm);
-            } else if (typeof val === "object" && val && val.text) {
-              return val.text.toLowerCase().includes(searchTerm);
+            if (typeof val === "string') {
+              return val.toLowerCase().includes(term);
+            } else if (typeof val === 'object' && val && val.text) {
+              return val.text.toLowerCase().includes(term);
             }
             return false;
           })
@@ -1337,10 +1361,10 @@
         let matchCount = 0;
         searchFilteredRows.forEach(row => {
           Object.values(row).forEach(val => {
-            if (typeof val === "string" && val.toLowerCase().includes(searchTerm)) {
-              matchCount += (val.toLowerCase().match(new RegExp(searchTerm, 'gi')) || []).length;
-            } else if (typeof val === "object" && val && val.text && val.text.toLowerCase().includes(searchTerm)) {
-              matchCount += (val.text.toLowerCase().match(new RegExp(searchTerm, 'gi')) || []).length;
+            if (typeof val === 'string' && val.toLowerCase().includes(term)) {
+              matchCount += (val.toLowerCase().match(new RegExp(term, 'gi')) || []).length;
+            } else if (typeof val === 'object' && val && val.text && val.text.toLowerCase().includes(term)) {
+              matchCount += (val.text.toLowerCase().match(new RegExp(term, 'gi')) || []).length;
             }
           });
         });
@@ -1351,7 +1375,7 @@
         updateMatchCount(0);
       }
     } else {
-      updateTable(data);
+      updateTable([]);
       updateMatchCount(0);
     }
   }

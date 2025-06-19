@@ -551,7 +551,7 @@
       }
       .verse-header { 
         flex-direction: column; 
-        align-items: flex-start; 
+        align-items: center; /* CHANGED: Center align items */ 
         padding: 1px 0; /* CHANGED: Reduced for mobile */
       }
       .verse-footer { 
@@ -566,11 +566,12 @@
         width: 100%; 
         white-space: nowrap; 
         overflow: hidden; 
-        text-overflow: ellipsis; 
+        text-overflow: ellipsis;
+        text-align: center; /* CHANGED: Center align text */
       }
       .verse-category { 
         font-size: 0.85em; 
-        text-align: right; 
+        text-align: center; /* CHANGED: Center align text */
         margin-top: 4px; 
         width: 100%; 
         padding-right: 0; 

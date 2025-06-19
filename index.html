@@ -8,7 +8,9 @@
   <meta property="og:description" content="Explore categorized theological verses from the Gita, Bible, Quran, and more.">
   <meta property="og:image" content="https://subhendug1793.github.io/verse-viewer/images/sastik_logo.png">
   <meta property="og:url" content="https://subhendug1793.github.io/verse-viewer/">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body { 
@@ -17,7 +19,7 @@
       background: #f9f9f9; 
       position: relative; 
       min-height: 100vh; 
-      display: flex; 
+      display: flex;
       flex-direction: column;
     }
     .header-container { 
@@ -64,11 +66,11 @@
       margin-right: 10px; 
     }
     h2 { 
-      font-family: 'Merriweather', serif; 
-      color: #0066cc; 
+      font-family: 'Merriweather', serif;
+      color: #0066cc;
       text-align: center; 
       margin: 0; 
-      font-size: 1.8em; 
+      font-size: 1.8em;
       font-weight: bold; 
       white-space: nowrap; 
     }
@@ -80,9 +82,9 @@
       text-decoration: underline; 
     }
     .mission-statement { 
-      font-family: 'Merriweather', serif; 
+      font-family: 'Merriweather', serif;
       text-align: center; 
-      margin: 0 auto 10px; 
+      margin: 0 auto 10px;
       max-width: 80%; 
       font-size: 1.1em; 
       line-height: 1.5; 
@@ -111,7 +113,7 @@
       justify-content: center; 
       align-items: center; 
       gap: 10px; 
-      margin-bottom: 5px; 
+      margin-bottom: 5px;
     }
     .content-count, .match-count { 
       font-size: 1em; 
@@ -123,7 +125,7 @@
       text-align: center;
     }
     select, input { 
-      font-family: 'Poppins', sans-serif; 
+      font-family: 'Poppins', sans-serif;
       padding: 5px; 
       margin-right: 10px; 
     }
@@ -282,7 +284,7 @@
     .view-full-verse { 
       display: inline-block; 
       padding: 6px 12px; 
-      background: #90EE90; /* CHANGED: Light green */
+      background: #800080; 
       color: #fff; 
       text-decoration: none; 
       border-radius: 6px; 
@@ -294,7 +296,7 @@
       flex: none; 
     }
     .view-full-verse:hover { 
-      background: #32CD32; /* CHANGED: Darker green on hover */
+      background: #4B0082; 
       transform: translateY(-2px); 
       box-shadow: 0 4px 10px rgba(0,102,204,0.4); 
     }
@@ -305,7 +307,7 @@
       flex-direction: column; 
       align-items: center; 
       max-width: 80%; 
-      margin: 5px auto 0; 
+      margin: 5px auto 0;
       padding: 10px 0; 
       pointer-events: auto; 
     }
@@ -350,7 +352,7 @@
       margin: 2px 0; 
     }
     .name-text { 
-      font-family: 'Merriweather', serif; 
+      font-family: 'Merriweather', serif;
       font-size: 2em; 
       margin: 5px 0; 
     }
@@ -406,7 +408,7 @@
       z-index: 1;
     }
     .single-verse-view h3 { 
-      font-family: 'Merriweather', serif; 
+      font-family: 'Merriweather', serif;
       color: #0066cc; 
       margin-bottom: 10px; 
     }
@@ -415,7 +417,7 @@
       text-align: left; 
     }
     .verse-details p { 
-      font-family: 'Merriweather', serif; 
+      font-family: 'Merriweather', serif;
       margin: 5px 0; 
       font-size: 1em; 
     }
@@ -528,7 +530,7 @@
         flex-direction: column; 
         align-items: center; 
         gap: 8px; 
-        margin-bottom: 5px; 
+        margin-bottom: 5px;
       }
       .content-count, .match-count { 
         text-align: center; 
@@ -618,7 +620,7 @@
       }
       .footer { 
         max-width: 90%; 
-        margin: 5px auto 0; 
+        margin: 5px auto 0;
       }
       .logos img { 
         width: 40px; 
@@ -645,7 +647,7 @@
         background-size: 60%; /* CHANGED: Watermark size */
       }
       .single-verse-view h3 { 
-        font-family: 'Merriweather', serif; 
+        font-family: 'Merriweather', serif;
       }
       .verse-details p { 
         font-size: 0.9em; 
@@ -773,7 +775,7 @@
       console.log("Firebase initialized successfully");
     } catch (error) {
       console.error("Firebase initialization failed:", error);
-      db = null;
+      db = null; // Ensure db is null if init fails
     }
   }
 
@@ -866,10 +868,10 @@
     try {
       let lastUpdated = "Unknown";
       if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
-        lastUpdated = new Date(document.lastModified).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false });
+        lastUpdated = new Date(document.lastModified).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
       } else {
         console.warn("document.lastModified unavailable, using current time");
-        lastUpdated = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false });
+        lastUpdated = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
       }
       lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4vUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${lastUpdated}</a>`;
     } catch (error) {
@@ -889,13 +891,15 @@
     const cachedData = JSON.parse(localStorage.getItem(cacheKey));
     const now = Date.now();
 
+    // Display cached or default count immediately
     if (cachedData && now - cachedData.timestamp < cacheTTL) {
       visitorCount.innerHTML = `Visitors: ${cachedData.count}`;
     } else {
-      visitorCount.innerHTML = `Visitors: 0`;
+      visitorCount.innerHTML = `Visitors: 0`; // Fallback to 0
     }
     visitorCount.classList.remove("error");
 
+    // Update count in background
     try {
       if (db) {
         const counterRef = doc(db, "counters", "viewerCount");
@@ -1001,14 +1005,14 @@
     }
   }
 
-  async function loadSingleVerse() {
+  async function loadSingleVerse() { /* CHANGED: Robust verse loading */
     const params = new URLSearchParams(window.location.search);
     const sheet = params.get("sheet");
     const verseParam = params.get("verse");
     let verseIndex = -1;
 
     if (!sheet || !verseParam) {
-      document.getElementById("singleVerseView").style.display = "none";
+      document.getElementById("singleVerseView")?.style.display = "none";
       document.querySelector('.search-row').style.display = 'flex';
       return;
     }
@@ -1193,7 +1197,7 @@
     return 'user_' + Math.random().toString(36).substr(2, 9);
   }
 
-  function displaySingleVerse(verse, index) {
+  function displaySingleVerse(verse, index) { /* CHANGED: Robust rendering */
     const singleVerseView = document.getElementById("singleVerseView");
     if (!singleVerseView) {
       console.error("Single verse view element not found");
@@ -1281,7 +1285,7 @@
             </div>
             <div class="share-buttons">${addShareButton(row, index, true)}</div>
           </div>
-          <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(getTextForUrl(verseName) || index)}" class="view-full-verse">👁️ Verse Details>>></a>
+          <a href="https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(getTextForUrl(verseName) || index)}" class="view-full-verse">👁️ Verse Details>>></a>
         </div>`;
         card.innerHTML = html;
         const searchInput = document.getElementById("searchInput");

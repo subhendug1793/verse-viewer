@@ -101,10 +101,7 @@
       white-space: nowrap; 
     }
     .tab-bar {
-      background-image: url('images/rainbow.jpg');
-      background-size: cover;
-      background-position: center;
-      opacity: 0.2;
+      background-color: #f0f0f0; /* Simple solid background */
       padding: 6px 0;
       margin: 0 auto 20px;
       width: 90%;
@@ -127,40 +124,40 @@
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s, border-color 0.3s;
       outline: none;
-      background-color: #FFD700;
-      color: #000;
+      background-color: #800000; /* Maroon */
+      color: #ffffff; /* White text */
       pointer-events: auto;
       z-index: 6;
     }
     .tab-button.selected {
-      background-color: #FF6200;
-      color: #000;
-      border-color: #333;
+      background-color: #FF6200; /* Orange */
+      color: #000000; /* Black text */
+      border-color: #333333; /* Blackish border */
     }
     .tab-button:hover:not(.selected) {
-      background-color: #FFC107;
+      background-color: #9B2D2D; /* Slightly lighter maroon on hover */
     }
     .controls { 
       margin-bottom: 10px; 
       text-align: center; 
-      display: none;
+      display: none; /* Hidden by default */
       justify-content: center; 
       align-items: center; 
       gap: 8px; 
       flex-wrap: nowrap; 
     }
     .controls.active {
-      display: flex;
+      display: flex; /* Shown when sheet is selected */
     }
     .search-row { 
-      display: none;
+      display: none; /* Hidden by default */
       justify-content: center; 
       align-items: center; 
       gap: 8px; 
       margin-bottom: 5px;
     }
     .search-row.active {
-      display: flex;
+      display: flex; /* Shown when sheet is selected */
     }
     .content-count, .match-count { 
       font-size: 0.75em; 
@@ -603,7 +600,6 @@
         padding: 4px 0;
         gap: 6px;
         border-radius: 10px;
-        opacity: 0.2;
       }
       .tab-button {
         font-size: 0.8em;
@@ -976,10 +972,9 @@
     const timeout = setTimeout(() => {
       lastUpdatedElement.innerHTML = `Last updated: Unknown`;
       console.warn("Last updated timeout reached");
-    }, 10000); // Increased timeout to 10 seconds
+    }, 10000);
     try {
       let lastUpdated;
-      // Fallback to a static date if document.lastModified is unavailable
       const staticDate = "06/19/2025 23:51:00";
       if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
         const date = new Date(document.lastModified);
@@ -1020,7 +1015,7 @@
       visitorCount.innerHTML = `Visitors: N/A`;
       visitorCount.classList.add("error");
       console.warn("Visitor count timeout reached");
-    }, 10000); // Increased timeout to 10 seconds
+    }, 10000);
     const cacheKey = 'visitorCount';
     const cacheTTL = 3600000;
     const cachedData = JSON.parse(localStorage.getItem(cacheKey));
@@ -1031,7 +1026,7 @@
       visitorCount.innerHTML = `Visitors: ${cachedData.count}`;
       visitorCount.classList.remove("error");
       clearTimeout(timeout);
-      return; // Use cached data if valid
+      return;
     } else {
       visitorCount.innerHTML = `Visitors: Loading...`;
     }
@@ -1046,7 +1041,6 @@
       }
     };
 
-    // Try Firestore first
     for (let retryCount = 0; retryCount < maxRetries; retryCount++) {
       try {
         if (db) {
@@ -1072,7 +1066,6 @@
       }
     }
 
-    // Fallback to counter.json
     for (let retryCount = 0; retryCount < maxRetries; retryCount++) {
       try {
         const data = await tryFetch('counter.json');
@@ -1092,7 +1085,6 @@
       }
     }
 
-    // Final fallback to cached data or default
     if (cachedData && cachedData.count > 0) {
       visitorCount.innerHTML = `Visitors: ${cachedData.count}`;
       visitorCount.classList.remove("error");
@@ -1125,8 +1117,8 @@
     searchInput.disabled = true;
     verseContainer.innerHTML = `<div style="text-align: center;">Loading ${sheet}...</div>`;
     errorDisplay.textContent = "";
-    document.querySelector('.search-row').classList.remove('active');
-    document.querySelector('.controls').classList.remove('active');
+    document.querySelector('.search-row').classList.add('active');
+    document.querySelector('.controls').classList.add('active');
 
     const urlsToTry = [
       `${sheet.toLowerCase()}.json`,
@@ -1172,7 +1164,7 @@
     errorDisplay.style.color = "red";
     errorDisplay.style.textAlign = "center";
     errorDisplay.style.marginBottom = "10px";
-    document.querySelector(".controls")?.after(errorDisplay);
+    document.querySelector(".tab-bar")?.after(errorDisplay);
     return errorDisplay;
   }
 
@@ -1187,6 +1179,15 @@
       document.querySelector('.search-row').classList.remove('active');
       document.querySelector('.controls').classList.remove('active');
       document.getElementById("verseContainer").style.display = "block";
+      if (currentSheet) {
+        const tabs = document.querySelectorAll(".tab-button");
+        tabs.forEach(tab => tab.classList.remove("selected"));
+        const selectedTab = document.querySelector(`.tab-button[data-sheet="${currentSheet}"]`);
+        if (selectedTab) selectedTab.classList.add("selected");
+        await loadSheetData(currentSheet);
+      } else {
+        deselectSheet();
+      }
       return;
     }
 
@@ -1237,6 +1238,10 @@
         controls.classList.remove('active');
         verseContainer.style.display = "none";
         document.querySelector('.search-row').classList.remove('active');
+        const tabs = document.querySelectorAll(".tab-button");
+        tabs.forEach(tab => tab.classList.remove("selected"));
+        const selectedTab = document.querySelector(`.tab-button[data-sheet="${sheet}"]`);
+        if (selectedTab) selectedTab.classList.add("selected");
         await loadReactions(sheet, verseIndex);
       } else {
         console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
@@ -1653,7 +1658,7 @@
             }
           });
         });
-        updateTable(searchFilteredRows        );
+        updateTable(searchFilteredRows);
         updateMatchCount(matchCount);
       } else {
         updateTable(filteredRows);
@@ -1683,92 +1688,120 @@
     }
   }
 
-  window.selectSheet = async function(sheet) {
-    if (currentSheet === sheet) return; // Prevent reloading the same sheet
-    currentSheet = sheet;
+  function deselectSheet() {
+    currentSheet = "";
     currentPage = 1;
     currentVerseIndex = -1;
+    data = [];
     const tabs = document.querySelectorAll(".tab-button");
     tabs.forEach(tab => tab.classList.remove("selected"));
-    const selectedTab = document.querySelector(`.tab-button[data-sheet="${sheet}"]`);
-    if (selectedTab) {
-      selectedTab.classList.add("selected");
-    } else {
-      console.error(`Tab button for sheet ${sheet} not found`);
-    }
-    const singleVerseView = document.getElementById("singleVerseView");
     const verseContainer = document.getElementById("verseContainer");
+    const singleVerseView = document.getElementById("singleVerseView");
+    const controls = document
+          singleVerseView").style.display = "none";
+    document.getElementById("verseContainer").style.display = "block";
+    // Update URL to reflect the selected sheet
+    history.pushState(null, '', `?sheet=${encodeURIComponent(sheet)}`);
+    await loadSheetData(sheet);
+  }
+
+  window.deselectSheet = function() {
+    const tabs = document.querySelectorAll(".tab-button");
     const controls = document.getElementById("controls");
     const searchRow = document.querySelector(".search-row");
-    if (singleVerseView && verseContainer && controls && searchRow) {
-      singleVerseView.style.display = "none";
-      verseContainer.style.display = "block";
-      controls.classList.add("active");
-      searchRow.classList.add("active");
-    } else {
-      console.error("Required DOM elements for sheet selection missing");
-    }
+    const verseContainer = document.getElementById("verseContainer");
+    const singleVerseView = document.getElementById("singleVerseView");
+    const errorDisplay = document.getElementById("errorDisplay") || createErrorDisplay();
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
     const searchInput = document.getElementById("searchInput");
-    if (categoryFilter && subCategoryFilter && searchInput) {
-      categoryFilter.value = "";
-      subCategoryFilter.value = "";
-      searchInput.value = "";
-    }
-    // Clear URL parameters
-    history.pushState(null, "", window.location.pathname);
-    try {
-      await loadSheetData(sheet);
-    } catch (error) {
-      console.error(`Failed to load sheet ${sheet}:`, error);
-      const errorDisplay = document.getElementById("errorDisplay") || createErrorDisplay();
-      errorDisplay.textContent = `Failed to load ${sheet}. Please try again or contact support.`;
-    }
-  };
+    const pagination = document.getElementById("pagination");
 
-  // Initialize the app
-  async function init() {
+    if (!controls || !searchRow || !verseContainer || !singleVerseView || !categoryFilter || !subCategoryFilter || !searchInput || !pagination) {
+      console.error("Required DOM elements missing for deselectSheet");
+      errorDisplay.textContent = "Internal error: Required elements not found.";
+      return;
+    }
+
+    // Reset current sheet and data
+    currentSheet = "";
+    currentPage = 1;
+    currentVerseIndex = -1;
+    data = [];
+
+    // Remove 'selected' class from all tabs
+    tabs.forEach(tab => tab.classList.remove("selected"));
+
+    // Hide controls and search row
+    controls.classList.remove("active");
+    searchRow.classList.remove("active");
+
+    // Disable filters and search input
+    categoryFilter.disabled = true;
+    subCategoryFilter.disabled = true;
+    searchInput.disabled = true;
+    searchInput.value = "";
+
+    // Clear verse container and pagination
+    verseContainer.innerHTML = `<div style="text-align: center;">Please select a tab to view verses.</div>`;
+    pagination.innerHTML = "";
+    errorDisplay.textContent = "";
+
+    // Hide single verse view
+    singleVerseView.style.display = "none";
+
+    // Reset URL to base URL
+    history.pushState(null, '', 'https://subhendug1793.github.io/verse-viewer/');
+
+    // Reset content and match counts
+    updateContentCount(0);
+    updateMatchCount(0);
+  }
+
+  // Initialize the page
+  document.addEventListener("DOMContentLoaded", async () => {
     initializeFirebase();
-    updateLastUpdated();
     await updateVisitorCount();
+    updateLastUpdated();
+
     const params = new URLSearchParams(window.location.search);
     const sheet = params.get("sheet");
     const verse = params.get("verse");
+
     if (sheet && verse) {
-      currentSheet = sheet;
-      const tabs = document.querySelectorAll(".tab-button");
-      tabs.forEach(tab => tab.classList.remove("selected"));
-      const selectedTab = document.querySelector(`.tab-button[data-sheet="${sheet}"]`);
-      if (selectedTab) {
-        selectedTab.classList.add("selected");
-      }
       await loadSingleVerse();
+    } else if (sheet) {
+      const validSheets = ["gita", "bible", "quran", "hadith", "miscellaneous"];
+      if (validSheets.includes(sheet.toLowerCase())) {
+        await selectSheet(sheet.toLowerCase());
+      } else {
+        console.error(`Invalid sheet parameter: ${sheet}`);
+        deselectSheet();
+      }
     } else {
-      await selectSheet("gita"); // Default sheet
+      deselectSheet();
     }
-    // Add popstate listener for browser back/forward navigation
-    window.addEventListener("popstate", async () => {
+
+    // Handle popstate for back/forward navigation
+    window.addEventListener('popstate', async () => {
       const newParams = new URLSearchParams(window.location.search);
       const newSheet = newParams.get("sheet");
       const newVerse = newParams.get("verse");
+
       if (newSheet && newVerse) {
-        currentSheet = newSheet;
-        const tabs = document.querySelectorAll(".tab-button");
-        tabs.forEach(tab => tab.classList.remove("selected"));
-        const selectedTab = document.querySelector(`.tab-button[data-sheet="${newSheet}"]`);
-        if (selectedTab) {
-          selectedTab.classList.add("selected");
-        }
         await loadSingleVerse();
+      } else if (newSheet) {
+        const validSheets = ["gita", "bible", "quran", "hadith", "miscellaneous"];
+        if (validSheets.includes(newSheet.toLowerCase())) {
+          await selectSheet(newSheet.toLowerCase());
+        } else {
+          deselectSheet();
+        }
       } else {
-        await selectSheet(currentSheet || "gita");
+        deselectSheet();
       }
     });
-  }
-
-  // Run initialization when DOM is fully loaded
-  document.addEventListener("DOMContentLoaded", init);
+  });
 </script>
 </body>
 </html>

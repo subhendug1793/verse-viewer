@@ -100,21 +100,65 @@
       font-weight: normal; 
       white-space: nowrap; 
     }
+    .tab-bar { /* CHANGED: Added tab bar styling */
+      background-image: url('images/rpaint_strip.jpg');
+      background-size: cover;
+      background-position: center;
+      padding: 10px 0;
+      margin: 0 auto 20px;
+      width: 90%;
+      max-width: 800px;
+      border-radius: 12px; /* Soft edges */
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      z-index: 5;
+    }
+    .tab-button { /* CHANGED: Added tab button styling */
+      font-family: 'Poppins', sans-serif;
+      font-size: 1em;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px; /* Soft edges for buttons */
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+      outline: none;
+    }
+    .tab-button.selected { /* CHANGED: Selected state */
+      background-color: #ffeb3b; /* Yellow */
+      color: #000; /* Black text */
+    }
+    .tab-button:not(.selected) { /* CHANGED: Unselected state */
+      background-color: #000; /* Black */
+      color: #fff; /* White text */
+    }
+    .tab-button:hover:not(.selected) { /* CHANGED: Hover for unselected */
+      background-color: #333;
+    }
     .controls { 
       margin-bottom: 10px; 
       text-align: center; 
-      display: flex; 
+      display: none; /* CHANGED: Hidden by default */
       justify-content: center; 
       align-items: center; 
       gap: 2px; 
       flex-wrap: wrap; 
     }
+    .controls.active { /* CHANGED: Show when active */
+      display: flex;
+    }
     .search-row { 
-      display: flex; 
+      display: none; /* CHANGED: Hidden by default */
       justify-content: center; 
       align-items: center; 
       gap: 10px; 
       margin-bottom: 5px;
+    }
+    .search-row.active { /* CHANGED: Show when active */
+      display: flex;
     }
     .content-count, .match-count { 
       font-size: 1em; 
@@ -138,21 +182,21 @@
       width: 200px; 
     }
     .verse-container { 
-      width: 90vw; /* CHANGED: Maximized width for desktop */
+      width: 90vw;
       margin: 0 auto 20px; 
       display: flex; 
       flex-direction: column; 
-      gap: 20px; /* CHANGED: Reduced gap for tighter layout */
+      gap: 20px;
     }
     .verse-card { 
       background: linear-gradient(135deg, #ffffff, #f9f9f9); 
       box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-      padding: 12px; /* CHANGED: Reduced padding to minimize white space */
+      padding: 12px;
       border-radius: 12px; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
-      gap: 8px; /* CHANGED: Reduced gap for compact layout */
+      gap: 8px;
       transition: transform 0.2s, box-shadow 0.2s; 
       border: 1px solid rgba(0,102,204,0.1); 
     }
@@ -165,7 +209,7 @@
       width: 100%; 
       justify-content: space-between; 
       align-items: center; 
-      padding: 2px 0; /* CHANGED: Reduced padding */
+      padding: 2px 0;
       border-bottom: 1px solid rgba(0,0,0,0.1); 
     }
     .verse-header.category-universal { 
@@ -214,7 +258,7 @@
     .verse-field { 
       width: 100%; 
       text-align: center; 
-      padding: 4px 0; /* CHANGED: Reduced padding */
+      padding: 4px 0;
       border-bottom: 1px solid rgba(0,0,0,0.1); 
       font-family: 'Poppins', sans-serif; 
       font-size: 0.95em; 
@@ -225,9 +269,9 @@
       width: 100%; 
       justify-content: space-between; 
       align-items: center; 
-      padding: 2px 0; /* CHANGED: Reduced padding */
+      padding: 2px 0;
       border-top: 1px solid rgba(0,0,0,0.1); 
-      gap: 8px; /* CHANGED: Reduced gap */
+      gap: 8px;
     }
     .verse-subcategory { 
       font-family: 'Poppins', sans-serif; 
@@ -387,10 +431,10 @@
     .single-verse-view {
       text-align: center;
       margin: 32px auto 32px auto;
-      max-width: 90vw; /* CHANGED: Maximized width for desktop */
+      max-width: 90vw;
       min-width: 320px; 
       width: 100%;
-      padding: 24px 16px; /* CHANGED: Reduced padding to minimize vertical white space */
+      padding: 24px 16px;
       background: #fff; 
       box-shadow: 0 0 16px rgba(0,0,0,0.12);
       border-radius: 18px;
@@ -514,6 +558,17 @@
         max-width: 90%; 
         white-space: normal; 
       }
+      .tab-bar { /* CHANGED: Adjusted for mobile */
+        width: 95%;
+        padding: 8px 0;
+        gap: 8px;
+        border-radius: 10px;
+      }
+      .tab-button { /* CHANGED: Adjusted for mobile */
+        font-size: 0.9em;
+        padding: 6px 12px;
+        border-radius: 6px;
+      }
       select, input { 
         width: 100%; 
         margin-bottom: 8px; 
@@ -541,24 +596,24 @@
         max-width: 250px; 
       }
       .verse-container { 
-        width: 98vw; /* CHANGED: Near-full width for mobile */
+        width: 98vw;
         margin-bottom: 10px; 
-        gap: 15px; /* CHANGED: Reduced gap for mobile */
+        gap: 15px;
       }
       .verse-card { 
-        padding: 10px; /* CHANGED: Further reduced for mobile */
+        padding: 10px;
         border-radius: 10px; 
       }
       .verse-header { 
         flex-direction: column; 
-        align-items: center; /* CHANGED: Center align items */ 
-        padding: 1px 0; /* CHANGED: Reduced for mobile */
+        align-items: center; 
+        padding: 1px 0;
       }
       .verse-footer { 
         flex-direction: column; 
         align-items: center; 
-        padding: 1px 0; /* CHANGED: Reduced for mobile */
-        gap: 6px; /* CHANGED: Reduced gap for mobile */
+        padding: 1px 0;
+        gap: 6px;
       }
       .verse-name { 
         font-size: 0.9em; 
@@ -567,11 +622,11 @@
         white-space: nowrap; 
         overflow: hidden; 
         text-overflow: ellipsis;
-        text-align: center; /* CHANGED: Center align text */
+        text-align: center;
       }
       .verse-category { 
         font-size: 0.85em; 
-        text-align: center; /* CHANGED: Center align text */
+        text-align: center;
         margin-top: 4px; 
         width: 100%; 
         padding-right: 0; 
@@ -615,7 +670,7 @@
       }
       .verse-field { 
         font-size: 0.9em; 
-        padding: 3px 0; /* CHANGED: Reduced for mobile */
+        padding: 3px 0;
       }
       .footer { 
         max-width: 90%; 
@@ -641,9 +696,9 @@
         width: 150px; 
       }
       .single-verse-view {
-        max-width: 98vw; /* CHANGED: Increased width for mobile */
+        max-width: 98vw;
         min-width: 0;
-        padding: 8vw 2vw; /* CHANGED: Adjusted padding for mobile */
+        padding: 8vw 2vw;
         background: #fff; 
       }
       .single-verse-view h3 { 
@@ -690,17 +745,16 @@
   <div class="mission-subtext">
     ⬇️ A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. ⬇️
   </div>
+  <div class="tab-bar" id="tabBar"> <!-- CHANGED: Added tab bar -->
+    <button class="tab-button" data-sheet="gita" onclick="selectSheet('gita')">Gita</button>
+    <button class="tab-button" data-sheet="bible" onclick="selectSheet('bible')">Bible</button>
+    <button class="tab-button" data-sheet="quran" onclick="selectSheet('quran')">Quran</button>
+    <button class="tab-button" data-sheet="hadith" onclick="selectSheet('hadith')">Hadith</button>
+    <button class="tab-button" data-sheet="miscellaneous" onclick="selectSheet('miscellaneous')">Miscellaneous</button>
+  </div>
   <div class="single-verse-view" id="singleVerseView" style="display: none;"></div>
   <div class="controls" id="controls">
-    <label for="sheetSelector">Select Gita/Bible/Quran+:</label>
-    <select id="sheetSelector" onchange="loadSheetData()">
-      <option value="">Select a sheet</option>
-      <option value="gita">Gita</option>
-      <option value="bible">Bible</option>
-      <option value="quran">Quran</option>
-      <option value="hadith">Hadith</option>
-      <option value="miscellaneous">Miscellaneous</option>
-    </select>
+    <!-- CHANGED: Removed sheet selector -->
     <label for="categoryFilter">Filter by Sloka/Verse/Ayah Category:</label>
     <select id="categoryFilter" disabled onchange="filterTable()">
       <option value="">All</option>
@@ -999,13 +1053,8 @@
     }
   }
 
-  async function loadSheetData() {
-    const sheetSelector = document.getElementById("sheetSelector");
-    if (!sheetSelector) {
-      console.error("Sheet selector not found");
-      return;
-    }
-    currentSheet = sheetSelector.value;
+  async function loadSheetData(sheet) { // CHANGED: Accepts sheet parameter
+    currentSheet = sheet;
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
     const searchInput = document.getElementById("searchInput");
@@ -1029,7 +1078,8 @@
       subCategoryFilter.disabled = false;
       searchInput.disabled = false;
       errorDisplay.textContent = "";
-      document.querySelector('.search-row').style.display = 'flex';
+      document.querySelector('.search-row').classList.add('active'); // CHANGED: Show search row
+      document.querySelector('.controls').classList.add('active'); // CHANGED: Show controls
       const urlsToTry = [
         `${currentSheet.toLowerCase()}.json`,
         `${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1).toLowerCase()}.json`,
@@ -1066,7 +1116,8 @@
       searchInput.disabled = true;
       errorDisplay.textContent = "";
       verseContainer.innerHTML = "";
-      document.querySelector('.search-row').style.display = 'flex';
+      document.querySelector('.search-row').classList.remove('active'); // CHANGED: Hide search row
+      document.querySelector('.controls').classList.remove('active'); // CHANGED: Hide controls
       updateContentCount(0);
       updateMatchCount(0);
     }
@@ -1080,7 +1131,8 @@
 
     if (!sheet || !verseParam) {
       document.getElementById("singleVerseView").style.display = "none";
-      document.querySelector('.search-row').style.display = 'flex';
+      document.querySelector('.search-row').classList.remove('active'); // CHANGED: Hide search row
+      document.querySelector('.controls').classList.remove('active'); // CHANGED: Hide controls
       return;
     }
 
@@ -1124,25 +1176,24 @@
       }
       if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < data.length) {
         currentVerseIndex = verseIndex;
-        const verse = data[verseIndex];
         displaySingleVerse(verse, verseIndex);
-        controls.style.display = "none";
+        controls.classList.remove('active'); // CHANGED: Hide controls
         verseContainer.style.display = "none";
-        document.querySelector('.search-row').style.display = 'none';
+        document.querySelector('.search-row').classList.remove('active'); // CHANGED: Hide search row
         await loadReactions(sheet, verseIndex);
       } else {
         console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
         displaySingleVerse(null, -1);
-        controls.style.display = "none";
+        controls.classList.remove('active'); // CHANGED: Hide controls
         verseContainer.style.display = "none";
-        document.querySelector('.search-row').style.display = 'none';
+        document.querySelector('.search-row').classList.remove('active'); // CHANGED: Hide search row
       }
     } else {
       console.error(`Failed to load ${sheet}.json`);
       displaySingleVerse(null, -1);
-      controls.style.display = "none";
+      controls.classList.remove('active'); // CHANGED: Hide controls
       verseContainer.style.display = "none";
-      document.querySelector('.search-row').style.display = 'none';
+      document.querySelector('.search-row').classList.remove('active'); // CHANGED: Hide search row
     }
   }
 
@@ -1416,18 +1467,16 @@
   function filterTable() {
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
-    const sheetSelector = document.getElementById("sheetSelector");
     const searchInput = document.getElementById("searchInput");
-    if (!categoryFilter || !subCategoryFilter || !sheetSelector || !searchInput) {
+    if (!categoryFilter || !subCategoryFilter || !searchInput) {
       console.error("Filter elements missing");
       return;
     }
     const category = categoryFilter.value;
     const subCategory = subCategoryFilter.value;
-    const sheetName = sheetSelector.value;
     const searchTerm = searchInput.value.toLowerCase().trim();
 
-    if (sheetName && data.length > 0) {
+    if (currentSheet && data.length > 0) {
       let filteredRows = data.filter(row => {
         const categoryMatch = !category || (row["Verse Category "] && row["Verse Category "].toLowerCase() === category.toLowerCase());
         const subCategoryMatch = !subCategory || (row["Sub Category"] && row["Sub Category"].toLowerCase() === subCategory.toLowerCase());
@@ -1449,8 +1498,7 @@
     const searchInput = document.getElementById("searchInput");
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
-    const sheetSelector = document.getElementById("sheetSelector");
-    if (!searchInput || !categoryFilter || !subCategoryFilter || !sheetSelector) {
+    if (!searchInput || !categoryFilter || !subCategoryFilter) {
       console.error("Search elements missing");
       return;
     }
@@ -1458,9 +1506,8 @@
     const term = searchTerm || searchInput.value.toLowerCase().trim();
     const category = categoryFilter.value;
     const subCategory = subCategoryFilter.value;
-    const sheetName = sheetSelector.value;
 
-    if (sheetName && data.length > 0) {
+    if (currentSheet && data.length > 0) {
       let filteredRows = data.filter(row => {
         const categoryMatch = !category || (row["Verse Category "] && row["Verse Category "].toLowerCase() === category.toLowerCase());
         const subCategoryMatch = !subCategory || (row["Sub Category"] && row["Sub Category"].toLowerCase() === subCategory.toLowerCase());
@@ -1514,11 +1561,25 @@
     }
   }
 
+  function selectSheet(sheet) { // CHANGED: New function for tab selection
+    currentSheet = sheet;
+    const buttons = document.querySelectorAll('.tab-button');
+    buttons.forEach(btn => {
+      if (btn.dataset.sheet === sheet) {
+        btn.classList.add('selected');
+      } else {
+        btn.classList.remove('selected');
+      }
+    });
+    loadSheetData(sheet);
+  }
+
   window.loadSheetData = loadSheetData;
   window.filterTable = filterTable;
   window.searchTable = searchTable;
   window.navigateVerse = navigateVerse;
   window.toggleReaction = toggleReaction;
+  window.selectSheet = selectSheet; // CHANGED: Expose selectSheet
 
   window.onload = () => {
     initializeFirebase();

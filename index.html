@@ -241,7 +241,7 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      gap: 8px; /* CHANGED: Reduced gap for tighter button alignment */
+      gap: 8px; /* CHANGED: Consistent gap for buttons */
       justify-content: center;
       z-index: 10;
       position: relative;
@@ -254,8 +254,9 @@
       display: flex; 
       align-items: center; 
       gap: 5px; 
-      font-size: 16px; 
-      padding: 0; /* CHANGED: Removed padding to eliminate gaps */
+      font-size: 16px; /* CHANGED: Explicit size for consistency */
+      padding: 0; 
+      line-height: 1; /* CHANGED: Ensure vertical alignment */
     }
     .reaction-buttons button.active {
       font-weight: bold;
@@ -267,9 +268,14 @@
     .share-buttons { 
       display: flex; 
       justify-content: center; 
-      gap: 8px; /* CHANGED: Consistent gap for share buttons */
+      gap: 8px; /* CHANGED: Consistent gap */
       flex-direction: row; 
-      align-items: center;
+      align-items: center; /* CHANGED: Center vertically with reaction buttons */
+    }
+    .share-buttons a img { 
+      width: 20px; /* CHANGED: Reduced size to match reaction buttons */
+      height: 20px; /* CHANGED: Consistent height */
+      vertical-align: middle; /* CHANGED: Align with reaction buttons */
     }
     .buttons-container {
       display: flex;
@@ -279,10 +285,6 @@
       flex-wrap: wrap;
       gap: 8px;
       flex: 1;
-    }
-    .share-buttons a img { 
-      width: 24px; 
-      height: 24px; 
     }
     .view-full-verse { 
       display: inline-block; 
@@ -385,11 +387,11 @@
     .single-verse-view {
       text-align: center;
       margin: 32px auto 32px auto;
-      max-width: 600px;
-      min-width: 300px;
+      max-width: 800px; /* CHANGED: Increased width for wider text span */
+      min-width: 320px; /* CHANGED: Slightly increased for better mobile fit */
       width: 100%;
       padding: 32px 24px 24px 24px;
-      background: #fff; /* CHANGED: Removed background image */
+      background: #fff; 
       box-shadow: 0 0 16px rgba(0,0,0,0.12);
       border-radius: 18px;
       position: relative;
@@ -398,22 +400,22 @@
       flex-direction: column;
       align-items: center;
     }
-    .single-verse-view::before { /* CHANGED: Removed pseudo-element for background image */
+    .single-verse-view::before { 
       content: none;
     }
-    .single-verse-view > * { /* CHANGED: Removed z-index for content */
+    .single-verse-view > * { 
       position: relative;
     }
     .single-verse-view h3 {
       margin-bottom: 18px;
       font-size: 1.35em;
-      font-family: 'Merriweather', serif; /* CHANGED: Added font for consistency */
-      color: #0066cc; /* CHANGED: Added color for consistency */
+      font-family: 'Merriweather', serif; 
+      color: #0066cc; 
     }
     .verse-details {
       margin-bottom: 24px;
       text-align: left;
-      width: 100%; /* CHANGED: Ensure full width to prevent overlap */
+      width: 100%; 
     }
     .verse-details p {
       font-family: 'Merriweather', serif;
@@ -430,7 +432,7 @@
       display: flex;
       flex-direction: row;
       justify-content: center;
-      gap: 12px; /* CHANGED: Adjusted gap for consistency */
+      gap: 12px; 
       flex-wrap: wrap;
       margin: 18px 0 0 0;
       position: relative;
@@ -589,18 +591,19 @@
       .reaction-buttons { 
         justify-content: center; 
         flex-direction: row; 
-        gap: 6px; /* CHANGED: Reduced gap for mobile */
+        gap: 6px; /* CHANGED: Consistent gap for mobile */
         align-items: center;
       }
       .share-buttons { 
         justify-content: center; 
         flex-direction: row; 
-        gap: 6px; /* CHANGED: Reduced gap for mobile */
-        align-items: center;
+        gap: 6px; /* CHANGED: Consistent gap for mobile */
+        align-items: center; /* CHANGED: Center vertically */
       }
       .share-buttons a img { 
-        width: 20px; 
-        height: 20px; 
+        width: 18px; /* CHANGED: Slightly smaller for mobile */
+        height: 18px; /* CHANGED: Consistent height */
+        vertical-align: middle; /* CHANGED: Align with reaction buttons */
       }
       .view-full-verse { 
         font-size: 0.8em; 
@@ -637,10 +640,10 @@
         width: 150px; 
       }
       .single-verse-view {
-        max-width: 96vw;
+        max-width: 98vw; /* CHANGED: Slightly wider for mobile */
         min-width: 0;
         padding: 10vw 2vw 5vw 2vw;
-        background: #fff; /* CHANGED: Ensure no background image on mobile */
+        background: #fff; 
       }
       .single-verse-view h3 { 
         font-family: 'Merriweather', serif;
@@ -652,7 +655,7 @@
         width: 120px; 
       }
       .single-verse-share-buttons { 
-        gap: 10px; /* CHANGED: Consistent gap for mobile */
+        gap: 10px; 
         margin-top: 12px;
       }
       .navigation-arrows img {

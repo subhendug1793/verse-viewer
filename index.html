@@ -396,11 +396,6 @@
       background-repeat: no-repeat;
       background-position: center; /* Centered watermark */
       background-size: contain; /* Ensure full image fits */
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      min-height: 300px; /* Ensure enough space for content */
     }
     .single-verse-view::before {
       content: '';
@@ -410,8 +405,8 @@
       right: 0;
       bottom: 0;
       background: inherit;
-      opacity: 0.015; /* Even subtler watermark */
-      filter: blur(6px); /* Increased blur for less sharpness */
+      opacity: 0.02; /* Subtle watermark */
+      filter: blur(3px); /* Softer effect */
       z-index: 0;
     }
     .single-verse-view > * {
@@ -426,27 +421,16 @@
     .verse-details { 
       margin-bottom: 20px; 
       text-align: left; 
-      width: 100%; /* Ensure details take full width */
-      flex-grow: 1; /* Allow details to take available space */
     }
     .verse-details p { 
       font-family: 'Merriweather', serif;
-      margin: 10px 0; 
+      margin: 5px 0; 
       font-size: 1em; 
-      word-wrap: break-word; /* Prevent overflow */
     }
     .verse-details strong { 
       display: inline-block; 
       width: 150px; 
       font-weight: bold; 
-    }
-    .single-verse-footer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-      width: 100%;
-      margin-top: 20px;
     }
     .single-verse-share-buttons { 
       display: flex; 
@@ -676,7 +660,6 @@
         padding: 20px 30px; /* Adjusted padding for mobile */
         background-color: rgba(255, 255, 255, 0.2); /* Lighter background for mobile */
         background-size: contain; /* Ensure watermark fits */
-        min-height: 250px; /* Adjusted for mobile */
       }
       .single-verse-view h3 { 
         font-family: 'Merriweather', serif;
@@ -1323,22 +1306,20 @@
       const className = header === "Verse Category " ? getCategoryClass(verse[header]) : "";
       html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
     });
-    html += `</div><div class="single-verse-footer">
-      <div class="navigation-arrows">
-        <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>
-          <img src="images/leftarrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';">
-        </a>
-        <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="next ${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>
-          <img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';">
-        </a>
-      </div>
-      <div class="reaction-buttons">
-        <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
-        <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
-        <button data-reaction="dislike" onclick="toggleReaction('dislike', '${currentSheet}', ${index})">👎 <span id="dislikeCount">0</span></button>
-      </div>
-      <div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>
+    html += `<div class="navigation-arrows">
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>
+        <img src="images/leftarrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';">
+      </a>
+      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="next ${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>
+        <img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';">
+      </a>
     </div>`;
+    html += `<div class="reaction-buttons">
+      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
+      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
+      <button data-reaction="dislike" onclick="toggleReaction('dislike', '${currentSheet}', ${index})">👎 <span id="dislikeCount">0</span></button>
+    </div>`;
+    html += `</div><div class="single-verse-share-buttons">${addShareButton(verse, index, false)}</div>`;
     singleVerseView.innerHTML = html;
     singleVerseView.style.display = "block";
   }

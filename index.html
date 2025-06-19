@@ -138,21 +138,21 @@
       width: 200px; 
     }
     .verse-container { 
-      width: 80%; 
+      width: 90vw; /* CHANGED: Maximized width for desktop */
       margin: 0 auto 20px; 
       display: flex; 
       flex-direction: column; 
-      gap: 25px; 
+      gap: 20px; /* CHANGED: Reduced gap for tighter layout */
     }
     .verse-card { 
       background: linear-gradient(135deg, #ffffff, #f9f9f9); 
       box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-      padding: 20px; 
+      padding: 12px; /* CHANGED: Reduced padding to minimize white space */
       border-radius: 12px; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
-      gap: 12px; 
+      gap: 8px; /* CHANGED: Reduced gap for compact layout */
       transition: transform 0.2s, box-shadow 0.2s; 
       border: 1px solid rgba(0,102,204,0.1); 
     }
@@ -165,7 +165,7 @@
       width: 100%; 
       justify-content: space-between; 
       align-items: center; 
-      padding: 4px 0; 
+      padding: 2px 0; /* CHANGED: Reduced padding */
       border-bottom: 1px solid rgba(0,0,0,0.1); 
     }
     .verse-header.category-universal { 
@@ -214,7 +214,7 @@
     .verse-field { 
       width: 100%; 
       text-align: center; 
-      padding: 8px 0; 
+      padding: 4px 0; /* CHANGED: Reduced padding */
       border-bottom: 1px solid rgba(0,0,0,0.1); 
       font-family: 'Poppins', sans-serif; 
       font-size: 0.95em; 
@@ -225,9 +225,9 @@
       width: 100%; 
       justify-content: space-between; 
       align-items: center; 
-      padding: 4px 0; 
+      padding: 2px 0; /* CHANGED: Reduced padding */
       border-top: 1px solid rgba(0,0,0,0.1); 
-      gap: 10px; 
+      gap: 8px; /* CHANGED: Reduced gap */
     }
     .verse-subcategory { 
       font-family: 'Poppins', sans-serif; 
@@ -241,7 +241,7 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      gap: 8px; /* CHANGED: Consistent gap for buttons */
+      gap: 8px; 
       justify-content: center;
       z-index: 10;
       position: relative;
@@ -254,9 +254,9 @@
       display: flex; 
       align-items: center; 
       gap: 5px; 
-      font-size: 16px; /* CHANGED: Explicit size for consistency */
+      font-size: 16px; 
       padding: 0; 
-      line-height: 1; /* CHANGED: Ensure vertical alignment */
+      line-height: 1; 
     }
     .reaction-buttons button.active {
       font-weight: bold;
@@ -268,14 +268,14 @@
     .share-buttons { 
       display: flex; 
       justify-content: center; 
-      gap: 8px; /* CHANGED: Consistent gap */
+      gap: 8px; 
       flex-direction: row; 
-      align-items: center; /* CHANGED: Center vertically with reaction buttons */
+      align-items: center; 
     }
     .share-buttons a img { 
-      width: 20px; /* CHANGED: Reduced size to match reaction buttons */
-      height: 20px; /* CHANGED: Consistent height */
-      vertical-align: middle; /* CHANGED: Align with reaction buttons */
+      width: 20px; 
+      height: 20px; 
+      vertical-align: middle; 
     }
     .buttons-container {
       display: flex;
@@ -387,10 +387,10 @@
     .single-verse-view {
       text-align: center;
       margin: 32px auto 32px auto;
-      max-width: 800px; /* CHANGED: Increased width for wider text span */
-      min-width: 320px; /* CHANGED: Slightly increased for better mobile fit */
+      max-width: 90vw; /* CHANGED: Maximized width for desktop */
+      min-width: 320px; 
       width: 100%;
-      padding: 32px 24px 24px 24px;
+      padding: 24px 16px; /* CHANGED: Reduced padding to minimize vertical white space */
       background: #fff; 
       box-shadow: 0 0 16px rgba(0,0,0,0.12);
       border-radius: 18px;
@@ -541,24 +541,24 @@
         max-width: 250px; 
       }
       .verse-container { 
-        width: 90%; 
+        width: 98vw; /* CHANGED: Near-full width for mobile */
         margin-bottom: 10px; 
-        gap: 20px; 
+        gap: 15px; /* CHANGED: Reduced gap for mobile */
       }
       .verse-card { 
-        padding: 15px; 
+        padding: 10px; /* CHANGED: Further reduced for mobile */
         border-radius: 10px; 
       }
       .verse-header { 
         flex-direction: column; 
         align-items: flex-start; 
-        padding: 3px 0; 
+        padding: 1px 0; /* CHANGED: Reduced for mobile */
       }
       .verse-footer { 
         flex-direction: column; 
         align-items: center; 
-        padding: 3px 0; 
-        gap: 8px; 
+        padding: 1px 0; /* CHANGED: Reduced for mobile */
+        gap: 6px; /* CHANGED: Reduced gap for mobile */
       }
       .verse-name { 
         font-size: 0.9em; 
@@ -591,19 +591,19 @@
       .reaction-buttons { 
         justify-content: center; 
         flex-direction: row; 
-        gap: 6px; /* CHANGED: Consistent gap for mobile */
+        gap: 6px; 
         align-items: center;
       }
       .share-buttons { 
         justify-content: center; 
         flex-direction: row; 
-        gap: 6px; /* CHANGED: Consistent gap for mobile */
-        align-items: center; /* CHANGED: Center vertically */
+        gap: 6px; 
+        align-items: center; 
       }
       .share-buttons a img { 
-        width: 18px; /* CHANGED: Slightly smaller for mobile */
-        height: 18px; /* CHANGED: Consistent height */
-        vertical-align: middle; /* CHANGED: Align with reaction buttons */
+        width: 18px; 
+        height: 18px; 
+        vertical-align: middle; 
       }
       .view-full-verse { 
         font-size: 0.8em; 
@@ -614,7 +614,7 @@
       }
       .verse-field { 
         font-size: 0.9em; 
-        padding: 6px 0; 
+        padding: 3px 0; /* CHANGED: Reduced for mobile */
       }
       .footer { 
         max-width: 90%; 
@@ -640,9 +640,9 @@
         width: 150px; 
       }
       .single-verse-view {
-        max-width: 98vw; /* CHANGED: Slightly wider for mobile */
+        max-width: 98vw; /* CHANGED: Increased width for mobile */
         min-width: 0;
-        padding: 10vw 2vw 5vw 2vw;
+        padding: 8vw 2vw; /* CHANGED: Adjusted padding for mobile */
         background: #fff; 
       }
       .single-verse-view h3 { 

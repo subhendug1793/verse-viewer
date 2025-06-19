@@ -100,86 +100,123 @@
       font-weight: normal; 
       white-space: nowrap; 
     }
-    .tab-bar { /* CHANGED: Added tab bar styling */
+    .tab-bar-container { /* CHANGED: Added full-width container */
+      position: sticky;
+      top: 0;
+      width: 100%;
+      left: 0;
+      right: 0;
+      background-color: rgba(255, 255, 255, 0.95); /* Fallback background */
+      z-index: 100;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .tab-bar { /* CHANGED: Modified tab bar styling */
       background-image: url('images/rpaint_strip.jpg');
       background-size: cover;
       background-position: center;
-      padding: 10px 0;
-      margin: 0 auto 20px;
-      width: 90%;
-      max-width: 800px;
-      border-radius: 12px; /* Soft edges */
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      opacity: 0.6; /* Lowered opacity for rainbow effect */
+      padding: 10px 20px;
+      margin: 0;
+      width: 100%;
+      border-radius: 0; /* Removed rounded corners for full-width */
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       gap: 10px;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      position: relative;
       z-index: 5;
     }
-    .tab-button { /* CHANGED: Added tab button styling */
+    .tab-bar::before { /* CHANGED: Overlay to ensure tabs are readable */
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.3);
+      z-index: -1;
+    }
+    .tab-button { /* CHANGED: Updated tab button styling */
+      font-family: 'Poppins', sans-serif;
+      font-size: 1em;
+      padding: 8px 16px;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+      outline: none;
+      background-color: #1b5e20; /* Deep green */
+      color: #fff; /* White text */
+    }
+    .tab-button.selected { /* CHANGED: Selected state */
+      background-color: #fff; /* White */
+      color: #000; /* Black text */
+      border-color: #1b5e20; /* Deep green border */
+    }
+    .tab-button:hover:not(.selected) { /* CHANGED: Hover for unselected */
+      background-color: #2e7d32; /* Lighter deep green */
+    }
+    .home-button { /* CHANGED: Added home button styling */
       font-family: 'Poppins', sans-serif;
       font-size: 1em;
       padding: 8px 16px;
       border: none;
-      border-radius: 8px; /* Soft edges for buttons */
+      border-radius: 8px;
       cursor: pointer;
-      transition: background-color 0.3s, color 0.3s;
-      outline: none;
+      background-color: #0066cc;
+      color: #fff;
+      margin-right: 20px;
+      transition: background-color 0.3s;
     }
-    .tab-button.selected { /* CHANGED: Selected state */
-      background-color: #ffeb3b; /* Yellow */
-      color: #000; /* Black text */
-    }
-    .tab-button:not(.selected) { /* CHANGED: Unselected state */
-      background-color: #000; /* Black */
-      color: #fff; /* White text */
-    }
-    .tab-button:hover:not(.selected) { /* CHANGED: Hover for unselected */
-      background-color: #333;
+    .home-button:hover { /* CHANGED: Home button hover */
+      background-color: #004c99;
     }
     .controls { 
       margin-bottom: 10px; 
       text-align: center; 
-      display: none; /* CHANGED: Hidden by default */
+      display: none;
       justify-content: center; 
       align-items: center; 
-      gap: 2px; 
-      flex-wrap: wrap; 
+      gap: 10px; /* CHANGED: Increased gap for single line */
+      flex-wrap: nowrap; /* CHANGED: Prevent wrapping on desktop */
     }
-    .controls.active { /* CHANGED: Show when active */
+    .controls.active { 
       display: flex;
+    }
+    .controls label { /* CHANGED: Smaller font for labels */
+      font-size: 0.85em;
+      white-space: nowrap;
+    }
+    .controls select { /* CHANGED: Smaller select inputs */
+      font-size: 0.85em;
+      padding: 3px;
+      margin-right: 5px;
     }
     .search-row { 
-      display: none; /* CHANGED: Hidden by default */
+      display: none;
       justify-content: center; 
       align-items: center; 
-      gap: 10px; 
+      gap: 10px; /* CHANGED: Adjusted gap */
       margin-bottom: 5px;
+      flex-wrap: nowrap; /* CHANGED: Single line on desktop */
     }
-    .search-row.active { /* CHANGED: Show when active */
+    .search-row.active { 
       display: flex;
     }
-    .content-count, .match-count { 
-      font-size: 1em; 
-      color: #333; 
-      text-align: left; 
+    .content-count, .match-count { /* CHANGED: Smaller font */
+      font-size: 0.85em;
+      color: #333;
+      white-space: nowrap;
     }
     .search-input-container {
       flex-grow: 0;
       text-align: center;
     }
-    select, input { 
-      font-family: 'Poppins', sans-serif;
-      padding: 5px; 
-      margin-right: 10px; 
-    }
-    select:disabled, input:disabled {
-      background-color: #e0e0e0;
-      cursor: not-allowed;
-    }
-    #searchInput { 
-      width: 200px; 
+    #searchInput { /* CHANGED: Smaller input */
+      font-size: 0.85em;
+      width: 150px;
+      padding: 3px;
     }
     .verse-container { 
       width: 90vw;
@@ -558,42 +595,51 @@
         max-width: 90%; 
         white-space: normal; 
       }
+      .tab-bar-container { /* CHANGED: Adjusted for mobile */
+        box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+      }
       .tab-bar { /* CHANGED: Adjusted for mobile */
-        width: 95%;
-        padding: 8px 0;
+        padding: 8px 10px;
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 8px;
-        border-radius: 10px;
       }
       .tab-button { /* CHANGED: Adjusted for mobile */
-        font-size: 0.9em;
+        font-size: 0.85em;
         padding: 6px 12px;
         border-radius: 6px;
       }
-      select, input { 
-        width: 100%; 
-        margin-bottom: 8px; 
-        padding: 4px; 
+      .home-button { /* CHANGED: Adjusted for mobile */
+        font-size: 0.85em;
+        padding: 6px 12px;
+        margin-right: 10px;
       }
-      .controls { 
-        flex-direction: column; 
-        align-items: center; 
-        gap: 8px; 
+      .controls { /* CHANGED: Stack on mobile */
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
       }
-      .search-row { 
-        flex-direction: column; 
-        align-items: center; 
-        gap: 8px; 
-        margin-bottom: 5px; 
+      .controls label, .controls select { /* CHANGED: Slightly larger for readability */
+        font-size: 0.8em;
       }
-      .content-count, .match-count { 
-        text-align: center; 
+      .search-row { /* CHANGED: Stack on mobile */
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .content-count, .match-count { /* CHANGED: Center text */
+        font-size: 0.8em;
+        text-align: center;
       }
       .search-input-container { 
         width: 100%; 
       }
       #searchInput { 
         width: 100%; 
-        max-width: 250px; 
+        max-width: 200px; 
+        font-size: 0.8em; 
       }
       .verse-container { 
         width: 98vw;
@@ -745,16 +791,18 @@
   <div class="mission-subtext">
     ⬇️ A unified platform offering categorized and filtered theological verses based on modern-day relevance empowering you to wisely apply or disregard teachings and avoid the misguidance of charlatans. ⬇️
   </div>
-  <div class="tab-bar" id="tabBar"> <!-- CHANGED: Added tab bar -->
-    <button class="tab-button" data-sheet="gita" onclick="selectSheet('gita')">Gita</button>
-    <button class="tab-button" data-sheet="bible" onclick="selectSheet('bible')">Bible</button>
-    <button class="tab-button" data-sheet="quran" onclick="selectSheet('quran')">Quran</button>
-    <button class="tab-button" data-sheet="hadith" onclick="selectSheet('hadith')">Hadith</button>
-    <button class="tab-button" data-sheet="miscellaneous" onclick="selectSheet('miscellaneous')">Miscellaneous</button>
+  <div class="tab-bar-container"> <!-- CHANGED: Added container for sticky behavior -->
+    <div class="tab-bar" id="tabBar">
+      <button class="home-button" onclick="goHome()">Home</button> <!-- CHANGED: Added Home button -->
+      <button class="tab-button" data-sheet="gita" onclick="toggleSheet('gita')">Gita</button> <!-- CHANGED: Changed to toggleSheet -->
+      <button class="tab-button" data-sheet="bible" onclick="toggleSheet('bible')">Bible</button>
+      <button class="tab-button" data-sheet="quran" onclick="toggleSheet('quran')">Quran</button>
+      <button class="tab-button" data-sheet="hadith" onclick="toggleSheet('hadith')">Hadith</button>
+      <button class="tab-button" data-sheet="miscellaneous" onclick="toggleSheet('miscellaneous')">Miscellaneous</button>
+    </div>
   </div>
   <div class="single-verse-view" id="singleVerseView" style="display: none;"></div>
   <div class="controls" id="controls">
-    <!-- CHANGED: Removed sheet selector -->
     <label for="categoryFilter">Filter by Sloka/Verse/Ayah Category:</label>
     <select id="categoryFilter" disabled onchange="filterTable()">
       <option value="">All</option>
@@ -1053,7 +1101,7 @@
     }
   }
 
-  async function loadSheetData(sheet) { // CHANGED: Accepts sheet parameter
+  async function loadSheetData(sheet) {
     currentSheet = sheet;
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
@@ -1078,8 +1126,8 @@
       subCategoryFilter.disabled = false;
       searchInput.disabled = false;
       errorDisplay.textContent = "";
-      document.querySelector('.search-row').classList.add('active'); // CHANGED: Show search row
-      document.querySelector('.controls').classList.add('active'); // CHANGED: Show controls
+      document.querySelector('.search-row').classList.add('active'); 
+      document.querySelector('.controls').classList.add('active'); 
       const urlsToTry = [
         `${currentSheet.toLowerCase()}.json`,
         `${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1).toLowerCase()}.json`,
@@ -1116,14 +1164,14 @@
       searchInput.disabled = true;
       errorDisplay.textContent = "";
       verseContainer.innerHTML = "";
-      document.querySelector('.search-row').classList.remove('active'); // CHANGED: Hide search row
-      document.querySelector('.controls').classList.remove('active'); // CHANGED: Hide controls
+      document.querySelector('.search-row').classList.remove('active'); 
+      document.querySelector('.controls').classList.remove('active'); 
       updateContentCount(0);
       updateMatchCount(0);
     }
   }
 
-  async function loadSingleVerse() {
+  async function loadSingleVerse() { // CHANGED: Fixed single verse view navigation
     const params = new URLSearchParams(window.location.search);
     const sheet = params.get("sheet");
     const verseParam = params.get("verse");
@@ -1131,8 +1179,9 @@
 
     if (!sheet || !verseParam) {
       document.getElementById("singleVerseView").style.display = "none";
-      document.querySelector('.search-row').classList.remove('active'); // CHANGED: Hide search row
-      document.querySelector('.controls').classList.remove('active'); // CHANGED: Hide controls
+      document.querySelector('.search-row').classList.remove('active');
+      document.querySelector('.controls').classList.remove('active');
+      selectSheet(sheet || ""); // CHANGED: Load sheet from URL or home
       return;
     }
 
@@ -1176,24 +1225,25 @@
       }
       if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < data.length) {
         currentVerseIndex = verseIndex;
-        displaySingleVerse(verse, verseIndex);
-        controls.classList.remove('active'); // CHANGED: Hide controls
+        selectSheet(sheet); // CHANGED: Select tab for sheet
+        displaySingleVerse(data[verseIndex], verseIndex);
+        controls.style.display = "none"; // CHANGED: Hide controls
         verseContainer.style.display = "none";
-        document.querySelector('.search-row').classList.remove('active'); // CHANGED: Hide search row
+        document.querySelector('.search-row').style.display = "none";
         await loadReactions(sheet, verseIndex);
       } else {
         console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
         displaySingleVerse(null, -1);
-        controls.classList.remove('active'); // CHANGED: Hide controls
+        controls.style.display = "none";
         verseContainer.style.display = "none";
-        document.querySelector('.search-row').classList.remove('active'); // CHANGED: Hide search row
+        document.querySelector('.search-row').style.display = "none";
       }
     } else {
       console.error(`Failed to load ${sheet}.json`);
       displaySingleVerse(null, -1);
-      controls.classList.remove('active'); // CHANGED: Hide controls
+      controls.style.display = "none";
       verseContainer.style.display = "none";
-      document.querySelector('.search-row').classList.remove('active'); // CHANGED: Hide search row
+      document.querySelector('.search-row').style.display = "none";
     }
   }
 
@@ -1357,7 +1407,7 @@
     singleVerseView.style.display = "block";
   }
 
-  function navigateVerse(newIndex) {
+  function navigateVerse(newIndex) { // CHANGED: Fixed navigation
     const verse = data[newIndex];
     if (!verse) {
       console.error(`Verse not found at index ${newIndex}`);
@@ -1406,7 +1456,7 @@
             </div>
             <div class="share-buttons">${addShareButton(row, index, true)}</div>
           </div>
-          <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(getTextForUrl(verseName) || index)}" class="view-full-verse">👁️ Verse Details>>></a>
+          <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(getTextForUrl(verseName) || index)}" class="view-full-verse" onclick="navigateVerse(${index}); return false;">👁️ Verse Details>>></a> <!-- CHANGED: Added onclick -->
         </div>`;
         card.innerHTML = html;
         const searchInput = document.getElementById("searchInput");
@@ -1561,8 +1611,7 @@
     }
   }
 
-  function selectSheet(sheet) { // CHANGED: New function for tab selection
-    currentSheet = sheet;
+  function selectSheet(sheet) { // CHANGED: Updated to handle URL and tab selection
     const buttons = document.querySelectorAll('.tab-button');
     buttons.forEach(btn => {
       if (btn.dataset.sheet === sheet) {
@@ -1571,7 +1620,32 @@
         btn.classList.remove('selected');
       }
     });
-    loadSheetData(sheet);
+    if (sheet) {
+      history.pushState(null, '', `?sheet=${encodeURIComponent(sheet)}`); // CHANGED: Update URL
+      loadSheetData(sheet);
+    } else {
+      history.pushState(null, '', '/verse-viewer/'); // CHANGED: Home URL
+      currentSheet = "";
+      document.getElementById("verseContainer").innerHTML = "";
+      document.querySelector('.controls').classList.remove('active');
+      document.querySelector('.search-row').classList.remove('active');
+      updateContentCount(0);
+      updateMatchCount(0);
+    }
+  }
+
+  function toggleSheet(sheet) { // CHANGED: New function for toggling tabs
+    const button = document.querySelector(`.tab-button[data-sheet="${sheet}"]`);
+    if (button.classList.contains('selected')) {
+      button.classList.remove('selected');
+      selectSheet("");
+    } else {
+      selectSheet(sheet);
+    }
+  }
+
+  function goHome() { // CHANGED: New function for Home button
+    selectSheet("");
   }
 
   window.loadSheetData = loadSheetData;
@@ -1579,13 +1653,14 @@
   window.searchTable = searchTable;
   window.navigateVerse = navigateVerse;
   window.toggleReaction = toggleReaction;
-  window.selectSheet = selectSheet; // CHANGED: Expose selectSheet
+  window.toggleSheet = toggleSheet; // CHANGED: Expose toggleSheet
+  window.goHome = goHome; // CHANGED: Expose goHome
 
   window.onload = () => {
     initializeFirebase();
     updateLastUpdated();
     updateVisitorCount();
-    loadSingleVerse();
+    loadSingleVerse(); // CHANGED: Handles sheet from URL
   };
 </script>
 </body>

@@ -8,7 +8,9 @@
   <meta property="og:description" content="Explore categorized theological verses from the Gita, Bible, Quran, and more.">
   <meta property="og:image" content="https://subhendug1793.github.io/verse-viewer/images/sastik_logo.png">
   <meta property="og:url" content="https://subhendug1793.github.io/verse-viewer/">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=stylesheet" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body { 
@@ -19,6 +21,12 @@
       min-height: 100vh; 
       display: flex;
       flex-direction: column;
+    }
+    .header-container { 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      margin-bottom: 20px; 
     }
     .header-info { 
       display: flex; 
@@ -33,127 +41,661 @@
       color: #666; 
       z-index: 10; 
     }
-    .header-info .last-updated { position: absolute; right: 20px; }
-    .header-info .last-updated a { color: #0066cc; text-decoration: none; }
-    .header-info .visitor-count { position: absolute; left: 0; font-weight: bold; color: #333; z-index: 10; }
-    .header-info .visitor-count.error { font-weight: normal; color: #999; }
-    .header-container { display: flex; justify-content: center; align-items: center; margin-bottom: 20px; }
-    .logo { width: 80px; height: auto; margin-right: 10px; }
-    h2 { font-family: 'Merriweather', serif; color: #0066cc; text-align: center; margin: 0; font-size: 1.8em; font-weight: bold; white-space: nowrap; text-decoration: none; }
-    h2 a { color: #0066cc; text-decoration: none; }
-    h2 a:hover { text-decoration: underline; }
-    .mission-statement { font-family: 'Merriweather', serif; text-align: center; margin: 0 auto 10px; max-width: 80%; font-size: 1.1em; line-height: 1.5; font-weight: bold; }
-    .mission-subtext { text-align: center; margin: 0 auto 20px; max-width: 90%; font-size: 0.75em; line-height: 1.2; font-weight: normal; white-space: nowrap; }
-    .controls { margin-bottom: 10px; text-align: center; display: flex; justify-content: center; align-items: center; gap: 2px; flex-wrap: wrap; }
-    .search-row { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 5px; }
-    .content-count, .match-count { font-size: 1em; color: #333; text-align: left; }
-    .search-input-container { flex-grow: 0; text-align: center; }
-    select, input { font-family: 'Poppins', sans-serif; padding: 5px; margin-right: 10px; }
-    select:disabled, input:disabled { background-color: #e0e0e0; cursor: not-allowed; }
-    #searchInput { width: 200px; }
-    .verse-container { width: 80%; margin: 0 auto 20px; display: flex; flex-direction: column; gap: 25px; }
-    .verse-card { background: linear-gradient(135deg, #ffffff, #f9f9f9); box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 12px; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid rgba(0,102,204,0.1); }
-    .verse-card:hover { transform: scale(1.02); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
-    .verse-header { display: flex; width: 100%; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.1); }
-    .verse-header.category-universal { background-color: #00FF00; }
-    .verse-header.category-general { background-color: #00FFFF; }
-    .verse-header.category-controversial { background-color: #FFFF00; }
-    .verse-header.category-divisive { background-color: #FF0000; }
-    .verse-header.category-violent { background-color: #000000; color: #FFFFFF; }
-    .verse-name { font-family: 'Merriweather', serif; font-weight: 700; font-size: 1em; color: #333; text-align: left; flex: 1; padding-left: 8px; }
-    .verse-name a { color: inherit; text-decoration: underline; }
-    .verse-header.category-violent .verse-name, .verse-header.category-violent .verse-name a { color: #FFFFFF; }
-    .verse-category { font-family: 'Poppins', sans-serif; font-size: 0.9em; text-align: right; flex: 1; padding-right: 8px; }
-    .verse-header.category-violent .verse-category { color: #FFFFFF; }
-    .verse-field { width: 100%; text-align: center; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-family: 'Poppins', sans-serif; font-size: 0.95em; color: #444; }
-    .verse-footer { display: flex; width: 100%; justify-content: space-between; align-items: center; padding: 4px 0; border-top: 1px solid rgba(0,0,0,0.1); gap: 10px; }
-    .verse-subcategory { font-family: 'Poppins', sans-serif; font-size: 0.9em; text-align: left; flex: 2; padding-left: 8px; color: #444; }
-    .reaction-buttons { display: flex; justify-content: center; gap: 8px; flex: 1; flex-direction: row; }
-    .reaction-buttons button { font-family: 'Poppins', sans-serif; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 16px; }
-    .reaction-buttons button.active { font-weight: bold; }
-    .reaction-buttons span { font-size: 1em; color: #333; }
-    .share-buttons { display: flex; justify-content: center; gap: 8px; flex: 1; flex-direction: row; align-items: center; margin-top: 3px; }
-    .buttons-container { display: flex; justify-content: center; align-items: center; flex-direction: row; flex-wrap: wrap; gap: 8px; flex: 1; }
-    .share-buttons a img { width: 24px; height: 24px; }
-    .view-full-verse { display: inline-block; padding: 6px 12px; background: #800080; color: #fff; text-decoration: none; border-radius: 6px; font-family: 'Poppins', sans-serif; font-size: 0.85em; box-shadow: 0 2px 6px rgba(0,102,204,0.3); transition: background 0.3s, transform 0.2s; text-align: right; flex: none; }
-    .view-full-verse:hover { background: #4B0082; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,102,204,0.4); }
-    .footer { position: relative; margin-top: auto; display: flex; flex-direction: column; align-items: center; max-width: 80%; margin: 5px auto 0; padding: 10px 0; pointer-events: auto; }
-    .footer a { text-decoration: none; cursor: pointer; pointer-events: auto; }
-    .footer img { vertical-align: middle; pointer-events: auto; }
-    .logos { display: flex; align-items: center; margin-bottom: 5px; }
-    .logos img { width: 60px; height: auto; margin-right: 5px; }
-    .logos img:last-child { margin-right: 0; }
-    .text-group { display: flex; flex-direction: column; align-items: center; text-align: center; }
-    .support-text { font-weight: bold; font-size: 0.9em; margin-bottom: 10px; }
-    .support-text span { display: block; }
-    .follow-text { font-size: 1.1em; margin: 2px 0; }
-    .name-text { font-family: 'Merriweather', serif; font-size: 2em; margin: 5px 0; }
-    .contact-text { font-size: 1em; max-width: 90%; text-align: center; pointer-events: auto; }
-    .contact-text span { display: block; white-space: nowrap; line-height: 1.4; }
-    .contact-text img { width: 20px; height: auto; vertical-align: middle; }
-    .qr-code { margin: 10px 0; }
-    .qr-code img { width: 200px; height: auto; }
-    .single-verse-view { text-align: center; margin: 20px auto; width: 90%; max-width: 1000px; /* NEW: Wider max-width */ height: auto; aspect-ratio: 3 / 1; /* NEW: Landscape aspect ratio */ padding: 20px 40px; background-color: rgba(255, 255, 255, 0.8); box-shadow: 0 0 10px rgba(0,0,0,0.1); position: relative; background-image: url('images/sastik_logo.png'); background-repeat: no-repeat; background-position: center; background-size: contain; }
-    .single-verse-view::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: inherit; opacity: 0.1; /* NEW: Opacity set to 10% */ filter: blur(2px); z-index: 0; }
-    .single-verse-view > * { position: relative; z-index: 1; }
-    .single-verse-view h3 { font-family: 'Merriweather', serif; color: #0066cc; margin-bottom: 10px; }
-    .verse-details { margin-bottom: 20px; text-align: left; }
-    .verse-details p { font-family: 'Merriweather', serif; margin: 5px 0; font-size: 1em; }
-    .verse-details strong { display: inline-block; width: 150px; font-weight: bold; }
-    .single-verse-share-buttons { display: flex; flex-direction: row; justify-content: center; gap: 12px; flex-wrap: wrap; }
-    .single-verse-share-buttons img { width: 24px; height: 24px; vertical-align: middle; }
-    .single-verse-share-buttons a { display: flex; justify-content: center; align-items: center; width: 40px; position: relative; }
-    .navigation-arrows { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; display: flex; justify-content: space-between; pointer-events: none; }
-    .navigation-arrows a { text-decoration: none; pointer-events: auto; }
-    .navigation-arrows img { width: 40px; height: auto; }
-    .navigation-arrows a.disabled img { opacity: 0.3; cursor: not-allowed; }
-    .navigation-arrows .prev { position: absolute; left: -40px; }
-    .navigation-arrows .next { position: absolute; right: -30px; }
+    .header-info .last-updated {
+      position: absolute; 
+      right: 20px; 
+    }
+    .header-info .last-updated a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .header-info .visitor-count {
+      position: absolute; 
+      left: 0; 
+      font-weight: bold;
+      color: #333;
+      z-index: 10;
+    }
+    .header-info .visitor-count.error {
+      font-weight: normal;
+      color: #999;
+    }
+    .logo { 
+      width: 80px; 
+      height: auto; 
+      margin-right: 10px; 
+    }
+    h2 { 
+      font-family: 'Merriweather', serif;
+      color: #0066cc;
+      text-align: center; 
+      margin: 0; 
+      font-size: 1.8em;
+      font-weight: bold; 
+      white-space: nowrap; 
+      text-decoration: none; 
+    }
+    h2 a { 
+      color: #0066cc; 
+      text-decoration: none; 
+    }
+    h2 a:hover { 
+      text-decoration: underline; 
+    }
+    .mission-statement { 
+      font-family: 'Merriweather', serif;
+      text-align: center; 
+      margin: 0 auto 10px;
+      max-width: 80%; 
+      font-size: 1.1em; 
+      line-height: 1.5; 
+      font-weight: bold; 
+    }
+    .mission-subtext { 
+      text-align: center; 
+      margin: 0 auto 20px; 
+      max-width: 90%; 
+      font-size: 0.75em; 
+      line-height: 1.2; 
+      font-weight: normal; 
+      white-space: nowrap; 
+    }
+    .controls { 
+      margin-bottom: 10px; 
+      text-align: center; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      gap: 2px; 
+      flex-wrap: wrap; 
+    }
+    .search-row { 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      gap: 10px; 
+      margin-bottom: 5px;
+    }
+    .content-count, .match-count { 
+      font-size: 1em; 
+      color: #333; 
+      text-align: left; 
+    }
+    .search-input-container {
+      flex-grow: 0;
+      text-align: center;
+    }
+    select, input { 
+      font-family: 'Poppins', sans-serif;
+      padding: 5px; 
+      margin-right: 10px; 
+    }
+    select:disabled, input:disabled {
+      background-color: #e0e0e0;
+      cursor: not-allowed;
+    }
+    #searchInput { 
+      width: 200px; 
+    }
+    .verse-container { 
+      width: 80%; 
+      margin: 0 auto 20px; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 25px; 
+    }
+    .verse-card { 
+      background: linear-gradient(135deg, #ffffff, #f9f9f9); 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+      padding: 20px; 
+      border-radius: 12px; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 12px; 
+      transition: transform 0.2s, box-shadow 0.2s; 
+      border: 1px solid rgba(0,102,204,0.1); 
+    }
+    .verse-card:hover { 
+      transform: scale(1.02); 
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15); 
+    }
+    .verse-header { 
+      display: flex; 
+      width: 100%; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 4px 0; 
+      border-bottom: 1px solid rgba(0,0,0,0.1); 
+    }
+    .verse-header.category-universal { 
+      background-color: #00FF00; 
+    }
+    .verse-header.category-general { 
+      background-color: #00FFFF; 
+    }
+    .verse-header.category-controversial { 
+      background-color: #FFFF00; 
+    }
+    .verse-header.category-divisive { 
+      background-color: #FF0000; 
+    }
+    .verse-header.category-violent { 
+      background-color: #000000; 
+      color: #FFFFFF; 
+    }
+    .verse-name { 
+      font-family: 'Merriweather', serif; 
+      font-weight: 700; 
+      font-size: 1em; 
+      color: #333; 
+      text-align: left; 
+      flex: 1; 
+      padding-left: 8px; 
+    }
+    .verse-name a { 
+      color: inherit; 
+      text-decoration: underline; 
+    }
+    .verse-header.category-violent .verse-name, 
+    .verse-header.category-violent .verse-name a { 
+      color: #FFFFFF; 
+    }
+    .verse-category { 
+      font-family: 'Poppins', sans-serif; 
+      font-size: 0.9em; 
+      text-align: right; 
+      flex: 1; 
+      padding-right: 8px; 
+    }
+    .verse-header.category-violent .verse-category { 
+      color: #FFFFFF; 
+    }
+    .verse-field { 
+      width: 100%; 
+      text-align: center; 
+      padding: 8px 0; 
+      border-bottom: 1px solid rgba(0,0,0,0.1); 
+      font-family: 'Poppins', sans-serif; 
+      font-size: 0.95em; 
+      color: #444; 
+    }
+    .verse-footer { 
+      display: flex; 
+      width: 100%; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 4px 0; 
+      border-top: 1px solid rgba(0,0,0,0.1); 
+      gap: 10px; 
+    }
+    .verse-subcategory { 
+      font-family: 'Poppins', sans-serif; 
+      font-size: 0.9em; 
+      text-align: left; 
+      flex: 2; 
+      padding-left: 8px; 
+      color: #444; 
+    }
+    .reaction-buttons { 
+      display: flex; 
+      justify-content: center; 
+      gap: 8px; 
+      flex: 1; 
+      flex-direction: row;
+    }
+    .reaction-buttons button { 
+      font-family: 'Poppins', sans-serif; 
+      background: none; 
+      border: none; 
+      cursor: pointer; 
+      display: flex; 
+      align-items: center; 
+      gap: 5px; 
+      font-size: 16px; 
+    }
+    .reaction-buttons button.active {
+      font-weight: bold;
+    }
+    .reaction-buttons span {
+      font-size: 1em;
+      color: #333;
+    }
+    .share-buttons { 
+      display: flex; 
+      justify-content: center; 
+      gap: 8px; 
+      flex: 1; 
+      flex-direction: row; 
+      align-items: center; 
+      margin-top: 3px;
+    }
+    .buttons-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 8px;
+      flex: 1;
+    }
+    .share-buttons a img { 
+      width: 24px; 
+      height: 24px; 
+    }
+    .view-full-verse { 
+      display: inline-block; 
+      padding: 6px 12px; 
+      background: #800080;
+      color: #fff; 
+      text-decoration: none; 
+      border-radius: 6px; 
+      font-family: 'Poppins', sans-serif; 
+      font-size: 0.85em; 
+      box-shadow: 0 2px 6px rgba(0,102,204,0.3); 
+      transition: background 0.3s, transform 0.2s; 
+      text-align: right; 
+      flex: none; 
+    }
+    .view-full-verse:hover { 
+      background: #4B0082; 
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 10px rgba(0,102,204,0.4); 
+    }
+    .footer { 
+      position: relative; 
+      margin-top: auto; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      max-width: 80%; 
+      margin: 5px auto 0;
+      padding: 10px 0; 
+      pointer-events: auto; 
+    }
+    /* CHANGED: Hide footer in single-verse view */
+    #singleVerseView:not([style*="display: none"]) ~ .footer {
+      display: none;
+    }
+    .footer a { 
+      text-decoration: none; 
+      cursor: pointer; 
+      pointer-events: auto; 
+    }
+    .footer img { 
+      vertical-align: middle; 
+      pointer-events: auto; 
+    }
+    .logos { 
+      display: flex; 
+      align-items: center; 
+      margin-bottom: 5px; 
+    }
+    .logos img { 
+      width: 60px; 
+      height: auto; 
+      margin-right: 5px; 
+    }
+    .logos img:last-child { 
+      margin-right: 0; 
+    }
+    .text-group { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      text-align: center; 
+    }
+    .support-text { 
+      font-weight: bold; 
+      font-size: 0.9em; 
+      margin-bottom: 10px; 
+    }
+    .support-text span { 
+      display: block; 
+    }
+    .follow-text { 
+      font-size: 1.1em; 
+      margin: 2px 0; 
+    }
+    .name-text { 
+      font-family: 'Merriweather', serif;
+      font-size: 2em; 
+      margin: 5px 0; 
+    }
+    .contact-text { 
+      font-size: 1em; 
+      max-width: 90%; 
+      text-align: center; 
+      pointer-events: auto; 
+    }
+    .contact-text span { 
+      display: block; 
+      white-space: nowrap; 
+      line-height: 1.4; 
+    }
+    .contact-text img { 
+      width: 20px; 
+      height: auto; 
+      vertical-align: middle; 
+    }
+    .qr-code { 
+      margin: 10px 0; 
+    }
+    .qr-code img { 
+      width: 200px; 
+      height: auto; 
+    }
+    .single-verse-view { 
+      text-align: center; 
+      margin: 20px auto; 
+      width: 80%;
+      max-width: 800px;
+      height: auto;
+      aspect-ratio: 2 / 1;
+      padding: 20px 40px;
+      background-color: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+      position: relative; 
+      background-image: url('images/sastik_logo.png');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      max-width: 600px;
+    }
+    .single-verse-view::before { 
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: inherit;
+      opacity: 0.15; /* CHANGED: Opacity set to 0.15 */
+      filter: blur(2px);
+      z-index: 0;
+    }
+    .single-verse-view > * { 
+      position: relative;
+      z-index: 1;
+    }
+    .single-verse-view h3 { 
+      font-family: 'Merriweather', serif;
+      color: #0066cc; 
+      margin-bottom: 10px; 
+    }
+    .verse-details { 
+      margin-bottom: 20px; 
+      text-align: left; 
+    }
+    .verse-details p { 
+      font-family: 'Merriweather', serif;
+      margin: 5px 0; 
+      font-size: 1em; 
+    }
+    .verse-details strong { 
+      display: inline-block; 
+      width: 150px; 
+      font-weight: bold; 
+    }
+    .single-verse-share-buttons { 
+      display: flex; 
+      flex-direction: row; 
+      justify-content: center; 
+      gap: 12px; 
+      flex-wrap: wrap; 
+    }
+    .single-verse-share-buttons img { 
+      width: 24px; 
+      height: 24px; 
+      vertical-align: middle; 
+    }
+    .single-verse-share-buttons a { 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      width: 40px; 
+      position: relative; 
+    }
+    .navigation-arrows {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+    .navigation-arrows a {
+      text-decoration: none;
+      pointer-events: auto;
+    }
+    .navigation-arrows img {
+      width: 40px;
+      height: auto;
+    }
+    .navigation-arrows a.disabled img {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    .navigation-arrows .prev {
+      position: absolute;
+      left: -40px;
+    }
+    .navigation-arrows .next {
+      position: absolute;
+      right: -30px;
+    }
     @media (max-width: 600px) {
-      .header-info { flex-direction: column; align-items: center; position: relative; top: 0; left: 0; right: 0; margin: 10px 0; font-size: 0.8em; }
-      .header-info .visitor-count { position: relative; left: 0; margin-bottom: 5px; }
-      .header-info .last-updated { position: relative; right: 0; }
-      .header-container { flex-direction: column; text-align: center; margin-bottom: 10px; }
-      .logo { margin-right: 0; margin-bottom: 5px; width: 50px; }
-      h2 { font-family: 'Merriweather', serif; font-size: 1.2em; }
-      .mission-statement { font-family: 'Merriweather', serif; font-size: 0.9em; max-width: 90%; }
-      .mission-subtext { font-size: 0.65em; max-width: 90%; white-space: normal; }
-      select, input { font-family: 'Poppins', sans-serif; width: 100%; margin-bottom: 8px; padding: 4px; }
-      .controls { flex-direction: column; align-items: center; gap: 8px; }
-      .search-row { flex-direction: column; align-items: center; gap: 8px; margin-bottom: 5px; }
-      .content-count, .match-count { text-align: center; }
-      .search-input-container { width: 100%; }
-      #searchInput { width: 100%; max-width: 250px; }
-      .verse-container { width: 90%; margin-bottom: 10px; gap: 20px; }
-      .verse-card { padding: 15px; border-radius: 10px; }
-      .verse-header { flex-direction: column; align-items: flex-start; padding: 3px 0; }
-      .verse-footer { flex-direction: column; align-items: center; padding: 3px 0; gap: 8px; }
-      .verse-name { font-size: 0.9em; padding-left: 0; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-      .verse-category { font-size: 0.85em; text-align: right; margin-top: 4px; width: 100%; padding-right: 0; }
-      .verse-subcategory { font-size: 0.85em; padding-left: 0; width: 100%; text-align: center; }
-      .buttons-container { justify-content: center; width: 100%; flex-direction: row; flex-wrap: wrap; gap: 6px; }
-      .reaction-buttons { justify-content: center; width: 100%; flex-direction: row; flex-wrap: wrap; gap: 6px; }
-      .share-buttons { justify-content: center; width: 100%; flex-direction: row; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 3px; }
-      .share-buttons a img { width: 20px; height: 20px; }
-      .view-full-verse { font-size: 0.8em; padding: 5px 10px; width: 100%; text-align: center; border-radius: 5px; }
-      .verse-field { font-size: 0.9em; padding: 6px 0; }
-      .footer { max-width: 90%; margin: 5px auto 0; }
-      .logos img { width: 40px; margin-right: 3px; }
-      .logos img:last-child { margin-right: 0; }
-      .follow-text { font-size: 0.9em; }
-      .contact-text { font-size: 0.75em; }
-      .contact-text img { width: 20px; }
-      .qr-code img { width: 150px; }
-      .single-verse-view { width: 95%; max-width: 500px; aspect-ratio: 2 / 1; /* NEW: Mobile landscape */ padding: 15px 20px; background-size: contain; }
-      .single-verse-view h3 { font-family: 'Merriweather', serif; }
-      .verse-details p { font-family: 'Merriweather', serif; font-size: 0.9em; }
-      .verse-details strong { width: 120px; }
-      .single-verse-share-buttons img { width: 20px; height: 20px; }
-      .single-verse-share-buttons a { width: 30px; }
-      .navigation-arrows img { width: 30px; }
-      .navigation-arrows .prev { left: -30px; }
-      .navigation-arrows .next { right: -20px; }
-      .reaction-buttons button { font-family: 'Poppins', sans-serif; font-size: 14px; }
+      .header-info { 
+        flex-direction: column; 
+        align-items: center; 
+        position: relative; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        margin: 10px 0; 
+        font-size: 0.8em; 
+      }
+      .header-info .visitor-count {
+        position: relative; 
+        left: 0; 
+        margin-bottom: 5px; 
+      }
+      .header-info .last-updated {
+        position: relative; 
+        right: 0; 
+      }
+      .header-container { 
+        flex-direction: column; 
+        text-align: center; 
+        margin-bottom: 10px; 
+      }
+      .logo { 
+        margin-right: 0; 
+        margin-bottom: 5px; 
+        width: 50px; 
+      }
+      h2 { 
+        font-family: 'Merriweather', serif;
+        font-size: 1.2em; 
+      }
+      .mission-statement { 
+        font-family: 'Merriweather', serif;
+        font-size: 0.9em; 
+        max-width: 90%; 
+      }
+      .mission-subtext { 
+        font-size: 0.65em; 
+        max-width: 90%; 
+        white-space: normal; 
+      }
+      select, input { 
+        font-family: 'Poppins', sans-serif;
+        width: 100%; 
+        margin-bottom: 8px; 
+        padding: 4px; 
+      }
+      .controls { 
+        flex-direction: column; 
+        align-items: center; 
+        gap: 8px; 
+      }
+      .search-row { 
+        flex-direction: column; 
+        align-items: center; 
+        gap: 8px; 
+        margin-bottom: 5px;
+      }
+      .content-count, .match-count { 
+        text-align: center; 
+      }
+      .search-input-container { 
+        width: 100%; 
+      }
+      #searchInput { 
+        width: 100%; 
+        max-width: 250px; 
+      }
+      .verse-container { 
+        width: 90%; 
+        margin-bottom: 10px; 
+        gap: 20px; 
+      }
+      .verse-card { 
+        padding: 15px; 
+        border-radius: 10px; 
+      }
+      .verse-header { 
+        flex-direction: column;
+        align-items: flex-start; 
+        padding: 3px 0; 
+      }
+      .verse-footer { 
+        flex-direction: column;
+        align-items: center;
+        padding: 3px 0; 
+        gap: 8px; 
+      }
+      .verse-name { 
+        font-size: 0.9em;
+        padding-left: 0; 
+        width: 100%; 
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .verse-category { 
+        font-size: 0.85em; 
+        text-align: right;
+        margin-top: 4px; 
+        width: 100%; 
+        padding-right: 0; 
+      }
+      .verse-subcategory { 
+        font-size: 0.85em; 
+        padding-left: 0; 
+        width: 100%; 
+        text-align: center;
+      }
+      .buttons-container {
+        justify-content: center; 
+        width: 100%; 
+        flex-direction: row; 
+        flex-wrap: wrap; 
+        gap: 6px; 
+      }
+      .reaction-buttons { 
+        justify-content: center;
+        width: 100%; 
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .share-buttons { 
+        justify-content: center;
+        width: 100%; 
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+        margin-top: 3px;
+      }
+      .share-buttons a img { 
+        width: 20px;
+        height: 20px; 
+      }
+      .view-full-verse { 
+        font-size: 0.8em; 
+        padding: 5px 10px; 
+        width: 100%; 
+        text-align: center;
+        border-radius: 5px; 
+      }
+      .verse-field { 
+        font-size: 0.9em; 
+        padding: 6px 0; 
+      }
+      .footer { 
+        max-width: 90%; 
+        margin: 5px auto 0;
+      }
+      .logos img { 
+        width: 40px; 
+        margin-right: 3px; 
+      }
+      .logos img:last-child { 
+        margin-right: 0; 
+      }
+      .follow-text { 
+        font-size: 0.9em; 
+      }
+      .contact-text { 
+        font-size: 0.75em; 
+      }
+      .contact-text img { 
+        width: 20px; 
+      }
+      .qr-code img { 
+        width: 150px; 
+      }
+      .single-verse-view { 
+        width: 90%;
+        max-width: 400px;
+        aspect-ratio: 3 / 2;
+        padding: 15px 20px;
+        background-size: contain;
+        max-width: 300px;
+      }
+      .single-verse-view h3 { 
+        font-family: 'Merriweather', serif;
+      }
+      .verse-details p { 
+        font-family: 'Merriweather', serif;
+        font-size: 0.9em; 
+      }
+      .verse-details strong { 
+        width: 120px; 
+      }
+      .single-verse-share-buttons img { 
+        width: 20px; 
+        height: 20px; 
+      }
+      .single-verse-share-buttons a { 
+        width: 30px; 
+      }
+      .navigation-arrows img {
+        width: 30px;
+      }
+      .navigation-arrows .prev {
+        left: -30px;
+      }
+      .navigation-arrows .next {
+        right: -20px;
+      }
+      .reaction-buttons button {
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+      }
     }
   </style>
 </head>
@@ -235,7 +777,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDoc, increment } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, getDoc, increment, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCou0LOLpeijDPxHlVN1pvpruvxdrLKVWk",
@@ -285,11 +827,31 @@
   let currentVerseIndex = -1;
 
   const columnMappings = {
-    bible: { verseName: ["Verse Name", "Verse"], bengaliTranslation: ["Bengali Translation"], englishTranslation: ["Verse in English", "English Translation"] },
-    quran: { verseName: ["Verse Name", "Verse"], bengaliTranslation: ["Bengali Meaning", "Bengali Translation"], englishTranslation: ["English Meaning", "English Translation"] },
-    gita: { verseName: ["Verse Name", "Verse"], bengaliTranslation: ["Bengali Translation"], englishTranslation: ["English Translation"] },
-    hadith: { verseName: ["Verse Name", "Verse"], bengaliTranslation: ["Bengali Translation"], englishTranslation: ["English Translation"] },
-    miscellaneous: { verseName: ["Verse Name", "Verse"], bengaliTranslation: ["Bengali Translation"], englishTranslation: ["English Translation"] }
+    bible: {
+      verseName: ["Verse Name", "Verse"],
+      bengaliTranslation: ["Bengali Translation"],
+      englishTranslation: ["Verse in English", "English Translation"]
+    },
+    quran: {
+      verseName: ["Verse Name", "Verse"],
+      bengaliTranslation: ["Bengali Meaning", "Bengali Translation"],
+      englishTranslation: ["English Meaning", "English Translation"]
+    },
+    gita: {
+      verseName: ["Verse Name", "Verse"],
+      bengaliTranslation: ["Bengali Translation"],
+      englishTranslation: ["English Translation"]
+    },
+    hadith: {
+      verseName: ["Verse Name", "Verse"],
+      bengaliTranslation: ["Bengali Translation"],
+      englishTranslation: ["English Translation"]
+    },
+    miscellaneous: {
+      verseName: ["Verse Name", "Verse"],
+      bengaliTranslation: ["Bengali Translation"],
+      englishTranslation: ["English Translation"]
+    }
   };
 
   function getColumnValue(row, field, sheet) {
@@ -320,30 +882,51 @@
   }
 
   function updateLastUpdated() {
-    const lastUpdatedElement = document.getElementById("lastUpdated");
-    if (!lastUpdatedElement) {
-      console.error("Last updated element not found");
-      return;
-    }
     try {
-      const now = new Date();
-      const dateStr = now.toLocaleDateString('en-IN', {
-        timeZone: 'Asia/Kolkata',
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-      }).replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$1/$2/$3');
-      const timeStr = now.toLocaleTimeString('en-IN', {
-        timeZone: 'Asia/Kolkata',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      });
-      lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4xUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${dateStr} ${timeStr}</a>`;
+      const lastUpdatedElement = document.getElementById("lastUpdated");
+      if (!lastUpdatedElement) throw new Error("Last updated element not found");
+      let lastUpdated;
+      if (document.lastModified && !isNaN(new Date(document.lastModified).getTime())) {
+        const date = new Date();
+        const dateStr = date.toLocaleDateString('en-IN', {
+          timeZone: 'Asia/Kolkata',
+          dateStr: '2-digit',
+          month: '2-digit',
+          yearStr: 'numeric'
+        }).replace(/(\d{2})\/(\d\{2\})/, '$1/$2/$3');
+        const timeStr = date.toLocaleTimeString('en-IN', {
+          timeZone: 'Asia/Kolkata',
+          hourStr: '2-digit',
+          minuteStr: '2-digit',
+          secondStr: '2-digit',
+          hour12Str: true
+        });
+        lastUpdated = `${dateStr} ${timeStr}`;
+      } else {
+        console.warn("document.lastModified unavailable");
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-IN', {
+          timeZone: 'Asia/Kolkata',
+          dateStr: '2-digit',
+          month: '2-digit',
+          yearStr: 'numeric'
+        }).replace(/(\d{2})\/(\d{2})/, '$1/$2/$3');
+        const timeStr = now.toLocaleTimeString('en-IN', {
+          timeZone: 'Asia/Kolkata',
+          hourStr: '2-digit',
+          minuteStr: '2-digit',
+          secondStr: '2-digit',
+          hour12Str: false
+        });
+        lastUpdated = `${dateStr} ${timeStr}`;
+      }
+      lastUpdatedElement.innerHTML = `Last updated: <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHaeyqE5JLDS8AuR4x9dgrcX6NoqjdUHpdk0GDI4xUV7PWbmGPFuJRhV108IjxEEM0QBqyFbhyr2Yt/pubhtml" target="_blank">${lastUpdated}</a>`;
     } catch (error) {
       console.error("Error updating last modified:", error);
-      lastUpdatedElement.innerHTML = `Last updated: Unknown`;
+      const lastUpdatedElement = document.getElementById("lastUpdated");
+      if (lastUpdatedElement) {
+        lastUpdatedElement.innerHTML = `Last updated: Unknown`;
+      }
     }
   }
 
@@ -354,24 +937,29 @@
       return;
     }
     const cacheKey = 'visitor_count';
-    const cacheTTL = 3600000; // 1 hour
-    let cachedData = null;
-    try {
-      cachedData = JSON.parse(localStorage.getItem(cacheKey));
-    } catch (e) {
-      console.warn("Invalid visitor count cache:", e);
-    }
-    const now = Date.now();
+    const cacheTTL = 3600000;
+    const cachedData = JSON.parse(localStorage.getItem(cacheKey));
+    const now = new Date.now();
     const maxRetries = 3;
+    let retryCount = 0;
 
     if (cachedData && now - cachedData.timestamp < cacheTTL && cachedData.count > 0) {
       visitorCount.innerHTML = `Visitors: ${cachedData.count}`;
       visitorCount.classList.remove("error");
-      return;
+    } else {
+      visitorCount.innerHTML = `Visitors: Loading...`;
     }
 
-    visitorCount.innerHTML = `Visitors: Loading...`;
-    let retryCount = 0;
+    const tryFetch = async (url) => {
+      try {
+        const response = await fetch(url, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.json();
+      } catch (error) {
+        throw error;
+      }
+    };
+
     while (retryCount < maxRetries) {
       try {
         if (db) {
@@ -384,6 +972,7 @@
               visitorCount.innerHTML = `Visitors: ${count}`;
               visitorCount.classList.remove("error");
               localStorage.setItem(cacheKey, JSON.stringify({ count, timestamp: now }));
+              console.log(`Firestore count: ${count}`);
               return;
             }
           }
@@ -392,7 +981,10 @@
       } catch (error) {
         console.warn(`Firestore attempt ${retryCount + 1} failed:`, error);
         retryCount++;
-        if (retryCount === maxRetries) break;
+        if (retryCount === maxRetries) {
+          console.error("Firestore max retries reached");
+          break;
+        }
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
     }
@@ -400,31 +992,35 @@
     retryCount = 0;
     while (retryCount < maxRetries) {
       try {
-        const response = await fetch('counter.json', { cache: 'no-store' });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const data = await response.json();
-        const count = data.visitors || 0;
+        const data = await tryFetch('counter.json');
+        const count = data.visitors || 0';
         if (count > 0) {
           visitorCount.innerHTML = `Visitors: ${count}`;
           visitorCount.classList.remove("error");
           localStorage.setItem(cacheKey, JSON.stringify({ count, timestamp: now }));
+          console.log(`counter.json visitor count: ${count}`);
           return;
         }
         throw new Error("counter.json count invalid");
       } catch (error) {
         console.warn(`counter.json attempt ${retryCount + 1} failed:`, error);
         retryCount++;
-        if (retryCount === maxRetries) break;
+        if (retryCount === maxRetries) {
+          console.error("counter.json max retries reached");
+          break;
+        }
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
     }
 
-    if (cachedData && cachedData.count > 0) {
+    if (cachedData && cacheData.count > 0) {
       visitorCount.innerHTML = `Visitors: ${cachedData.count}`;
       visitorCount.classList.remove("error");
+      console.log(`Using cached visitor count: ${cachedData.count}`);
     } else {
       visitorCount.innerHTML = `Visitors: Error`;
       visitorCount.classList.add("error");
+      console.error("All visitor counts failed");
     }
   }
 
@@ -439,20 +1035,22 @@
     const subCategoryFilter = document.getElementById("subCategoryFilter");
     const searchInput = document.getElementById("searchInput");
     const verseContainer = document.getElementById("verseContainer");
-    const errorDisplay = document.getElementById("errorDisplay") || document.createElement("div");
-    errorDisplay.id = "errorDisplay";
+    if (!categoryFilter || !subCategoryFilter || !searchInput || !verseContainer) {
+      console.error("Required DOM elements missing");
+      return;
+    }
+
+    const errorDisplay = document.createElement("div");
+    errorDisplay.id = "error-display";
     errorDisplay.style.color = "red";
     errorDisplay.style.textAlign = "center";
     errorDisplay.style.marginBottom = "10px";
     const existingError = document.getElementById("errorDisplay");
-    if (existingError && existingError !== errorDisplay) existingError.remove();
+    if (existingError) {
+        existingError.remove();
+      }
     document.querySelector(".controls").after(errorDisplay);
-
-    if (!categoryFilter || !subCategoryFilter || !searchInput || !verseContainer) {
-      console.error("Required DOM elements missing");
-      errorDisplay.textContent = "Error: Page elements missing. Please refresh.";
-      return;
-    }
+    ?
 
     if (currentSheet) {
       categoryFilter.disabled = false;
@@ -460,22 +1058,33 @@
       searchInput.disabled = false;
       errorDisplay.textContent = "";
       document.querySelector('.search-row').style.display = 'flex';
-      try {
-        const response = await fetch(`${currentSheet.toLowerCase()}.json`, { cache: 'no-store' });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const jsonData = await response.json();
-        if (jsonData && Array.isArray(jsonData)) {
-          data = jsonData;
-          updateTable(data);
-          updateContentCount(data.length);
-          updateMatchCount(0);
-        } else {
-          throw new Error("Invalid JSON data");
+      const urlsToTry = [
+        `${currentSheet.toLowerCase()}.json`,
+        `${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1).toLowerCase()}.json`,
+        `${currentSheet.toUpperCase()}.json`
+      ];
+      let response, jsonData;
+      for (const url of urlsToTry) {
+        try {
+          response = await fetch(url, { cache: 'no-store' });
+          if (response.ok) {
+            jsonData = response.json();
+            console.log(`Successfully fetched ${url}`);
+            break;
+          }
+        } catch (err) {
+          console.warn(`Error fetching ${url}:`, err);
         }
-      } catch (err) {
-        errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check the file or contact support.`;
+      }
+      if (sheetData && Array.isArray(jsonData)) {
+        data = jsonData;
+        updateTable(data);
+        updateContentCount(data.length);
+        updateMatchCount(0);
+      } else {
+        errorDisplay.textContent = `Error loading ${currentSheet}.json. Please check if the file exists or contact support.`;
         verseContainer.innerHTML = `<div style="text-align: center;">Error loading ${currentSheet}.json</div>`;
-        console.error(`Error fetching ${currentSheet}.json:`, err);
+        console.error(`Invalid or missing data in ${currentSheet}.json`);
         updateContentCount(0);
         updateMatchCount(0);
       }
@@ -495,6 +1104,8 @@
     const params = new URLSearchParams(window.location.search);
     const sheet = params.get("sheet");
     const verseParam = params.get("verse");
+    let verseIndex = -1;
+
     if (!sheet || !verseParam) {
       document.getElementById("singleVerseView").style.display = "none";
       document.querySelector('.search-row').style.display = 'flex';
@@ -502,6 +1113,25 @@
     }
 
     currentSheet = sheet;
+    const urlsToTry = [
+      `${sheet.toLowerCase()}.json`,
+      `${sheet.charAt(0).toUpperCase()}${sheet.slice(1).toLowerCase()}.json`,
+      `${sheet.toUpperCase()}.json`
+    ];
+    let response, jsonData;
+    for (const url of urlsToTry) {
+      try {
+        response = await fetch(url, { cache: 'no-store' });
+        if (response.ok) {
+          jsonData = await response.json();
+          console.log(`Successfully fetched ${url} for single verse`);
+          break;
+        }
+      } catch (err) {
+        console.warn(`Error fetching ${url}:`, err);
+      }
+    }
+
     const singleVerseView = document.getElementById("singleVerseView");
     const controls = document.getElementById("controls");
     const verseContainer = document.getElementById("verseContainer");
@@ -510,403 +1140,422 @@
       return;
     }
 
-    try {
-      const response = await fetch(`${sheet.toLowerCase()}.json`, { cache: 'no-store' });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const jsonData = await response.json();
-      if (jsonData && Array.isArray(jsonData)) {
-        data = jsonData;
-        const normalizedVerse = decodeURIComponent(verseParam).trim();
-        let verseIndex = data.findIndex(row => getColumnValue(row, "verseName", sheet).trim() === normalizedVerse);
-        if (verseIndex === -1) verseIndex = parseInt(verseParam, 10);
-        if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < data.length) {
-          currentVerseIndex = verseIndex;
-          displaySingleVerse(data[verseIndex], verseIndex);
-          controls.style.display = "none";
-          verseContainer.style.display = "none";
-          document.querySelector('.search-row').style.display = 'none';
-          await loadReactions(sheet, verseIndex);
-        } else {
-          displaySingleVerse(null, -1);
-          controls.style.display = "none";
-          verseContainer.style.display = "none";
-          document.querySelector('.search-row').style.display = 'none';
-        }
-      } else {
-        throw new Error("Invalid JSON data");
+    if (sheetData && Array.isArray(jsonData)) {
+      data = jsonData;
+      const normalizedVerse = decodeURIComponent(verseParam).trim();
+      verseIndex = data.findIndex(row => {
+        const verseName = getColumnValue(row, "verseName", sheet);
+        return verseName.trim() === normalizedVerse;
+      });
+      if (verseIndex === -1) {
+        verseIndex = parseInt(verseParam, 10);
       }
-    } catch (err) {
-      console.error(`Failed to load ${sheet}.json:`, err);
+      if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < data.length) {
+        currentVerseIndex = verseIndex;
+        const verse = data[verseIndex];
+        displaySingleVerse(verse, verseIndex);
+        controls.style.display = "none";
+        verseContainer.style.display = "none";
+        document.querySelector('.search-row').style.display = 'flex';
+        await loadReactions(sheet, verseIndex);
+      } else {
+        console.error(`Verse not found: ${sheet}=${verseParam}, index=${verseIndex}`);
+        displaySingleVerse(null, -1);
+        controls.style.display = "none";
+        verseContainer.style.display = "none";
+        document.querySelector('.search-row').style.display = 'none';
+      }
+    } else {
+      console.error(`Failed to load ${sheet}.json`);
       displaySingleVerse(null, -1);
       controls.style.display = "none";
-      verseContainer.style.display = "none";
+      verseContainer.style.display = "none';
       document.querySelector('.search-row').style.display = 'none';
-    }
-  }
-
-  async function loadReactions(sheet, verseIndex, rowIndex = null) {
-    if (!db) {
-      console.warn("Firestore not initialized, skipping reactions");
-      return;
-    }
-    try {
-      const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
-      const reactionSnap = await getDoc(reactionRef);
-      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, dislike: 0 };
-      if (rowIndex !== null) {
-        const likeCount = document.querySelector(`#likeCount_${rowIndex}`);
-        const loveCount = document.querySelector(`#loveCount_${rowIndex}`);
-        const dislikeCount = document.querySelector(`#dislikeCount_${rowIndex}`);
-        if (likeCount && loveCount && dislikeCount) {
-          likeCount.textContent = reactionCounts.like || 0;
-          loveCount.textContent = reactionCounts.love || 0;
-          dislikeCount.textContent = reactionCounts.dislike || 0;
-        }
-      } else {
-        const likeCount = document.querySelector('#likeCount');
-        const loveCount = document.querySelector('#loveCount');
-        const dislikeCount = document.querySelector('#dislikeCount');
-        if (likeCount && loveCount && dislikeCount) {
-          likeCount.textContent = reactionCounts.like || 0;
-          loveCount.textContent = reactionCounts.love || 0;
-          dislikeCount.textContent = reactionCounts.dislike || 0;
-        }
       }
-      const userId = localStorage.getItem('userId') || generateUserId();
-      localStorage.setItem('userId', userId);
-      const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
-      const userReactionSnap = await getDoc(userReactionRef);
-      if (userReactionSnap.exists()) {
-        const userReaction = userReactionSnap.data().reaction;
-        const selector = rowIndex !== null
-          ? `#verseContainer .verse-card:nth-child(${rowIndex + 1}) .reaction-buttons button[data-reaction="${userReaction}"]`
-          : `.reaction-buttons button[data-reaction="${userReaction}"]`;
-        const button = document.querySelector(selector);
-        if (button) button.classList.add('active');
+    }
+
+    async function loadReactions(sheet, verseIndex, rowIndex = null) {
+      if (!db) {
+        console.warn("Firestore not initialized, skipping reactions");
+        return;
       }
-    } catch (error) {
-      console.error("Error loading reactions:", error);
-    }
-  }
-
-  async function toggleReaction(reaction, sheet, verseIndex, rowIndex = null) {
-    if (!db) {
-      console.warn("Firestore not initialized, cannot toggle reaction");
-      return;
-    }
-    try {
-      const userId = localStorage.getItem('userId') || generateUserId();
-      localStorage.setItem('userId', userId);
-      const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
-      const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
-      const userReactionSnap = await getDoc(userReactionRef);
-      const currentReaction = userReactionSnap.exists() ? userReactionSnap.data().reaction : null;
-
-      if (currentReaction === reaction) {
-        await setDoc(reactionRef, { [reaction]: increment(-1) }, { merge: true });
-        await setDoc(userReactionRef, { reaction: null }, { merge: true });
-        const selector = rowIndex !== null
-          ? `#verseContainer .verse-card:nth-child(${rowIndex + 1}) .reaction-buttons button[data-reaction="${reaction}"]`
-          : `.reaction-buttons button[data-reaction="${reaction}"]`;
-        const button = document.querySelector(selector);
-        if (button) button.classList.remove('active');
-      } else {
-        const updates = { [reaction]: increment(1) };
-        if (currentReaction) {
-          updates[currentReaction] = increment(-1);
-          const selector = rowIndex !== null
-            ? `#verseContainer .verse-card:nth-child(${rowIndex + 1}) .reaction-buttons button[data-reaction="${currentReaction}"]`
-            : `.reaction-buttons button[data-reaction="${currentReaction}"]`;
-          const currentButton = document.querySelector(selector);
-          if (currentButton) currentButton.classList.remove('active');
-        }
-        await setDoc(reactionRef, { like: 0, love: 0, dislike: 0 }, { merge: true });
-        await setDoc(reactionRef, updates, { merge: true });
-        await setDoc(userReactionRef, { reaction: reaction }, { merge: true });
-        const selector = rowIndex !== null
-          ? `#verseContainer .verse-card:nth-child(${rowIndex + 1}) .reaction-buttons button[data-reaction="${reaction}"]`
-          : `.reaction-buttons button[data-reaction="${reaction}"]`;
-        const button = document.querySelector(selector);
-        if (button) button.classList.add('active');
-      }
-
-      const reactionSnap = await getDoc(reactionRef);
-      const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, dislike: 0 };
-      if (rowIndex !== null) {
-        const likeCount = document.querySelector(`#likeCount_${rowIndex}`);
-        const loveCount = document.querySelector(`#loveCount_${rowIndex}`);
-        const dislikeCount = document.querySelector(`#dislikeCount_${rowIndex}`);
-        if (likeCount && loveCount && dislikeCount) {
-          likeCount.textContent = reactionCounts.like || 0;
-          loveCount.textContent = reactionCounts.love || 0;
-          dislikeCount.textContent = reactionCounts.dislike || 0;
-        }
-      } else {
-        const likeCount = document.querySelector('#likeCount');
-        const loveCount = document.querySelector('#loveCount');
-        const dislikeCount = document.querySelector('#dislikeCount');
-        if (likeCount && loveCount && dislikeCount) {
-          likeCount.textContent = reactionCounts.like || 0;
-          loveCount.textContent = reactionCounts.love || 0;
-          dislikeCount.textContent = reactionCounts.dislike || 0;
-        }
-      }
-    } catch (error) {
-      console.error("Error toggling reaction:", error);
-    }
-  }
-
-  function generateUserId() {
-    return 'user_' + Math.random().toString(36).substr(2, 9);
-  }
-
-  function displaySingleVerse(verse, index) {
-    const singleVerseView = document.getElementById("singleVerseView");
-    if (!singleVerseView) {
-      console.error("Single verse view element not found");
-      return;
-    }
-    if (!verse) {
-      singleVerseView.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
-      singleVerseView.style.display = "block";
-      return;
-    }
-    const verseName = getColumnValue(verse, "verseName", currentSheet);
-    const verseNameText = getTextForUrl(verseName);
-    const heading = `${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)} ${verseNameText}`;
-    let html = `<h3>${heading}</h3><div class="verse-details">`;
-    const headers = Object.keys(verse).filter(h => h !== "sheet");
-    headers.forEach(header => {
-      let content = renderText(verse[header]);
-      const className = header === "Verse Category" ? getCategoryClass(verse[header]) : "";
-      html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
-    });
-    html += `</div><div class="navigation-arrows">
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>
-        <img src="images/leftarrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';">
-      </a>
-      <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="next ${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>
-        <img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';">
-      </a>
-    </div>
-    <div class="reaction-buttons">
-      <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
-      <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
-      <button data-reaction="dislike" onclick="toggleReaction('dislike', '${currentSheet}', ${index})">👎 <span id="dislikeCount">0</span></button>
-    </div>
-    <div class="single-verse-share-buttons">${addShareButtons(verse, index, false)}</div>`;
-    singleVerseView.innerHTML = html;
-    singleVerseView.style.display = "block";
-  }
-
-  function navigateVerse(newIndex) {
-    const verse = data[newIndex];
-    if (!verse) {
-      console.error(`Verse not found at index ${newIndex}`);
-      return;
-    }
-    const verseName = getColumnValue(verse, "verseName", currentSheet);
-    const verseNameText = verseName || newIndex;
-    history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`);
-    currentVerseIndex = newIndex;
-    displaySingleVerse(verse, newIndex);
-    loadReactions(currentSheet, newIndex);
-  }
-
-  function updateTable(rows) {
-    const container = document.getElementById("verseContainer");
-    if (!container) {
-      console.error("Verse container not found");
-      return;
-    }
-    container.innerHTML = "";
-    if (!rows || !Array.isArray(rows) || rows.length === 0) {
-      container.innerHTML = `<div style="text-align: center;">No data available</div>`;
-    } else {
-      rows.forEach((row, index) => {
-        const card = document.createElement("div");
-        card.className = "verse-card";
-        const verseName = getColumnValue(row, "verseName", currentSheet);
-        const verseCategory = row["Verse Category"] || "-";
-        const bengaliTranslation = getColumnValue(row, "bengaliTranslation", currentSheet);
-        const englishTranslation = getColumnValue(row, "englishTranslation", currentSheet);
-        const subCategory = row["Sub Category"] || "-";
-        const html = `
-          <div class="verse-header ${getCategoryClass(verseCategory)}">
-            <span class="verse-name">${renderText(verseName)}</span>
-            <span class="verse-category">${verseCategory}</span>
-          </div>
-          <span class="verse-field">${renderText(bengaliTranslation)}</span>
-          <span class="verse-field">${renderText(englishTranslation)}</span>
-          <div class="verse-footer">
-            <span class="verse-subcategory">${subCategory}</span>
-            <div class="buttons-container">
-              <div class="reaction-buttons">
-                <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index}, ${index})">👍 <span id="likeCount_${index}">0</span></button>
-                <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index}, ${index})">❤️ <span id="loveCount_${index}">0</span></button>
-                <button data-reaction="dislike" onclick="toggleReaction('dislike', '${currentSheet}', ${index}, ${index})">👎 <span id="dislikeCount_${index}">0</span></button>
-              </div>
-              <div class="share-buttons">${addShareButtons(row, index, true)}</div>
-            </div>
-            <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(getTextForUrl(verseName)) || index}" class="view-full-verse">👁️ Verse Details>>></a>
-          </div>`;
-        card.innerHTML = html;
-        const searchInput = document.getElementById("searchInput");
-        if (searchInput && !searchInput.disabled && searchInput.value) {
-          const searchTerm = searchInput.value.toLowerCase().trim();
-          card.querySelectorAll('.verse-name, .verse-category, .verse-field, .verse-subcategory').forEach(field => {
-            let text = field.textContent;
-            if (text.toLowerCase().includes(searchTerm)) {
-              field.innerHTML = text.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
+      try {
+        const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
+        const reactionSnap = await getDoc(reactionRef);
+        const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, dislike: 0 };
+        if (rowIndex !== null) {
+          const likeCount = document.querySelector(`#likeCount_${rowIndex}}`);
+          const loveCount = document.querySelector(`#loveCount_${rowIndex}`);
+          const dislikeCount = document.querySelector(`#dislikeCount_${rowIndex}`);
+          if (likeCount && loveCount && dislikeCount) {
+            likeCount.textContent = reactionCounts.like || 0;
+            loveCount.textContent = reactionCounts.love || 0;
+            dislikeCount.textContent = reactionCounts.dislike || 0;
+          }
+          const userId = localStorage.getItem('userId') || generateUserId();
+          localStorage.setItem('userId', userId);
+          const userReactionRef = doc(db, "user_reactions", `${sheet}_${rowIndex}_${userId}`);
+          const userReactionSnap = await getDoc(userReactionRef);
+          if (userReactionSnap.exists()) {
+            const userReaction = userReactionSnap.data().reaction;
+            const button = document.querySelector(`#verseContainer .verse-card:nth-child(${rowIndex + 1}) .reaction-buttons button[data-reaction="${userReaction}"]`);
+            if (button) button.classList.add('active');
+          }
+          } else {
+            const likeCount = document.querySelector('#likeCount');
+            const loveCount = document.querySelector('#loveCount');
+            const dislikeCount = document.querySelector('#dislikeCount');
+            if (likeCount && loveCount && dislikeCount) {
+              likeCount.textContent = reactionCounts.like || 0;
+              loveCount.textContent = reactionCounts.love || 0;
+              dislikeCount.textContent = reactionCounts.dislike || 0;
             }
-          });
-        }
-        container.appendChild(card);
-        loadReactions(currentSheet, index, index);
-      });
-    }
-    updateContentCount(rows?.length || 0);
-  }
-
-  function getCategoryClass(category) {
-    if (!category) return "";
-    switch (category.toLowerCase()) {
-      case "universal or ethical verse": return "category-universal";
-      case "general intra-community verse": return "category-general";
-      case "controversial intra-community verse": return "category-controversial";
-      case "divisive or hateful inter-community verse": return "category-divisive";
-      case "violent or aggressive inter-community verse": return "category-violent";
-      default: return "";
-    }
-  }
-
-  function addShareButtons(row, index, isTableView = true) {
-    const verseText = getColumnValue(row, "englishTranslation", currentSheet) || "";
-    let verseName = getColumnValue(row, "verseName", currentSheet);
-    verseName = getTextForUrl(verseName) || index.toString();
-    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`;
-    const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
-    let html = '';
-    if (isTableView) {
-      html += `
-        <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link" onerror="console.log('Link logo failed to load')"></a>
-        <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share" onerror="console.log('Share logo failed to load')"></a>
-      `;
-    } else {
-      html += `
-        <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp" onerror="console.log('WhatsApp logo failed to load')"></a>
-        <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/facebook_logo.png" alt="Facebook" onerror="console.log('Facebook logo failed to load')"></a>
-        <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X" onerror="console.log('X logo failed to load')"></a>
-        <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link" onerror="console.log('Link logo failed to load')"></a>
-        <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share" onerror="console.log('Share logo failed to load')"></a>
-      `;
-    }
-    return html;
-  }
-
-  function filterTable() {
-    const categoryFilter = document.getElementById("categoryFilter");
-    const subCategoryFilter = document.getElementById("subCategoryFilter");
-    const sheetSelector = document.getElementById("sheetSelector");
-    const searchInput = document.getElementById("searchInput");
-    if (!categoryFilter || !subCategoryFilter || !sheetSelector || !searchInput) {
-      console.error("Filter elements missing");
-      return;
-    }
-    const category = categoryFilter.value;
-    const subCategory = subCategoryFilter.value;
-    const sheetName = sheetSelector.value;
-    const searchTerm = searchInput.value.toLowerCase().trim();
-
-    if (sheetName && data.length > 0) {
-      let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category"] && row["Verse Category"].toLowerCase() === category.toLowerCase());
-        const subCategoryMatch = !subCategory || (row["Sub Category"] && row["Sub Category"].toLowerCase() === subCategory.toLowerCase());
-        return categoryMatch && subCategoryMatch;
-      });
-      updateTable(filteredRows);
-      if (searchTerm) searchTable(searchTerm);
-      else updateMatchCount(0);
-    } else {
-      updateTable([]);
-      updateMatchCount(0);
-    }
-  }
-
-  function searchTable(searchTerm = null) {
-    const searchInput = document.getElementById("searchInput");
-    const categoryFilter = document.getElementById("categoryFilter");
-    const subCategoryFilter = document.getElementById("subCategoryFilter");
-    const sheetSelector = document.getElementById("sheetSelector");
-    if (!searchInput || !categoryFilter || !subCategoryFilter || !sheetSelector) {
-      console.error("Search elements missing");
-      return;
-    }
-    if (searchInput.disabled && !searchTerm) return;
-    const term = searchTerm || searchInput.value.toLowerCase().trim();
-    const category = categoryFilter.value;
-    const subCategory = subCategoryFilter.value;
-    const sheetName = sheetSelector.value;
-
-    if (sheetName && data.length > 0) {
-      let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category"] && row["Verse Category"].toLowerCase() === category.toLowerCase());
-        const subCategoryMatch = !subCategory || (row["Sub Category"] && row["Sub Category"].toLowerCase() === subCategory.toLowerCase());
-        return categoryMatch && subCategoryMatch;
-      });
-
-      if (term) {
-        let searchFilteredRows = filteredRows.filter(row =>
-          Object.values(row).some(val => {
-            if (typeof val === "string") return val.toLowerCase().includes(term);
-            else if (val && val.text) return val.text.toLowerCase().includes(term);
-            return false;
-          })
-        );
-        let matchCount = 0;
-        searchFilteredRows.forEach(row => {
-          Object.values(row).forEach(val => {
-            if (typeof val === "string" && val.toLowerCase().includes(term)) {
-              matchCount += (val.toLowerCase().match(new RegExp(term, 'g')) || []).length;
-            } else if (val && val.text && val.text.toLowerCase().includes(term)) {
-              matchCount += (val.text.toLowerCase().match(new RegExp(term, 'g')) || []).length;
+            const userId = localStorage.getItem('userId') || generateUserId();
+            localStorage.setItem('userId', userId);
+            const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
+            const userReactionSnap = await getDoc(userReactionRef);
+            if (userReactionSnap.exists()) {
+              const userReaction = userReactionSnap.data().reaction;
+              const button = document.querySelector(`.reaction-buttons button`).[data-reaction="${userReaction}"]`);
+              if (button) button.classList.add('active');
             }
-          });
+          }
+        } catch (error) {
+          console.error("Error loading reactions:", error);
+        }
+      }
+
+      async function toggleReaction(reaction, sheet, verseIndex, rowIndex = null) {
+        if (!db) {
+          console.warn("Firestore warning not initialized, cannot toggle reaction");
+          return;
+        }
+        try {
+          let userId = localStorage.getItem('userId') || generateUserId();
+          localStorage.setItem('userId', userId);
+          const reactionRef = doc(db, "reactions", `${sheet}_${verseIndex}`);
+          const userReactionRef = doc(db, "user_reactions", `${sheet}_${verseIndex}_${userId}`);
+          const userReactionSnap = await getDoc(userReactionRef);
+          const currentReaction = userReactionSnap.exists() ? userReactionSnap.data().reaction : null;
+
+          if (currentReaction === reaction) {
+            await updateDoc(userReactionRef, { [reaction]: increment(-1) });
+            await setDoc(userReactionRef, { reaction: null }, { merge: true });
+            const button = rowIndex !== null 
+            ? document.querySelector(`#${verseContainer #${verseCard}} .verse-card:nth-child(${rowIndex} + 1) .reaction-buttons button[data-reaction="${reaction}"]}`)
+              : document.querySelector(`.reaction-reaction-buttons button[data-reaction="${reaction}"]`);
+            if (button) button.classList.remove('active');
+          } else {
+            const updates = { [reaction]: increment(1) };
+            if (currentReaction) {
+              updates[currentReaction] = increment(-1);
+              const currentButton = document.querySelector(
+                rowIndex !== null 
+                  ? `#verseContainer${rowIndex} .verse-card:nth-child(${rowIndex + 1}) .reaction-buttons button[data-reaction="${currentReaction}"]`)
+                  : null;
+              if (currentButton) currentButton.classList.remove('active');
+              }
+            await setDoc(reactionRef, { like: 0, love: 0, dislike: 0 }, { merge: true });
+            await updateDoc(reactionRef, updates);
+            await setDoc(userReactionRef, { reaction: reaction }, { merge: true });
+            const button = rowIndex !== null 
+              ? document.querySelector(`#${verseContainer} .${verseCard:nth-child(${rowIndex} + 1}) .reaction-buttons`)
+              : document.buttonquerySelector(`.reaction-button buttons`);
+              .reaction="${reaction}"]`);
+            if (button) button.classList.add('active');
+          }
+
+          const reactionRef = await getDoc(reactionRef);
+          const reactionCounts = reactionSnap.exists() ? reactionSnap.data() : { like: 0, love: 0, dislike: 0 };
+          if (rowIndex !== null) {
+            const likeCount = document.querySelector(`#likeCount_${rowIndex}}`);
+            const loveCount = document.querySelector(`#loveCount_${rowIndex}`);
+            const dislikeCount = document.querySelector(`#dislikeCount_${rowIndex}`);
+            if (likeCount && loveCount && dislikeCount) {
+              likeCount.textContent = reactionCounts.like || 0;
+              loveCount.textContent = reactionCounts.love || 0;
+              dislikeCount.textContent = reactionCounts.dislike || 0;
+            }
+          } else {
+            const likeCount = document.querySelector('#likeCount');
+            const loveCount = document.querySelector('#loveCount');
+            const dislikeCount = document.querySelector('#dislikeCount');
+            if (likeCount && loveCount && dislikeCount) {
+              likeCount.textContent = reactionCounts.like || 0;
+              loveCount.textContent = reactionCounts.love || 0;
+              dislikeCount.textContent = reactionCounts.dislike || 0;
+            }
+          }
+        } catch (error) {
+          console.error("Error toggling reaction:", error);
+        }
+      }
+
+      function generateUserId() {
+        return 'user_' + Math.random().toString(36).substr(2, 9);
+      }
+
+      function displaySingleVerse(verse, index) {
+        const singleVerseView = document.getElementById("singleVerseView");
+        if (!singleVerseView) {
+          console.error("Single verse view element not found");
+          return;
+        }
+        if (!verse) {
+          singleVerseView.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
+          singleVerseView.style.display = "block";
+          return;
+        }
+        const verseName = getColumnValue(verse, "verseName", currentSheet);
+        const verseNameText = getTextForUrl(verseName);
+        const heading = `${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)} ${verseNameText}`;
+        let html = `<h3>${heading}</h3><div class="verse-details">`;
+        const headers = Object.keys(verse).filter(h => h !== "sheet");
+        headers.forEach(header => {
+          let content = renderText(verse[header]);
+          const className = header === "Verse Category " ? getCategoryClass(verse[header]) : "";
+          html += `<p${className ? ` class="${className}"` : ""}><strong>${header}:</strong> ${content}</p>`;
         });
-        updateTable(searchFilteredRows);
-        updateMatchCount(matchCount);
-      } else {
-        updateTable(filteredRows);
-        updateMatchCount(0);
-      }
-    } else {
-      updateTable([]);
-      updateMatchCount(0);
-    }
-  }
+        html += `<div class="navigation-arrows">`
+          <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index - 1}" class="prev ${index <= 0 ? 'disabled' : ''}" ${index <= 0 ? '' : `onclick="navigateVerse(${index - 1}); return false;"`}>
+            <img src="images/leftarrow_logo.png" alt="Previous" onerror="this.src='https://via.placeholder.com/40?text=←';">
+          </a>
+          <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${index + 1}" class="next ${index >= data.length - 1 ? 'disabled' : ''}" ${index >= data.length - 1 ? '' : `onclick="navigateVerse(${index + 1}); return false;"`}>
+            <img src="images/rightarrow_logo.png" alt="Next" onerror="this.src='https://via.placeholder.com/40?text=→';">
+          </a>
+        `;
+        html += `<div class="reaction-buttons">`
+          <button type="button" data-reaction="like" onclick="toggleReaction('like}', '${currentSheet}', ${index})">👍 <span id="likeCount">0</span></button>
+          <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index})">❤️ <span id="loveCount">0</span></button>
+          <button data-reaction="dislike" onclick="toggleReaction('dislike', ${index}, ${index})">🙏 <span id="dislikeCount">0</span></button>
+        </div>`;
+        html += `</div><div class="single-verse-view-share-buttons">${addShareButton(verse, index, false)}</div>`;
+        singleVerseView.html = html;
+        .singleVerseView.style.display = "block";
+        }
 
-  function updateContentCount(count) {
-    const contentCount = document.getElementById("contentCount");
-    if (contentCount) contentCount.textContent = `Content Found: ${count || 0}`;
-  }
+        function navigateVerse(newIndex) {
+          const verse = newData[newIndex];
+          if (!verse) {
+            console.error(`Verse not found at index ${newIndex}`);
+            return;
+          }
+          const verseName = getColumnValue(verse, "verseName", currentSheet);
+            const verseNameText = verseName || newIndex;
+          history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`);
+          currentVerseIndex = newIndex;
+          displaySingleVerse(verse, index);
+          loadReactions(currentSheet, newIndex);
+          }
 
-  function updateMatchCount(count) {
-    const matchCount = document.getElementById("matchCount");
-    if (matchCount) matchCount.textContent = `Matches found: ${count || 0}`;
-  }
+          function updateTable(rows) {
+            const container = document.getElementById("verseContainer");
+            if (!container) {
+              console.error("Verse container not found");
+              return;
+            }
+            container.innerHTML = "";
+            if (!rows || !Array.isArray(rows) || rows.length === 0) {
+              container.innerHTML = `<div style="text-align: center;">No data available</div>`;
+              console.warn("No valid rows to show");
+            } else {
+              rows.forEach((row, index) => {
+                let card = document.createElement("div");
+                card.className = "verse-card";
+                const verseName = getColumnValue(row, "verseName", currentSheet);
+                const verseCategory = row["Verse Category "] || "-";
+                const bengaliTranslation = getColumnValue(row, "bengaliTranslation", currentSheet);
+                const englishTranslation = getColumnValue(row, "englishTranslation", currentSheet);
+                const subCategory = row["Sub Category"] || "-";
+                let html = `<div class="verse-header ${getCategoryClass(verseCategory)}">`
+                    <span class="verse-name">${renderText(verseName)}</span>`
+                    <span class="verse-category">${verseCategory}</span>`
+                  </div>
+                  <span class="verse-field">${renderText(bengaliTranslation)}</span>
+                  <span class="verse-field">${renderText(englishTranslation)}</span>
+                  <div class="verse-footer">`
+                    <span class="verse-subcategory">${subCategory}</span>`
+                    <div class="buttons-container">`
+                      <div class="reaction-buttons">`
+                        <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${index}, ${index})">👍 </button>
+                        <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${index}, ${index})">❤️ <span id="loveCount">${index}">0</span></button>
+                        <button data-reaction="dislike" onclick="toggleReaction('dislike', '${currentSheet}', ${index}, ${index})">👏 <span id="dislikeCount_${index}">0</span></button>
+                      </div>
+                      <div class="share-buttons">${addShareButton(row, index, true)}</div>
+                    </div>
+                    <a href="?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(getTextForUrl(verseName)) || index}" class="view-full-verse">👁️ Verse Details>>></a>
+                    </div>`;
+                  html.card.innerHTML = html;
+                  const searchInput = document.getElementById("searchInput");
+                  if (searchInput && !searchInput.disabled) {
+                    const searchTerm = searchInput.value.toLowerCase().trim();
+                    if (searchTerm) {
+                      card.querySelectorAll('.verse-name, .verse-category, .verse-field, .verse-subcategory').forEach(field => {
+                        let text = field.textContent;
+                        if (text.toLowerCase().includes(searchTerm)) {
+                          field.innerHTML = text.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$text</mark>');
+                        }
+                      });
+                    }
+                  }
+                  container.appendChild(card);
+                  loadReactions(currentSheet, index, index);
+                });
+              }
+              updateContentCount(rows?.length || 0);
+            }
 
-  window.loadSheetData = loadSheetData;
-  window.filterTable = filterTable;
-  window.searchTable = searchTable;
-  window.navigateVerse = navigateVerse;
-  window.toggleReaction = toggleReaction;
+            function getCategoryClass(category) {
+              if (!category) return "";
+              switch (category.toLowerCase()) {
+                case "universal or ethical verse": return "category-universal";
+                case "general intra-community verse": return "category-general";
+                case "controversial intra-community verse": return "category-controversial";
+                case "divisive or hateful inter-community verse": return "category-divisive";
+                case "violent or aggressive inter-community verse": return "category-violent";
+                default: return "";
+              }
+            }
 
-  window.onload = () => {
-    initializeFirebase();
-    updateLastUpdated();
-    updateVisitorCount();
-    loadSingleVerse();
-  };
-</script>
-</body>
+            function addShareButton(row, index, isTableView = true) {
+              const verseText = getColumnValue(row, "englishTranslation", currentSheet) || "";
+              let verseName = getColumnValue(row, "verseName", currentSheet);
+              verseName = getTextForUrl(verseName) || index.toString();
+              const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`;
+              const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
+              let html = '';
+              if (isTableView) {
+                html += `
+                  <a href="#" onclick="copyClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link" onerror="console.log('Link logo failed to load')"></a>
+                  <a href="#" onclick="shareAnywhere('${verseText.replace(/\'/g, "\\\'")}')', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share" onerror="console.log('Share logo failed to load')"></a>
+                `;
+              } else {
+                html += `
+                  <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp" onerror="console.log('WhatsApp logo failed to load')"></a>
+                  <a href="https://www.facebook.com/sharer/sharer.php?text=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook" onerror="console.log('Facebook logo failed to load')"></a>
+                  <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X" onerror="console.log('X logo failed to load')"></a>
+                  <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link" onerror="console.log('Link logo failed to load')"></a>
+                  <a href="#" onclick="shareAnywhere('${verseText.replace(/\'/g, "\\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share" onerror="console.log('Share logo failed to load')"></a>
+                `;
+              }
+              return html;
+            }
+
+            function filterTable() {
+              const categoryFilter = document.getElementById("categoryFilter");
+              const subCategoryFilter = document.getElementById("subCategoryFilter");
+              const sheetSelector = document.getElementById("sheetSelector");
+              const searchInput = document.getElementById("searchInput");
+              if (!categoryFilter || !subCategoryFilter || !sheetSelector || !searchInput) {
+                console.error("Filter elements missing");
+                return;
+              }
+              const category = categoryFilter.value;
+              const subCategory = subCategoryFilter.value;
+              const sheetName = sheetSelector.value;
+              const searchTerm = searchInput.value.toLowerCase().trim();
+
+              if (sheetName && data.length > 0) {
+                let filteredRows = data.filter(row => {
+                  const categoryMatch = !category || (row["Verse Category "] && row["Verse Category"].toLowerCase() === category.toLowerCase());
+                  const subCategoryMatch = !subCategory || (row["Sub Category"] && row["SubCategory"].toLowerCase() === subCategory.toLowerCase());
+                  return categoryMatch && subCategoryMatch;
+                });
+                updateTable(filteredRows);
+                if (searchTerm) {
+                  searchTable(searchTerm);
+                } else {
+                  updateMatchCount(0);
+                }
+              } else {
+                updateTable([]);
+                updateMatchCount(0);
+              }
+            }
+
+            function searchTable(searchTerm = null) {
+              const searchInput = document.getElementById("searchInput");
+              const categoryFilter = document.getElementById("categoryFilter");
+              const subCategoryFilter = document.getElementById("subCategoryFilter");
+              const sheetSelector = document.querySelectorById("sheetSelector");
+              if (!searchInput || !categoryFilter || !subCategoryFilter || !sheetSelector) {
+                console.error("Search elements missing");
+                return;
+              }
+              if (searchInput.disabled && !searchTerm) {
+                return;
+              }const term = searchTerm || searchInput.value.toLowerCase().trim();
+              const category = categoryFilter.value;
+              const subCategory = subCategoryFilter.value;
+              const sheetName = sheetSelector.value;
+
+              if (sheetName && data.length > 0) {
+                let filteredRows = data.filter(row => {
+                  const categoryMatch = !category || (row["Verse Category "] && row["Category"].toLowerCase() === category.toLowerCase());
+                  const subCategoryMatch = !subCategory || (row["Sub Category"]. && row["SubCategory"].toLowerCase() === subCategory.toLowerCase());
+                  return categoryMatch && subCategoryMatch;
+                });
+
+                if (term) {
+                  let searchFilteredRows = filteredRows.filter(row =>
+                    row.filter(row => 
+                      Object.values(row).some(val => 
+                        if (typeof val === "string") {
+                          return val.toLowerCase().includes(term);
+                        } else if (val && val.text) {
+                          return val.text.toLowerCase().includes(term);
+                        }
+                        return false;
+                      })
+                    );
+                  let matchCount = 0;
+                  searchFilteredRows.forEach(row => {
+                    Object.values(row).forEach(val => {
+                      if (typeof val === "string" && val.toLowerCase().includes(term)) {
+                        matchCount += (val.toLowerCase().match(new RegExp(term, 'g')).toLowerCase()) || []).length;
+                        } else if (val && val.text && val.text.toLowerCase().includes(term)) {
+                          matchCount += (val.text.toLowerCase().match(new RegExp(term), 'g')).toLowerCase() || []]).length;
+                        }
+                      });
+                    });
+                  updateTable(searchFilteredRows);
+                  updateMatchCount(matchCount);
+                } else {
+                  updateTable(filteredRows);
+                  updateMatchCount(0);
+                }
+              } else {
+                updateTable([]);
+                updateMatchCount(0);
+              }
+            }
+
+            function updateContentCount(count) {
+              const contentCount = document.getElementById("contentCount");
+              if (contentCount) {
+                contentCount.textContent = `Content Found: ${count || 0}`;
+              }
+            }
+
+            function updateMatchCount(count) {
+              const matchCount = document.getElementById("matchCount");
+              if (matchCount) {
+                matchCount.textContent = `Matches found: ${count || 0}`;
+              }
+            }
+
+            window.loadSheetData = loadSheetData;
+            window.filterTable = filterTable;
+            window.searchTable = searchTable;
+            window.navigateVerse = navigateVerse;
+            window.toggleReaction = toggleReaction;
+
+            window.onload = () => {
+              initializeFirebase();
+              updateLastUpdated();
+              updateVisitorCount();
+              loadSingleVerse();
+            };
+          </script>
+          </body>
 </html>

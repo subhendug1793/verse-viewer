@@ -924,7 +924,6 @@
       navigator.share({
         title: 'SASTIK GBQ+ Verse',
         text: verseText,
-        description: shareUrl,
         url: shareUrl
       }).then(() => console.log("Successfully shared")).catch(err => console.error('Share error:', err));
     } else {
@@ -1128,7 +1127,7 @@
   }
 
   async function loadSheetData(sheet) {
-    console.log(`loadSheetData: ${sheet}`); // CHANGED: Debug log
+    console.log(`loadSheetData: ${sheet}`);
     currentSheet = sheet;
     currentPage = 1;
     const categoryFilter = document.getElementById("categoryFilter");
@@ -1162,7 +1161,7 @@
     let sheetData = null;
     for (const url of urlsToTry) {
       try {
-        console.log(`Fetching: ${url}`); // CHANGED: Debug log
+        console.log(`Fetching: ${url}`);
         const response = await fetch(url, { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } });
         if (response.ok) {
           sheetData = await response.json();
@@ -1211,6 +1210,7 @@
     let verseIndex = -1;
 
     if (!sheet || !verseParam) {
+      console.log("No sheet or verse in URL, clearing view"); // CHANGED: Debug log
       document.getElementById("singleVerseView").style.display = "none";
       document.querySelector('.search-row')?.classList.remove('active');
       document.querySelector('.controls')?.classList.remove('active');
@@ -1265,7 +1265,9 @@
       }
       if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < data.length) {
         currentVerseIndex = verseIndex;
-        history.pushState({ sheet: currentSheet, verse: normalizedVerseParam }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(normalizedVerseParam)}`);
+        const verseName = getColumnValue(data[verseIndex], "verseName", sheet);
+        const verseNameText = getTextForUrl(verseName) || verseIndex;
+        history.pushState({ sheet: currentSheet, verse: verseNameText }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`);
         displaySingleVerse(data[verseIndex], verseIndex);
         controls.classList.remove('active');
         verseContainer.style.display = "none";
@@ -1467,11 +1469,14 @@
     const verse = data[newIndex];
     if (!verse) {
       console.error(`Verse not found at index ${newIndex}`);
+      const errorDisplay = document.getElementById("errorDisplay") || createErrorDisplay();
+      errorDisplay.textContent = `Verse at index ${newIndex} not found.`;
       return;
     }
     const verseName = getColumnValue(verse, "verseName", currentSheet);
     const verseNameText = getTextForUrl(verseName) || newIndex;
-    history.pushState({ sheet: currentSheet, verse: verseNameText }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`);
+    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`; // CHANGED: Use specified URL format
+    history.pushState({ sheet: currentSheet, verse: verseNameText }, '', shareUrl);
     currentVerseIndex = newIndex;
     displaySingleVerse(verse, newIndex);
     document.getElementById("verseContainer").style.display = "none";
@@ -1518,9 +1523,9 @@
         <span class="verse-subcategory">${subCategory}</span>
         <div class="buttons-container">
           <div class="reaction-buttons">
-            <button data-reaction="like" onclick="toggleReaction('${currentSheet}', ${globalIndex}, ${globalIndex})">👍 <span id="likeCount_${globalIndex}"></span></button>
-            <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${globalIndex}, ${globalIndex})">❤️ <span id="loveCount_${globalIndex}"></span></button>
-            <button data-reaction="dislike" onclick="toggleReaction('dislike', '${currentSheet}', ${globalIndex}, ${globalIndex})">👎 <span id="dislikeCount_${globalIndex}"></span></button>
+            <button data-reaction="like" onclick="toggleReaction('like', '${currentSheet}', ${globalIndex}, ${globalIndex})">👍 <span id="likeCount_${globalIndex}">0</span></button>
+            <button data-reaction="love" onclick="toggleReaction('love', '${currentSheet}', ${globalIndex}, ${globalIndex})">❤️ <span id="loveCount_${globalIndex}">0</span></button>
+            <button data-reaction="dislike" onclick="toggleReaction('dislike', '${currentSheet}', ${globalIndex}, ${globalIndex})">👎 <span id="dislikeCount_${globalIndex}">0</span></button>
           </div>
           <div class="share-buttons">${addShareButton(row, globalIndex, true)}</div>
         </div>
@@ -1534,7 +1539,7 @@
           card.querySelectorAll('.verse-name, .verse-category, .verse-field, .verse-subcategory').forEach(field => {
             let text = field.textContent;
             if (text.toLowerCase().includes(searchTerm)) {
-              field.innerHTML = text.replace(new RegExp(searchTerm, 'gi'), '<mark>$&</mark>');
+              field.innerHTML = text.replace(new RegExp(`(${searchTerm})`, 'gi'), '<mark>$1</mark>');
             }
           });
         }
@@ -1608,20 +1613,29 @@
   }
 
   function addShareButton(row, index, isListView = true) {
+    console.log(`addShareButton: row ${index}`); // CHANGED: Debug log
     const verseName = getColumnValue(row, "verseName", currentSheet);
     const verseNameText = getTextForUrl(verseName) || index;
-    const shareUrl = `${window.location.origin}${window.location.pathname}?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`;
+    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`; // CHANGED: Use specified URL format
     const verseText = `${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)} ${verseNameText}`;
     return `
-      <a href="#" onclick="copyToClipboard('${shareUrl}'); return false;"><img src="images/copy_logo.png" alt="Copy Link" onerror="console.log('Copy logo failed')"></a>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/facebook_logo.png" alt="Facebook" onerror="console.log('Facebook logo failed')"></a>
-      <a href="https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(verseText)}" target="_blank"><img src="images/telegram_logo.png" alt="Telegram" onerror="console.log('Telegram logo failed')"></a>
-      <a href="#" onclick="shareAnywhere('${verseText}', '${shareUrl}'); return false;"><img src="images/share_logo.png" alt="Share Anywhere" onerror="console.log('Share logo failed')"></a>
+      <a href="#" onclick="copyToClipboard('${shareUrl}'); return false;">
+        <img src="images/copy_logo.png" alt="Copy Link" onerror="this.src='https://via.placeholder.com/20?text=C'; console.error('Failed to load copy_logo.png for row ${index}');">
+      </a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank">
+        <img src="images/facebook_logo.png" alt="Facebook" onerror="this.src='https://via.placeholder.com/20?text=F'; console.error('Failed to load facebook_logo.png for row ${index}');">
+      </a>
+      <a href="https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(verseText)}" target="_blank">
+        <img src="images/telegram_logo.png" alt="Telegram" onerror="this.src='https://via.placeholder.com/20?text=T'; console.error('Failed to load telegram_logo.png for row ${index}');">
+      </a>
+      <a href="#" onclick="shareAnywhere('${verseText}', '${shareUrl}'); return false;">
+        <img src="images/share_logo.png" alt="Share Anywhere" onerror="this.src='https://via.placeholder.com/20?text=S'; console.error('Failed to load share_logo.png for row ${index}');">
+      </a>
     `;
   }
 
   function filterTable() {
-    console.log("filterTable called"); // CHANGED: Debug log
+    console.log("filterTable called");
     const categoryFilter = document.getElementById("categoryFilter").value.toLowerCase().trim();
     const subCategoryFilter = document.getElementById("subCategoryFilter").value.toLowerCase().trim();
     let filteredRows = data;
@@ -1631,7 +1645,7 @@
         const category = (row["Verse Category "] || "").toLowerCase().trim();
         return category === categoryFilter;
       });
-      console.log(`Filtered by category: ${filteredRows.length} rows`); // CHANGED: Debug log
+      console.log(`Filtered by category: ${filteredRows.length} rows`);
     }
 
     if (subCategoryFilter) {
@@ -1639,7 +1653,7 @@
         const subCategory = (row["Sub Category"] || "").toLowerCase().trim();
         return subCategory === subCategoryFilter;
       });
-      console.log(`Filtered by subcategory: ${subCategoryFilter}, ${filteredRows.length} rows`); // CHANGED: Debug log
+      console.log(`Filtered by subcategory: ${subCategoryFilter}, ${filteredRows.length} rows`);
     }
 
     const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
@@ -1650,7 +1664,7 @@
           return text.includes(searchTerm);
         });
       });
-      console.log(`Filtered by search: ${searchTerm}, ${filteredRows.length} rows`); // CHANGED: Debug log
+      console.log(`Filtered by search: ${searchTerm}, ${filteredRows.length} rows`);
     }
 
     updateTable(filteredRows);
@@ -1658,7 +1672,7 @@
   }
 
   function searchTable() {
-    console.log("searchTable called"); // CHANGED: Debug log
+    console.log("searchTable called");
     filterTable();
   }
 
@@ -1677,7 +1691,7 @@
   }
 
   function clearSheet() {
-    console.log("clearSheet called"); // CHANGED: Debug log
+    console.log("clearSheet called");
     currentSheet = "";
     currentVerseIndex = -1;
     currentPage = 1;
@@ -1701,7 +1715,7 @@
   }
 
   window.selectSheet = function(sheet) {
-    console.log(`selectSheet: ${sheet}`); // CHANGED: Debug log
+    console.log(`selectSheet: ${sheet}`);
     try {
       const buttons = document.querySelectorAll(".tab-button");
       if (!buttons.length) {
@@ -1712,7 +1726,7 @@
       buttons.forEach(btn => {
         if (btn.dataset.sheet.toLowerCase() === sheet.toLowerCase() && btn.classList.contains("selected")) {
           isDeselect = true;
-          console.log(`Deselecting: ${sheet}`); // CHANGED: Debug log
+          console.log(`Deselecting: ${sheet}`);
         }
         btn.classList.remove("selected");
       });
@@ -1725,7 +1739,7 @@
       buttons.forEach(btn => {
         if (btn.dataset.sheet.toLowerCase() === sheet.toLowerCase()) {
           btn.classList.add("selected");
-          console.log(`Selected: ${sheet}`); // CHANGED: Debug log
+          console.log(`Selected: ${sheet}`);
         }
       });
       currentSheet = sheet;
@@ -1746,20 +1760,20 @@
   };
 
   function bindTabEvents() {
-    console.log("bindTabEvents called"); // CHANGED: Debug log
+    console.log("bindTabEvents called");
     const buttons = document.querySelectorAll(".tab-button");
     buttons.forEach(button => {
       const sheet = button.dataset.sheet;
       button.removeEventListener('click', handleTabClick);
       button.addEventListener('click', () => {
-        console.log(`Tab clicked: ${sheet}`); // CHANGED: Debug log
+        console.log(`Tab clicked: ${sheet}`);
         window.selectSheet(sheet);
       });
     });
   }
 
   function init() {
-    console.log("init called"); // CHANGED: Debug log
+    console.log("init called");
     initializeFirebase();
     updateVisitorCount();
     updateLastUpdated();
@@ -1769,11 +1783,11 @@
     const sheet = params.get("sheet");
     const verse = params.get("verse");
     if (sheet && verse) {
-      console.log(`Loading single verse: ${sheet}, ${verse}`); // CHANGED: Debug log
+      console.log(`Loading single verse: ${sheet}, ${verse}`);
       loadSingleVerse();
     }
     window.addEventListener('popstate', (e) => {
-      console.log("popstate:", e.state); // CHANGED: Debug log
+      console.log("popstate:", e.state);
       const params = new URLSearchParams(window.location.search);
       const sheet = params.get("sheet");
       const verse = params.get("verse");

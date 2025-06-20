@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -101,7 +99,7 @@
       white-space: nowrap; 
     }
     .tab-bar {
-      background-color: #f0f0f0; /* Simple solid background */
+      background: #ffffff; /* CHANGED: Set white background, remove rainbow image */
       padding: 6px 0;
       margin: 0 auto 20px;
       width: 90%;
@@ -124,43 +122,48 @@
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s, border-color 0.3s;
       outline: none;
-      background-color: #800000; /* Maroon */
-      color: #ffffff; /* White text */
+      background-color: #800000; /* CHANGED: Maroon for unselected tabs */
+      color: #ffffff; /* CHANGED: White text for contrast */
       pointer-events: auto;
       z-index: 6;
     }
     .tab-button.selected {
-      background-color: #FF6200; /* Orange */
-      color: #000000; /* Black text */
-      border-color: #333333; /* Blackish border */
+      background-color: #FFFF00; /* CHANGED: Yellow for selected tabs */
+      color: #000000; /* CHANGED: Black text for contrast */
+      border-color: #333333; /* CHANGED: Blackish border */
     }
     .tab-button:hover:not(.selected) {
-      background-color: #9B2D2D; /* Slightly lighter maroon on hover */
+      background-color: #9b1c1c; /* CHANGED: Slightly lighter maroon on hover */
     }
     .controls { 
       margin-bottom: 10px; 
       text-align: center; 
-      display: none; /* Hidden by default */
+      display: none;
       justify-content: center; 
       align-items: center; 
       gap: 8px; 
-      flex-wrap: nowrap; 
+      flex-wrap: nowrap; /* CHANGED: Keep single line */
     }
     .controls.active {
-      display: flex; /* Shown when sheet is selected */
+      display: flex;
+    }
+    .controls label {
+      font-size: 0.7em; /* CHANGED: Smaller font for single-line layout */
+      white-space: nowrap;
     }
     .search-row { 
-      display: none; /* Hidden by default */
+      display: none;
       justify-content: center; 
       align-items: center; 
       gap: 8px; 
       margin-bottom: 5px;
+      flex-wrap: nowrap; /* CHANGED: Keep single line */
     }
     .search-row.active {
-      display: flex; /* Shown when sheet is selected */
+      display: flex;
     }
     .content-count, .match-count { 
-      font-size: 0.75em; 
+      font-size: 0.7em; /* CHANGED: Smaller font for single-line layout */
       color: #333; 
       white-space: nowrap;
     }
@@ -170,7 +173,7 @@
     }
     select, input { 
       font-family: 'Poppins', sans-serif;
-      font-size: 0.75em;
+      font-size: 0.7em; /* CHANGED: Smaller font for single-line layout */
       padding: 4px; 
       margin-right: 4px; 
     }
@@ -207,9 +210,9 @@
       transition: background-color 0.3s;
     }
     .pagination button.active {
-      background-color: #FF6200;
-      color: #fff;
-      border-color: #FF6200;
+      background-color: #FFFF00; /* CHANGED: Match selected tab color */
+      color: #000;
+      border-color: #333;
     }
     .pagination button:disabled {
       opacity: 0.5;
@@ -480,6 +483,22 @@
     .single-verse-view > * { 
       position: relative;
     }
+    .single-verse-view .back-button { /* CHANGED: Style for back button */
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 5px 10px;
+      background: #800000; /* CHANGED: Match unselected tab color */
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.8em;
+      transition: background-color 0.3s;
+    }
+    .single-verse-view .back-button:hover { /* CHANGED: Hover effect */
+      background: #9b1c1c;
+    }
     .single-verse-view h3 {
       margin-bottom: 18px;
       font-size: 1.35em;
@@ -567,8 +586,12 @@
       .header-info .visitor-count {
         position: relative; 
         left: 0; 
-        margin-bottom: 5px; 
+        margin-bottom: 5px;
+ 
       }
+      .header-info .tab-button {
+        font-size: 0;8px;
+        }
       .header-info .last-updated {
         position: relative; 
         right: 0; 
@@ -576,30 +599,36 @@
       .header-container { 
         flex-direction: column; 
         text-align: center; 
-        margin-bottom: 10px; 
+        margin-bottom: 10px;
+ 
       }
       .logo { 
-        margin-right: 0; 
-        margin-bottom: 5px; 
-        width: 50px; 
+        width: flex-direction; 
+        height: column0;
+        margin-bottom: 5px;
+        }
       }
       h2 { 
-        font-size: 1.2em; 
+        color: font-size; 
+        color: 1; 
+        color: 2em; 
       }
       .mission-statement { 
-        font-size: 0.9em; 
+        background-color: font-size: 0; 
+        color: 9emem; 
         max-width: 90%; 
       }
       .mission-subtext { 
-        font-size: 0.65em; 
-        max-width: 90%; 
+        font-size: 0; 
+        font-size: 65; 
+        max-width: font-size; 
         white-space: normal; 
       }
-      .tab-bar {
-        width: 95%;
-        padding: 4px 0;
-        gap: 6px;
-        border-radius: 10px;
+      .tab-bar { 
+        width: 95%; 
+        padding: 4px 8px; 
+        gap: 6px; 
+        border-radius: 10px; 
       }
       .tab-button {
         font-size: 0.8em;
@@ -607,60 +636,64 @@
         border-radius: 6px;
       }
       .controls { 
-        flex-direction: column; 
+        flex-direction: row; /* CHANGED: Keep single line on mobile */
         align-items: center; 
-        gap: 6px;
+        gap: 4px; /* CHANGED: Tighter spacing */
+        flex-wrap: nowrap; /* CHANGED: Prevent wrapping */
+        overflow-x: auto; /* CHANGED: Allow horizontal scroll if needed */
       }
       .search-row { 
-        flex-direction: column; 
+        flex-direction: row; /* CHANGED: Keep single line on mobile */
         align-items: center; 
-        gap: 6px; 
+        gap: 4px; /* CHANGED: Tighter spacing */
+        flex-wrap: nowrap; 
+        overflow-x: auto; /* CHANGED: Allow horizontal scroll */
         margin-bottom: 5px; 
       }
       .content-count, .match-count { 
-        font-size: 0.7em;
-        text-align: center; 
+        font-size: 0.65em; /* CHANGED: Smaller font */
+        text-align: left; 
       }
       .search-input-container { 
-        width: 100%; 
+        width: auto; /* CHANGED: Fit content */
       }
       select, input { 
-        font-size: 0.7em;
-        width: 100%; 
-        margin-bottom: 6px; 
+        font-size: 0.65em; /* CHANGED: Smaller font */
+        width: auto; /* CHANGED: Fit content */
+        margin-bottom: 0; 
         padding: 3px; 
       }
       #searchInput { 
-        width: 100%; 
-        max-width: 160px; 
+        width: 80px; /* CHANGED: Smaller width */
+        max-width: 100px; 
       }
       .verse-container { 
         width: 98vw;
         margin-bottom: 10px; 
         gap: 15px;
       }
-      .pagination {
-        gap: 6px;
-        padding: 0 8px;
+      .pagination { 
+        gap: 6px; 
+        padding: 0 8px; 
       }
-      .pagination button {
-        font-size: 0.8em;
-        padding: 4px 8px;
+      .pagination button { 
+        font-size: 0.8em; 
+        padding: 4px 8px; 
       }
       .verse-card { 
-        padding: 10px;
+        padding: 10px; 
         border-radius: 10px; 
       }
       .verse-header { 
         flex-direction: column; 
         align-items: center; 
-        padding: 1px 0;
+        padding: 1px 0; 
       }
       .verse-footer { 
         flex-direction: column; 
         align-items: center; 
-        padding: 1px 0;
-        gap: 6px;
+        padding: 1px 0; 
+        gap: 6px; 
       }
       .verse-name { 
         font-size: 0.9em; 
@@ -668,12 +701,12 @@
         width: 100%; 
         white-space: nowrap; 
         overflow: hidden; 
-        text-overflow: ellipsis;
-        text-align: center;
+        text-overflow: ellipsis; 
+        text-align: center; 
       }
       .verse-category { 
         font-size: 0.85em; 
-        text-align: center;
+        text-align: center; 
         margin-top: 4px; 
         width: 100%; 
         padding-right: 0; 
@@ -695,7 +728,7 @@
         justify-content: center; 
         flex-direction: row; 
         gap: 6px; 
-        align-items: center;
+        align-items: center; 
       }
       .share-buttons { 
         justify-content: center; 
@@ -713,11 +746,10 @@
         padding: 5px 10px; 
         width: 100%; 
         text-align: center; 
-        border-radius: 5px; 
       }
       .verse-field { 
         font-size: 0.9em; 
-        padding: 3px 0;
+        padding: 3px 0; 
       }
       .footer { 
         max-width: 90%; 
@@ -747,6 +779,10 @@
         min-width: 0;
         padding: 8vw 2vw;
         background: #fff; 
+      }
+      .single-verse-view .back-button { /* CHANGED: Adjust for mobile */
+        font-size: 0.7em;
+        padding: 4px 8px;
       }
       .single-verse-view h3 { 
         font-family: 'Merriweather', serif;
@@ -803,9 +839,11 @@
     <button class="tab-button" data-sheet="miscellaneous" onclick="selectSheet('miscellaneous')">Miscellaneous</button>
   </div>
   <div id="errorDisplay"></div>
-  <div class="single-verse-view" id="singleVerseView" style="display: none;"></div>
+  <div class="single-verse-view" id="singleVerseView" style="display: none;">
+    <a href="#" class="back-button" id="backToSheetButton">Back to Sheet</a> <!-- CHANGED: Added back button -->
+  </div>
   <div class="controls" id="controls">
-    <label for="categoryFilter">Filter by Verse:</label>
+    <label for="categoryFilter">Filter by Verse Category:</label> <!-- CHANGED: Updated label -->
     <select id="categoryFilter" disabled onchange="filterTable()">
       <option value="">All</option>
       <option value="Universal or Ethical Verse">Universal or Ethical Verse</option>
@@ -814,7 +852,7 @@
       <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
       <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
     </select>
-    <label for="subCategoryFilter">Filter by Sub Category:</label>
+    <label for="subCategoryFilter">Filter by Sub Category:</label> <!-- CHANGED: Updated label -->
     <select id="subCategoryFilter" disabled onchange="filterTable()">
       <option value="">All</option>
       <option value="Historical or Narrative verse">Historical or Narrative verse</option>
@@ -849,8 +887,8 @@
       </div>
       <div class="name-text">Subhendu Ghosh Sastik</div>
       <div class="contact-text">
-        <span>If you’d like to contribute to verse updates 📜 or have any suggestions or feedback 💭</span>
-        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.png" alt="Telegram" style="width: 20px; height: auto; vertical-align: middle;"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="images/gmail_logo.png" alt="Mail" style="width: 20px; height: auto; vertical-align: middle;" onerror="console.log('Gmail logo failed to load')"></a><a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></span>
+        <span>If you’d like to contribute to verse updates 📜 or have any suggestions or feedback 💪</span>
+        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.png" alt="Telegram" style="width: 20px; height: auto; vertical-align: middle;"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="images/gmail_logo.png" alt="Mail" style="width: 20px; height: auto;" onerror="console.log('Gmail logo failed to load')"></a><a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></span>
       </div>
     </div>
   </div>
@@ -886,7 +924,7 @@
       alert("Link copied to clipboard!");
     }).catch(err => {
       console.error("Failed to copy link:", err);
-      alert("Failed to copy link. Please try again.");
+      alert("Failed to copy link: Please try again.");
     });
   };
 
@@ -895,8 +933,9 @@
       navigator.share({
         title: 'SASTIK GBQ+ Verse',
         text: verseText,
+        description: shareUrl,
         url: shareUrl
-      }).catch(err => console.error('Share error:', err));
+      }).then(() => console.log("Successfully shared")).catch(err => console.error('Share error:', err));
     } else {
       alert('Share not supported on this browser. Copy the link instead.');
     }
@@ -1117,8 +1156,8 @@
     searchInput.disabled = true;
     verseContainer.innerHTML = `<div style="text-align: center;">Loading ${sheet}...</div>`;
     errorDisplay.textContent = "";
-    document.querySelector('.search-row').classList.add('active');
-    document.querySelector('.controls').classList.add('active');
+    document.querySelector('.search-row').classList.remove('active');
+    document.querySelector('.controls').classList.remove('active');
 
     const urlsToTry = [
       `${sheet.toLowerCase()}.json`,
@@ -1164,7 +1203,7 @@
     errorDisplay.style.color = "red";
     errorDisplay.style.textAlign = "center";
     errorDisplay.style.marginBottom = "10px";
-    document.querySelector(".tab-bar")?.after(errorDisplay);
+    document.querySelector(".controls")?.after(errorDisplay);
     return errorDisplay;
   }
 
@@ -1176,18 +1215,10 @@
 
     if (!sheet || !verseParam) {
       document.getElementById("singleVerseView").style.display = "none";
-      document.querySelector('.search-row').classList.remove('active');
-      document.querySelector('.controls').classList.remove('active');
+      document.querySelector('.search-row').classList.add('active'); /* CHANGED: Show search row for verse list */
+      document.querySelector('.controls').classList.add('active'); /* CHANGED: Show controls for verse list */
       document.getElementById("verseContainer").style.display = "block";
-      if (currentSheet) {
-        const tabs = document.querySelectorAll(".tab-button");
-        tabs.forEach(tab => tab.classList.remove("selected"));
-        const selectedTab = document.querySelector(`.tab-button[data-sheet="${currentSheet}"]`);
-        if (selectedTab) selectedTab.classList.add("selected");
-        await loadSheetData(currentSheet);
-      } else {
-        deselectSheet();
-      }
+      document.getElementById("pagination").style.display = "flex"; /* CHANGED: Show pagination for verse list */
       return;
     }
 
@@ -1214,9 +1245,10 @@
     const singleVerseView = document.getElementById("singleVerseView");
     const controls = document.getElementById("controls");
     const verseContainer = document.getElementById("verseContainer");
+    const pagination = document.getElementById("pagination");
     const errorDisplay = document.getElementById("errorDisplay") || createErrorDisplay();
 
-    if (!singleVerseView || !controls || !verseContainer) {
+    if (!singleVerseView || !controls || !verseContainer || !pagination) {
       console.error("Required DOM elements missing for single verse view");
       errorDisplay.textContent = "Internal error: Required elements not found.";
       return;
@@ -1234,14 +1266,12 @@
       }
       if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < data.length) {
         currentVerseIndex = verseIndex;
+        history.pushState({ sheet: currentSheet, verse: normalizedVerseParam }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(normalizedVerseParam)}`); /* CHANGED: Add state for back navigation */
         displaySingleVerse(data[verseIndex], verseIndex);
         controls.classList.remove('active');
         verseContainer.style.display = "none";
         document.querySelector('.search-row').classList.remove('active');
-        const tabs = document.querySelectorAll(".tab-button");
-        tabs.forEach(tab => tab.classList.remove("selected"));
-        const selectedTab = document.querySelector(`.tab-button[data-sheet="${sheet}"]`);
-        if (selectedTab) selectedTab.classList.add("selected");
+        pagination.style.display = "none"; /* CHANGED: Hide pagination in single verse view */
         await loadReactions(sheet, verseIndex);
       } else {
         console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
@@ -1249,6 +1279,7 @@
         controls.classList.remove('active');
         verseContainer.style.display = "none";
         document.querySelector('.search-row').classList.remove('active');
+        pagination.style.display = "none"; /* CHANGED: Hide pagination on error */
         errorDisplay.textContent = `Verse "${verseParam}" not found in ${sheet}.`;
       }
     } else {
@@ -1257,6 +1288,7 @@
       controls.classList.remove('active');
       verseContainer.style.display = "none";
       document.querySelector('.search-row').classList.remove('active');
+      pagination.style.display = "none"; /* CHANGED: Hide pagination on error */
       errorDisplay.textContent = `Error loading ${sheet}.json. Please check if the file exists or contact support.`;
     }
   }
@@ -1382,19 +1414,21 @@
 
   function displaySingleVerse(verse, index) {
     const singleVerseView = document.getElementById("singleVerseView");
-    if (!singleVerseView) {
-      console.error("Single verse view element not found");
+    const backButton = document.getElementById("backToSheetButton");
+    if (!singleVerseView || !backButton) {
+      console.error("Single verse view or back button not found");
       return;
     }
     if (!verse) {
-      singleVerseView.innerHTML = `<h3>Error</h3><p>Verse not found.</p>`;
+      singleVerseView.innerHTML = `<a href="?sheet=${encodeURIComponent(currentSheet)}" class="back-button" id="backToSheetButton" onclick="selectSheet('${currentSheet}'); return false;">Back to ${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)}</a><h3>Error</h3><p>Verse not found.</p>`; /* CHANGED: Include back button on error */
       singleVerseView.style.display = "block";
       return;
     }
     const verseName = getColumnValue(verse, "verseName", currentSheet);
     const verseNameText = getTextForUrl(verseName);
     const heading = `${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)} ${verseNameText}`;
-    let html = `<h3>${heading}</h3><div class="verse-details">`;
+    let html = `<a href="?sheet=${encodeURIComponent(currentSheet)}" class="back-button" id="backToSheetButton" onclick="selectSheet('${currentSheet}'); return false;">Back to ${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)}</a>`; /* CHANGED: Add back button */
+    html += `<h3>${heading}</h3><div class="verse-details">`;
     const headers = Object.keys(verse).filter(h => h !== "sheet");
     headers.forEach(header => {
       let content = renderText(verse[header]);
@@ -1429,12 +1463,13 @@
     }
     const verseName = getColumnValue(verse, "verseName", currentSheet);
     const verseNameText = getTextForUrl(verseName) || newIndex;
-    history.pushState(null, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`);
+    history.pushState({ sheet: currentSheet, verse: verseNameText }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`); /* CHANGED: Add state for back navigation */
     currentVerseIndex = newIndex;
     displaySingleVerse(verse, newIndex);
     document.getElementById("verseContainer").style.display = "none";
     document.getElementById("controls").classList.remove('active');
     document.querySelector('.search-row').classList.remove('active');
+    document.getElementById("pagination").style.display = "none"; /* CHANGED: Hide pagination */
     loadReactions(currentSheet, newIndex);
   }
 
@@ -1563,119 +1598,54 @@
     }
   }
 
-  function addShareButton(row, index, isTableView = true) {
-    const verseText = getColumnValue(row, "englishTranslation", currentSheet) || "";
-    let verseName = getColumnValue(row, "verseName", currentSheet);
-    verseName = getTextForUrl(verseName) || index.toString();
-    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseName)}`;
-    const escapedShareUrl = shareUrl.replace(/'/g, "\\'");
-    let html = '';
-    if (isTableView) {
-      html += `
-        <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link" onerror="console.log('Link logo failed to load')"></a>
-        <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share" onerror="console.log('Share logo failed to load')"></a>
-      `;
-    } else {
-      html += `
-        <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(verseText + ' ' + shareUrl)}" target="_blank"><img src="images/whatsapp_logo.png" alt="WhatsApp" onerror="console.log('WhatsApp logo failed to load')"></a>
-        <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup" target="_blank"><img src="images/facebook_logo.png" alt="Facebook" onerror="console.log('Facebook logo failed to load')"></a>
-        <a href="https://x.com/intent/tweet?text=${encodeURIComponent(verseText)}&url=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/x_logo.png" alt="X" onerror="console.log('X logo failed to load')"></a>
-        <a href="#" onclick="copyToClipboard('${escapedShareUrl}'); return false;"><img src="images/link_logo.png" alt="Copy Link" onerror="console.log('Link logo failed to load')"></a>
-        <a href="#" onclick="shareAnywhere('${verseText.replace(/'/g, "\\'")}', '${escapedShareUrl}'); return false;"><img src="images/share_logo.png" alt="Share" onerror="console.log('Share logo failed to load')"></a>
-      `;
-    }
-    return html;
+  function addShareButton(row, index, isListView = true) {
+    const verseName = getColumnValue(row, "verseName", currentSheet);
+    const verseNameText = getTextForUrl(verseName) || index;
+    const shareUrl = `${window.location.origin}${window.location.pathname}?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`;
+    const verseText = `${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)} ${verseNameText}`;
+    return `
+      <a href="#" onclick="copyToClipboard('${shareUrl}'); return false;"><img src="images/copy_logo.png" alt="Copy Link" onerror="console.log('Copy logo failed to load')"></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank"><img src="images/facebook_logo.png" alt="Share on Facebook" onerror="console.log('Facebook logo failed to load')"></a>
+      <a href="https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(verseText)}" target="_blank"><img src="images/telegram_logo.png" alt="Share on Telegram" onerror="console.log('Telegram logo failed to load')"></a>
+      <a href="#" onclick="shareAnywhere('${verseText}', '${shareUrl}'); return false;"><img src="images/share_logo.png" alt="Share Anywhere" onerror="console.log('Share logo failed to load')"></a>
+    `;
   }
 
   function filterTable() {
-    const categoryFilter = document.getElementById("categoryFilter");
-    const subCategoryFilter = document.getElementById("subCategoryFilter");
-    const searchInput = document.getElementById("searchInput");
-    if (!categoryFilter || !subCategoryFilter || !searchInput) {
-      console.error("Filter elements missing");
-      return;
-    }
-    const category = categoryFilter.value;
-    const subCategory = subCategoryFilter.value;
-    const searchTerm = searchInput.value.toLowerCase().trim();
+    const categoryFilter = document.getElementById("categoryFilter").value.toLowerCase();
+    const subCategoryFilter = document.getElementById("subCategoryFilter").value.toLowerCase();
+    let filteredRows = data;
 
-    if (currentSheet && data.length > 0) {
-      let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category "] && row["Verse Category "].toLowerCase() === category.toLowerCase());
-        const subCategoryMatch = !subCategory || (row["Sub Category"] && row["Sub Category"].toLowerCase() === subCategory.toLowerCase());
-        return categoryMatch && subCategoryMatch;
-      });
-      updateTable(filteredRows);
-      if (searchTerm) {
-        searchTable(searchTerm);
-      } else {
-        updateMatchCount(0);
-      }
-    } else {
-      updateTable([]);
-      updateMatchCount(0);
+    if (categoryFilter) {
+      filteredRows = filteredRows.filter(row => (row["Verse Category "] || "").toLowerCase() === categoryFilter);
     }
+
+    if (subCategoryFilter) {
+      filteredRows = filteredRows.filter(row => (row["Sub Category"] || "").toLowerCase() === subCategoryFilter);
+    }
+
+    const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+    if (searchTerm) {
+      filteredRows = filteredRows.filter(row => {
+        return Object.values(row).some(value => {
+          const text = getTextForUrl(value).toLowerCase();
+          return text.includes(searchTerm);
+        });
+      });
+    }
+
+    updateTable(filteredRows);
+    updateMatchCount(filteredRows.length);
   }
 
-  function searchTable(searchTerm = null) {
-    const searchInput = document.getElementById("searchInput");
-    const categoryFilter = document.getElementById("categoryFilter");
-    const subCategoryFilter = document.getElementById("subCategoryFilter");
-    if (!searchInput || !categoryFilter || !subCategoryFilter) {
-      console.error("Search elements missing");
-      return;
-    }
-    if (searchInput.disabled && !searchTerm) return;
-    const term = searchTerm || searchInput.value.toLowerCase().trim();
-    const category = categoryFilter.value;
-    const subCategory = subCategoryFilter.value;
-
-    if (currentSheet && data.length > 0) {
-      let filteredRows = data.filter(row => {
-        const categoryMatch = !category || (row["Verse Category "] && row["Verse Category "].toLowerCase() === category.toLowerCase());
-        const subCategoryMatch = !subCategory || (row["Sub Category"] && row["Sub Category"].toLowerCase() === subCategory.toLowerCase());
-        return categoryMatch && subCategoryMatch;
-      });
-
-      if (term) {
-        let searchFilteredRows = filteredRows.filter(row =>
-          Object.values(row).some(val => {
-            if (typeof val === "string") {
-              return val.toLowerCase().includes(term);
-            } else if (val && val.text) {
-              return val.text.toLowerCase().includes(term);
-            }
-            return false;
-          })
-        );
-        let matchCount = 0;
-        searchFilteredRows.forEach(row => {
-          Object.values(row).forEach(val => {
-            if (typeof val === "string" && val.toLowerCase().includes(term)) {
-              matchCount += (val.toLowerCase().match(new RegExp(term, 'gi')) || []).length;
-            } else if (val && val.text && val.text.toLowerCase().includes(term)) {
-              matchCount += (val.text.toLowerCase().match(new RegExp(term, 'gi')) || []).length;
-            }
-          });
-        });
-        updateTable(searchFilteredRows);
-        updateMatchCount(matchCount);
-      } else {
-        updateTable(filteredRows);
-        updateMatchCount(0);
-      }
-    } else {
-      updateTable([]);
-      updateMatchCount(0);
-    }
+  function searchTable() {
+    filterTable();
   }
 
   function updateContentCount(count) {
     const contentCount = document.getElementById("contentCount");
     if (contentCount) {
       contentCount.textContent = `Content Found: ${count}`;
-    } else {
-      console.error("Content count element not found");
     }
   }
 
@@ -1683,125 +1653,69 @@
     const matchCount = document.getElementById("matchCount");
     if (matchCount) {
       matchCount.textContent = `Matches found: ${count}`;
-    } else {
-      console.error("Match count element not found");
     }
   }
 
-  function deselectSheet() {
-    currentSheet = "";
-    currentPage = 1;
+  function selectSheet(sheet) {
+    const buttons = document.querySelectorAll(".tab-button");
+    buttons.forEach(btn => {
+      btn.classList.remove("selected");
+      if (btn.dataset.sheet === sheet) {
+        btn.classList.add("selected");
+      }
+    });
+    currentSheet = sheet;
     currentVerseIndex = -1;
-    data = [];
-    const tabs = document.querySelectorAll(".tab-button");
-    tabs.forEach(tab => tab.classList.remove("selected"));
-    const verseContainer = document.getElementById("verseContainer");
-    const singleVerseView = document.getElementById("singleVerseView");
-    const controls = document
-          singleVerseView").style.display = "none";
+    history.pushState({ sheet: sheet }, '', `?sheet=${encodeURIComponent(sheet)}`); /* CHANGED: Add state for back navigation */
+    document.getElementById("singleVerseView").style.display = "none";
     document.getElementById("verseContainer").style.display = "block";
-    // Update URL to reflect the selected sheet
-    history.pushState(null, '', `?sheet=${encodeURIComponent(sheet)}`);
-    await loadSheetData(sheet);
+    document.getElementById("pagination").style.display = "flex"; /* CHANGED: Show pagination for verse list */
+    document.querySelector('.controls').classList.add('active'); /* CHANGED: Show controls for verse list */
+    document.querySelector('.search-row').classList.add('active'); /* CHANGED: Show search row for verse list */
+    loadSheetData(sheet);
   }
 
-  window.deselectSheet = function() {
-    const tabs = document.querySelectorAll(".tab-button");
-    const controls = document.getElementById("controls");
-    const searchRow = document.querySelector(".search-row");
-    const verseContainer = document.getElementById("verseContainer");
-    const singleVerseView = document.getElementById("singleVerseView");
-    const errorDisplay = document.getElementById("errorDisplay") || createErrorDisplay();
-    const categoryFilter = document.getElementById("categoryFilter");
-    const subCategoryFilter = document.getElementById("subCategoryFilter");
-    const searchInput = document.getElementById("searchInput");
-    const pagination = document.getElementById("pagination");
-
-    if (!controls || !searchRow || !verseContainer || !singleVerseView || !categoryFilter || !subCategoryFilter || !searchInput || !pagination) {
-      console.error("Required DOM elements missing for deselectSheet");
-      errorDisplay.textContent = "Internal error: Required elements not found.";
-      return;
-    }
-
-    // Reset current sheet and data
-    currentSheet = "";
-    currentPage = 1;
-    currentVerseIndex = -1;
-    data = [];
-
-    // Remove 'selected' class from all tabs
-    tabs.forEach(tab => tab.classList.remove("selected"));
-
-    // Hide controls and search row
-    controls.classList.remove("active");
-    searchRow.classList.remove("active");
-
-    // Disable filters and search input
-    categoryFilter.disabled = true;
-    subCategoryFilter.disabled = true;
-    searchInput.disabled = true;
-    searchInput.value = "";
-
-    // Clear verse container and pagination
-    verseContainer.innerHTML = `<div style="text-align: center;">Please select a tab to view verses.</div>`;
-    pagination.innerHTML = "";
-    errorDisplay.textContent = "";
-
-    // Hide single verse view
-    singleVerseView.style.display = "none";
-
-    // Reset URL to base URL
-    history.pushState(null, '', 'https://subhendug1793.github.io/verse-viewer/');
-
-    // Reset content and match counts
-    updateContentCount(0);
-    updateMatchCount(0);
-  }
-
-  // Initialize the page
-  document.addEventListener("DOMContentLoaded", async () => {
+  function init() {
     initializeFirebase();
-    await updateVisitorCount();
+    updateVisitorCount();
     updateLastUpdated();
-
     const params = new URLSearchParams(window.location.search);
     const sheet = params.get("sheet");
     const verse = params.get("verse");
 
     if (sheet && verse) {
-      await loadSingleVerse();
+      const buttons = document.querySelectorAll(".tab-button");
+      buttons.forEach(btn => {
+        btn.classList.remove("selected");
+        if (btn.dataset.sheet.toLowerCase() === sheet.toLowerCase()) {
+          btn.classList.add("selected");
+        }
+      });
+      currentSheet = sheet;
+      loadSingleVerse();
     } else if (sheet) {
-      const validSheets = ["gita", "bible", "quran", "hadith", "miscellaneous"];
-      if (validSheets.includes(sheet.toLowerCase())) {
-        await selectSheet(sheet.toLowerCase());
-      } else {
-        console.error(`Invalid sheet parameter: ${sheet}`);
-        deselectSheet();
-      }
+      selectSheet(sheet);
     } else {
-      deselectSheet();
+      selectSheet("gita");
     }
 
-    // Handle popstate for back/forward navigation
-    window.addEventListener('popstate', async () => {
-      const newParams = new URLSearchParams(window.location.search);
-      const newSheet = newParams.get("sheet");
-      const newVerse = newParams.get("verse");
-
-      if (newSheet && newVerse) {
-        await loadSingleVerse();
-      } else if (newSheet) {
-        const validSheets = ["gita", "bible", "quran", "hadith", "miscellaneous"];
-        if (validSheets.includes(newSheet.toLowerCase())) {
-          await selectSheet(newSheet.toLowerCase());
-        } else {
-          deselectSheet();
-        }
+    window.addEventListener('popstate', (event) => { /* CHANGED: Handle browser back/forward */
+      const state = event.state || {};
+      const params = new URLSearchParams(window.location.search);
+      const sheet = params.get("sheet");
+      const verse = params.get("verse");
+      if (sheet && verse) {
+        currentSheet = sheet;
+        loadSingleVerse();
+      } else if (sheet || state.sheet) {
+        selectSheet(sheet || state.sheet || "gita");
       } else {
-        deselectSheet();
+        selectSheet("gita");
       }
     });
-  });
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
 </script>
 </body>
 </html>

@@ -933,7 +933,7 @@
   };
 
   let data = [];
-  let currentSheet = "";
+  let currentSheet = ""; // CHANGED: Initialize as empty
   let currentVerseIndex = -1;
   let currentPage = 1;
   const versesPerPage = 25;
@@ -1206,10 +1206,15 @@
 
     if (!sheet || !verseParam) {
       document.getElementById("singleVerseView").style.display = "none";
-      document.querySelector('.search-row').classList.add('active'); /* CHANGED: Show search row */
-      document.querySelector('.controls').classList.add('active'); /* CHANGED: Show controls */
+      document.querySelector('.search-row').classList.add('active'); // CHANGED: Show search row
+      document.querySelector('.controls').classList.add('active'); // CHANGED: Show controls
       document.getElementById("verseContainer").style.display = "block";
-      document.getElementById("pagination").style.display = "flex"; /* CHANGED: Show pagination */
+      document.getElementById("pagination").style.display = "flex"; // CHANGED: Show pagination
+      if (sheet) {
+        selectSheet(sheet); // CHANGED: Load sheet if provided
+      } else {
+        clearSheet(); // CHANGED: Clear if no sheet
+      }
       return;
     }
 
@@ -1257,20 +1262,28 @@
       }
       if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < data.length) {
         currentVerseIndex = verseIndex;
-        history.pushState({ sheet: currentSheet, verse: normalizedVerseParam }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(normalizedVerseParam)}`); /* CHANGED: Add state */
+        history.pushState({ sheet: currentSheet, verse: normalizedVerseParam }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(normalizedVerseParam)}`); // CHANGED: Add state
         displaySingleVerse(data[verseIndex], verseIndex);
         controls.classList.remove('active');
         verseContainer.style.display = "none";
         document.querySelector('.search-row').classList.remove('active');
-        pagination.style.display = "none"; /* CHANGED: Hide pagination */
+        pagination.style.display = "none"; // CHANGED: Hide pagination
         await loadReactions(sheet, verseIndex);
+        // CHANGED: Update tab selection
+        const buttons = document.querySelectorAll(".tab-button");
+        buttons.forEach(btn => {
+          btn.classList.remove("selected");
+          if (btn.dataset.sheet.toLowerCase() === sheet.toLowerCase()) {
+            btn.classList.add("selected");
+          }
+        });
       } else {
         console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
         displaySingleVerse(null, -1);
         controls.classList.remove('active');
         verseContainer.style.display = "none";
         document.querySelector('.search-row').classList.remove('active');
-        pagination.style.display = "none"; /* CHANGED: Hide pagination */
+        pagination.style.display = "none"; // CHANGED: Hide pagination
         errorDisplay.textContent = `Verse "${verseParam}" not found in ${sheet}.`;
       }
     } else {
@@ -1279,7 +1292,7 @@
       controls.classList.remove('active');
       verseContainer.style.display = "none";
       document.querySelector('.search-row').classList.remove('active');
-      pagination.style.display = "none"; /* CHANGED: Hide pagination */
+      pagination.style.display = "none"; // CHANGED: Hide pagination
       errorDisplay.textContent = `Error loading ${sheet}.json. Please check if the file exists or contact support.`;
     }
   }
@@ -1411,14 +1424,14 @@
       return;
     }
     if (!verse) {
-      singleVerseView.innerHTML = `<a href="?sheet=${encodeURIComponent(currentSheet)}" class="back-button" id="backToSheetButton" onclick="selectSheet('${currentSheet}'); return false;">Back to ${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)}</a><h3>Error</h3><p>Verse not found.</p>`; /* CHANGED: Include back button */
+      singleVerseView.innerHTML = `<a href="?sheet=${encodeURIComponent(currentSheet)}" class="back-button" id="backToSheetButton" onclick="selectSheet('${currentSheet}'); return false;">Back to ${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)}</a><h3>Error</h3><p>Verse not found.</p>`; // CHANGED: Include back button
       singleVerseView.style.display = "block";
       return;
     }
     const verseName = getColumnValue(verse, "verseName", currentSheet);
     const verseNameText = getTextForUrl(verseName);
     const heading = `${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)} ${verseNameText}`;
-    let html = `<a href="?sheet=${encodeURIComponent(currentSheet)}" class="back-button" id="backToSheetButton" onclick="selectSheet('${currentSheet}'); return false;">Back to ${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)}</a>`; /* CHANGED: Add back button */
+    let html = `<a href="?sheet=${encodeURIComponent(currentSheet)}" class="back-button" id="backToSheetButton" onclick="selectSheet('${currentSheet}'); return false;">Back to ${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)}</a>`; // CHANGED: Add back button
     html += `<h3>${heading}</h3><div class="verse-details">`;
     const headers = Object.keys(verse).filter(h => h !== "sheet");
     headers.forEach(header => {
@@ -1454,13 +1467,13 @@
     }
     const verseName = getColumnValue(verse, "verseName", currentSheet);
     const verseNameText = getTextForUrl(verseName) || newIndex;
-    history.pushState({ sheet: currentSheet, verse: verseNameText }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`); /* CHANGED: Add state */
+    history.pushState({ sheet: currentSheet, verse: verseNameText }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`); // CHANGED: Add state
     currentVerseIndex = newIndex;
     displaySingleVerse(verse, newIndex);
     document.getElementById("verseContainer").style.display = "none";
     document.getElementById("controls").classList.remove('active');
     document.querySelector('.search-row').classList.remove('active');
-    document.getElementById("pagination").style.display = "none"; /* CHANGED: Hide pagination */
+    document.getElementById("pagination").style.display = "none"; // CHANGED: Hide pagination
     loadReactions(currentSheet, newIndex);
   }
 
@@ -1647,22 +1660,50 @@
     }
   }
 
+  function clearSheet() { // CHANGED: New function to clear selection
+    currentSheet = "";
+    currentVerseIndex = -1;
+    data = [];
+    const buttons = document.querySelectorAll(".tab-button");
+    buttons.forEach(btn => btn.classList.remove("selected"));
+    document.getElementById("verseContainer").innerHTML = `<div style="text-align: center;">Please select a sheet to view verses.</div>`;
+    document.getElementById("pagination").style.display = "none";
+    document.getElementById("controls").classList.remove('active');
+    document.querySelector('.search-row').classList.remove('active');
+    document.getElementById("singleVerseView").style.display = "none";
+    history.pushState({}, '', window.location.pathname); // CHANGED: Clear URL params
+    updateContentCount(0);
+    updateMatchCount(0);
+  }
+
   function selectSheet(sheet) {
     const buttons = document.querySelectorAll(".tab-button");
+    let isDeselect = false;
     buttons.forEach(btn => {
+      if (btn.dataset.sheet.toLowerCase() === sheet.toLowerCase() && btn.classList.contains("selected")) {
+        isDeselect = true; // CHANGED: Detect deselection
+      }
       btn.classList.remove("selected");
-      if (btn.dataset.sheet === sheet) {
+    });
+
+    if (isDeselect) {
+      clearSheet(); // CHANGED: Deselect and clear
+      return;
+    }
+
+    buttons.forEach(btn => {
+      if (btn.dataset.sheet.toLowerCase() === sheet.toLowerCase()) {
         btn.classList.add("selected");
       }
     });
     currentSheet = sheet;
     currentVerseIndex = -1;
-    history.pushState({ sheet: sheet }, '', `?sheet=${encodeURIComponent(sheet)}`); /* CHANGED: Add state */
+    history.pushState({ sheet: sheet }, '', `?sheet=${encodeURIComponent(sheet)}`); // CHANGED: Update URL
     document.getElementById("singleVerseView").style.display = "none";
     document.getElementById("verseContainer").style.display = "block";
-    document.getElementById("pagination").style.display = "flex"; /* CHANGED: Show pagination */
-    document.querySelector('.controls').classList.add('active'); /* CHANGED: Show controls */
-    document.querySelector('.search-row').classList.add('active'); /* CHANGED: Show search row */
+    document.getElementById("pagination").style.display = "flex"; // CHANGED: Show pagination
+    document.querySelector('.controls').classList.add('active'); // CHANGED: Show controls
+    document.querySelector('.search-row').classList.add('active'); // CHANGED: Show search row
     loadSheetData(sheet);
   }
 
@@ -1675,22 +1716,14 @@
     const verse = params.get("verse");
 
     if (sheet && verse) {
-      const buttons = document.querySelectorAll(".tab-button");
-      buttons.forEach(btn => {
-        btn.classList.remove("selected");
-        if (btn.dataset.sheet.toLowerCase() === sheet.toLowerCase()) {
-          btn.classList.add("selected");
-        }
-      });
-      currentSheet = sheet;
-      loadSingleVerse();
+      loadSingleVerse(); // CHANGED: Load single verse if both params present
     } else if (sheet) {
-      selectSheet(sheet);
+      selectSheet(sheet); // CHANGED: Select sheet if only sheet param
     } else {
-      selectSheet("gita");
+      clearSheet(); // CHANGED: No default sheet
     }
 
-    window.addEventListener('popstate', (event) => { /* CHANGED: Handle back/forward */
+    window.addEventListener('popstate', (event) => { // CHANGED: Handle back/forward
       const state = event.state || {};
       const params = new URLSearchParams(window.location.search);
       const sheet = params.get("sheet");
@@ -1699,9 +1732,9 @@
         currentSheet = sheet;
         loadSingleVerse();
       } else if (sheet || state.sheet) {
-        selectSheet(sheet || state.sheet || "gita");
+        selectSheet(sheet || state.sheet);
       } else {
-        selectSheet("gita");
+        clearSheet();
       }
     });
   }

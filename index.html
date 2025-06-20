@@ -933,7 +933,7 @@
   };
 
   let data = [];
-  let currentSheet = ""; // CHANGED: Initialize as empty
+  let currentSheet = "";
   let currentVerseIndex = -1;
   let currentPage = 1;
   const versesPerPage = 25;
@@ -1128,6 +1128,7 @@
   }
 
   async function loadSheetData(sheet) {
+    console.log(`Attempting to load sheet: ${sheet}`); // CHANGED: Debug log
     currentSheet = sheet;
     currentPage = 1;
     const categoryFilter = document.getElementById("categoryFilter");
@@ -1137,12 +1138,11 @@
     const errorDisplay = document.getElementById("errorDisplay") || createErrorDisplay();
 
     if (!categoryFilter || !subCategoryFilter || !searchInput || !verseContainer) {
-      console.error("Required DOM elements missing");
+      console.error("Required DOM elements missing in loadSheetData");
       errorDisplay.textContent = "Internal error: Required elements not found.";
       return;
     }
 
-    // CHANGED: Reset filters on sheet load
     categoryFilter.value = "";
     subCategoryFilter.value = "";
     searchInput.value = "";
@@ -1162,6 +1162,7 @@
     let sheetData = null;
     for (const url of urlsToTry) {
       try {
+        console.log(`Fetching: ${url}`); // CHANGED: Debug log
         const response = await fetch(url, { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } });
         if (response.ok) {
           sheetData = await response.json();
@@ -1182,7 +1183,7 @@
       document.querySelector('.controls').classList.add('active');
       updateTable(data);
       updateContentCount(data.length);
-      updateMatchCount(data.length); // CHANGED: Show total count initially
+      updateMatchCount(data.length);
     } else {
       errorDisplay.textContent = `Error loading ${sheet}.json. Please check if the file exists or contact support at sastikofficial@gmail.com.`;
       verseContainer.innerHTML = `<div style="text-align: center;">Failed to load ${sheet} data. Please try another tab or refresh.</div>`;
@@ -1203,6 +1204,7 @@
   }
 
   async function loadSingleVerse() {
+    console.log("loadSingleVerse called"); // CHANGED: Debug log
     const params = new URLSearchParams(window.location.search);
     const sheet = params.get("sheet");
     const verseParam = params.get("verse");
@@ -1210,11 +1212,11 @@
 
     if (!sheet || !verseParam) {
       document.getElementById("singleVerseView").style.display = "none";
-      document.querySelector('.search-row').classList.remove('active'); // CHANGED: Hide search row initially
-      document.querySelector('.controls').classList.remove('active'); // CHANGED: Hide controls initially
+      document.querySelector('.search-row').classList.remove('active');
+      document.querySelector('.controls').classList.remove('active');
       document.getElementById("verseContainer").style.display = "block";
-      document.getElementById("pagination").style.display = "none"; // CHANGED: Hide pagination initially
-      clearSheet(); // CHANGED: Always clear on invalid params
+      document.getElementById("pagination").style.display = "none";
+      clearSheet();
       return;
     }
 
@@ -1227,6 +1229,7 @@
     let sheetData = null;
     for (const url of urlsToTry) {
       try {
+        console.log(`Fetching single verse: ${url}`); // CHANGED: Debug log
         const response = await fetch(url, { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } });
         if (response.ok) {
           sheetData = await response.json();
@@ -1262,14 +1265,13 @@
       }
       if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < data.length) {
         currentVerseIndex = verseIndex;
-        history.pushState({ sheet: currentSheet, verse: normalizedVerseParam }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(normalizedVerseParam)}`); // CHANGED: Add state
+        history.pushState({ sheet: currentSheet, verse: normalizedVerseParam }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(normalizedVerseParam)}`);
         displaySingleVerse(data[verseIndex], verseIndex);
         controls.classList.remove('active');
         verseContainer.style.display = "none";
         document.querySelector('.search-row').classList.remove('active');
         pagination.style.display = "none";
         await loadReactions(sheet, verseIndex);
-        // CHANGED: Update tab selection
         const buttons = document.querySelectorAll(".tab-button");
         buttons.forEach(btn => {
           btn.classList.remove("selected");
@@ -1660,10 +1662,11 @@
     }
   }
 
-  function clearSheet() { // CHANGED: Enhanced clear function
+  function clearSheet() {
+    console.log("clearSheet called"); // CHANGED: Debug log
     currentSheet = "";
     currentVerseIndex = -1;
-    currentPage = 1; // CHANGED: Reset page
+    currentPage = 1;
     data = [];
     const buttons = document.querySelectorAll(".tab-button");
     buttons.forEach(btn => btn.classList.remove("selected"));
@@ -1672,68 +1675,91 @@
     document.getElementById("controls").classList.remove('active');
     document.querySelector('.search-row').classList.remove('active');
     document.getElementById("singleVerseView").style.display = "none";
-    // CHANGED: Reset filters
     const categoryFilter = document.getElementById("categoryFilter");
     const subCategoryFilter = document.getElementById("subCategoryFilter");
     const searchInput = document.getElementById("searchInput");
     if (categoryFilter) categoryFilter.value = "";
     if (subCategoryFilter) subCategoryFilter.value = "";
     if (searchInput) searchInput.value = "";
-    history.replaceState({}, '', window.location.pathname); // CHANGED: Force clear URL params
+    history.replaceState({}, '', window.location.pathname);
     updateContentCount(0);
     updateMatchCount(0);
   }
 
-  function selectSheet(sheet) {
-    const buttons = document.querySelectorAll(".tab-button");
-    let isDeselect = false;
-    buttons.forEach(btn => {
-      if (btn.dataset.sheet.toLowerCase() === sheet.toLowerCase() && btn.classList.contains("selected")) {
-        isDeselect = true; // CHANGED: Detect deselection
+  window.selectSheet = function(sheet) { // CHANGED: Expose globally and add error handling
+    console.log(`selectSheet called for: ${sheet}`); // CHANGED: Debug log
+    try {
+      const buttons = document.querySelectorAll(".tab-button");
+      if (!buttons.length) {
+        console.error("No tab buttons found");
+        return;
       }
-      btn.classList.remove("selected");
-    });
+      let isDeselect = false;
+      buttons.forEach(btn => {
+        if (btn.dataset.sheet.toLowerCase() === sheet.toLowerCase() && btn.classList.contains("selected")) {
+          isDeselect = true;
+          console.log(`Deselecting sheet: ${sheet}`); // CHANGED: Debug log
+        }
+        btn.classList.remove("selected");
+      });
 
-    if (isDeselect) {
-      clearSheet(); // CHANGED: Deselect and clear
-      return;
+      if (isDeselect) {
+        clearSheet();
+        return;
+      }
+
+      buttons.forEach(btn => {
+        if (btn.dataset.sheet.toLowerCase() === sheet.toLowerCase()) {
+          btn.classList.add("selected");
+          console.log(`Selected sheet: ${sheet}`); // CHANGED: Debug log
+        }
+      });
+      currentSheet = sheet;
+      currentVerseIndex = -1;
+      currentPage = 1;
+      history.pushState({ sheet: sheet }, '', `?sheet=${encodeURIComponent(sheet)}`);
+      document.getElementById("singleVerseView").style.display = "none";
+      document.getElementById("verseContainer").style.display = "block";
+      document.getElementById("pagination").style.display = "flex";
+      document.querySelector('.controls').classList.add('active');
+      document.querySelector('.search-row').classList.add('active');
+      loadSheetData(sheet);
+    } catch (error) {
+      console.error(`Error in selectSheet for ${sheet}:`, error);
+      const errorDisplay = document.getElementById("errorDisplay") || createErrorDisplay();
+      errorDisplay.textContent = `Error selecting ${sheet}. Please try again.`;
     }
+  };
 
-    buttons.forEach(btn => {
-      if (btn.dataset.sheet.toLowerCase() === sheet.toLowerCase()) {
-        btn.classList.add("selected");
+  function bindTabEvents() { // CHANGED: Explicitly bind events
+    console.log("Binding tab events"); // CHANGED: Debug log
+    const buttons = document.querySelectorAll(".tab-button");
+    buttons.forEach(button => {
+      const sheet = button.dataset.sheet;
+      button.removeEventListener('click', handleTabClick); // Prevent duplicate listeners
+      button.addEventListener('click', handleTabClick);
+      function handleTabClick() {
+        console.log(`Tab clicked: ${sheet}`); // CHANGED: Debug log
+        window.selectSheet(sheet);
       }
     });
-    currentSheet = sheet;
-    currentVerseIndex = -1;
-    currentPage = 1; // CHANGED: Reset page
-    history.pushState({ sheet: sheet }, '', `?sheet=${encodeURIComponent(sheet)}`); // CHANGED: Update URL
-    document.getElementById("singleVerseView").style.display = "none";
-    document.getElementById("verseContainer").style.display = "block";
-    document.getElementById("pagination").style.display = "flex";
-    document.querySelector('.controls').classList.add('active');
-    document.querySelector('.search-row').classList.add('active');
-    loadSheetData(sheet);
   }
 
   function init() {
+    console.log("init called"); // CHANGED: Debug log
     initializeFirebase();
     updateVisitorCount();
     updateLastUpdated();
-
-    // CHANGED: Always clear sheet on load/reload, ignore query params
     clearSheet();
-
-    // CHANGED: Handle direct single verse links
+    bindTabEvents(); // CHANGED: Bind tab events
     const params = new URLSearchParams(window.location.search);
     const sheet = params.get("sheet");
     const verse = params.get("verse");
     if (sheet && verse) {
       loadSingleVerse();
     }
-
-    // CHANGED: Add popstate listener for back/forward navigation
     window.addEventListener('popstate', (event) => {
+      console.log("popstate event:", event.state); // CHANGED: Debug log
       const state = event.state || {};
       const params = new URLSearchParams(window.location.search);
       const sheet = params.get("sheet");

@@ -1127,7 +1127,7 @@
   }
 
   async function loadSheetData(sheet) {
-    console.log(`loadSheetData: ${sheet}`);
+    console.log(`loadSheetData: ${sheet}`); // CHANGED: Debug log
     currentSheet = sheet;
     currentPage = 1;
     const categoryFilter = document.getElementById("categoryFilter");
@@ -1142,9 +1142,6 @@
       return;
     }
 
-    categoryFilter.value = "";
-    subCategoryFilter.value = "";
-    searchInput.value = "";
     categoryFilter.disabled = true;
     subCategoryFilter.disabled = true;
     searchInput.disabled = true;
@@ -1175,6 +1172,7 @@
 
     if (sheetData && Array.isArray(sheetData)) {
       data = sheetData;
+      populateFilters(); // CHANGED: Populate dropdowns
       categoryFilter.disabled = false;
       subCategoryFilter.disabled = false;
       searchInput.disabled = false;
@@ -1182,7 +1180,7 @@
       document.querySelector('.controls')?.classList.add('active');
       updateTable(data);
       updateContentCount(data.length);
-      updateMatchCount(data.length);
+      updateMatchCount(0);
     } else {
       errorDisplay.textContent = `Error loading ${sheet}.json. Please check if the file exists or contact support at sastikofficial@gmail.com.`;
       verseContainer.innerHTML = `<div style="text-align: center;">Failed to load ${sheet} data. Please try another tab or refresh.</div>`;
@@ -1200,6 +1198,37 @@
     errorDisplay.style.marginBottom = "10px";
     document.querySelector(".controls")?.after(errorDisplay);
     return errorDisplay;
+  }
+
+  // CHANGED: Populate filter dropdowns dynamically
+  function populateFilters() {
+    console.log("populateFilters called"); // CHANGED: Debug log
+    const categoryFilter = document.getElementById("categoryFilter");
+    const subCategoryFilter = document.getElementById("subCategoryFilter");
+    if (!categoryFilter || !subCategoryFilter) {
+      console.error("Filter elements missing");
+      return;
+    }
+
+    const categories = [...new Set(data.map(row => row["Verse Category "] || "").filter(c => c))];
+    const subCategories = [...new Set(data.map(row => row["Sub Category"] || "").filter(sc => sc))];
+
+    categoryFilter.innerHTML = '<option value="">All Categories</option>';
+    subCategoryFilter.innerHTML = '<option value="">All Sub Categories</option>';
+
+    categories.forEach(category => {
+      const option = document.createElement("option");
+      option.value = category.toLowerCase();
+      option.textContent = category;
+      categoryFilter.appendChild(option);
+    });
+
+    subCategories.forEach(subCategory => {
+      const option = document.createElement("option");
+      option.value = subCategory.toLowerCase();
+      option.textContent = subCategory;
+      subCategoryFilter.appendChild(option);
+    });
   }
 
   async function loadSingleVerse() {
@@ -1475,7 +1504,7 @@
     }
     const verseName = getColumnValue(verse, "verseName", currentSheet);
     const verseNameText = getTextForUrl(verseName) || newIndex;
-    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`; // CHANGED: Use specified URL format
+    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`;
     history.pushState({ sheet: currentSheet, verse: verseNameText }, '', shareUrl);
     currentVerseIndex = newIndex;
     displaySingleVerse(verse, newIndex);
@@ -1616,7 +1645,7 @@
     console.log(`addShareButton: row ${index}`); // CHANGED: Debug log
     const verseName = getColumnValue(row, "verseName", currentSheet);
     const verseNameText = getTextForUrl(verseName) || index;
-    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`; // CHANGED: Use specified URL format
+    const shareUrl = `https://subhendug1793.github.io/verse-viewer/?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`;
     const verseText = `${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)} ${verseNameText}`;
     return `
       <a href="#" onclick="copyToClipboard('${shareUrl}'); return false;">
@@ -1634,46 +1663,92 @@
     `;
   }
 
+  // CHANGED: Restored old filterTable function
   function filterTable() {
-    console.log("filterTable called");
-    const categoryFilter = document.getElementById("categoryFilter").value.toLowerCase().trim();
-    const subCategoryFilter = document.getElementById("subCategoryFilter").value.toLowerCase().trim();
-    let filteredRows = data;
-
-    if (categoryFilter) {
-      filteredRows = filteredRows.filter(row => {
-        const category = (row["Verse Category "] || "").toLowerCase().trim();
-        return category === categoryFilter;
-      });
-      console.log(`Filtered by category: ${filteredRows.length} rows`);
+    console.log("filterTable called"); // CHANGED: Debug log
+    const categoryFilter = document.getElementById("categoryFilter");
+    const subCategoryFilter = document.getElementById("subCategoryFilter");
+    const searchInput = document.getElementById("searchInput");
+    if (!categoryFilter || !subCategoryFilter || !searchInput) {
+      console.error("Filter elements missing");
+      return;
     }
+    const category = categoryFilter.value.toLowerCase().trim();
+    const subCategory = subCategoryFilter.value.toLowerCase().trim();
+    const searchTerm = searchInput.value.toLowerCase().trim();
 
-    if (subCategoryFilter) {
-      filteredRows = filteredRows.filter(row => {
-        const subCategory = (row["Sub Category"] || "").toLowerCase().trim();
-        return subCategory === subCategoryFilter;
+    if (currentSheet && data.length > 0) {
+      let filteredRows = data.filter(row => {
+        const categoryMatch = !category || (row["Verse Category "] && row["Verse Category "].toLowerCase().trim() === category);
+        const subCategoryMatch = !subCategory || (row["Sub Category"] && row["Sub Category"].toLowerCase().trim() === subCategory);
+        return categoryMatch && subCategoryMatch;
       });
-      console.log(`Filtered by subcategory: ${subCategoryFilter}, ${filteredRows.length} rows`);
+      console.log(`Filtered rows: ${filteredRows.length}`); // CHANGED: Debug log
+      updateTable(filteredRows);
+      if (searchTerm) {
+        searchTable(searchTerm);
+      } else {
+        updateMatchCount(0);
+      }
+    } else {
+      updateTable([]);
+      updateMatchCount(0);
     }
-
-    const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
-    if (searchTerm) {
-      filteredRows = filteredRows.filter(row => {
-        return Object.values(row).some(value => {
-          const text = getTextForUrl(value).toLowerCase().trim();
-          return text.includes(searchTerm);
-        });
-      });
-      console.log(`Filtered by search: ${searchTerm}, ${filteredRows.length} rows`);
-    }
-
-    updateTable(filteredRows);
-    updateMatchCount(filteredRows.length);
   }
 
-  function searchTable() {
-    console.log("searchTable called");
-    filterTable();
+  // CHANGED: Restored old searchTable function
+  function searchTable(searchTerm = null) {
+    console.log("searchTable called"); // CHANGED: Debug log
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const subCategoryFilter = document.getElementById("subCategoryFilter");
+    if (!searchInput || !categoryFilter || !subCategoryFilter) {
+      console.error("Search elements missing");
+      return;
+    }
+    if (searchInput.disabled && !searchTerm) return;
+    const term = searchTerm || searchInput.value.toLowerCase().trim();
+    const category = categoryFilter.value.toLowerCase().trim();
+    const subCategory = subCategoryFilter.value.toLowerCase().trim();
+
+    if (currentSheet && data.length > 0) {
+      let filteredRows = data.filter(row => {
+        const categoryMatch = !category || (row["Verse Category "] && row["Verse Category "].toLowerCase().trim() === category);
+        const subCategoryMatch = !subCategory || (row["Sub Category"] && row["Sub Category"].toLowerCase().trim() === subCategory);
+        return categoryMatch && subCategoryMatch;
+      });
+
+      if (term) {
+        let searchFilteredRows = filteredRows.filter(row =>
+          Object.values(row).some(val => {
+            if (typeof val === "string") {
+              return val.toLowerCase().includes(term);
+            } else if (val && val.text) {
+              return val.text.toLowerCase().includes(term);
+            }
+            return false;
+          })
+        );
+        let matchCount = 0;
+        searchFilteredRows.forEach(row => {
+          Object.values(row).forEach(val => {
+            if (typeof val === "string" && val.toLowerCase().includes(term)) {
+              matchCount += (val.toLowerCase().match(new RegExp(term, 'gi')) || []).length;
+            } else if (val && val.text && val.text.toLowerCase().includes(term)) {
+              matchCount += (val.text.toLowerCase().match(new RegExp(term, 'gi')) || []).length;
+            }
+          });
+        });
+        updateTable(searchFilteredRows);
+        updateMatchCount(matchCount);
+      } else {
+        updateTable(filteredRows);
+        updateMatchCount(0);
+      }
+    } else {
+      updateTable([]);
+      updateMatchCount(0);
+    }
   }
 
   function updateContentCount(count) {

@@ -1142,6 +1142,10 @@
       return;
     }
 
+    // CHANGED: Reset filters on sheet load
+    categoryFilter.value = "";
+    subCategoryFilter.value = "";
+    searchInput.value = "";
     categoryFilter.disabled = true;
     subCategoryFilter.disabled = true;
     searchInput.disabled = true;
@@ -1178,7 +1182,7 @@
       document.querySelector('.controls').classList.add('active');
       updateTable(data);
       updateContentCount(data.length);
-      updateMatchCount(0);
+      updateMatchCount(data.length); // CHANGED: Show total count initially
     } else {
       errorDisplay.textContent = `Error loading ${sheet}.json. Please check if the file exists or contact support at sastikofficial@gmail.com.`;
       verseContainer.innerHTML = `<div style="text-align: center;">Failed to load ${sheet} data. Please try another tab or refresh.</div>`;
@@ -1206,15 +1210,11 @@
 
     if (!sheet || !verseParam) {
       document.getElementById("singleVerseView").style.display = "none";
-      document.querySelector('.search-row').classList.add('active'); // CHANGED: Show search row
-      document.querySelector('.controls').classList.add('active'); // CHANGED: Show controls
+      document.querySelector('.search-row').classList.remove('active'); // CHANGED: Hide search row initially
+      document.querySelector('.controls').classList.remove('active'); // CHANGED: Hide controls initially
       document.getElementById("verseContainer").style.display = "block";
-      document.getElementById("pagination").style.display = "flex"; // CHANGED: Show pagination
-      if (sheet) {
-        selectSheet(sheet); // CHANGED: Load sheet if provided
-      } else {
-        clearSheet(); // CHANGED: Clear if no sheet
-      }
+      document.getElementById("pagination").style.display = "none"; // CHANGED: Hide pagination initially
+      clearSheet(); // CHANGED: Always clear on invalid params
       return;
     }
 
@@ -1267,7 +1267,7 @@
         controls.classList.remove('active');
         verseContainer.style.display = "none";
         document.querySelector('.search-row').classList.remove('active');
-        pagination.style.display = "none"; // CHANGED: Hide pagination
+        pagination.style.display = "none";
         await loadReactions(sheet, verseIndex);
         // CHANGED: Update tab selection
         const buttons = document.querySelectorAll(".tab-button");
@@ -1283,7 +1283,7 @@
         controls.classList.remove('active');
         verseContainer.style.display = "none";
         document.querySelector('.search-row').classList.remove('active');
-        pagination.style.display = "none"; // CHANGED: Hide pagination
+        pagination.style.display = "none";
         errorDisplay.textContent = `Verse "${verseParam}" not found in ${sheet}.`;
       }
     } else {
@@ -1292,7 +1292,7 @@
       controls.classList.remove('active');
       verseContainer.style.display = "none";
       document.querySelector('.search-row').classList.remove('active');
-      pagination.style.display = "none"; // CHANGED: Hide pagination
+      pagination.style.display = "none";
       errorDisplay.textContent = `Error loading ${sheet}.json. Please check if the file exists or contact support.`;
     }
   }
@@ -1424,14 +1424,14 @@
       return;
     }
     if (!verse) {
-      singleVerseView.innerHTML = `<a href="?sheet=${encodeURIComponent(currentSheet)}" class="back-button" id="backToSheetButton" onclick="selectSheet('${currentSheet}'); return false;">Back to ${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)}</a><h3>Error</h3><p>Verse not found.</p>`; // CHANGED: Include back button
+      singleVerseView.innerHTML = `<a href="?sheet=${encodeURIComponent(currentSheet)}" class="back-button" id="backToSheetButton" onclick="selectSheet('${currentSheet}'); return false;">Back to ${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)}</a><h3>Error</h3><p>Verse not found.</p>`;
       singleVerseView.style.display = "block";
       return;
     }
     const verseName = getColumnValue(verse, "verseName", currentSheet);
     const verseNameText = getTextForUrl(verseName);
     const heading = `${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)} ${verseNameText}`;
-    let html = `<a href="?sheet=${encodeURIComponent(currentSheet)}" class="back-button" id="backToSheetButton" onclick="selectSheet('${currentSheet}'); return false;">Back to ${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)}</a>`; // CHANGED: Add back button
+    let html = `<a href="?sheet=${encodeURIComponent(currentSheet)}" class="back-button" id="backToSheetButton" onclick="selectSheet('${currentSheet}'); return false;">Back to ${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)}</a>`;
     html += `<h3>${heading}</h3><div class="verse-details">`;
     const headers = Object.keys(verse).filter(h => h !== "sheet");
     headers.forEach(header => {
@@ -1467,13 +1467,13 @@
     }
     const verseName = getColumnValue(verse, "verseName", currentSheet);
     const verseNameText = getTextForUrl(verseName) || newIndex;
-    history.pushState({ sheet: currentSheet, verse: verseNameText }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`); // CHANGED: Add state
+    history.pushState({ sheet: currentSheet, verse: verseNameText }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`);
     currentVerseIndex = newIndex;
     displaySingleVerse(verse, newIndex);
     document.getElementById("verseContainer").style.display = "none";
     document.getElementById("controls").classList.remove('active');
     document.querySelector('.search-row').classList.remove('active');
-    document.getElementById("pagination").style.display = "none"; // CHANGED: Hide pagination
+    document.getElementById("pagination").style.display = "none";
     loadReactions(currentSheet, newIndex);
   }
 
@@ -1660,9 +1660,10 @@
     }
   }
 
-  function clearSheet() { // CHANGED: New function to clear selection
+  function clearSheet() { // CHANGED: Enhanced clear function
     currentSheet = "";
     currentVerseIndex = -1;
+    currentPage = 1; // CHANGED: Reset page
     data = [];
     const buttons = document.querySelectorAll(".tab-button");
     buttons.forEach(btn => btn.classList.remove("selected"));
@@ -1671,7 +1672,14 @@
     document.getElementById("controls").classList.remove('active');
     document.querySelector('.search-row').classList.remove('active');
     document.getElementById("singleVerseView").style.display = "none";
-    history.pushState({}, '', window.location.pathname); // CHANGED: Clear URL params
+    // CHANGED: Reset filters
+    const categoryFilter = document.getElementById("categoryFilter");
+    const subCategoryFilter = document.getElementById("subCategoryFilter");
+    const searchInput = document.getElementById("searchInput");
+    if (categoryFilter) categoryFilter.value = "";
+    if (subCategoryFilter) subCategoryFilter.value = "";
+    if (searchInput) searchInput.value = "";
+    history.replaceState({}, '', window.location.pathname); // CHANGED: Force clear URL params
     updateContentCount(0);
     updateMatchCount(0);
   }
@@ -1698,12 +1706,13 @@
     });
     currentSheet = sheet;
     currentVerseIndex = -1;
+    currentPage = 1; // CHANGED: Reset page
     history.pushState({ sheet: sheet }, '', `?sheet=${encodeURIComponent(sheet)}`); // CHANGED: Update URL
     document.getElementById("singleVerseView").style.display = "none";
     document.getElementById("verseContainer").style.display = "block";
-    document.getElementById("pagination").style.display = "flex"; // CHANGED: Show pagination
-    document.querySelector('.controls').classList.add('active'); // CHANGED: Show controls
-    document.querySelector('.search-row').classList.add('active'); // CHANGED: Show search row
+    document.getElementById("pagination").style.display = "flex";
+    document.querySelector('.controls').classList.add('active');
+    document.querySelector('.search-row').classList.add('active');
     loadSheetData(sheet);
   }
 
@@ -1711,19 +1720,20 @@
     initializeFirebase();
     updateVisitorCount();
     updateLastUpdated();
+
+    // CHANGED: Always clear sheet on load/reload, ignore query params
+    clearSheet();
+
+    // CHANGED: Handle direct single verse links
     const params = new URLSearchParams(window.location.search);
     const sheet = params.get("sheet");
     const verse = params.get("verse");
-
     if (sheet && verse) {
-      loadSingleVerse(); // CHANGED: Load single verse if both params present
-    } else if (sheet) {
-      selectSheet(sheet); // CHANGED: Select sheet if only sheet param
-    } else {
-      clearSheet(); // CHANGED: No default sheet
+      loadSingleVerse();
     }
 
-    window.addEventListener('popstate', (event) => { // CHANGED: Handle back/forward
+    // CHANGED: Add popstate listener for back/forward navigation
+    window.addEventListener('popstate', (event) => {
       const state = event.state || {};
       const params = new URLSearchParams(window.location.search);
       const sheet = params.get("sheet");
@@ -1731,8 +1741,8 @@
       if (sheet && verse) {
         currentSheet = sheet;
         loadSingleVerse();
-      } else if (sheet || state.sheet) {
-        selectSheet(sheet || state.sheet);
+      } else if (sheet && !verse) {
+        selectSheet(sheet);
       } else {
         clearSheet();
       }

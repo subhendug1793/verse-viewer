@@ -1,15 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SASTIK GBQ+ Verse Filter</title>
-  <meta property="og:title" content="SASTIK GBQ+ Verse">
-  <meta property="og:description" content="Explore categorized theological verses from the Gita, Bible, Quran, and more.">
-  <meta property="og:image" content="https://subhendug1793.github.io/verse-viewer/images/sastik_logo.png">
-  <meta property="og:url" content="https://subhendug1793.github.io/verse-viewer/">
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta name="description" content="Explore verses from the Gita, Quran, Bible, Hadith, and more with translations in Bengali and English.">
+  <meta name="keywords" content="Gita, Quran, Bible, Hadith, verses, Bengali translation, English translation, Sastik">
+  <meta name="author" content="Sastik">
+  <meta property="og:title" content="SASTIK GBQ+ Verse Viewer">
+  <meta property="og:description" content="Discover and share verses from multiple scriptures with translations.">
+  <meta property="og:image" content="images/sastik_logo.png">
+  <meta property="og:url" content="https://your-github-pages-url">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>SASTIK GBQ+ Verse Viewer</title>
+  <link rel="icon" type="image/png" href="images/sastik_logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Merriweather:wght@700&display=swap" rel="stylesheet">
   <style>
     body { 
       font-family: 'Poppins', sans-serif; 
@@ -100,7 +104,7 @@
     }
     .tab-bar {
       background: #ffffff; /* CHANGED: Set white background, remove rainbow image */
-      padding: 6px 0;
+      padding: 10px 0;
       margin: 0 auto 20px;
       width: 90%;
       max-width: 800px;
@@ -109,14 +113,14 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
       z-index: 5;
     }
     .tab-button {
       font-family: 'Poppins', sans-serif;
-      font-size: 0.9em;
-      padding: 6px 12px;
+      font-size: 1em;
+      padding: 8px 16px;
       border: 2px solid transparent;
       border-radius: 8px;
       cursor: pointer;
@@ -133,7 +137,7 @@
       border-color: #333333; /* CHANGED: Blackish border */
     }
     .tab-button:hover:not(.selected) {
-      background-color: #9b1c1c; /* CHANGED: Slightly lighter maroon on hover */
+      background-color: #9b1c1c; /* CHANGED: Lighter maroon on hover */
     }
     .controls { 
       margin-bottom: 10px; 
@@ -141,29 +145,29 @@
       display: none;
       justify-content: center; 
       align-items: center; 
-      gap: 8px; 
-      flex-wrap: nowrap; /* CHANGED: Keep single line */
+      gap: 10px; 
+      flex-wrap: nowrap; /* CHANGED: Single line */
     }
     .controls.active {
       display: flex;
     }
     .controls label {
-      font-size: 0.7em; /* CHANGED: Smaller font for single-line layout */
+      font-size: 0.8em; /* CHANGED: Smaller font for single-line layout */
       white-space: nowrap;
     }
     .search-row { 
       display: none;
       justify-content: center; 
       align-items: center; 
-      gap: 8px; 
-      margin-bottom: 5px;
-      flex-wrap: nowrap; /* CHANGED: Keep single line */
+      gap: 10px; 
+      margin-bottom: 10px;
+      flex-wrap: nowrap; /* CHANGED: Single line */
     }
     .search-row.active {
       display: flex;
     }
     .content-count, .match-count { 
-      font-size: 0.7em; /* CHANGED: Smaller font for single-line layout */
+      font-size: 0.8em; /* CHANGED: Smaller font for single-line layout */
       color: #333; 
       white-space: nowrap;
     }
@@ -173,16 +177,16 @@
     }
     select, input { 
       font-family: 'Poppins', sans-serif;
-      font-size: 0.7em; /* CHANGED: Smaller font for single-line layout */
-      padding: 4px; 
-      margin-right: 4px; 
+      font-size: 0.8em; /* CHANGED: Smaller font for single-line layout */
+      padding: 5px; 
+      margin-right: 5px; 
     }
     select:disabled, input:disabled {
       background-color: #e0e0e0;
       cursor: not-allowed;
     }
     #searchInput { 
-      width: 100px; 
+      width: 120px; 
     }
     .verse-container { 
       width: 90vw;
@@ -195,14 +199,14 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       margin-top: 20px;
       flex-wrap: wrap;
     }
     .pagination button {
       font-family: 'Poppins', sans-serif;
-      font-size: 0.85em;
-      padding: 5px 10px;
+      font-size: 0.9em;
+      padding: 6px 12px;
       border: 1px solid #ccc;
       border-radius: 5px;
       background-color: #fff;
@@ -210,9 +214,9 @@
       transition: background-color 0.3s;
     }
     .pagination button.active {
-      background-color: #FFFF00; /* CHANGED: Match selected tab color */
-      color: #000;
-      border-color: #333;
+      background-color: #0066cc;
+      color: #fff;
+      border-color: #0066cc;
     }
     .pagination button:disabled {
       opacity: 0.5;
@@ -224,12 +228,12 @@
     .verse-card { 
       background: linear-gradient(135deg, #ffffff, #f9f9f9); 
       box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-      padding: 12px;
+      padding: 15px;
       border-radius: 12px; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
-      gap: 8px;
+      gap: 10px;
       transition: transform 0.2s, box-shadow 0.2s; 
       border: 1px solid rgba(0,102,204,0.1); 
     }
@@ -242,7 +246,7 @@
       width: 100%; 
       justify-content: space-between; 
       align-items: center; 
-      padding: 2px 0;
+      padding: 5px 0;
       border-bottom: 1px solid rgba(0,0,0,0.1); 
     }
     .verse-header.category-universal { 
@@ -264,11 +268,11 @@
     .verse-name { 
       font-family: 'Merriweather', serif; 
       font-weight: 700; 
-      font-size: 1em; 
+      font-size: 1.1em; 
       color: #333; 
       text-align: left; 
       flex: 1; 
-      padding-left: 8px; 
+      padding-left: 10px; 
     }
     .verse-name a { 
       color: inherit; 
@@ -280,10 +284,10 @@
     }
     .verse-category { 
       font-family: 'Poppins', sans-serif; 
-      font-size: 0.9em; 
+      font-size: 1em; 
       text-align: right; 
       flex: 1; 
-      padding-right: 8px; 
+      padding-right: 10px; 
     }
     .verse-header.category-violent .verse-category { 
       color: #FFFFFF; 
@@ -291,10 +295,10 @@
     .verse-field { 
       width: 100%; 
       text-align: center; 
-      padding: 4px 0;
+      padding: 5px 0;
       border-bottom: 1px solid rgba(0,0,0,0.1); 
       font-family: 'Poppins', sans-serif; 
-      font-size: 0.95em; 
+      font-size: 1em; 
       color: #444; 
     }
     .verse-footer { 
@@ -302,23 +306,23 @@
       width: 100%; 
       justify-content: space-between; 
       align-items: center; 
-      padding: 2px 0;
+      padding: 5px 0;
       border-top: 1px solid rgba(0,0,0,0.1); 
-      gap: 8px;
+      gap: 10px;
     }
     .verse-subcategory { 
       font-family: 'Poppins', sans-serif; 
-      font-size: 0.9em; 
+      font-size: 1em; 
       text-align: left; 
       flex: 2; 
-      padding-left: 8px; 
+      padding-left: 10px; 
       color: #444; 
     }
     .reaction-buttons {
       display: flex;
       flex-direction: row;
       align-items: center;
-      gap: 8px; 
+      gap: 10px; 
       justify-content: center;
       z-index: 10;
       position: relative;
@@ -345,7 +349,7 @@
     .share-buttons { 
       display: flex; 
       justify-content: center; 
-      gap: 8px; 
+      gap: 10px; 
       flex-direction: row; 
       align-items: center; 
     }
@@ -360,7 +364,7 @@
       align-items: center;
       flex-direction: row;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
       flex: 1;
     }
     .view-full-verse { 
@@ -371,7 +375,7 @@
       text-decoration: none; 
       border-radius: 6px; 
       font-family: 'Poppins', sans-serif; 
-      font-size: 0.85em; 
+      font-size: 0.9em; 
       box-shadow: 0 2px 6px rgba(0,102,204,0.3); 
       transition: background 0.3s, transform 0.2s; 
       text-align: right; 
@@ -389,7 +393,7 @@
       flex-direction: column; 
       align-items: center; 
       max-width: 80%; 
-      margin: 5px auto 0;
+      margin: 10px auto 0;
       padding: 10px 0; 
       pointer-events: auto; 
     }
@@ -405,7 +409,7 @@
     .logos { 
       display: flex; 
       align-items: center; 
-      margin-bottom: 5px; 
+      margin-bottom: 10px; 
     }
     .logos img { 
       width: 60px; 
@@ -431,12 +435,12 @@
     }
     .follow-text { 
       font-size: 1.1em; 
-      margin: 2px 0; 
+      margin: 5px 0; 
     }
     .name-text { 
       font-family: 'Merriweather', serif;
       font-size: 2em; 
-      margin: 5px 0; 
+      margin: 10px 0; 
     }
     .contact-text { 
       font-size: 1em; 
@@ -463,13 +467,13 @@
     }
     .single-verse-view {
       text-align: center;
-      margin: 32px auto 32px auto;
+      margin: 40px auto 40px auto;
       max-width: 90vw;
       min-width: 320px; 
       width: 100%;
-      padding: 24px 16px;
+      padding: 30px 20px;
       background: #fff; 
-      box-shadow: 0 0 16px rgba(0,0,0,0.12);
+      box-shadow: 0 0 20px rgba(0,0,0,0.15);
       border-radius: 18px;
       position: relative;
       z-index: 5;
@@ -487,33 +491,33 @@
       position: absolute;
       top: 10px;
       left: 10px;
-      padding: 5px 10px;
+      padding: 6px 12px;
       background: #800000; /* CHANGED: Match unselected tab color */
       color: #fff;
       text-decoration: none;
       border-radius: 5px;
       font-family: 'Poppins', sans-serif;
-      font-size: 0.8em;
+      font-size: 0.9em;
       transition: background-color 0.3s;
     }
     .single-verse-view .back-button:hover { /* CHANGED: Hover effect */
       background: #9b1c1c;
     }
     .single-verse-view h3 {
-      margin-bottom: 18px;
-      font-size: 1.35em;
+      margin-bottom: 20px;
+      font-size: 1.5em;
       font-family: 'Merriweather', serif; 
       color: #0066cc; 
     }
     .verse-details {
-      margin-bottom: 24px;
+      margin-bottom: 30px;
       text-align: left;
       width: 100%; 
     }
     .verse-details p {
       font-family: 'Merriweather', serif;
       margin: 5px 0;
-      font-size: 1em;
+      font-size: 1.1em;
       word-break: break-word;
     }
     .verse-details strong {
@@ -525,9 +529,9 @@
       display: flex;
       flex-direction: row;
       justify-content: center;
-      gap: 12px; 
+      gap: 15px; 
       flex-wrap: wrap;
-      margin: 18px 0 0 0;
+      margin: 20px 0 0 0;
       position: relative;
       z-index: 10;
     }
@@ -559,11 +563,11 @@
     }
     .navigation-arrows .prev {
       position: absolute;
-      left: -40px;
+      left: -50px;
     }
     .navigation-arrows .next {
       position: absolute;
-      right: -30px;
+      right: -50px;
     }
     #errorDisplay {
       color: red;
@@ -587,11 +591,7 @@
         position: relative; 
         left: 0; 
         margin-bottom: 5px;
- 
       }
-      .header-info .tab-button {
-        font-size: 0;8px;
-        }
       .header-info .last-updated {
         position: relative; 
         right: 0; 
@@ -600,103 +600,96 @@
         flex-direction: column; 
         text-align: center; 
         margin-bottom: 10px;
- 
       }
       .logo { 
-        width: flex-direction; 
-        height: column0;
+        width: 60px; 
         margin-bottom: 5px;
-        }
       }
       h2 { 
-        color: font-size; 
-        color: 1; 
-        color: 2em; 
+        font-size: 1.5em; 
       }
       .mission-statement { 
-        background-color: font-size: 0; 
-        color: 9emem; 
+        font-size: 0.9em; 
         max-width: 90%; 
       }
       .mission-subtext { 
-        font-size: 0; 
-        font-size: 65; 
-        max-width: font-size; 
+        font-size: 0.65em; 
+        max-width: 95%; 
         white-space: normal; 
       }
       .tab-bar { 
         width: 95%; 
-        padding: 4px 8px; 
-        gap: 6px; 
+        padding: 8px; 
+        gap: 8px; 
         border-radius: 10px; 
       }
       .tab-button {
-        font-size: 0.8em;
-        padding: 4px 8px;
+        font-size: 0.9em;
+        padding: 6px 12px;
         border-radius: 6px;
       }
       .controls { 
-        flex-direction: row; /* CHANGED: Keep single line on mobile */
+        flex-direction: row; /* CHANGED: Keep single line */
         align-items: center; 
-        gap: 4px; /* CHANGED: Tighter spacing */
-        flex-wrap: nowrap; /* CHANGED: Prevent wrapping */
-        overflow-x: auto; /* CHANGED: Allow horizontal scroll if needed */
+        gap: 5px; /* CHANGED: Tighter spacing */
+        flex-wrap: nowrap; 
+        overflow-x: auto; /* CHANGED: Allow scroll if needed */
       }
       .search-row { 
-        flex-direction: row; /* CHANGED: Keep single line on mobile */
+        flex-direction: row; /* CHANGED: Keep single line */
         align-items: center; 
-        gap: 4px; /* CHANGED: Tighter spacing */
+        gap: 5px; /* CHANGED: Tighter spacing */
         flex-wrap: nowrap; 
-        overflow-x: auto; /* CHANGED: Allow horizontal scroll */
+        overflow-x: auto; /* CHANGED: Allow scroll */
         margin-bottom: 5px; 
       }
       .content-count, .match-count { 
-        font-size: 0.65em; /* CHANGED: Smaller font */
+        font-size: 0.7em; /* CHANGED: Smaller font */
         text-align: left; 
       }
       .search-input-container { 
-        width: auto; /* CHANGED: Fit content */
+        width: auto; 
       }
       select, input { 
-        font-size: 0.65em; /* CHANGED: Smaller font */
-        width: auto; /* CHANGED: Fit content */
+        font-size: 0.7em; /* CHANGED: Smaller font */
+        width: auto; 
         margin-bottom: 0; 
-        padding: 3px; 
+        padding: 4px; 
       }
       #searchInput { 
-        width: 80px; /* CHANGED: Smaller width */
-        max-width: 100px; 
+        width: 100px; 
+        max-width: 120px; 
       }
       .verse-container { 
-        width: 98vw;
+        width: 95vw;
         margin-bottom: 10px; 
         gap: 15px;
       }
       .pagination { 
-        gap: 6px; 
-        padding: 0 8px; 
+        gap: 8px; 
+        padding: 0 10px; 
       }
       .pagination button { 
         font-size: 0.8em; 
-        padding: 4px 8px; 
+        padding: 5px 10px; 
       }
       .verse-card { 
-        padding: 10px; 
+        padding: 12px; 
         border-radius: 10px; 
       }
       .verse-header { 
         flex-direction: column; 
         align-items: center; 
-        padding: 1px 0; 
+        padding: 3px 0; 
       }
       .verse-footer { 
         flex-direction: column; 
         align-items: center; 
-        padding: 1px 0; 
-        gap: 6px; 
+        padding: 3px 0; 
+        gap: 8px; 
       }
       .verse-name { 
-        font-size: 0.9em; 
+        font-size: 1em; 
         padding-left: 0; 
         width: 100%; 
         white-space: nowrap; 
@@ -705,14 +698,14 @@
         text-align: center; 
       }
       .verse-category { 
-        font-size: 0.85em; 
+        font-size: 0.9em; 
         text-align: center; 
-        margin-top: 4px; 
+        margin-top: 5px; 
         width: 100%; 
         padding-right: 0; 
       }
       .verse-subcategory { 
-        font-size: 0.85em; 
+        font-size: 0.9em; 
         padding-left: 0; 
         width: 100%; 
         text-align: center; 
@@ -722,18 +715,18 @@
         width: 100%; 
         flex-direction: row; 
         flex-wrap: wrap; 
-        gap: 6px; 
+        gap: 8px; 
       }
       .reaction-buttons { 
         justify-content: center; 
         flex-direction: row; 
-        gap: 6px; 
+        gap: 8px; 
         align-items: center; 
       }
       .share-buttons { 
         justify-content: center; 
         flex-direction: row; 
-        gap: 6px; 
+        gap: 8px; 
         align-items: center; 
       }
       .share-buttons a img { 
@@ -753,10 +746,10 @@
       }
       .footer { 
         max-width: 90%; 
-        margin: 5px auto 0; 
+        margin: 10px auto 0; 
       }
       .logos img { 
-        width: 40px; 
+        width: 50px; 
         margin-right: 3px; 
       }
       .logos img:last-child { 
@@ -766,26 +759,26 @@
         font-size: 0.9em; 
       }
       .contact-text { 
-        font-size: 0.75em; 
+        font-size: 0.8em; 
       }
       .contact-text img { 
-        width: 20px; 
+        width: 18px; 
       }
       .qr-code img { 
         width: 150px; 
       }
       .single-verse-view {
-        max-width: 98vw;
+        max-width: 95vw;
         min-width: 0;
-        padding: 8vw 2vw;
+        padding: 10vw 3vw;
         background: #fff; 
       }
       .single-verse-view .back-button { /* CHANGED: Adjust for mobile */
-        font-size: 0.7em;
-        padding: 4px 8px;
+        font-size: 0.8em;
+        padding: 5px 10px;
       }
       .single-verse-view h3 { 
-        font-family: 'Merriweather', serif;
+        font-size: 1.2em; 
       }
       .verse-details p { 
         font-size: 0.9em; 
@@ -795,7 +788,7 @@
       }
       .single-verse-share-buttons { 
         gap: 10px; 
-        margin-top: 12px;
+        margin-top: 15px;
       }
       .navigation-arrows img {
         width: 30px;
@@ -804,7 +797,7 @@
         left: -30px;
       }
       .navigation-arrows .next {
-        right: -20px;
+        right: -30px;
       }
       .reaction-buttons button {
         font-size: 14px; 
@@ -839,11 +832,9 @@
     <button class="tab-button" data-sheet="miscellaneous" onclick="selectSheet('miscellaneous')">Miscellaneous</button>
   </div>
   <div id="errorDisplay"></div>
-  <div class="single-verse-view" id="singleVerseView" style="display: none;">
-    <a href="#" class="back-button" id="backToSheetButton">Back to Sheet</a> <!-- CHANGED: Added back button -->
-  </div>
+  <div class="single-verse-view" id="singleVerseView" style="display: none;"></div>
   <div class="controls" id="controls">
-    <label for="categoryFilter">Filter by Verse Category:</label> <!-- CHANGED: Updated label -->
+    <label for="categoryFilter">Filter by Verse:</label>
     <select id="categoryFilter" disabled onchange="filterTable()">
       <option value="">All</option>
       <option value="Universal or Ethical Verse">Universal or Ethical Verse</option>
@@ -852,7 +843,7 @@
       <option value="Divisive or Hateful Inter-community Verse">Divisive or Hateful Inter-community Verse</option>
       <option value="Violent or Aggressive Inter-community Verse">Violent or Aggressive Inter-community Verse</option>
     </select>
-    <label for="subCategoryFilter">Filter by Sub Category:</label> <!-- CHANGED: Updated label -->
+    <label for="subCategoryFilter">Filter by Sub Category:</label>
     <select id="subCategoryFilter" disabled onchange="filterTable()">
       <option value="">All</option>
       <option value="Historical or Narrative verse">Historical or Narrative verse</option>
@@ -887,8 +878,8 @@
       </div>
       <div class="name-text">Subhendu Ghosh Sastik</div>
       <div class="contact-text">
-        <span>If you’d like to contribute to verse updates 📜 or have any suggestions or feedback 💪</span>
-        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.png" alt="Telegram" style="width: 20px; height: auto; vertical-align: middle;"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="images/gmail_logo.png" alt="Mail" style="width: 20px; height: auto;" onerror="console.log('Gmail logo failed to load')"></a><a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></span>
+        <span>If you’d like to contribute to verse updates 📜 or have any suggestions or feedback 💭</span>
+        <span>Feel free to connect with <a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">me</a> on <a href="https://t.me/Sg1793" target="_blank"><img src="images/telegram_logo.png" alt="Telegram" style="width: 20px; height: auto; vertical-align: middle;"></a> or reach out via email at <a href="mailto:sastikofficial@gmail.com" target="_blank"><img src="images/gmail_logo.png" alt="Mail" style="width: 20px; height: auto; vertical-align: middle;" onerror="console.log('Gmail logo failed to load')"></a><a href="https://m.me/subhendu.ghosh.790349" target="_blank" style="color: #0066cc; text-decoration: none;">sastikofficial@gmail.com</a></span>
       </div>
     </div>
   </div>
@@ -1215,10 +1206,10 @@
 
     if (!sheet || !verseParam) {
       document.getElementById("singleVerseView").style.display = "none";
-      document.querySelector('.search-row').classList.add('active'); /* CHANGED: Show search row for verse list */
-      document.querySelector('.controls').classList.add('active'); /* CHANGED: Show controls for verse list */
+      document.querySelector('.search-row').classList.add('active'); /* CHANGED: Show search row */
+      document.querySelector('.controls').classList.add('active'); /* CHANGED: Show controls */
       document.getElementById("verseContainer").style.display = "block";
-      document.getElementById("pagination").style.display = "flex"; /* CHANGED: Show pagination for verse list */
+      document.getElementById("pagination").style.display = "flex"; /* CHANGED: Show pagination */
       return;
     }
 
@@ -1266,12 +1257,12 @@
       }
       if (!isNaN(verseIndex) && verseIndex >= 0 && verseIndex < data.length) {
         currentVerseIndex = verseIndex;
-        history.pushState({ sheet: currentSheet, verse: normalizedVerseParam }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(normalizedVerseParam)}`); /* CHANGED: Add state for back navigation */
+        history.pushState({ sheet: currentSheet, verse: normalizedVerseParam }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(normalizedVerseParam)}`); /* CHANGED: Add state */
         displaySingleVerse(data[verseIndex], verseIndex);
         controls.classList.remove('active');
         verseContainer.style.display = "none";
         document.querySelector('.search-row').classList.remove('active');
-        pagination.style.display = "none"; /* CHANGED: Hide pagination in single verse view */
+        pagination.style.display = "none"; /* CHANGED: Hide pagination */
         await loadReactions(sheet, verseIndex);
       } else {
         console.error(`Verse not found: sheet=${sheet}, verse=${verseParam}, index=${verseIndex}`);
@@ -1279,7 +1270,7 @@
         controls.classList.remove('active');
         verseContainer.style.display = "none";
         document.querySelector('.search-row').classList.remove('active');
-        pagination.style.display = "none"; /* CHANGED: Hide pagination on error */
+        pagination.style.display = "none"; /* CHANGED: Hide pagination */
         errorDisplay.textContent = `Verse "${verseParam}" not found in ${sheet}.`;
       }
     } else {
@@ -1288,7 +1279,7 @@
       controls.classList.remove('active');
       verseContainer.style.display = "none";
       document.querySelector('.search-row').classList.remove('active');
-      pagination.style.display = "none"; /* CHANGED: Hide pagination on error */
+      pagination.style.display = "none"; /* CHANGED: Hide pagination */
       errorDisplay.textContent = `Error loading ${sheet}.json. Please check if the file exists or contact support.`;
     }
   }
@@ -1420,7 +1411,7 @@
       return;
     }
     if (!verse) {
-      singleVerseView.innerHTML = `<a href="?sheet=${encodeURIComponent(currentSheet)}" class="back-button" id="backToSheetButton" onclick="selectSheet('${currentSheet}'); return false;">Back to ${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)}</a><h3>Error</h3><p>Verse not found.</p>`; /* CHANGED: Include back button on error */
+      singleVerseView.innerHTML = `<a href="?sheet=${encodeURIComponent(currentSheet)}" class="back-button" id="backToSheetButton" onclick="selectSheet('${currentSheet}'); return false;">Back to ${currentSheet.charAt(0).toUpperCase()}${currentSheet.slice(1)}</a><h3>Error</h3><p>Verse not found.</p>`; /* CHANGED: Include back button */
       singleVerseView.style.display = "block";
       return;
     }
@@ -1463,7 +1454,7 @@
     }
     const verseName = getColumnValue(verse, "verseName", currentSheet);
     const verseNameText = getTextForUrl(verseName) || newIndex;
-    history.pushState({ sheet: currentSheet, verse: verseNameText }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`); /* CHANGED: Add state for back navigation */
+    history.pushState({ sheet: currentSheet, verse: verseNameText }, '', `?sheet=${encodeURIComponent(currentSheet)}&verse=${encodeURIComponent(verseNameText)}`); /* CHANGED: Add state */
     currentVerseIndex = newIndex;
     displaySingleVerse(verse, newIndex);
     document.getElementById("verseContainer").style.display = "none";
@@ -1666,12 +1657,12 @@
     });
     currentSheet = sheet;
     currentVerseIndex = -1;
-    history.pushState({ sheet: sheet }, '', `?sheet=${encodeURIComponent(sheet)}`); /* CHANGED: Add state for back navigation */
+    history.pushState({ sheet: sheet }, '', `?sheet=${encodeURIComponent(sheet)}`); /* CHANGED: Add state */
     document.getElementById("singleVerseView").style.display = "none";
     document.getElementById("verseContainer").style.display = "block";
-    document.getElementById("pagination").style.display = "flex"; /* CHANGED: Show pagination for verse list */
-    document.querySelector('.controls').classList.add('active'); /* CHANGED: Show controls for verse list */
-    document.querySelector('.search-row').classList.add('active'); /* CHANGED: Show search row for verse list */
+    document.getElementById("pagination").style.display = "flex"; /* CHANGED: Show pagination */
+    document.querySelector('.controls').classList.add('active'); /* CHANGED: Show controls */
+    document.querySelector('.search-row').classList.add('active'); /* CHANGED: Show search row */
     loadSheetData(sheet);
   }
 
@@ -1699,7 +1690,7 @@
       selectSheet("gita");
     }
 
-    window.addEventListener('popstate', (event) => { /* CHANGED: Handle browser back/forward */
+    window.addEventListener('popstate', (event) => { /* CHANGED: Handle back/forward */
       const state = event.state || {};
       const params = new URLSearchParams(window.location.search);
       const sheet = params.get("sheet");
